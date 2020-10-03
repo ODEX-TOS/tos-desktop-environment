@@ -38,7 +38,6 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-- [Repo](#repo)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -63,6 +62,8 @@ To get a local copy up and running follow these simple steps.
 
 > TDE depends on a lot of different tools and projects.
 > A list can be found [here](https://github.com/ODEX-TOS/tos-live/blob/master/repo/BUILD/PKGBUILD_AWESOME)
+
+![desktop](images/desktop.png)
 
 ### Installation
 
