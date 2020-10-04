@@ -30,3 +30,5 @@ else
     package.cpath =
         package.cpath .. ";" .. "/etc/xdg/awesome/helper/lib-so/?/?.so;" .. "/etc/xdg/awesome/helper/lib-so/?.so"
 end
+
+print(package.path)
