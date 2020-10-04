@@ -5,4 +5,10 @@ export LUA_PATH="$LUA_PATH;$(pwd)/plugins/?.lua;"
 export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;/etc/xdg/awesome/?.lua;/etc/xdg/awesome/?/init.lua;"
 export LUA_PATH="$LUA_PATH;"
 
-lua5.3 tests/runner.lua
+LUA="lua5.3"
+
+if [[ ! -z "$1" ]]; then
+    RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua 
+else
+    "$LUA" tests/runner.lua
+fi

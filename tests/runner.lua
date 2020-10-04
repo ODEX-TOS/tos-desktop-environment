@@ -12,5 +12,9 @@ require("tests.theme")
 -- END OF LIST OF TESTS TO RUN
 
 local lu = LuaUnit.new()
-lu:setOutputType("text")
+if not (os.getenv("RUNNER") == nil) then
+    lu:setOutputType(os.getenv("RUNNER"), os.getenv("FILE"))
+else
+    lu:setOutputType("text")
+end
 os.exit(lu:runSuite())

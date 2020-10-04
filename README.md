@@ -38,6 +38,7 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [Unit Testing](#unit-test)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -110,6 +111,26 @@ We have three major directories
 - `tos` contains the configuration files of TDE - this directory contains example conf files (the real once are stored in `~/.config/tos`)
 - `plugins` contains example plugins for TDE (the real once are stored in `~/.config/tde`)
 - `tde` the source code of the desktop environment
+
+### Unit Test
+
+You can run unit tests by executing the following command in the root project directory
+
+```
+bash test-runner.sh
+```
+
+You can also get the JUNIT output by executing the following (t will be saved in result.xml)
+
+```
+bash test-runner.sh result.xml
+```
+
+Alternative unit testing output is also available
+
+```
+RUNNER="tap" bash test-runner.sh
+```
 
 <!-- ROADMAP -->
 
