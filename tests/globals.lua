@@ -24,5 +24,11 @@ screen = {
     set_index_miss_handler = function()
     end,
     set_newindex_miss_handler = function()
-    end
+    end,
+    primary = {
+        dpi = 100
+    }
+}
+mouse = {
+    screen = ""
 }

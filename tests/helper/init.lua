@@ -2,3 +2,5 @@
 
 require("tests.helper.files")
 require("tests.helper.logger")
+require("tests.helper.luapath")
+require("tests.helper.plugin-loader")
