@@ -8,7 +8,7 @@ export LUA_PATH="$LUA_PATH;"
 LUA="lua5.3"
 
 if [[ ! -z "$1" ]]; then
-    RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua 
+  RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua
 else
-    "$LUA" tests/runner.lua
+  "$LUA" tests/runner.lua
 fi
