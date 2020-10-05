@@ -51,8 +51,7 @@ end
 
 -- some system files that should exist
 function test_script_lines_in_file()
-    assert(files.exists("/usr/share/awesome/lib/beautiful.lua"))
-    assert(files.exists("/etc/xdg/awesome/rc.lua"))
+    assert(files.exists(os.getenv("PWD") .. "/tde/rc.lua"))
 end
 
 function test_script_create_string_from_file_single_line()

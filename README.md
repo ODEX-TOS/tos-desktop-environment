@@ -39,6 +39,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
   - [Unit Testing](#unit-test)
+    - [Dockerized](#docker)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -130,6 +131,25 @@ Alternative unit testing output is also available
 
 ```
 RUNNER="tap" bash test-runner.sh
+```
+
+#### Docker
+
+You can also run the test suite using the `tos` docker image
+We have provided an image on top of that located in `tests/Dockerfile``
+You can build and run it like this:
+
+```bash
+# build the image
+docker build -t "tde-test-suite" tests
+
+# run the test suite
+docker run -v "$(pwd):/data" tde-test-suite
+```
+
+Alternativly we have provided a docker-compose file that does this all for you
+```bash
+docker-compose up
 ```
 
 <!-- ROADMAP -->
