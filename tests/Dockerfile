@@ -7,4 +7,3 @@ RUN pacman -Syu awesome-tos --noconfirm
 WORKDIR /data
 
 CMD [ "bash", "test-runner.sh" ]
-
