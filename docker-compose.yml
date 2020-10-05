@@ -1,0 +1,6 @@
+version: "3"
+services:
+  test-suite:
+    build: tests
+    volumes:
+      - "$PWD:/data"

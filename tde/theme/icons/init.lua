@@ -33,7 +33,7 @@ return {
   --tags
   chrome = theme(config["browser"] or lit_dir .. "/firefox.svg"),
   code = theme(config["code"] or lit_dir .. "/code.svg"),
-  social = theme(config["social"] or lit_dir .. "/forum.svg"),
+  social = theme(config["social"] or dir .. "/forum.svg"),
   folder = theme(config["folder"] or lit_dir .. "/folder.svg"),
   music = theme(config["music"] or lit_dir .. "/music.svg"),
   game = theme(config["game"] or lit_dir .. "/google-controller.svg"),
