@@ -119,20 +119,20 @@ We have three major directories
 You can run unit tests by executing the following command in the root project
 directory
 
-```
+```sh
 bash test-runner.sh
 ```
 
 You can also get the JUNIT output by executing the following (t will be saved in
 result.xml)
 
-```
+```sh
 bash test-runner.sh result.xml
 ```
 
 Alternative unit testing output is also available
 
-```
+```sh
 RUNNER="tap" bash test-runner.sh
 ```
 
@@ -142,7 +142,7 @@ You can also run the test suite using the `tos` docker image We have provided an
 image on top of that located in `tests/Dockerfile`` You can build and run it
 like this:
 
-```bash
+```sh
 # build the image
 docker build -t "tde-test-suite" tests
 
@@ -152,7 +152,7 @@ docker run -v "$(pwd):/data" tde-test-suite
 
 Alternativly we have provided a docker-compose file that does this all for you
 
-```bash
+```sh
 docker-compose up
 ```
 
