@@ -22,8 +22,8 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("helper.luapath")
-require("helper.logger")
+require("lib-tde.luapath")
+require("lib-tde.logger")
 
 print("Booting up...")
 
@@ -32,7 +32,7 @@ general = require("parser")(os.getenv("HOME") .. "/.config/tos/general.conf")
 
 -- Setup Sentry error logging --
 if not (general["tde_opt_out"] == "0") then
-  _G.sentry = require("helper.errors")
+  _G.sentry = require("lib-tde.errors")
 else
   print("User opted out of stacktrace analysis")
   print("No information will be send to the tos developers")

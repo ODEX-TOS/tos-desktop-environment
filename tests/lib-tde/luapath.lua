@@ -3,7 +3,7 @@
 local path = package.path
 local cpath = package.cpath
 
-require("tde.helper.luapath")
+require("tde.lib-tde.luapath")
 local newPath = package.path
 local newCpath = package.cpath
 
@@ -15,11 +15,11 @@ function test_plugin_path()
 end
 
 function test_lib_lua_path()
-    assert(newPath:match("helper/lib[-]lua/[?]/[?].lua"))
-    assert(newPath:match("helper/lib[-]lua/[?].lua"))
+    assert(newPath:match("lib[-]tde/lib[-]lua/[?]/[?].lua"))
+    assert(newPath:match("lib[-]tde/lib[-]lua/[?].lua"))
 end
 
 function test_lib_so_path()
-    assert(newCpath:match("helper/lib[-]so/[?]/[?].so"))
-    assert(newCpath:match("helper/lib[-]so/[?].so"))
+    assert(newCpath:match("lib[-]tde/lib[-]so/[?]/[?].so"))
+    assert(newCpath:match("lib[-]tde/lib[-]so/[?].so"))
 end

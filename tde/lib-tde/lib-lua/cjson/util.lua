@@ -214,7 +214,7 @@ local function run_test(testname, func, input, should_work, output)
 end
 
 local function run_test_group(tests)
-    local function run_helper(name, func, input)
+    local function run_lib-tde(name, func, input)
         if type(name) == "string" and #name > 0 then
             print("==> " .. name)
         end
@@ -224,9 +224,9 @@ local function run_test_group(tests)
     end
 
     for _, v in ipairs(tests) do
-        -- Run the helper if "should_work" is missing
+        -- Run the lib-tde if "should_work" is missing
         if v[4] == nil then
-            run_helper(unpack(v))
+            run_lib-tde(unpack(v))
         else
             run_test(unpack(v))
         end

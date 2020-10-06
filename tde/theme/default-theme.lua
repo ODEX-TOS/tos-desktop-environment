@@ -31,7 +31,7 @@ local awful = require("awful")
 local gtk = require("beautiful.gtk")
 local config = require("theme.config")
 local darklight = require("theme.icons.dark-light")
-local file_exists = require("helper.file").exists
+local file_exists = require("lib-tde.file").exists
 
 local theme = {}
 theme.icons = theme_dir .. "/icons/"

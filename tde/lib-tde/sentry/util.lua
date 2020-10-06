@@ -14,7 +14,7 @@ local string_match = string.match
 local math_random = math.random
 local os_date = os.date
 
-local loglevel = require("helper.logger").error
+local loglevel = require("lib-tde.logger").error
 
 
 local _M = {}

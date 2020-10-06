@@ -3,9 +3,9 @@
  Copyright (C) 2014-2020 Gary V. Vaughan
 ]]
 --[[--
- Private argument checking helpers.
+ Private argument checking lib-tdes.
 
- Undocumented internal helpers for strict environment wrapping.
+ Undocumented internal lib-tdes for strict environment wrapping.
 
  @module posix._strict
 ]]

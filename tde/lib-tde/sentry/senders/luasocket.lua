@@ -8,7 +8,7 @@
 -- @copyright 2014-2017 CloudFlare, Inc.
 -- @license BSD 3-clause (see LICENSE file)
 
-local util = require("helper.sentry.util")
+local util = require("lib-tde.sentry.util")
 local http = require("socket.http")
 local ltn12 = require("ltn12")
 

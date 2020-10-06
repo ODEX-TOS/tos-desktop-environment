@@ -1,5 +1,5 @@
 -- the logger class overrides the print function
-local logger = require("tde.helper.logger")
+local logger = require("tde.lib-tde.logger")
 
 function test_logger_settings()
     assert(logger)

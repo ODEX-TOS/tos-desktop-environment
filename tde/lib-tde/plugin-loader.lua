@@ -3,9 +3,9 @@
 -- End users should add their plugins in that directory
 -- Following that there is a plugins.conf file inside .config/tos/plugins.conf
 -- This file describes which plugins should be loaded
-local dirExists = require("helper.file").dir_exists
+local dirExists = require("lib-tde.file").dir_exists
 local naughty = require("naughty")
-local ERROR = require("helper.logger").error
+local ERROR = require("lib-tde.logger").error
 
 local function getItem(item)
     return plugins[item] or nil

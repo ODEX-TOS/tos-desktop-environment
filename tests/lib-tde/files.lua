@@ -1,4 +1,4 @@
-files = require("tde.helper.file")
+files = require("tde.lib-tde.file")
 
 -- get the script lcation
 local function script_path()

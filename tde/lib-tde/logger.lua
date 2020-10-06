@@ -1,4 +1,4 @@
-local filehandle = require("helper.file")
+local filehandle = require("lib-tde.file")
 local time = require("socket").gettime
 -- store the old print variable into echo
 echo = print

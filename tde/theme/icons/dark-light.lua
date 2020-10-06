@@ -1,5 +1,5 @@
 local background = require("theme.config")["background"]
-local file_exists = require("helper.file").exists
+local file_exists = require("lib-tde.file").exists
 
 function split(inputstr, sep)
   if sep == nil then

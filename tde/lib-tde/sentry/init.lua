@@ -7,8 +7,8 @@
 -- @copyright 2014-2017 CloudFlare, Inc.
 -- @license BSD 3-clause (see LICENSE file)
 
-local util = require("helper.sentry.util")
-local filehandle = require("helper.file")
+local util = require("lib-tde.sentry.util")
+local filehandle = require("lib-tde.file")
 local cjson = require("cjson")
 
 local _M = {}

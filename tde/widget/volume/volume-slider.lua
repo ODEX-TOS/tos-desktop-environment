@@ -29,7 +29,7 @@ local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local spawn = require("awful.spawn")
 local awful = require("awful")
-local sound = require("helper.sound")
+local sound = require("lib-tde.sound")
 
 local slider =
   wibox.widget {

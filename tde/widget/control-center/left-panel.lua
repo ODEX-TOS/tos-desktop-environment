@@ -40,7 +40,7 @@ left_panel_visible = false
 -- body gets populated with a scrollbar widget once generated
 local body = {}
 
-local plugins = require("helper.plugin-loader")("settings")
+local plugins = require("lib-tde.plugin-loader")("settings")
 
 local left_panel_func = function(screen)
   -- set the panel width equal to the rofi settings

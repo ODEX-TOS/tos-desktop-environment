@@ -1,4 +1,4 @@
-local fileHandle = require("helper.file")
+local fileHandle = require("lib-tde.file")
 
 local function osExecute(cmd)
     local handle = assert(io.popen(cmd, "r"))

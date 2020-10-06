@@ -16,7 +16,7 @@
 
 -- luacheck: globals ngx
 
-local util = require("helper.sentry.util")
+local util = require("lib-tde.sentry.util")
 
 local ngx_socket = ngx.socket
 local ngx_get_phase = ngx.get_phase

@@ -32,3 +32,8 @@ screen = {
 mouse = {
     screen = ""
 }
+
+-- general configuration file
+general = {
+    audio_change_sound = "1"
+}

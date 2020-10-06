@@ -4,7 +4,7 @@
 echo = print
 
 function test_loader()
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     assert(plugin_loader)
     print = echo
 end
@@ -13,7 +13,7 @@ function test_loader_section_test()
     plugins = {
         test_1 = "mock-plugin"
     }
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table")
     assert(#result == 0)
@@ -24,7 +24,7 @@ function test_loader_section_mock_test()
     plugins = {
         test_1 = "widget.mock-plugin"
     }
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table")
     assert(#result == 1)
@@ -38,7 +38,7 @@ function test_loader_section_multi_plugin()
         test_2 = "widget.mock-plugin",
         test_3 = "widget.mock-plugin"
     }
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table")
     assert(#result == 3)
@@ -56,7 +56,7 @@ function test_loader_section_multi_plugin()
         test_1 = "widget.mock-plugin",
         mock_1 = "widget.mock-plugin"
     }
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     local resultMock = plugin_loader("mock")
 
@@ -81,7 +81,7 @@ function test_loader_section_multi_multi_plugin()
         mock_2 = "widget.mock-plugin"
     }
 
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     local resultMock = plugin_loader("mock")
 
@@ -108,7 +108,7 @@ function test_loader_section_inconsistent_flow_state()
         test_3 = "widget.mock-plugin",
         test_5 = "widget.mock-plugin"
     }
-    local plugin_loader = require("tde.helper.plugin-loader")
+    local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table")
     assert(#result == 3)

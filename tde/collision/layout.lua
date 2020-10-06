@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 
--- This helper module help retro-generate the clients layout from awful
+-- This lib-tde module help retro-generate the clients layout from awful
 -- this is a giant hack and doesn't even always work and require upstream
 -- patches
 

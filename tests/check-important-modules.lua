@@ -1,4 +1,4 @@
-local exists = require("tde.helper.file").exists
+local exists = require("tde.lib-tde.file").exists
 
 -- This file checks to make sure the most important files are intact
 -- It ignores a lot of fancy feature files such as a lot of widgets
@@ -39,40 +39,40 @@ function test_configuration_mod_key_tde_rc_lua()
     assert(exists("tde/rc.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_xrandr_lua()
-    assert(exists("tde/helper/xrandr.lua"))
+function test_configuration_mod_key_tde_lib_tde_xrandr_lua()
+    assert(exists("tde/lib-tde/xrandr.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_sentry_init_lua()
-    assert(exists("tde/helper/sentry/init.lua"))
+function test_configuration_mod_key_tde_lib_tde_sentry_init_lua()
+    assert(exists("tde/lib-tde/sentry/init.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_file_lua()
-    assert(exists("tde/helper/file.lua"))
+function test_configuration_mod_key_tde_lib_tde_file_lua()
+    assert(exists("tde/lib-tde/file.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_plugin_loader_lua()
-    assert(exists("tde/helper/plugin-loader.lua"))
+function test_configuration_mod_key_tde_lib_tde_plugin_loader_lua()
+    assert(exists("tde/lib-tde/plugin-loader.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_sound_lua()
-    assert(exists("tde/helper/sound.lua"))
+function test_configuration_mod_key_tde_lib_tde_sound_lua()
+    assert(exists("tde/lib-tde/sound.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_errors_lua()
-    assert(exists("tde/helper/errors.lua"))
+function test_configuration_mod_key_tde_lib_tde_errors_lua()
+    assert(exists("tde/lib-tde/errors.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_hardware_check_lua()
-    assert(exists("tde/helper/hardware-check.lua"))
+function test_configuration_mod_key_tde_lib_tde_hardware_check_lua()
+    assert(exists("tde/lib-tde/hardware-check.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_logger_lua()
-    assert(exists("tde/helper/logger.lua"))
+function test_configuration_mod_key_tde_lib_tde_logger_lua()
+    assert(exists("tde/lib-tde/logger.lua"))
 end
 
-function test_configuration_mod_key_tde_helper_luapath_lua()
-    assert(exists("tde/helper/luapath.lua"))
+function test_configuration_mod_key_tde_lib_tde_luapath_lua()
+    assert(exists("tde/lib-tde/luapath.lua"))
 end
 
 function test_configuration_mod_key_tde_parser_lua()
