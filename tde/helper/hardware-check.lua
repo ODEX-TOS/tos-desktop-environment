@@ -34,12 +34,17 @@ function bluetooth()
 end
 
 function ffmpeg()
-    out, returnValue = osExecute("pacman -Q ffmpeg")
-    return returnValue == 0
+    return has_package_installed("ffmpeg")
 end
 
 function sound()
     out, returnValue = osExecute("pactl info | grep 'Sink'")
+    return returnValue == 0
+end
+
+function has_package_installed(name)
+    if name == "" or name == nil then return false end
+    out, returnValue = osExecute("pacman -Q " .. name)
     return returnValue == 0
 end
 
@@ -48,5 +53,6 @@ return {
     hasWifi = wifi,
     hasBluetooth = bluetooth,
     hasFFMPEG = ffmpeg,
-    hasSound = sound
+    hasSound = sound,
+    has_package_installed = has_package_installed
 }
