@@ -1,7 +1,7 @@
 --- Separating Multiple Monitor functions as a separeted module (taken from awesome wiki)
 -- TODO: add a display duplication option
 local gtable = require("gears.table")
-local awful = require("awful")
+
 local naughty = require("naughty")
 local apps = require("configuration.apps")
 

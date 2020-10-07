@@ -37,3 +37,5 @@ mouse = {
 general = {
     audio_change_sound = "1"
 }
+
+awful = require("tests.mock.awful")

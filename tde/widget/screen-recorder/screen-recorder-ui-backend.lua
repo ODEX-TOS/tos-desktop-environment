@@ -1,4 +1,4 @@
-local awful = require("awful")
+
 local gears = require("gears")
 local beautiful = require("beautiful")
 local theme = require("theme.icons.dark-light")

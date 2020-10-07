@@ -39,7 +39,7 @@ else
 end
 
 local gears = require("gears")
-local awful = require("awful")
+awful = require("awful")
 
 plugins = require("parser")(os.getenv("HOME") .. "/.config/tos/plugins.conf")
 tags = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")

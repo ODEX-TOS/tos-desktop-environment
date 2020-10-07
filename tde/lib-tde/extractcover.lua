@@ -26,7 +26,7 @@
 -- Will used by music/mpd widget
 -- Depends ffmpeg or perl-image-exiftool, song with hard-coded album cover
 
-local awful = require("awful")
+
 
 local extract = {}
 -- TODO: get image information from spotify

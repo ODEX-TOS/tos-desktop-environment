@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 -- Load these libraries (if you haven't already)
-local awful = require("awful")
+
 local gears = require("gears")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi

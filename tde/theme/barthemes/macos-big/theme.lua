@@ -38,7 +38,7 @@ local theme = dofile(themes_path.."default/theme.lua")
 
 theme.tip = titlebar_icon_path -- So a script can access it
 
-local awful = require("awful")
+
 -- Used to make it easier to align the panels in specific monitor positions
 local screen_width = awful.screen.focused().geometry.width
 local screen_height = awful.screen.focused().geometry.height

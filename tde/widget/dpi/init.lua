@@ -28,7 +28,7 @@
 -- Better with Compton tryone fork for blur fx
 --------------
 
-local awful = require("awful")
+
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")

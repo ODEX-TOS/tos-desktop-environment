@@ -14,7 +14,7 @@ Forked to fit TDE (transapancy support)
 -- local debug = ret and lib-tdes.debug or function() end
 -- => Awesome WM
 -- ============================================================
-local awful = require("awful")
+
 local gears = require("gears")
 
 local atooltip = awful.tooltip

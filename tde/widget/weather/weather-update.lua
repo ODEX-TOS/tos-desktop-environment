@@ -28,7 +28,7 @@
 --      description (string)
 --      icon_code (string)
 
-local awful = require("awful")
+
 local gears = require("gears")
 local config = require("config")
 local theme = require("theme.icons.dark-light")

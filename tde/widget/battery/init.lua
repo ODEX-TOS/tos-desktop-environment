@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local awful = require("awful")
+
 local naughty = require("naughty")
 
 local config = require("config")

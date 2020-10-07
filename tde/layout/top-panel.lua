@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local TaskList = require("widget.task-list")

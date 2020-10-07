@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local awful = require("awful")
+
 local mat_list_item = require("widget.material.list-item")
 local mat_slider = require("widget.material.slider")
 local clickable_container = require("widget.material.clickable-container")
@@ -32,23 +32,11 @@ local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local gears = require("gears")
 local beautiful = require("beautiful")
+local breakTimer = require("lib-tde.function.break-timer")
+local numberInSecToMS = breakTimer.numberInSecToMS
 
-local width = dpi(200)
 local totalTime = 5
 local currentTime = 0
-
-local function leadingZero(number)
-  if number < 10 then
-    return "0" .. number
-  end
-  return number
-end
-
-local function numberInSecToMS(number)
-  local minutes = math.floor(number / 60)
-  local seconds = math.floor(number % 60)
-  return leadingZero(minutes) .. ":" .. leadingZero(seconds)
-end
 
 local slider =
   wibox.widget {

@@ -24,7 +24,7 @@
 ]]
 local beautiful = require("beautiful")
 local gears = require("gears")
-local awful = require("awful")
+
 local wibox = require("wibox")
 
 local clickable_container = require("widget.material.clickable-container")

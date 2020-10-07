@@ -32,7 +32,7 @@
 -- @copyright 2017 Pavel Makhov
 -------------------------------------------------
 
-local awful = require("awful")
+
 local naughty = require("naughty")
 local watch = require("awful.widget.watch")
 local wibox = require("wibox")
