@@ -140,7 +140,7 @@ local function newcontext(cfg)
       end
       context.setdhparam(ctx, cfg.dhparam)
    end
-   
+
    -- Set elliptic curves
    if (not config.algorithms.ec) and (cfg.curve or cfg.curveslist) then
      return false, "elliptic curves not supported"
@@ -226,7 +226,7 @@ local function wrap(sock, cfg)
       registry[s] = ctx
       return s
    end
-   return nil, msg 
+   return nil, msg
 end
 
 --
@@ -247,7 +247,7 @@ local function info(ssl, field)
   if str then
     info.cipher, info.protocol, info.key,
     info.authentication, info.encryption, info.mac =
-        string.match(str, 
+        string.match(str,
           "^(%S+)%s+(%S+)%s+Kx=(%S+)%s+Au=(%S+)%s+Enc=(%S+)%s+Mac=(%S+)")
     info.export = (string.match(str, "%sexport%s*$") ~= nil)
   end

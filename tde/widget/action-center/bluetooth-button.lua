@@ -78,7 +78,7 @@ end
 local power_on_cmd =
   [[
 rfkill unblock bluetooth
-echo 'power on' | bluetoothctl 
+echo 'power on' | bluetoothctl
 notify-send 'Initializing bluetooth Service...'
 ]]
 

@@ -37,7 +37,7 @@ local pango = require("lgi").Pango
 local pangocairo = require("lgi").PangoCairo
 local module = {}
 local mat_color    = require("theme.mat-colors")
-local config       = require( "theme.config"   ) 
+local config       = require( "theme.config"   )
 
 local arrow_color = mat_color[config["accent"] or "cyan"].hue_500 or mat_color.cyan.hue_800
 local bg_color = mat_color[config["background"] or "purple"].hue_800 or mat_color.purple.hue_800

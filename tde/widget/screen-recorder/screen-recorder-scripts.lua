@@ -129,10 +129,10 @@ local ffmpeg_start_recording = function(audio, filename)
 
 	ffmpeg_pid =
 		awful.spawn.easy_async_with_shell(
-		[[		
+		[[
 		file_name=]] ..
 			filename ..
-				[[		
+				[[
 
 		ffmpeg -video_size ]] ..
 					user_resolution ..

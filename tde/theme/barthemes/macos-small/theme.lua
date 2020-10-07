@@ -154,7 +154,7 @@ end
 local symb = "  "
 theme.tagnames = { symb, symb, symb, symb, symb, symb, symb, symb, symb, symb }
 -- Substitutes:   
--- Nature:         
+-- Nature:        
 --theme.tagnames = { "  ", "  ", "  ", "  ", "  ", "  ", "  ", "  ", "  ", "  " }
 --theme.tagnames = { " i ", " ii ", " iii ", " iv ", " v ", " vi ", " vii ", " viii ", " ix ", " x " }
 
