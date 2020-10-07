@@ -22,23 +22,23 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local TaskList = require("widget.task-list")
 local gears = require("gears")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
-local hardware = require("helper.hardware-check")
+local hardware = require("lib-tde.hardware-check")
 
 local dpi = require("beautiful").xresources.apply_dpi
 
 local icons = require("theme.icons")
 
 -- load the topbar plugins
-local pluginsright = require("helper.plugin-loader")("topbar-right")
-local pluginscenter = require("helper.plugin-loader")("topbar-center")
-local pluginsleft = require("helper.plugin-loader")("topbar-left")
+local pluginsright = require("lib-tde.plugin-loader")("topbar-right")
+local pluginscenter = require("lib-tde.plugin-loader")("topbar-center")
+local pluginsleft = require("lib-tde.plugin-loader")("topbar-left")
 
 -- Clock / Calendar 12h format
 local textclock = wibox.widget.textclock('<span font="Roboto bold 10">%l:%M %p</span>')

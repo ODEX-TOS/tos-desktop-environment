@@ -23,11 +23,11 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local awful = require("awful")
+
 local naughty = require("naughty")
 
 local config = require("config")
-local file = require("helper.file")
+local file = require("lib-tde.file")
 local gears = require("gears")
 
 local clickable_container = require("widget.material.clickable-container")

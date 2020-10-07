@@ -10,7 +10,7 @@ require("tests.globals")
 
 -- TESTS TO RUN
 require("tests.check-important-modules")
-require("tests.helper")
+require("tests.lib-tde")
 require("tests.theme")
 require("tests.configuration")
 -- END OF LIST OF TESTS TO RUN

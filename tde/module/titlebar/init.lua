@@ -10,11 +10,11 @@ License: MIT
 Repository: https://github.com/mut-ex/awesome-wm-nice
 Forked to fit TDE (transapancy support)
 ]] -- ============================================================
--- local ret, helpers = pcall(require, "helpers")
--- local debug = ret and helpers.debug or function() end
+-- local ret, lib-tdes = pcall(require, "lib-tdes")
+-- local debug = ret and lib-tdes.debug or function() end
 -- => Awesome WM
 -- ============================================================
-local awful = require("awful")
+
 local gears = require("gears")
 
 local atooltip = awful.tooltip

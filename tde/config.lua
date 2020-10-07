@@ -25,7 +25,7 @@
 -- This file holds general configuration parameters and functions you can use
 local HOME = os.getenv("HOME")
 local filesystem = require("gears.filesystem")
-local file_exists = require("helper.file").exists
+local file_exists = require("lib-tde.file").exists
 
 config = {
     package_timeout = 180, -- how frequently we want to check if there are new updates in seconds

@@ -23,11 +23,12 @@
 --SOFTWARE.
 ]]
 -- Load these libraries (if you haven't already)
-local awful = require("awful")
+
 local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = require("beautiful").xresources.apply_dpi
+local breakTimerFunctions = require("lib-tde.function.break-timer")
 
 _G.pause = {}
 local breakTimer = require("widget.break-timer")
@@ -99,35 +100,6 @@ _G.pause.show = function(time)
   print("Showing break timer")
 end
 
-local split = function(inputstr, sep)
-  if sep == nil then
-    sep = "%s"
-  end
-  local t = {}
-  if inputstr == nil then
-    return t
-  end
-  for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-    table.insert(t, str)
-  end
-  return t
-end
-
-local current_time_inbetween = function(time_start, time_end)
-  local time = os.date("*t")
-  local time_start_split = split(time_start, ":")
-  local time_end_split = split(time_end, ":")
-  local time_start_hour = tonumber(time_start_split[1])
-  local time_start_min = tonumber(time_start_split[2])
-  local time_end_hour = tonumber(time_end_split[1])
-  local time_end_min = tonumber(time_end_split[2])
-
-  local currentTimeInMin = (time.hour * 60) + time.min
-
-  return currentTimeInMin >= ((time_start_hour * 60) + time_start_min) and
-    currentTimeInMin <= ((time_end_hour * 60) + time_end_min)
-end
-
 local breakTriggerTimer =
   gears.timer {
   timeout = tonumber(general["break_timeout"]) or (60 * 60 * 1),
@@ -135,7 +107,7 @@ local breakTriggerTimer =
   callback = function()
     time_start = general["break_time_start"] or "00:00"
     time_end = general["break_time_end"] or "23:59"
-    if current_time_inbetween(time_start, time_end) then
+    if breakTimerFunctions.current_time_inbetween(time_start, time_end) then
       _G.pause.show(tonumber(general["break_time"]) or (60 * 5))
     else
       print("Break triggered but outside of time contraints")

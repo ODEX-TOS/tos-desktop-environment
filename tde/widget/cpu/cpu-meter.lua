@@ -32,7 +32,7 @@ local config = require("config")
 local gears = require("gears")
 local total_prev = 0
 local idle_prev = 0
-local file = require("helper.file")
+local file = require("lib-tde.file")
 
 local slider =
   wibox.widget {

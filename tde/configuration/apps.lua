@@ -32,7 +32,7 @@ function addHash(input)
   return "#" .. input
 end
 
--- helper to retrieve current theme
+-- lib-tde to retrieve current theme
 local themefile = require("theme.config")
 local beautiful = require("beautiful")
 local color = beautiful.primary.hue_500
@@ -84,7 +84,7 @@ return {
     'sh -c "pgrep greenclip || greenclip daemon"'
   },
   bins = {
-    coverUpdate = require("helper.extractcover").extractalbum,
+    coverUpdate = require("lib-tde.extractcover").extractalbum,
     full_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" full',
     area_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" area',
     window_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" window "' .. color .. '"',

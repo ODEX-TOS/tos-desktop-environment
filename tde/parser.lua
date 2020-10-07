@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local file_exists = require("helper.file").exists
+local file_exists = require("lib-tde.file").exists
 
 function split(inputstr, sep)
     if sep == nil then

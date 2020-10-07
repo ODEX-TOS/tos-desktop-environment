@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 require("awful.autofocus")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 require("awful.hotkeys_popup.keys")
@@ -31,7 +31,7 @@ local config = require("configuration.keys.mod")
 local modkey = config.modKey
 local altkey = config.altKey
 local apps = require("configuration.apps")
-local xrandr = require("helper.xrandr")
+local xrandr = require("lib-tde.xrandr")
 
 -- Key bindings
 local globalKeys =

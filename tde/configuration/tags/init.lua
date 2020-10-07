@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 local icons = require("theme.icons")
 local config = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")
 local menubar = require("menubar")

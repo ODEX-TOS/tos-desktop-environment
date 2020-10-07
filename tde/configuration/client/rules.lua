@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 local gears = require("gears")
 local client_keys = require("configuration.client.keys")
 local client_buttons = require("configuration.client.buttons")

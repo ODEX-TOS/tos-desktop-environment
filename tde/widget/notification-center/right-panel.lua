@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
@@ -33,7 +33,7 @@ local clickable_container = require("widget.material.clickable-container")
 local scrollbar = require("widget.scrollbar")
 
 -- load the notification plugins
-local plugins = require("helper.plugin-loader")("notification")
+local plugins = require("lib-tde.plugin-loader")("notification")
 
 -- body gets populated with a scrollbar widget once generated
 local body = {}

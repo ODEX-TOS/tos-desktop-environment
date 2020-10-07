@@ -28,7 +28,7 @@ local mat_slider = require("widget.material.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local spawn = require("awful.spawn")
-local awful = require("awful")
+
 
 local slider_osd =
   wibox.widget {

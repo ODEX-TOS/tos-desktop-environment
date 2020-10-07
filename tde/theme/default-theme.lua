@@ -27,11 +27,11 @@ local mat_colors = require("theme.mat-colors")
 local theme_dir = filesystem.get_configuration_dir() .. "/theme"
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
-local awful = require("awful")
+
 local gtk = require("beautiful.gtk")
 local config = require("theme.config")
 local darklight = require("theme.icons.dark-light")
-local file_exists = require("helper.file").exists
+local file_exists = require("lib-tde.file").exists
 
 local theme = {}
 theme.icons = theme_dir .. "/icons/"
