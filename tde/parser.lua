@@ -23,22 +23,9 @@
 --SOFTWARE.
 ]]
 local file_exists = require("lib-tde.file").exists
+local split = require("lib-tde.function.common").split
 
-function split(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t = {}
-    if inputstr == nil then
-        return t
-    end
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        table.insert(t, str)
-    end
-    return t
-end
-
-function extract(line)
+local function extract(line)
     local splitted = split(line, "=")
     if splitted[1] == nil or splitted[2] == nil then
         return nil
@@ -46,7 +33,7 @@ function extract(line)
     return splitted[1]:gsub("%s+", ""), splitted[2]:gsub("%s+", ""):gsub('"', ""):gsub("'", ""):gsub("`", "")
 end
 
-function parse_file(file)
+local function parse_file(file)
     local lines = {}
     for line in io.lines(file) do
         if not (line:sub(1, 1) == "#") then
@@ -61,6 +48,9 @@ function parse_file(file)
 end
 
 return function(file)
+    if not (type(file) == "string") then
+        return {}
+    end
     print("Parsing file: " .. file)
     if file_exists(file) then
         local result = parse_file(file)

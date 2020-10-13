@@ -128,24 +128,25 @@ end
 
 local HOME = os.getenv("HOME")
 local FILE = HOME .. "/.cache/tutorial_tos"
-local f = io.open(FILE, "r")
-if f ~= nil then
+if require("lib-tde.file").exists(FILE) then
     print("Tutorial has already been shown")
-    io.close(f)
-else
-    print("Showing tutorial")
-    require("gears").timer.start_new(
-        3,
-        function()
-            naughty.notify(
-                {
-                    app_name = "TOS tutorial!",
-                    title = "",
-                    message = "All the icons on the bottom represent workspaces",
-                    timeout = 0,
-                    position = "top_left"
-                }
-            ):connect_signal("destroyed", secondTip)
-        end
-    )
+    return false
 end
+
+print("Showing tutorial")
+require("gears").timer.start_new(
+    3,
+    function()
+        naughty.notify(
+            {
+                app_name = "TOS tutorial!",
+                title = "",
+                message = "All the icons on the bottom represent workspaces",
+                timeout = 0,
+                position = "top_left"
+            }
+        ):connect_signal("destroyed", secondTip)
+    end
+)
+
+return true
