@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
 local bottom_panel = require("layout.bottom-panel")
 local left_panel = require("layout.left-panel")
 local right_panel = require("layout.right-panel")

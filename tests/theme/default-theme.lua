@@ -1,7 +1,7 @@
 local default = require("tde.theme.default-theme")
 local theme = default.theme
 local awesomeOverride = default.awesome_overrides
-local dir_exists = require("tde.helper.file").dir_exists
+local dir_exists = require("tde.lib-tde.file").dir_exists
 
 local function test_material_theme(colorscheme)
     assert(colorscheme.hue_50)

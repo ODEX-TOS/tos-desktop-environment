@@ -8,7 +8,6 @@
 -- @copyright 2020 Pavel Makhov
 -------------------------------------------------
 
-local awful = require("awful")
 local wibox = require("wibox")
 local spawn = require("awful.spawn")
 local naughty = require("naughty")

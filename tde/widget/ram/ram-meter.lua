@@ -29,7 +29,7 @@ local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
-local file = require("helper.file")
+local file = require("lib-tde.file")
 local gears = require("gears")
 
 local slider =

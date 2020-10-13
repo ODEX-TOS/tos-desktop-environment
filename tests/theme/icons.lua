@@ -1,6 +1,6 @@
 local icons = require("tde.theme.icons")
 local file_exists = function(loc)
-    local exists = require("helper.file").exists
+    local exists = require("lib-tde.file").exists
     loc = loc:gsub("/etc/xdg/awesome/", os.getenv("PWD") .. "/tde/")
     return exists(loc)
 end

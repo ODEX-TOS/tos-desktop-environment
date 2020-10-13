@@ -15,7 +15,7 @@
 --  Just hover your cursor above the calculator widget and start typing
 --  Stop keygrabbing by leaving the calculator
 
-local awful = require("awful")
+
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")

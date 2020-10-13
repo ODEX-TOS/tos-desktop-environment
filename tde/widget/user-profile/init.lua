@@ -25,7 +25,7 @@
 -- YOU CAN UPDATE YOUR PROFILE PICTURE USING `mugshot` package
 -- Will use default user.svg if there's no user image in /var/lib/...
 
-local awful = require("awful")
+
 local wibox = require("wibox")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi

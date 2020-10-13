@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 require("awful.autofocus")
 local config = require("configuration.keys.mod")
 local modkey = config.modKey

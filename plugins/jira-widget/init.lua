@@ -9,7 +9,6 @@
 -- @copyright 2020 Tom Meyers
 -------------------------------------------------
 
-local awful = require("awful")
 local wibox = require("wibox")
 local watch = require("awful.widget.watch")
 local json = require("jira-widget.json")

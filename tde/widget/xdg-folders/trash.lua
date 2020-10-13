@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local awful = require("awful")
+
 local gears = require("gears")
 
 local clickable_container = require("widget.material.clickable-container")

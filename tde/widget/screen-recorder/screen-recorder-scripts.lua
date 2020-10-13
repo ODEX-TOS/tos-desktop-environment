@@ -1,4 +1,4 @@
-local awful = require("awful")
+
 local naughty = require("naughty")
 
 local user_config = require("widget.screen-recorder.screen-recorder-config")

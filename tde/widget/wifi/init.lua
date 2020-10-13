@@ -22,11 +22,11 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
+
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
-local file = require("helper.file")
+local file = require("lib-tde.file")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local theme = require("theme.icons.dark-light")
