@@ -33,18 +33,20 @@ local function bluetooth()
     return false
 end
 
+local function has_package_installed(name)
+    if name == "" or name == nil then
+        return false
+    end
+    local out, returnValue = osExecute("pacman -Q " .. name)
+    return returnValue == 0
+end
+
 local function ffmpeg()
     return has_package_installed("ffmpeg")
 end
 
 local function sound()
     local out, returnValue = osExecute("pactl info | grep 'Sink'")
-    return returnValue == 0
-end
-
-local function has_package_installed(name)
-    if name == "" or name == nil then return false end
-    local out, returnValue = osExecute("pacman -Q " .. name)
     return returnValue == 0
 end
 

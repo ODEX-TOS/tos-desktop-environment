@@ -27,6 +27,7 @@ local wibox = require("wibox")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local theme = require("theme.icons.dark-light")
+local split = require("lib-tde.function.common").split
 
 local beautiful = require("beautiful")
 
