@@ -1,14 +1,31 @@
-export LUA_PATH="$PWD/tests/mock/?.lua;$PWD/tests/mock/?.lua;"
-export LUA_PATH="$LUA_PATH;$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
-export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
-export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
-export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;/etc/xdg/awesome/?.lua;/etc/xdg/awesome/?/init.lua;"
-export LUA_PATH="$LUA_PATH;"
-
 LUA="lua5.3"
 
-if [[ ! -z "$1" ]]; then
-  RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua
+# run the integration tests
+if [[ ! -z "$TDE_IT_TEST_RUN" ]]; then
+  echo "Starting integration tests"
+
+  export LUA_PATH="$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
+  export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
+  export LUA_PATH="$LUA_PATH;"
+  if [[ ! -z "$1" ]]; then
+    RUNNER="junit" FILE="$1" "$LUA" tests/runner-it.lua
+  else
+    "$LUA" tests/runner-it.lua
+  fi
 else
-  "$LUA" tests/runner.lua
+  # run the unit tests
+  export LUA_PATH="$PWD/tests/mock/?.lua;$PWD/tests/mock/?.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
+  export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
+  export LUA_PATH="$LUA_PATH;"
+
+  if [[ ! -z "$1" ]]; then
+    RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua
+  else
+    "$LUA" tests/runner.lua
+  fi
 fi

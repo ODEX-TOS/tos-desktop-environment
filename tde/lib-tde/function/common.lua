@@ -24,6 +24,17 @@ local function split(inputstr, sep)
     return t
 end
 
+-- sleep for x seconds where x can be subseconds long
+local function sleep(time)
+    if type(time) == "number" then
+        if time < 0 then
+            return
+        end
+        require("socket").select(nil, nil, time)
+    end
+end
+
 return {
     split = split,
+    sleep = sleep
 }

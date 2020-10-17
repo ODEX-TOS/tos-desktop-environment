@@ -56,5 +56,6 @@ return {
     hasBluetooth = bluetooth,
     hasFFMPEG = ffmpeg,
     hasSound = sound,
-    has_package_installed = has_package_installed
+    has_package_installed = has_package_installed,
+    execute = osExecute
 }
