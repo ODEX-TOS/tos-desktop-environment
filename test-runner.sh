@@ -7,7 +7,7 @@ if [[ ! -z "$TDE_IT_TEST_RUN" ]]; then
   export LUA_PATH="$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
-  export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;/etc/xdg/awesome/?.lua;/etc/xdg/awesome/?/init.lua;"
+  export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
   export LUA_PATH="$LUA_PATH;"
   if [[ ! -z "$1" ]]; then
     RUNNER="junit" FILE="$1" "$LUA" tests/runner-it.lua
@@ -20,7 +20,7 @@ else
   export LUA_PATH="$LUA_PATH;$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
-  export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;/etc/xdg/awesome/?.lua;/etc/xdg/awesome/?/init.lua;"
+  export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
   export LUA_PATH="$LUA_PATH;"
 
   if [[ ! -z "$1" ]]; then

@@ -1,1 +1,2 @@
-require("tests.IT.launch-tde")
+require("tests.IT.layout")
+require("tests.IT.widgets")

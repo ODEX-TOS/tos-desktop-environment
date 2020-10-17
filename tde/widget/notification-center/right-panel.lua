@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
@@ -175,7 +174,10 @@ local right_panel = function(screen)
   end
 
   widgets = notification_plugin()
-
+  -- returns the state of the widgets
+  -- first tuple element returns the notification section (type wibox.widget)
+  -- the second tuple element returns the widget section (type wibox.widget)
+  -- if no element is supplied it should return the current unmodified state
   function panel:switch_mode(mode)
     if mode == "notif_mode" then
       -- Update Content
@@ -186,6 +188,7 @@ local right_panel = function(screen)
       notification_widget.visible = false
       widgets.visible = true
     end
+    return notification_widget, widgets
   end
 
   backdrop:buttons(

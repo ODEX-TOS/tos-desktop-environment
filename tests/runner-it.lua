@@ -1,7 +1,7 @@
 -- THIS FILE IS USED TO RUN ALL TESTS
 
 -- this function gets overridden by TDE
-local realPrint = print
+--local realPrint = print
 
 EXPORT_ASSERT_TO_GLOBALS = true
 require("tests.luaunit")
@@ -9,7 +9,7 @@ require("tests.luaunit")
 require("tests.IT")
 
 -- So we have to manually put it back in our test runner
-print = realPrint
+--print = realPrint
 
 local lu = LuaUnit.new()
 if not (os.getenv("RUNNER") == nil) then
