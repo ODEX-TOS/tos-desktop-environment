@@ -12,7 +12,7 @@
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @return table The table as a list of strings
--- @function tib-tde.function.common.split
+-- @function lib-tde.function.common.split
 local function split(inputstr, sep)
     if not (type(sep) == "string") then
         sep = "%s"
@@ -40,7 +40,7 @@ end
 -- sleep for x seconds where x can be subseconds long
 --
 -- @tparam number time The time in seconds
--- @function tib-tde.function.common.sleep
+-- @function lib-tde.function.common.sleep
 local function sleep(time)
     if type(time) == "number" then
         if time < 0 then
