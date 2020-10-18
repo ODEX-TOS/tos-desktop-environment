@@ -3,7 +3,7 @@
 --
 -- @author Tom Meyers &lt;tom@odex.be&gt;
 -- @copyright 2020 Tom Meyers
--- @classmod lib-tde.function.common
+-- @tdemod lib-tde.function.common
 ---------------------------------------------------------------------------
 
 -- split the input to a table based on the seperator
