@@ -149,8 +149,4 @@ function mat_slider.mt:__call(...)
   return new(...)
 end
 
---@DOC_widget_COMMON@
-
---@DOC_object_COMMON@
-
 return setmetatable(mat_slider, mat_slider.mt)

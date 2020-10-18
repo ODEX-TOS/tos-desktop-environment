@@ -97,8 +97,4 @@ function mat_list_item.mt:__call(...)
   return new(...)
 end
 
---@DOC_widget_COMMON@
-
---@DOC_object_COMMON@
-
 return setmetatable(mat_list_item, mat_list_item.mt)
