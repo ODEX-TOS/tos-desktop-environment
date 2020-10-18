@@ -14,7 +14,7 @@
 -- @lfunction lib-tde.function.common.split
 -- @usage -- This will return {1: "abc", 2: "def"}
 -- lib-tde.function.common.split("abc;def", ";")
-local function split(inputstr, sep)
+function split(inputstr, sep)
     if not (type(sep) == "string") then
         sep = "%s"
     end
