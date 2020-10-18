@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------
---- Commong functions used within TDE
+--- Commong functions used within TDE.
 --
 -- @author Tom Meyers &lt;tom@odex.be&gt;
 -- @copyright 2020 Tom Meyers
@@ -11,9 +11,9 @@
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @treturn table The table as a list of strings
--- @lfunction lib-tde.function.common.split
+-- @function split
 -- @usage -- This will return {1: "abc", 2: "def"}
--- lib-tde.function.common.split("abc;def", ";")
+--  lib-tde.function.common.split("abc;def", ";")
 function split(inputstr, sep)
     if not (type(sep) == "string") then
         sep = "%s"
