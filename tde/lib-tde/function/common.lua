@@ -8,11 +8,10 @@
 
 -- split the input to a table based on the seperator
 -- usage: split("abc;def", ";") -> {1: "abc", 2: "def"}
---
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @treturn table The table as a list of strings
--- @staticfct lib-tde.function.common.split
+-- @lfunction lib-tde.function.common.split
 -- @usage -- This will return {1: "abc", 2: "def"}
 -- lib-tde.function.common.split("abc;def", ";")
 local function split(inputstr, sep)
@@ -40,7 +39,6 @@ local function split(inputstr, sep)
 end
 
 -- sleep for x seconds where x can be subseconds long
---
 -- @tparam number time The time in seconds
 -- @staticfct lib-tde.function.common.sleep
 -- @usage -- lib-tde.function.common.sleep(1)
