@@ -1,8 +1,19 @@
-
+---------------------------------------------------------------------------
+-- This module helps with running applications as defined in autostart
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-tde.function.application_runner
+---------------------------------------------------------------------------
 
 local ran_before = {}
 
--- if the command starts with a ""
+--- run a shell command asynchronously and run it only the first time
+-- @tparam string cmd The shell command to run
+-- @treturn bool Returns true if the command ran
+-- @staticfct lib-tde.function.application_runner.run_once
+-- @usage -- This will return true
+-- lib-tde.function.application_runner.run_once("echo 'hello'")
 local function run_once(cmd)
     if cmd == "" then
         return false
