@@ -3,7 +3,7 @@
 --
 -- @author Tom Meyers &lt;tom@odex.be&gt;
 -- @copyright 2020 Tom Meyers
--- @coreclassmod lib-tde.function.common
+-- @classmod lib-tde.function.common
 ---------------------------------------------------------------------------
 
 -- split the input to a table based on the seperator
@@ -12,7 +12,6 @@
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @return table The table as a list of strings
--- @function lib-tde.function.common.split
 local function split(inputstr, sep)
     if not (type(sep) == "string") then
         sep = "%s"
@@ -40,7 +39,6 @@ end
 -- sleep for x seconds where x can be subseconds long
 --
 -- @tparam number time The time in seconds
--- @function lib-tde.function.common.sleep
 local function sleep(time)
     if type(time) == "number" then
         if time < 0 then

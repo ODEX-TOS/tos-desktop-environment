@@ -3,5 +3,5 @@
 --
 -- @author Tom Meyers &lt;tom@odex.be&gt;
 -- @copyright 2020 Tom Meyers
--- @module function
+-- @classmod lib-tde.function
 ---------------------------------------------------------------------------
