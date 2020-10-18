@@ -119,7 +119,10 @@ local breakTriggerTimer =
 -- Thus no more breaks will be triggered
 _G.pause.disable = function()
   print("Disabeling break timer")
-  breakTriggerTimer:stop()
+  -- only stop the timer if it is still running
+  if breakTriggerTimer.started then
+    breakTriggerTimer:stop()
+  end
 end
 
 return breakOverlay

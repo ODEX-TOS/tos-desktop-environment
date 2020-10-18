@@ -36,6 +36,8 @@ local theme = require("theme.icons.dark-light")
 
 local config = require("config")
 
+local sleep = require("lib-tde.function.common").sleep
+
 local playButton =
   wibox.widget {
   {
@@ -72,7 +74,7 @@ play_button:buttons(
         -- give spotify time to react
         awful.spawn("playerctl play-pause")
         -- give the music player time to react
-        os.execute("sleep " .. config.player_reaction_time)
+        sleep(config.player_reaction_time)
         checkIfPlaying()
         _G.updateInfo()
       end
