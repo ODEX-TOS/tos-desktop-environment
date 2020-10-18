@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+--- A set of functions designed as a general helper
+--
+-- @author Tom Meyers &lt;tom@odex.be&gt;
+-- @copyright 2020 Tom Meyers
+-- @module function
+---------------------------------------------------------------------------
