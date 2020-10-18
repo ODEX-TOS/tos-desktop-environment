@@ -151,10 +151,6 @@ function mat_list_item:get_suffix()
   return self._private.suffix
 end
 
---- The widget who will be the content.
--- @property content
--- @tparam widget widget The widget
-
 function mat_list_item:set_content(widget)
   if widget then
     base.check_widget(widget)
@@ -167,15 +163,10 @@ function mat_list_item:get_content()
   return self._private.content
 end
 
--- Get the number of children element
--- @treturn table The children
 function mat_list_item:get_children()
   return {self._private.widget}
 end
 
--- Replace the layout children
--- This layout only accept one children, all others will be ignored
--- @tparam table children A table composed of valid widgets
 function mat_list_item:set_children(children)
   if not children[2] then
     self:set_content(children[1])
