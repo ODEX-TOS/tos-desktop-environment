@@ -36,7 +36,7 @@ function run_rc_config_in_xephyr(config, time)
     -- this is the command to launch TDE
     local ENV = "XDG_CURRENT_DESKTOP=TDE TDE_ENV=develop DISPLAY=" .. DISPLAY
     local launchCMD = "awesome --config " .. config
-    local xephyrCommand = "Xephyr -br -ac -reset -once -terminate -screen 700x700 " .. DISPLAY .. " &"
+    local xephyrCommand = "DISPLAY=:0 Xephyr -br -ac -reset -once -terminate -screen 700x700 " .. DISPLAY .. " &"
     local command =
         "timeout " ..
         tostring(timeout) .. " bash -c '(" .. xephyrCommand .. "); sleep 1; " .. ENV .. " " .. launchCMD .. "'"

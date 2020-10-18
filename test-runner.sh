@@ -4,7 +4,7 @@ LUA="lua5.3"
 if [[ ! -z "$TDE_IT_TEST_RUN" ]]; then
   echo "Starting integration tests"
 
-  export LUA_PATH="$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
+  export LUA_PATH="$PWD/tde/?/?.lua;$PWD/tde/?.lua;$PWD/tde/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
   export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
@@ -17,7 +17,7 @@ if [[ ! -z "$TDE_IT_TEST_RUN" ]]; then
 else
   # run the unit tests
   export LUA_PATH="$PWD/tests/mock/?.lua;$PWD/tests/mock/?.lua;"
-  export LUA_PATH="$LUA_PATH;$PWD/tde/?/?.lua;$PWD/tde/?.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/tde/?/?.lua;$PWD/tde/?.lua;$PWD/tde/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
   export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"

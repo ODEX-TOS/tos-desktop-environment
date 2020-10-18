@@ -145,7 +145,7 @@ local return_button = function()
 		if percentage == "" or percentage == nil then
 			percentage = file.string("/sys/class/power_supply/BAT1/capacity")
 		end
-		local battery_percentage = tonumber(percentage)
+		local battery_percentage = tonumber(percentage) or 0
 		print("Battery percentage: " .. percentage)
 
 		battery_widget.spacing = dpi(5)
