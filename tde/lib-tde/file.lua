@@ -1,28 +1,38 @@
+-- check if a file or directory exists
+local function exists(file)
+  if not (type(file) == "string") then
+    return false
+  end
+  -- we can't os.rename root but it exists (always)
+  if file == "/" then
+    return true
+  end
+  local ok, err, code = os.rename(file, file)
+  if not ok then
+    if code == 13 then
+      -- Permission denied, but it exists
+      return true
+    end
+  end
+  return ok
+end
+
 -- see if the file exists
 function file_exists(file)
   if type(file) ~= "string" then
     return false
   end
-  local f = io.open(file, "rb")
-  if f then
-    f:close()
-  end
-  return f ~= nil
-end
-
-local function osExecute(cmd)
-  local handle = assert(io.popen(cmd, "r"))
-  local commandOutput = assert(handle:read("*a"))
-  local returnTable = {handle:close()}
-  return commandOutput, returnTable[3] -- rc[3] contains returnCode
+  return exists(file)
 end
 
 function dir_exists(dir)
   if type(dir) ~= "string" then
     return false
   end
-  local response, value = osExecute("cd " .. dir)
-  return value == 0
+  if dir:sub(-1) == "/" then
+    return exists(dir)
+  end
+  return exists(dir .. "/")
 end
 
 -- get all lines from a file, returns an empty
