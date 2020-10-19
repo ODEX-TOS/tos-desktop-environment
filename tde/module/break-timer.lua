@@ -28,7 +28,7 @@ local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = require("beautiful").xresources.apply_dpi
-local breakTimerFunctions = require("lib-tde.function.break-timer")
+local breakTimerFunctions = require("lib-tde.function.datetime")
 
 _G.pause = {}
 local breakTimer = require("widget.break-timer")

@@ -32,7 +32,7 @@ local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local gears = require("gears")
 local beautiful = require("beautiful")
-local breakTimer = require("lib-tde.function.break-timer")
+local breakTimer = require("lib-tde.function.datetime")
 local numberInSecToMS = breakTimer.numberInSecToMS
 
 local totalTime = 5

@@ -1,7 +1,21 @@
+---------------------------------------------------------------------------
+-- This contains functions that help with manipulating time.
+--
+
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-tde.function.datetime
+---------------------------------------------------------------------------
+
 local split = require("lib-tde.function.common").split
 
--- put a 0 in front of a number if it is smaller than 10
-local function leadingZero(number)
+--- Adds a leading 0 if the number is smaller than 10
+-- @param number number the number to pad zero's infront of
+-- @return string a string representing the number with padded zero's
+-- @staticfct lib-tde.function.datetime.numberZeroPadding
+-- @usage -- This will return 06
+-- lib-tde.function.datetime.numberZeroPadding(6)
+local function numberZeroPadding(number)
     if not (type(number) == "number") then
         return "00"
     end
@@ -14,7 +28,12 @@ local function leadingZero(number)
     return tostring(number)
 end
 
--- format the about of seconds to MM:SS (M = minutes, S = seconds)
+--- Format the amount of seconds to MM:SS (M = minutes, S = seconds)
+-- @param number number the number in seconds that need to be converted to a MINUTE:SECOND string representation
+-- @return string The string format of the time in MM:SS
+-- @staticfct lib-tde.function.datetime.numberInSecToMS
+-- @usage -- This will return 02:06
+-- lib-tde.function.datetime.leadingZero(126)
 local function numberInSecToMS(number)
     if not (type(number) == "number") then
         return "00:00"
@@ -25,7 +44,7 @@ local function numberInSecToMS(number)
 
     local minutes = math.floor(number / 60)
     local seconds = math.floor(number % 60)
-    return leadingZero(minutes) .. ":" .. leadingZero(seconds)
+    return numberZeroPadding(minutes) .. ":" .. numberZeroPadding(seconds)
 end
 
 
@@ -34,6 +53,14 @@ end
 -- the third property is used to mock time
 -- don't use it in production
 -- the format of time_start and time_end are HH:MM
+
+--- Check if the current system time is inbetween 2 time's
+-- @param string time_start A string in the form HH:MM (Hour:Minute) representing the start time
+-- @param string time_end A string in the form HH:MM (Hour:Minute) representing the end time
+-- @return boolean Returns if the system time is between these numbers
+-- @staticfct lib-tde.function.datetime.numberInSecToMS
+-- @usage -- This will return True if the the system time is before 1 pm
+-- lib-tde.function.datetime.current_time_inbetween("00:00", "13:00")
 local function current_time_inbetween(time_start, time_end, mock_time)
     local time = os.date("*t")
     if not (mock_time == nil) then
@@ -77,7 +104,7 @@ local function current_time_inbetween(time_start, time_end, mock_time)
         currentTimeInMin <= ((time_end_hour * 60) + time_end_min)
 end
 return {
-    numberZeroPadding = leadingZero,
+    numberZeroPadding = numberZeroPadding,
     numberInSecToMS = numberInSecToMS,
     current_time_inbetween = current_time_inbetween,
     unit_test_split = split

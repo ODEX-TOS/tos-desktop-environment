@@ -1,4 +1,4 @@
-local breakTimer = require("tde.lib-tde.function.break-timer")
+local breakTimer = require("tde.lib-tde.function.datetime")
 
 function test_break_timer_exists()
     assert(breakTimer)

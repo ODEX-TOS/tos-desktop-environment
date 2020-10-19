@@ -13,7 +13,7 @@
 -- @staticfct lib-tde.function.common.split
 -- @usage -- This will return {1: "abc", 2: "def"}
 -- lib-tde.function.common.split("abc;def", ";")
-function split(inputstr, sep)
+local function split(inputstr, sep)
     if not (type(sep) == "string") then
         sep = "%s"
     end
@@ -43,7 +43,7 @@ end
 -- @usage -- lib-tde.function.common.sleep(1)
 -- lib-tde.function.common.sleep(5)
 -- lib-tde.function.common.sleep(0.2)
-function sleep(time)
+local function sleep(time)
     if type(time) == "number" then
         if time < 0 then
             return
