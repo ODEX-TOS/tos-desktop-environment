@@ -19,7 +19,7 @@
 local ran_before = {}
 
 --- run a shell command asynchronously and run it only the first time
--- @tparam string cmd The shell command to run
+-- @tparam cmd string The shell command to run
 -- @treturn bool Returns true if the command ran
 -- @staticfct run_once
 -- @usage -- This will return true

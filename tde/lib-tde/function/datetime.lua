@@ -10,7 +10,7 @@
 local split = require("lib-tde.function.common").split
 
 --- Adds a leading 0 if the number is smaller than 10
--- @param number number the number to pad zero's infront of
+-- @param number integer the number to pad zero's infront of
 -- @return string a string representing the number with padded zero's
 -- @staticfct numberZeroPadding
 -- @usage -- This will return 06
@@ -29,7 +29,7 @@ local function numberZeroPadding(number)
 end
 
 --- Format the amount of seconds to MM:SS (M = minutes, S = seconds)
--- @param number number the number in seconds that need to be converted to a MINUTE:SECOND string representation
+-- @param number integer the number in seconds that need to be converted to a MINUTE:SECOND string representation
 -- @return string The string format of the time in MM:SS
 -- @staticfct numberInSecToMS
 -- @usage -- This will return 02:06
@@ -48,8 +48,8 @@ local function numberInSecToMS(number)
 end
 
 --- Check if the current system time is inbetween 2 time's
--- @param string time_start A string in the form HH:MM (Hour:Minute) representing the start time
--- @param string time_end A string in the form HH:MM (Hour:Minute) representing the end time
+-- @param time_start string A string in the form HH:MM (Hour:Minute) representing the start time
+-- @param time_end string A string in the form HH:MM (Hour:Minute) representing the end time
 -- @return boolean Returns if the system time is between these numbers
 -- @staticfct current_time_inbetween
 -- @usage -- This will return True if the the system time is before 1 pm

@@ -21,7 +21,7 @@
 -- TODO: don't use a shell command - instead check file using lua
 
 --- Return how much percentage a battery currently is, if no battery exists return nil
--- @param string stdout The output of @{upowerBatteryScript}
+-- @param stdout string The output of @{upowerBatteryScript}
 -- @return number a number between 0 and 100 indicating the battery percentage
 -- @staticfct getBatteryInformationFromUpower
 -- @see upowerBatteryScript
@@ -39,7 +39,7 @@ local function getBatteryInformationFromUpower(stdout)
 end
 
 --- Return true if the battery is charging
--- @param string stdout The output of @{chargedScript}
+-- @param stdout string The output of @{chargedScript}
 -- @return boolean a number between 0 and 100 indicating the battery percentage
 -- @staticfct isBatteryCharging
 -- @see chargedScript

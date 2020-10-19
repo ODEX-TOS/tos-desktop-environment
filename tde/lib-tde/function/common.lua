@@ -21,8 +21,8 @@
 ---------------------------------------------------------------------------
 
 --- split the input to a table based on the seperator
--- @tparam string inputstr The string to split.
--- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
+-- @tparam inputstr string The string to split.
+-- @tparam[opt] sep string a regular expression that splits the string (all matches are removed from the set).
 -- @treturn table The table as a list of strings
 -- @staticfct split
 -- @usage -- This will return {1: "abc", 2: "def"}
@@ -52,7 +52,7 @@ local function split(inputstr, sep)
 end
 
 --- sleep for x seconds where x can be subseconds long
--- @tparam number time The time in seconds
+-- @tparam time number The time in seconds
 -- @staticfct sleep
 -- @usage -- lib-tde.function.common.sleep(1)
 -- lib-tde.function.common.sleep(5)
