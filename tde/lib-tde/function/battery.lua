@@ -19,16 +19,17 @@
 ---------------------------------------------------------------------------
 
 -- TODO: don't use a shell command - instead check file using lua
+
 --- Return how much percentage a battery currently is, if no battery exists return nil
--- @param string stdout The output of @{upowerBatteryScript} 
+-- @param string stdout The output of @{upowerBatteryScript}
 -- @return number a number between 0 and 100 indicating the battery percentage
 -- @staticfct lib-tde.function.battery.getBatteryInformationFromUpower
--- @see @{upowerBatteryScript}
+-- @see upowerBatteryScript
 -- @usage -- This will return a number like 87
 -- awful.spawn.easy_async_with_shell(lib-tde.function.battery.upowerBatteryScript, function(stdout)
 --      lib-tde.function.battery.getBatteryInformationFromUpower(stdout)
 --end)
-function getBatteryInformationFromUpower(stdout)
+local function getBatteryInformationFromUpower(stdout)
     local battery = stdout:gsub("%%", "")
     local value = tonumber(battery)
     if value == nil then
@@ -37,17 +38,16 @@ function getBatteryInformationFromUpower(stdout)
     return value
 end
 
-
 --- Return true if the battery is charging
--- @param string stdout The output of @{chargedScript} 
+-- @param string stdout The output of @{chargedScript}
 -- @return boolean a number between 0 and 100 indicating the battery percentage
 -- @staticfct lib-tde.function.battery.isBatteryCharging
--- @see @{chargedScript}
+-- @see chargedScript
 -- @usage -- This will return True
 -- awful.spawn.easy_async_with_shell(lib-tde.function.battery.chargedScript, function(stdout)
 --      lib-tde.function.battery.isBatteryCharging(stdout)
 -- end)
-function isBatteryCharging(stdout)
+local function isBatteryCharging(stdout)
     status = tonumber(stdout)
     return status == 1
 end

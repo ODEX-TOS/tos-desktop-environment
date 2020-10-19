@@ -1,6 +1,20 @@
 ---------------------------------------------------------------------------
 -- This module adds extra functionality to widgets by exposing commonly used functions.
 --
+-- Lua directly implements the C - standard library and nothing more
+-- As a result a lot of common functions in higer level languages lack
+-- A solution is to use the this common module including some usefull functions
+--
+-- For example the split() function splits strings into a table of indexes
+--
+--  lib-tde.function.common.split("a,b,c,d", ",") -- returns {1:"a",2:"b",3:"c",4:"d"}
+--
+-- As another example you can use the sleep() function to implement delay into you logic
+-- Be carefull using sleep() as it blocks the main thread and can result in extreem poor performance
+-- As it also blocks user input from beeing processes
+--
+--  lib-tde.function.common.sleep(0.5) -- blocks this thread for 0.5 seconds
+--
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.function.common

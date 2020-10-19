@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------
 -- This contains functions that help with manipulating time.
 --
-
+--
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.function.datetime
@@ -46,13 +46,6 @@ local function numberInSecToMS(number)
     local seconds = math.floor(number % 60)
     return numberZeroPadding(minutes) .. ":" .. numberZeroPadding(seconds)
 end
-
-
-
--- check if the current time exists
--- the third property is used to mock time
--- don't use it in production
--- the format of time_start and time_end are HH:MM
 
 --- Check if the current system time is inbetween 2 time's
 -- @param string time_start A string in the form HH:MM (Hour:Minute) representing the start time
