@@ -23,7 +23,7 @@
 --- Return how much percentage a battery currently is, if no battery exists return nil
 -- @param string stdout The output of @{upowerBatteryScript}
 -- @return number a number between 0 and 100 indicating the battery percentage
--- @staticfct lib-tde.function.battery.getBatteryInformationFromUpower
+-- @staticfct getBatteryInformationFromUpower
 -- @see upowerBatteryScript
 -- @usage -- This will return a number like 87
 -- awful.spawn.easy_async_with_shell(lib-tde.function.battery.upowerBatteryScript, function(stdout)
@@ -41,7 +41,7 @@ end
 --- Return true if the battery is charging
 -- @param string stdout The output of @{chargedScript}
 -- @return boolean a number between 0 and 100 indicating the battery percentage
--- @staticfct lib-tde.function.battery.isBatteryCharging
+-- @staticfct isBatteryCharging
 -- @see chargedScript
 -- @usage -- This will return True
 -- awful.spawn.easy_async_with_shell(lib-tde.function.battery.chargedScript, function(stdout)

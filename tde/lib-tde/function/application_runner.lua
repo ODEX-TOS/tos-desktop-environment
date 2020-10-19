@@ -20,7 +20,7 @@ local ran_before = {}
 --- run a shell command asynchronously and run it only the first time
 -- @tparam string cmd The shell command to run
 -- @treturn bool Returns true if the command ran
--- @staticfct lib-tde.function.application_runner.run_once
+-- @staticfct run_once
 -- @usage -- This will return true
 -- lib-tde.function.application_runner.run_once("echo 'hello'")
 local function run_once(cmd)

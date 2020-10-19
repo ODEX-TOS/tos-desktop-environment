@@ -7,13 +7,13 @@
 --
 -- For example the split() function splits strings into a table of indexes
 --
---  lib-tde.function.common.split("a,b,c,d", ",") -- returns {1:"a",2:"b",3:"c",4:"d"}
+--    lib-tde.function.common.split("a,b,c,d", ",") -- returns {1:"a",2:"b",3:"c",4:"d"}
 --
 -- As another example you can use the sleep() function to implement delay into you logic
 -- Be carefull using sleep() as it blocks the main thread and can result in extreem poor performance
 -- As it also blocks user input from beeing processes
 --
---  lib-tde.function.common.sleep(0.5) -- blocks this thread for 0.5 seconds
+--    lib-tde.function.common.sleep(0.5) -- blocks this thread for 0.5 seconds
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
@@ -24,7 +24,7 @@
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @treturn table The table as a list of strings
--- @staticfct lib-tde.function.common.split
+-- @staticfct split
 -- @usage -- This will return {1: "abc", 2: "def"}
 -- lib-tde.function.common.split("abc;def", ";")
 local function split(inputstr, sep)
@@ -53,7 +53,7 @@ end
 
 --- sleep for x seconds where x can be subseconds long
 -- @tparam number time The time in seconds
--- @staticfct lib-tde.function.common.sleep
+-- @staticfct sleep
 -- @usage -- lib-tde.function.common.sleep(1)
 -- lib-tde.function.common.sleep(5)
 -- lib-tde.function.common.sleep(0.2)
