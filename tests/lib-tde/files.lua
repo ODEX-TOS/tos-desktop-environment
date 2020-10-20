@@ -34,6 +34,11 @@ function test_dir_exists_validation()
     assert(files.dir_exists("/"))
 end
 
+function test_dir_exists_works_with_symlink()
+    -- On TOS based systems /bin is symlinked to /usr/bin
+    assert(files.dir_exists("/bin"))
+end
+
 function test_dir_exists_for_known_directories()
     local project_dir = script_path()
 
