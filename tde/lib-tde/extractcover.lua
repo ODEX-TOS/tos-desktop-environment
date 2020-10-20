@@ -22,6 +22,18 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+
+---------------------------------------------------------------------------
+-- Extract album cover from song
+--
+-- This is a helper module to extract metadata from music.
+-- It depends on the external package playerctl 
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-tde.extractcover
+---------------------------------------------------------------------------
+
 -- Extract album cover from song
 -- Will used by music/mpd widget
 -- Depends ffmpeg or perl-image-exiftool, song with hard-coded album cover
@@ -30,6 +42,11 @@
 
 local extract = {}
 -- TODO: get image information from spotify
+
+--- Creates a file in /tmp/cover.jpg asynchronousely containing the cover image of the current song
+-- @staticfct extractalbum
+-- @usage -- This will return {1: "abc", 2: "def"}
+-- lib-tde.extract_cover.extractalbum() -> returns nothing
 local extract_cover = function()
   -- see https://github.com/altdesktop/playerctl/issues/172 for more info
   local extract_script =
@@ -49,10 +66,6 @@ local extract_cover = function()
   )
 end
 
-extractit = function()
-  extract_cover()
-end
-
-extract.extractalbum = extractit
+extract.extractalbum = extract_cover
 
 return extract
