@@ -28,7 +28,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-tde.extractcover
+-- @tdemod lib-tde.hardware-check
 ---------------------------------------------------------------------------
 
 local fileHandle = require("lib-tde.file")
