@@ -32,7 +32,7 @@ function dir_exists(dir)
   if dir:sub(-1) == "/" then
     return exists(dir)
   end
-  return exists(dir .. "/")
+  return exists(dir)
 end
 
 -- get all lines from a file, returns an empty
