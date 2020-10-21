@@ -80,8 +80,7 @@ return {
     "blueman-applet", -- Bluetooth tray icon
     "xfce4-power-manager", -- Power manager
     'sh -c "/etc/xdg/awesome/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
-    "xrdb $HOME/.Xresources",
-    'sh -c "pgrep greenclip || greenclip daemon"'
+    "xrdb $HOME/.Xresources"
   },
   bins = {
     coverUpdate = require("lib-tde.extractcover").extractalbum,

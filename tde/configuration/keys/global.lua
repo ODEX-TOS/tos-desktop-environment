@@ -22,9 +22,9 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 require("awful.autofocus")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local has_package_installed = require("lib-tde.hardware-check").has_package_installed
 require("awful.hotkeys_popup.keys")
 
 local config = require("configuration.keys.mod")
@@ -32,6 +32,21 @@ local modkey = config.modKey
 local altkey = config.altKey
 local apps = require("configuration.apps")
 local xrandr = require("lib-tde.xrandr")
+
+-- returns true if we cannot create a screenshot
+local function send_notification_if_maim_missing()
+  if not has_package_installed("maim") then
+    require("naughty").notification(
+      {
+        title = "cannot create screenshot",
+        message = "maim is not installed, install it using tde-contrib package",
+        app_name = "tde package notifier"
+      }
+    )
+    return true
+  end
+  return false
+end
 
 -- Key bindings
 local globalKeys =
@@ -109,7 +124,9 @@ local globalKeys =
     "Print",
     function()
       print("Taking a full screenshot")
-      awful.spawn("snap full")
+      if not send_notification_if_maim_missing() then
+        awful.spawn("snap full")
+      end
     end
   ),
   -- Screen Shot Area and Save
@@ -118,7 +135,9 @@ local globalKeys =
     "s",
     function()
       print("Taking an area screenhot")
-      awful.spawn("snap area")
+      if not send_notification_if_maim_missing() then
+        awful.spawn("snap area")
+      end
     end
   ),
   -- Toggle System Tray
@@ -485,7 +504,9 @@ local globalKeys =
     config.printscreen,
     function()
       print("Taking a full screenshot")
-      awful.spawn(apps.bins.full_screenshot)
+      if not send_notification_if_maim_missing() then
+        awful.spawn(apps.bins.full_screenshot)
+      end
     end,
     {description = "fullscreen screenshot", group = "Utility"}
   ),
@@ -494,7 +515,9 @@ local globalKeys =
     config.snapArea,
     function()
       print("Taking an area screenshot")
-      awful.spawn(apps.bins.area_screenshot)
+      if not send_notification_if_maim_missing() then
+        awful.spawn(apps.bins.area_screenshot)
+      end
     end,
     {description = "area/selected screenshot", group = "Utility"}
   ),
@@ -503,10 +526,12 @@ local globalKeys =
     config.windowSnapArea,
     function()
       print("Taking a screenshot of a window")
-      if general["window_screen_mode"] == "none" then
-        awful.spawn(apps.bins.window_blank_screenshot)
-      else
-        awful.spawn(apps.bins.window_screenshot)
+      if not send_notification_if_maim_missing() then
+        if general["window_screen_mode"] == "none" then
+          awful.spawn(apps.bins.window_blank_screenshot)
+        else
+          awful.spawn(apps.bins.window_screenshot)
+        end
       end
     end,
     {description = "window screenshot", group = "Utility"}
