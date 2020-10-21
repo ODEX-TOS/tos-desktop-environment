@@ -69,7 +69,7 @@ fi
 # watch for dbus events
 process="python /etc/xdg/awesome/tos-udev-dbus.py"
 if ! pgrep -f "$process"; then
-    PYTHONDONTWRITEBYTECODE=1 $process & 
+    PYTHONDONTWRITEBYTECODE=1 "$process" & 
 fi
 
 # autolock the system
