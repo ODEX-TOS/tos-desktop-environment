@@ -35,4 +35,8 @@
 # normal updates
 checkupdates-tos | wc -l
 # of which x security updates
-arch-audit -u -r -C never | wc -l
+if [[ "$(command arch-audit)" ]]; then
+    arch-audit -u -r -C never | wc -l
+else
+    echo -n "" | wc -l
+fi

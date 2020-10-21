@@ -24,6 +24,18 @@
 ]]
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
+local has_package_installed = require("lib-tde.hardware-check").has_package_installed
+
+local function show_widget_or_default(widget, show)
+  if show then
+    return widget
+  end
+  return wibox.widget {
+    text = "",
+    visible = false,
+    widget = wibox.widget.textbox
+  }
+end
 
 local separator_horizontal =
   wibox.container.margin(
@@ -65,7 +77,7 @@ return function(position)
         -- require("widget.xdg-folders.pictures"),
         -- require("widget.xdg-folders.videos"),
         separator_horizontal,
-        require("widget.xdg-folders.trash"),
+        show_widget_or_default(require("widget.xdg-folders.trash"), has_package_installed("gvfs")),
         layout = wibox.layout.fixed.vertical
       }
     }
@@ -80,7 +92,7 @@ return function(position)
       -- require("widget.xdg-folders.pictures"),
       -- require("widget.xdg-folders.videos"),
       separator_vertical,
-      require("widget.xdg-folders.trash"),
+      show_widget_or_default(require("widget.xdg-folders.trash"), has_package_installed("gvfs")),
       layout = wibox.layout.fixed.horizontal
     }
   }

@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local TaskList = require("widget.task-list")
@@ -181,7 +180,9 @@ local function topbar_right_plugin(s)
   table_widget:add(show_widget_or_default(require("widget.bluetooth"), hardware.hasBluetooth()))
   table_widget:add(show_widget_or_default(require("widget.wifi"), hardware.hasWifi()))
   table_widget:add(require("widget.package-updater"))
-  table_widget:add(show_widget_or_default(require("widget.music"), hardware.hasSound())) --only add this when the data can be extracted from spotify
+  table_widget:add(
+    show_widget_or_default(require("widget.music"), hardware.hasSound() and hardware.has_package_installed("playerctl"))
+  ) --only add this when the data can be extracted from spotify
   table_widget:add(require("widget.about"))
   table_widget:add(show_widget_or_default(require("widget.screen-recorder")(), hardware.hasFFMPEG()))
   table_widget:add(require("widget.search"))

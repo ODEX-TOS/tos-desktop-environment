@@ -72,6 +72,16 @@ if ! pgrep -f "$process"; then
     PYTHONDONTWRITEBYTECODE=1 $process & 
 fi
 
+# autolock the system
+if [[ "$(command -v xidlehook)" ]]; then
+    sh /etc/xdg/awesome/autolock.sh &
+fi
+
+# run clipboard manager
+if [[ "$(command -v greenclip)" ]]; then
+    pgrep greenclip || greenclip daemon
+fi
+
 # autostart user scripts if that directory exists
 if [[ -d "$userlocation" ]]; then
         for script in "$userlocation"/*.sh; do
