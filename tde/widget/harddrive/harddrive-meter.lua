@@ -43,6 +43,8 @@ watch(
     local space_consumed = stdout:match("(%d+)") or 0
     slider:set_value(tonumber(space_consumed))
     print("harddrive size: " .. space_consumed .. "%")
+    awesome.emit_signal("PROP::DISK", tonumber(space_consumed))
+
     collectgarbage("collect")
   end
 )

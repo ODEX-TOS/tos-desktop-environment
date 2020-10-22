@@ -25,7 +25,6 @@
 -- YOU CAN UPDATE YOUR PROFILE PICTURE USING `mugshot` package
 -- Will use default user.svg if there's no user image in /var/lib/...
 
-
 local wibox = require("wibox")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
@@ -148,6 +147,7 @@ awful.spawn.easy_async_with_shell(
     -- Remove newline represented by `\n`
     distroname = out:gsub("%\n", "")
     distro_name.markup = '<span font="SFNS Display Regular 12">' .. distroname .. "</span>"
+    awesome.emit_signal("DISTRONAME", distroname)
   end
 )
 
@@ -157,6 +157,7 @@ awful.spawn.easy_async_with_shell(
   function(out)
     uptime = out:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
+    awesome.emit_signal("uptime::changed", uptime)
   end
 )
 -- Check uptime every 600 seconds/10min
@@ -166,6 +167,7 @@ awful.widget.watch(
   function(widget, stdout)
     uptime = stdout:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
+    awesome.emit_signal("uptime::changed", uptime)
     collectgarbage("collect")
   end
 )
@@ -176,6 +178,7 @@ awful.spawn.easy_async_with_shell(
   function(out)
     kernel = out:gsub("%\n", "")
     kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
+    awesome.emit_signal("KERNEL", kernel)
   end
 )
 

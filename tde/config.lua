@@ -36,11 +36,12 @@ config = {
     bluetooth_poll = 5, -- how often do we check if bluetooth is active/disabled
     hardisk_poll = 1800, -- how often do we check how full the harddisk is
     temp_poll = 30, -- how often do we check the current temperature
-    ram_poll = 30, -- how often do we check the current ram usage
+    ram_poll = 10, -- how often do we check the current ram usage
     weather_poll = 1200, -- how often we check the weather status
     cpu_poll = 10, -- how often do we check the current cpu status
     colors_config = HOME .. "/.config/tos/colors.conf",
     icons_config = HOME .. "/.config/tos/icons.conf",
+    proc_poll = 20,
     getComptonFile = function()
         userfile = HOME .. "/.config/picom.conf"
         if (file_exists(userfile)) then

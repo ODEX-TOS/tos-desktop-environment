@@ -96,3 +96,12 @@ function Test_IT_notification_working()
     print(tostring(match))
     assert(match)
 end
+
+function Test_IT_settings_app_exists_working()
+    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/settings-app.lua"
+    local assertion, match, stdout = run_rc_config_in_xephyr(config, 5)
+    assert(assertion)
+    print(stdout)
+    print(tostring(match))
+    assert(match)
+end

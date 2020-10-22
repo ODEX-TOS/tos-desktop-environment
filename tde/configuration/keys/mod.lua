@@ -32,9 +32,9 @@ return {
     kill = config["kill"] or "q",
     floating = config["floating"] or "c",
     fullscreen = config["fullscreen"] or "f",
-    window = config["window_switch"] or "s",
+    window = config["window_switch"] or "b",
     launcher = config["launcher"] or "d",
-    browser = config["browser"] or "w",
+    browser = config["browser"] or "b",
     filemanager = config["filemanager"] or "e",
     monitor = config["systemmonitor"] or "Escape",
     previousWorkspace = config["previous_workspace"] or "w",
@@ -57,5 +57,6 @@ return {
     snapArea = config["snapshot_area"] or "Print",
     windowSnapArea = config["window_screenshot"] or "Print",
     emoji = config["emoji"] or "m",
-    clipboard = config["clipboard"] or "p"
+    clipboard = config["clipboard"] or "p",
+    settings = config["settings"] or "s"
 }

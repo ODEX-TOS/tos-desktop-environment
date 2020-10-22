@@ -60,7 +60,7 @@ local globalKeys =
     function()
       xrandr.xrandr()
     end,
-    {description = "Launch screen layout mode", group = "launcher"}
+    {description = "Launch screen layout mode", group = "Launcher"}
   ),
   awful.key(
     {modkey},
@@ -69,7 +69,7 @@ local globalKeys =
       print("Spawning terminal")
       awful.spawn(apps.default.terminal)
     end,
-    {description = "Open Terminal", group = "launcher"}
+    {description = "Open Terminal", group = "Launcher"}
   ),
   awful.key(
     {modkey},
@@ -87,7 +87,7 @@ local globalKeys =
       print("Spawning rofi app menu")
       awful.spawn(apps.default.rofiappmenu)
     end,
-    {description = "Open Rofi", group = "launcher"}
+    {description = "Open Rofi", group = "Launcher"}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -97,7 +97,7 @@ local globalKeys =
       print("Opening browser: " .. browser)
       awful.spawn(browser)
     end,
-    {description = "Open Browser", group = "launcher"}
+    {description = "Open Browser", group = "Launcher"}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -106,7 +106,7 @@ local globalKeys =
       print("Opening filemanager: thunar")
       awful.spawn("thunar")
     end,
-    {description = "Open file manager", group = "launcher"}
+    {description = "Open file manager", group = "Launcher"}
   ),
   awful.key(
     {"Control", "Shift"},
@@ -115,7 +115,7 @@ local globalKeys =
       print("Opening system monitor")
       awful.spawn("gnome-system-monitor")
     end,
-    {description = "Open system monitor", group = "launcher"}
+    {description = "Open system monitor", group = "Launcher"}
   ),
   -- Screen Shots
   -- Screen Shot and Save
@@ -211,7 +211,7 @@ local globalKeys =
         _G.screen.primary.right_panel:toggle()
       end
     end,
-    {description = "Open Notification Center", group = "launcher"}
+    {description = "Open Notification Center", group = "Launcher"}
   ),
   -- Standard program
   awful.key(
@@ -305,7 +305,7 @@ local globalKeys =
     function()
       _G.toggle_quake()
     end,
-    {description = "dropdown terminal", group = "launcher"}
+    {description = "dropdown terminal", group = "Launcher"}
   ),
   -- Brightness
   awful.key(
@@ -553,6 +553,15 @@ local globalKeys =
       awful.spawn(apps.default.roficlipboard)
     end,
     {description = "Show clipboard history", group = "Utility"}
+  ),
+  awful.key(
+    {modkey},
+    config.settings,
+    function()
+      print("Opening settings application")
+      root.elements.settings.enable_view_by_index(4, mouse.screen)
+    end,
+    {description = "Open settings application", group = "Launcher"}
   )
 )
 
