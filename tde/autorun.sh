@@ -63,7 +63,7 @@ fi
 
 # launch a polkit authentication manager
 if [[ "$(command -v lxsession)" ]]; then
-        lxsession -s TOS -e TDE &
+    pgrep lxsession || lxsession -s TOS -e TDE &
 fi
 
 # watch for dbus events
