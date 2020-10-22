@@ -235,7 +235,7 @@ return function()
     )
 
     awful.spawn.with_line_callback(
-      "sh -c 'tos theme list | head -n1'",
+      "tos theme active",
       {
         stdout = function(o)
           table.insert(screens, o)
