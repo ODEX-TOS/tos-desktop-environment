@@ -67,7 +67,6 @@ require("module.quake-terminal")
 require("module.brightness-slider-osd")
 require("module.volume-slider-osd")
 require("module.plugin-module")
-require("module.settings")
 
 -- Only activate the break timer if users what it
 -- The default implementation of TOS doesn't use it
@@ -82,6 +81,8 @@ require("collision")()
 require("configuration.client")
 require("configuration.tags")
 _G.root.keys(require("configuration.keys.global"))
+require("module.settings")
+
 -- Create a wibox for each screen and add it
 awful.screen.connect_for_each_screen(
   function(s)

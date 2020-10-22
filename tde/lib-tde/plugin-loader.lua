@@ -15,11 +15,10 @@ local function inValidPlugin(name, msg)
     print("Plugin " .. name .. " is not valid!")
     print(name .. " returned: " .. msg)
     -- notify the user that a wrong plugin was entered
-    naughty.notify(
+    naughty.notification(
         {
             text = 'Plugin <span weight="bold">' .. name .. "</span>" .. msg,
             timeout = 5,
-            screen = mouse.screen,
             urgency = "critical"
         }
     )

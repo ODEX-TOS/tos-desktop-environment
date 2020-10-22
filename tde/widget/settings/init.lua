@@ -6,6 +6,10 @@ local rounded = require("lib-tde.widget.rounded")
 local file_exists = require("lib-tde.file").exists
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
+local naughty = require("naughty")
+local plugins = require("lib-tde.plugin-loader")("settings")
+local err = require("lib-tde.logger").error
+
 root.elements = {}
 root.widget = {}
 root.elements.settings_views = {}
@@ -35,6 +39,18 @@ if grabber == nil then
     stop_event = "release"
   }
   root.elements.settings_grabber = grabber
+end
+
+local function send_plugin_error(msg)
+  print("SETTINGS APP: " .. msg, err)
+  naughty.notification(
+    {
+      title = "Plugin error",
+      urgency = "critical",
+      message = msg,
+      timeout = 10
+    }
+  )
 end
 
 function close_views()
@@ -207,6 +223,18 @@ function make_nav()
   table.insert(root.elements.settings_views, make_view(icons.chart, "system", require("widget.settings.system")()))
   table.insert(root.elements.settings_views, make_view(icons.monitor, "display", require("widget.settings.display")()))
   table.insert(root.elements.settings_views, make_view(icons.volume, "media", require("widget.settings.media")()))
+
+  for _, value in ipairs(plugins) do
+    if value.icon == nil then
+      send_plugin_error("Settings app plugin is missing icon")
+    elseif value.name == nil then
+      send_plugin_error("Settings app plugin is missing name")
+    elseif value.wibox == nil then
+      send_plugin_error("Settings app plugin is missing widget")
+    else
+      table.insert(root.elements.settings_views, make_view(value.icon, value.name, value.wibox))
+    end
+  end
 
   local header = wibox.container.margin()
   header.margins = m
