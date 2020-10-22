@@ -117,7 +117,12 @@ return function()
   brightness:connect_signal(
     "property::value",
     function()
-      awful.spawn.with_shell("brightness -s " .. tostring(brightness.value))
+      if _G.oled then
+        awful.spawn("brightness -s " .. tostring(brightness.value) .. " -F")
+      else
+        awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
+        awful.spawn("brightness -s " .. tostring(brightness.value))
+      end
     end
   )
 
