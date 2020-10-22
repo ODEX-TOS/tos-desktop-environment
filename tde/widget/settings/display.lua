@@ -9,7 +9,9 @@ local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_width = dpi(800)
+local settings_width = dpi(1100)
+local settings_height = dpi(800)
+
 local settings_nw = dpi(260)
 
 local screens = {}
@@ -241,9 +243,9 @@ return function()
           table.insert(screens, o)
         end,
         output_done = function()
-          mon_size.w = (((settings_width - settings_nw) - (m * 4)) / #screens) - ((m / 2) * (#screens - 1))
-          mon_size.h = mon_size.w * (screen.primary.geometry.height / screen.primary.geometry.width)
-          monitors.forced_height = mon_size.h
+          --mon_size.w = (((settings_width - settings_nw) - (m * 4)) / #screens) - ((m / 2) * (#screens - 1))
+          --mon_size.h = mon_size.w * (screen.primary.geometry.height / screen.primary.geometry.width)
+          monitors.forced_height = settings_height / 3
           for k, v in pairs(screens) do
             layout:insert(k, wibox.widget.base.empty_widget())
             layout:set(k, make_mon(v, k))
