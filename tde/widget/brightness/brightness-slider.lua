@@ -58,6 +58,7 @@ local update = function()
     function(stdout)
       local brightness = string.match(stdout, "(%d+)")
       slider:set_value(tonumber(brightness))
+      awesome.emit_signal("brightness:update", brightness)
       collectgarbage("collect")
     end
   )

@@ -64,5 +64,8 @@ return {
   network = theme(config["network"] or dir .. "/network.svg"),
   upload = theme(config["upload"] or dir .. "/upload.svg"),
   download = theme(config["download"] or dir .. "/download.svg"),
-  warning = theme(config["warning"] or dir .. "/warning.svg")
+  warning = theme(config["warning"] or dir .. "/warning.svg"),
+  lan = theme(config["lan"] or dir .. "/lan.svg"),
+  calendar = theme(config["calendar"] or dir .. "/calendar.svg"),
+  package = theme("/etc/xdg/awesome/widget/package-updater/icons/package.svg")
 }

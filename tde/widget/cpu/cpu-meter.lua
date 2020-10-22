@@ -56,6 +56,7 @@ gears.timer {
 
     slider:set_value(diff_usage)
     print("CPU usage: " .. diff_usage .. "%")
+    awesome.emit_signal("PROP::CPU", diff_usage)
 
     total_prev = total
     idle_prev = idle

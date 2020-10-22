@@ -66,6 +66,12 @@ function test_config_cpu_poll()
     assert(config.cpu_poll > 1)
 end
 
+function test_config_proc_poll()
+    assert(config.proc_poll)
+    assert(type(config.proc_poll) == "number")
+    assert(config.proc_poll > 1)
+end
+
 function test_about_tde_and_tos()
     assert(config.aboutText)
     assert(config.aboutText:find("TOS"))

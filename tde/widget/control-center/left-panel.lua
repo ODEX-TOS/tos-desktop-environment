@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
@@ -279,6 +278,37 @@ local left_panel_func = function(screen)
     )
   )
 
+  local settings_app_button =
+    wibox.widget {
+    wibox.widget {
+      icon = icons.settings,
+      size = dpi(24),
+      widget = mat_icon
+    },
+    wibox.widget {
+      text = "Full settings application",
+      font = "Iosevka Regular 12",
+      widget = wibox.widget.textbox,
+      align = center
+    },
+    forced_height = dpi(12),
+    clickable = true,
+    widget = mat_list_item
+  }
+
+  settings_app_button:buttons(
+    awful.util.table.join(
+      awful.button(
+        {},
+        1,
+        function()
+          closeleft_panel()
+          root.elements.settings.enable_view_by_index(4, mouse.screen)
+        end
+      )
+    )
+  )
+
   local wifi_button =
     wibox.widget {
     wibox.widget {
@@ -424,9 +454,30 @@ local left_panel_func = function(screen)
           widget = wibox.container.background
         },
         widget = mat_list_item
+      },
+      separator,
+      {
+        wibox.widget {
+          text = "Settings application",
+          font = "Iosevka Regular 10",
+          align = "left",
+          widget = wibox.widget.textbox
+        },
+        widget = mat_list_item
+      },
+      {
+        wibox.widget {
+          settings_app_button,
+          bg = beautiful.bg_modal, --beautiful.background.hue_800,
+          shape = function(cr, w, h)
+            gears.shape.rounded_rect(cr, w, h, 28)
+          end,
+          widget = wibox.container.background
+        },
+        widget = mat_list_item
       }
     }
-    for index, value in ipairs(plugins) do
+    for _, value in ipairs(plugins) do
       table_widget:add(
         {
           wibox.container.margin(value, dpi(15), dpi(15), dpi(15), dpi(15)),

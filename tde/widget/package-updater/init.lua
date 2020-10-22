@@ -32,7 +32,6 @@
 -- @copyright 2017 Pavel Makhov
 -------------------------------------------------
 
-
 local naughty = require("naughty")
 local watch = require("awful.widget.watch")
 local wibox = require("wibox")
@@ -156,6 +155,7 @@ watch(
       updateAvailable = true
     end
     widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. ".svg"))
+    awesome.emit_signal("PROP::PACKAGES", "Packages to update: " .. numOfUpdatesAvailable)
     collectgarbage("collect")
   end,
   widget

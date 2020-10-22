@@ -36,6 +36,7 @@ local file_exists = require("lib-tde.file").exists
 local theme = {}
 theme.icons = theme_dir .. "/icons/"
 theme.font = "Roboto medium 10"
+theme.monitor_font = "Roboto medium 50"
 theme.gtk = gtk.get_theme_variables()
 
 -- get all lines from a file, returns an empty
@@ -95,6 +96,11 @@ theme.accent = loadtheme(theme.accent, config, "accent_")
 theme.background = loadtheme(theme.background, config, "background_")
 theme.text = color(config["text"]) or "#FFFFFF"
 
+-- system stat charts in settings app
+theme.cpu_bar = color(config["cpu_bar"]) or "#f90273"
+theme.ram_bar = color(config["ram_bar"]) or "#017AFC"
+theme.disk_bar = color(config["disk_bar"]) or "#fdc400"
+
 local awesome_overrides = function(theme)
   theme.dir = "/etc/xdg/awesome/theme"
   --theme.dir             = os.getenv("HOME") .. "/code/awesome-pro/themes/pro-dark"
@@ -132,6 +138,7 @@ local awesome_overrides = function(theme)
 
   theme.bg_modal = color(config["background_modal"]) or "#ffffff20"
   theme.bg_modal_title = color(config["background_modal_title"]) or "#ffffff30"
+  theme.bg_settings_display_number = "#00000070"
   -- Borders
 
   theme.border_width = dpi(2)

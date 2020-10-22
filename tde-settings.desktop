@@ -1,0 +1,11 @@
+[Desktop Entry]
+X-Desktop-File-Install-Version=0.11
+Name=TDE Settings
+
+Comment=Qt5 settings application
+
+Exec=awesome-client "root.elements.settings.enable_view_by_index(4, mouse.screen)"
+Icon=preferences-desktop-theme
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;TDE;

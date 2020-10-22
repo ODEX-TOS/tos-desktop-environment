@@ -48,6 +48,7 @@ gears.timer {
     local free = string.gmatch(stdout[3], "%d+")()
     local usage = (1 - (free / total)) * 100
     slider:set_value(usage)
+    awesome.emit_signal("PROP::RAM", usage)
     print("Ram usage: " .. usage .. "%")
   end
 }
