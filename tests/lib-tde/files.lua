@@ -103,5 +103,15 @@ function test_script_lines_from_file()
     rm_file("test_file_1")
 end
 
+function test_directory_list_works()
+    assert(files.list_dir("/etc"))
+    assert(type(files.list_dir("/etc")) == "table")
+end
+
+function test_directory_list_unexisting_dir_works()
+    assert(#files.list_dir("/bdquqddqdsqdqsd") == 0)
+    assert(type(files.list_dir("/bdquqddqdsqdqsd")) == "table")
+end
+
 rm_file("test_file_1")
 rm_file("test_file_2")

@@ -23,6 +23,8 @@ else
   export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
   export LUA_PATH="$LUA_PATH;"
 
+  export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"
+
   if [[ ! -z "$1" ]]; then
     RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua
   else

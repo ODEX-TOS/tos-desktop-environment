@@ -3,7 +3,7 @@
 --
 -- This module exposes an API to communicate with the filesystem
 --
--- Often you need to check what the environment is where you are running in 
+-- Often you need to check what the environment is where you are running in
 -- This often involves checking what files exist for example in `/proc` or `/sys``
 --
 -- Checking files is as easy as
@@ -36,7 +36,6 @@
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.file
 ---------------------------------------------------------------------------
-
 
 -- check if a file or directory exists
 local function exists(file)
@@ -144,6 +143,26 @@ function getString(file, match, head)
   return string
 end
 
+--- Return a table of filename found in a directory
+-- @tparam dir string The path to the directory, can be both absolute or relative.
+-- @treturn table an iterable table containg all files in the directory
+-- @staticfct list_dir
+-- @usage -- This returns a table
+-- lib-tde.file.dir_exists("/etc") -> {1:"/etc/passwd", 2:"/etc/shadow", 3:"/etc/hosts", ...}
+local function list_dir(str)
+  if not (type(str) == "string") then
+    return {}
+  end
+  -- use posix complient checks
+  local M = require("posix.dirent")
+  local ok, files = pcall(M.dir, str)
+  if not ok then
+    return {}
+  end
+  -- momentary check
+  return files
+end
+
 function log(filename)
   -- tests the functions above
   local lines = lines_from(filename)
@@ -159,5 +178,6 @@ return {
   lines = lines_from,
   string = getString,
   exists = file_exists,
-  dir_exists = dir_exists
+  dir_exists = dir_exists,
+  list_dir = list_dir
 }
