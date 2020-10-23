@@ -278,7 +278,7 @@ return function()
           output_done = function()
             --mon_size.w = (((settings_width - settings_nw) - (m * 4)) / #screens) - ((m / 2) * (#screens - 1))
             --mon_size.h = mon_size.w * (screen.primary.geometry.height / screen.primary.geometry.width)
-            --monitors.forced_height = settings_height / 3
+            monitors.forced_height = settings_height / 1.5
             if #screen < 4 then
               layout.forced_num_cols = #screen
             end
