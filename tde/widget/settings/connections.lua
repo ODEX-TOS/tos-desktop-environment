@@ -92,7 +92,22 @@ local function make_network_widget(ssid, active)
         1,
         nil,
         function()
-          awful.spawn("tos network connect " .. ssid .. " password " .. active_text)
+          -- try to connect without a password
+          if active_text == "" then
+            awful.spawn.easy_async(
+              "tos network connect " .. ssid,
+              function(out)
+                root.elements.settings_views[2].view.refresh()
+              end
+            )
+          else
+            awful.spawn.easy_async(
+              "tos network connect " .. ssid .. " password " .. active_text,
+              function(out)
+                root.elements.settings_views[2].view.refresh()
+              end
+            )
+          end
         end
       )
     )
