@@ -66,7 +66,7 @@ function file_exists(file)
   if type(file) ~= "string" then
     return false
   end
-  return exists(file)
+  return exists(file) and not exists(file .. "/")
 end
 
 --- Check if a directory exists
@@ -159,7 +159,40 @@ local function list_dir(str)
   if not ok then
     return {}
   end
+  local ABS_files = {}
+  for _, item in ipairs(files) do
+    if not (item == ".") and not (item == "..") then
+      table.insert(ABS_files, str .. "/" .. item)
+    end
+  end
   -- momentary check
+  return ABS_files
+end
+
+--- Return a table of filename found in a directory and all child directories (be carefull for big directories)
+-- @tparam dir string The path to the directory, can be both absolute or relative.
+-- @treturn table an iterable table containg all files in the directory
+-- @staticfct list_dir
+-- @usage -- This returns a table
+-- lib-tde.file.dir_exists("/etc") -> {1:"/etc/passwd", 2:"/etc/ssh/sshd_config", 3:"/etc/pacman/pacman.conf", ...}
+local function list_dir_full(str)
+  if not (type(str) == "string") then
+    return {}
+  end
+  local files = {}
+  -- traverse the directory
+  for _, value in ipairs(list_dir(str)) do
+    if file_exists(value) then
+      print(value)
+      table.insert(files, value)
+    else
+      local filearr = list_dir_full(value)
+      for _, val in ipairs(filearr) do
+        print(val)
+        table.insert(files, val)
+      end
+    end
+  end
   return files
 end
 
@@ -179,5 +212,6 @@ return {
   string = getString,
   exists = file_exists,
   dir_exists = dir_exists,
-  list_dir = list_dir
+  list_dir = list_dir,
+  list_dir_full = list_dir_full
 }

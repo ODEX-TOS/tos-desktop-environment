@@ -29,6 +29,8 @@ function test_file_check_parameters_exist()
     assert(files.string)
 end
 
+-- TODO: verify that dir exists only works for directories
+-- HINT: list_dir should contain . and ..
 function test_dir_exists_validation()
     assert(not files.dir_exists(123))
     assert(files.dir_exists("/"))
@@ -45,6 +47,8 @@ function test_dir_exists_for_known_directories()
     assert(files.dir_exists(project_dir))
     assert(not files.dir_exists(project_dir .. "something_that_should_never_exists_123"))
 end
+
+-- TODO: check that file_exists doesn't mark a directory as a file
 
 function test_script_file_exists()
     local project_dir = script_path()
@@ -103,6 +107,10 @@ function test_script_lines_from_file()
     rm_file("test_file_1")
 end
 
+-- TODO: check for hidden files
+-- TODO: check that . and .. are excluded
+-- TODO: verify reqursion
+
 function test_directory_list_works()
     assert(files.list_dir("/etc"))
     assert(type(files.list_dir("/etc")) == "table")
@@ -111,6 +119,16 @@ end
 function test_directory_list_unexisting_dir_works()
     assert(#files.list_dir("/bdquqddqdsqdqsd") == 0)
     assert(type(files.list_dir("/bdquqddqdsqdqsd")) == "table")
+end
+
+function test_directory_list_works_reqursive()
+    assert(files.list_dir_full("/tmp"))
+    assert(type(files.list_dir_full("/tmp")) == "table")
+end
+
+function test_directory_list_unexisting_dir_works_reqursive()
+    assert(#files.list_dir_full("/bdquqddqdsqdqsd") == 0)
+    assert(type(files.list_dir_full("/bdquqddqdsqdqsd")) == "table")
 end
 
 rm_file("test_file_1")
