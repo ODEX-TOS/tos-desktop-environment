@@ -212,6 +212,7 @@ function make_nav()
   rule.bg = beautiful.background.hue_800
   rule.widget = wibox.widget.base.empty_widget()
 
+  table.insert(root.elements.settings_views, make_view(icons.settings, "General", require("widget.settings.general")()))
   table.insert(
     root.elements.settings_views,
     make_view(icons.calendar, "Calendar", require("widget.settings.calendar")())
@@ -223,6 +224,7 @@ function make_nav()
   table.insert(root.elements.settings_views, make_view(icons.chart, "System", require("widget.settings.system")()))
   table.insert(root.elements.settings_views, make_view(icons.monitor, "Display", require("widget.settings.display")()))
   table.insert(root.elements.settings_views, make_view(icons.volume, "Media", require("widget.settings.media")()))
+  table.insert(root.elements.settings_views, make_view(icons.brush, "Theme", require("widget.settings.theme")()))
   table.insert(root.elements.settings_views, make_view(icons.about, "About", require("widget.settings.about")()))
 
   for _, value in ipairs(plugins) do
