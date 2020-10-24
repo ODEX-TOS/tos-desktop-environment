@@ -97,7 +97,7 @@ end
 --- Take any byte and add the appropriate si prefix
 -- @tparam number bytes the amount of bytes to prefix
 -- @tparam[opt] number start indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
--- @staticfct num_to_sbytes_to_grandnessi_prefix
+-- @staticfct bytes_to_grandness
 -- @usage -- returns 42.0KB and 123.0MB respectivly
 -- lib-tde.function.common.bytes_to_grandness(42000)
 -- lib-tde.function.common.bytes_to_grandness(123000000)
