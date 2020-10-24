@@ -33,6 +33,7 @@ local gears = require("gears")
 local total_prev = 0
 local idle_prev = 0
 local file = require("lib-tde.file")
+local signals = require("lib-tde.signals")
 
 local slider =
   wibox.widget {
@@ -56,7 +57,7 @@ gears.timer {
 
     slider:set_value(diff_usage)
     print("CPU usage: " .. diff_usage .. "%")
-    awesome.emit_signal("PROP::CPU", diff_usage)
+    signals.emit_cpu_usage(diff_usage)
 
     total_prev = total
     idle_prev = idle

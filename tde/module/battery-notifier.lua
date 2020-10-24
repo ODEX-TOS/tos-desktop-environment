@@ -1,7 +1,6 @@
 -- Dependencies:
 -- acpid, upower, acpi_listens
 
-
 local naughty = require("naughty")
 
 local icons = require("theme.icons")
@@ -14,6 +13,7 @@ local battery_script = battery_function.upowerBatteryScript
 
 -- Subscribe to power supply status changes with acpi_listen
 local charger_script = battery_function.chargerScript
+local signals = require("lib-tde.signals")
 
 -- Periodically get battery info
 awful.widget.watch(
@@ -24,7 +24,7 @@ awful.widget.watch(
 		if value == nil then
 			return
 		end
-		awesome.emit_signal("module::battery", value)
+		signals.emit_battery(value)
 	end
 )
 
@@ -32,7 +32,7 @@ local emit_charger_info = function()
 	awful.spawn.easy_async_with_shell(
 		battery_function.chargedScript,
 		function(out)
-			awesome.emit_signal("module::charger", battery_function.isBatteryCharging(out))
+			signals.emit_battery_charging(battery_function.isBatteryCharging(out))
 		end
 	)
 end
@@ -90,8 +90,7 @@ local function send_notification(title, text, icon, timeout, urgency)
 end
 
 -- Full / Low / Critical notifications
-awesome.connect_signal(
-	"module::battery",
+signals.connect_battery(
 	function(battery)
 		local text
 		local icon
@@ -132,8 +131,7 @@ awesome.connect_signal(
 
 -- Charger notifications
 local charger_first_time = true
-awesome.connect_signal(
-	"module::charger",
+signals.connect_battery_charging(
 	function(plugged)
 		charger_plugged = plugged
 		local text

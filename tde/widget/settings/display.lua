@@ -5,7 +5,7 @@ local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
 local filesystem = require("lib-tde.file")
 local icons = require("theme.icons")
-
+local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 
 -- result.widget contains the current widget/wibox to display
@@ -149,8 +149,7 @@ return function()
     end
   )
 
-  awesome.connect_signal(
-    "brightness:update",
+  signals.connect_brightness(
     function(value)
       brightness:set_value(tonumber(value))
     end
@@ -261,8 +260,7 @@ return function()
     awful.spawn.easy_async_with_shell(
       "brightness -g",
       function(o)
-        local n = (1000 * tonumber(o) - 300) / 7
-        brightness:set_value(math.floor(tonumber(n)))
+        brightness:set_value(math.floor(tonumber(o)))
       end
     )
     if bSelectWallpaper then

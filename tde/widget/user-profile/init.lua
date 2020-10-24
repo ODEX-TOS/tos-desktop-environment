@@ -38,6 +38,8 @@ local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
 
 local PATH_TO_USERICON = "/var/lib/AccountsService/icons/"
 
+local signals = require("lib-tde.signals")
+
 -- guarantee that the cache dir exists
 awful.spawn("mkdir -p " .. PATH_TO_CACHE_ICON)
 
@@ -90,7 +92,7 @@ awful.spawn.easy_async_with_shell(
     -- Capitalize first letter of username
     name = out:gsub("%W", "")
     name = name:sub(1, 1):upper() .. name:sub(2)
-    awesome.emit_signal("hostname::changed", name)
+    signals.emit_username(name)
     profile_name.markup = '<span font="SFNS Display Bold 24">' .. name .. "</span>" --out:sub(1,1):upper()..out:sub(2)
 
     -- Bash script to check if user profile picture exists in /var/lib/AccountsService/icons/
@@ -148,7 +150,7 @@ awful.spawn.easy_async_with_shell(
     -- Remove newline represented by `\n`
     distroname = out:gsub("%\n", "")
     distro_name.markup = '<span font="SFNS Display Regular 12">' .. distroname .. "</span>"
-    awesome.emit_signal("DISTRONAME", distroname)
+    signals.emit_distro(distroname)
   end
 )
 
@@ -158,7 +160,7 @@ awful.spawn.easy_async_with_shell(
   function(out)
     uptime = out:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
-    awesome.emit_signal("uptime::changed", uptime)
+    signals.emit_uptime(uptime)
   end
 )
 -- Check uptime every 600 seconds/10min
@@ -168,7 +170,7 @@ awful.widget.watch(
   function(widget, stdout)
     uptime = stdout:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
-    awesome.emit_signal("uptime::changed", uptime)
+    signals.emit_uptime(uptime)
     collectgarbage("collect")
   end
 )
@@ -179,7 +181,7 @@ awful.spawn.easy_async_with_shell(
   function(out)
     kernel = out:gsub("%\n", "")
     kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
-    awesome.emit_signal("KERNEL", kernel)
+    signals.emit_kernel(kernel)
   end
 )
 

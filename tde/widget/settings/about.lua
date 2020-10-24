@@ -6,6 +6,8 @@ local rounded = require("lib-tde.widget.rounded")
 local execute = require("lib-tde.hardware-check").execute
 local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
 local file = require("lib-tde.file")
+local signals = require("lib-tde.signals")
+
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 
@@ -80,8 +82,7 @@ return function()
   local container = wibox.layout.fixed.vertical()
   local device_name, device_text = generate_setting_panel("Device name")
 
-  awesome.connect_signal(
-    "hostname::changed",
+  signals.connect_username(
     function(value)
       device_text.text = value
     end
@@ -89,8 +90,7 @@ return function()
 
   local memory_name, memory_text = generate_setting_panel("Memory")
 
-  awesome.connect_signal(
-    "PROP::RAM::total",
+  signals.connect_ram_total(
     function(value)
       memory_text.text = bytes_to_grandness(value, 1)
     end
@@ -109,8 +109,7 @@ return function()
 
   local disk_name, disk_text = generate_setting_panel("Disk capacity")
 
-  awesome.connect_signal(
-    "PROP::DISK::TOTAL",
+  signals.connect_disk_space(
     function(value)
       -- instead of 100G -> 100GB
       disk_text.text = value
@@ -120,8 +119,7 @@ return function()
   local os_name_name, os_name_text = generate_setting_panel("OS Name")
   os_name_text.text = "TOS Linux"
 
-  awesome.connect_signal(
-    "DISTRONAME",
+  signals.connect_distro(
     function(value)
       os_name_text.text = value
     end

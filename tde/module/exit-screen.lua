@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
@@ -32,6 +31,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 local icons = require("theme.icons")
 local apps = require("configuration.apps")
 local clickable_container = require("widget.clickable-container")
+local signals = require("lib-tde.signals")
 
 -- Appearance
 local icon_size = beautiful.exit_screen_icon_size or dpi(90)
@@ -130,13 +130,13 @@ end
 poweroff_command = function()
 	print("Powering off")
 	awful.spawn.with_shell("poweroff")
-	awesome.emit_signal("module::exit_screen_hide")
+	signals.emit_module_exit_screen_hide()
 end
 
 reboot_command = function()
 	print("Rebooting")
 	awful.spawn.with_shell("reboot")
-	awesome.emit_signal("module::exit_screen_hide")
+	signals.emit_module_exit_screen_hide()
 end
 
 local poweroff = buildButton(icons.power, "Shutdown")
@@ -204,7 +204,7 @@ screen.connect_signal(
 
 		-- Hide exit screen
 		exit_screen_hide = function()
-			awesome.emit_signal("module::exit_screen_hide")
+			signals.emit_module_exit_screen_hide()
 
 			-- Hide exit_screen in all screens
 			for s in screen do
@@ -247,15 +247,13 @@ screen.connect_signal(
 		end
 
 		-- Signals
-		awesome.connect_signal(
-			"module::exit_screen_show",
+		signals.connect_module_exit_screen_show(
 			function()
 				exit_screen_grabber:start()
 			end
 		)
 
-		awesome.connect_signal(
-			"module::exit_screen_hide",
+		signals.connect_module_exit_screen_hide(
 			function()
 				exit_screen_grabber:stop()
 			end

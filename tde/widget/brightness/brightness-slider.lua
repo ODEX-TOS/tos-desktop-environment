@@ -27,6 +27,7 @@ local mat_list_item = require("widget.material.list-item")
 local mat_slider = require("widget.material.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
+local signals = require("lib-tde.signals")
 
 local spawn = require("awful.spawn")
 
@@ -57,8 +58,7 @@ local update = function()
     [[grep -q on ~/.cache/oled && brightness -g -F || brightness -g]],
     function(stdout)
       local brightness = string.match(stdout, "(%d+)")
-      slider:set_value(tonumber(brightness))
-      awesome.emit_signal("brightness:update", brightness)
+      signals.emit_brightness(tonumber(brightness))
       collectgarbage("collect")
     end
   )
@@ -72,10 +72,9 @@ awesome.connect_signal(
 )
 
 -- The emit will come from the OSD
-awesome.connect_signal(
-  "widget::brightness:update",
+signals.connect_brightness(
   function(value)
-    slider:set_value(tonumber(value))
+    slider:set_value(value)
   end
 )
 

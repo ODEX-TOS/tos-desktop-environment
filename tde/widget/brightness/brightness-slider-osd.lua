@@ -28,7 +28,7 @@ local mat_slider = require("widget.material.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local spawn = require("awful.spawn")
-
+local signals = require("lib-tde.signals")
 
 local slider_osd =
   wibox.widget {
@@ -40,7 +40,7 @@ slider_osd:connect_signal(
   "property::value",
   function()
     if (_G.menuopened) then
-      awesome.emit_signal("widget::brightness:update", slider_osd.value)
+      signals.emit_brightness(tonumber(slider_osd.value))
     end
     if (_G.oled) then
       spawn("brightness -s " .. math.max(slider_osd.value, 5) .. " -F") -- toggle pixel values

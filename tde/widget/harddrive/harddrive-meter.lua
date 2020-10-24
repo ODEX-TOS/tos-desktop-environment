@@ -30,6 +30,8 @@ local icons = require("theme.icons")
 local watch = require("awful.widget.watch")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
+local signals = require("lib-tde.signals")
+
 local slider =
   wibox.widget {
   read_only = true,
@@ -44,8 +46,8 @@ watch(
     local space_total = stdout:match("(%d+[MGTP])") or "1GB"
     slider:set_value(tonumber(space_consumed))
     print("harddrive size: " .. space_consumed .. "%")
-    awesome.emit_signal("PROP::DISK", tonumber(space_consumed))
-    awesome.emit_signal("PROP::DISK::TOTAL", space_total)
+    signals.emit_disk_usage(tonumber(space_consumed))
+    signals.emit_disk_space(space_total)
 
     collectgarbage("collect")
   end

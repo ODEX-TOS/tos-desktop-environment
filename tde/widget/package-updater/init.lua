@@ -40,6 +40,7 @@ local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local theme = require("theme.icons.dark-light")
 local icon = require("theme.icons").warning
+local signals = require("lib-tde.signals")
 
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
@@ -155,7 +156,7 @@ watch(
       updateAvailable = true
     end
     widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. ".svg"))
-    awesome.emit_signal("PROP::PACKAGES", "Packages to update: " .. numOfUpdatesAvailable)
+    signals.emit_packages_to_update(numOfUpdatesAvailable)
     collectgarbage("collect")
   end,
   widget

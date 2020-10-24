@@ -4,6 +4,7 @@ local gears = require("gears")
 local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
+local signals = require("lib-tde.signals")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -67,8 +68,7 @@ return function()
     end
   )
 
-  awesome.connect_signal(
-    "widget::volume:update",
+  signals.connect_volume(
     function(value)
       vol_slider:set_value(tonumber(value))
     end

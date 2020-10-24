@@ -28,6 +28,7 @@ local mat_slider = require("widget.material.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local spawn = require("awful.spawn")
+local signals = require("lib-tde.signals")
 
 local sound = require("lib-tde.sound")
 
@@ -43,6 +44,7 @@ slider:connect_signal(
     spawn("amixer -D pulse sset Master " .. slider.value .. "%")
     -- Only play sound when beeing drawn, we also remove the OSD from the screen
     _G.volume2:set_value(slider.value)
+    signals.emit_volume(slider.value)
     if (_G.menuopened) then
       _G.toggleVolOSD(false)
       sound()

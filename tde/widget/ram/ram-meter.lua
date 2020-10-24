@@ -30,6 +30,7 @@ local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local file = require("lib-tde.file")
+local signals = require("lib-tde.signals")
 local gears = require("gears")
 
 local slider =
@@ -48,8 +49,8 @@ gears.timer {
     local free = string.gmatch(stdout[3], "%d+")()
     local usage = (1 - (free / total)) * 100
     slider:set_value(usage)
-    awesome.emit_signal("PROP::RAM", usage)
-    awesome.emit_signal("PROP::RAM::total", total)
+    signals.emit_ram_usage(usage)
+    signals.emit_ram_total(total)
     print("Ram usage: " .. usage .. "%")
   end
 }

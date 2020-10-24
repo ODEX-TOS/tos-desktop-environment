@@ -28,7 +28,6 @@
 --      description (string)
 --      icon_code (string)
 
-
 local gears = require("gears")
 local config = require("config")
 local theme = require("theme.icons.dark-light")
@@ -40,6 +39,8 @@ local units = "metric" -- weather_units  metric(°C)/imperial(°F)
 
 -- Don't update too often, because your requests might get blocked for 24 hours
 local update_interval = config.weather_poll
+
+local signals = require("lib-tde.signals")
 
 -- Check units
 if units == "metric" then
@@ -72,9 +73,9 @@ gears.timer {
                 local description = weather_details:match("(.*)@@")
                 local temperature = weather_details:match("@@(.*)")
                 if icon_code == "..." then
-                    awesome.emit_signal("widget::weather", "Maybe it's 10000", "No internet connection...", "")
+                    signals.emit_weather("Maybe it's 10000", "No internet connection...", "")
                 else
-                    awesome.emit_signal("widget::weather", temperature, description, icon_code)
+                    signals.emit_weather(temperature, description, icon_code)
                 end
             end
         )
@@ -96,16 +97,15 @@ awful.widget.watch(
         local description = weather_details:match("(.*)@@")
         local temperature = weather_details:match("@@(.*)")
         if icon_code == "..." then
-            awesome.emit_signal("widget::weather", "Maybe it's 10000", "No internet connection...", "")
+            signals.emit_weather("Maybe it's 10000", "No internet connection...", "")
         else
-            awesome.emit_signal("widget::weather", temperature, description, icon_code)
+            signals.emit_weather(temperature, description, icon_code)
         end
         collectgarbage("collect")
     end
 )
 
-awesome.connect_signal(
-    "widget::weather",
+signals.connect_weather(
     function(temperature, description, icon_code)
         local widgetIconName
 

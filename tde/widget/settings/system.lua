@@ -6,6 +6,7 @@ local rounded = require("lib-tde.widget.rounded")
 local conf = require("config")
 local icons = require("theme.icons")
 local file = require("lib-tde.file")
+local signals = require("lib-tde.signals")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -263,23 +264,19 @@ return function()
     text = "Uptime: unknown",
     widget = wibox.widget.textbox
   }
-
-  awesome.connect_signal(
-    "DISTRONAME",
+  signals.connect_distro(
     function(value)
       osName.text = "OS: " .. value
     end
   )
 
-  awesome.connect_signal(
-    "uptime::changed",
+  signals.connect_uptime(
     function(value)
       uptime.text = "Uptime: " .. value
     end
   )
 
-  awesome.connect_signal(
-    "KERNEL",
+  signals.connect_kernel(
     function(value)
       kernelVersion.text = "Kernel: " .. value
     end
@@ -330,31 +327,27 @@ return function()
   }
 
   -- TODO: decrease precision of the values
-  awesome.connect_signal(
-    "PROP::RAM",
+  signals.connect_ram_usage(
     function(value)
       ram_progress:set_value(value)
       ram_value.text = value .. "%"
     end
   )
 
-  awesome.connect_signal(
-    "PROP::PACKAGES",
+  signals.connect_packages_to_update(
     function(value)
-      pac_value.text = value
+      pac_value.text = "Packages to update: " .. value
     end
   )
 
-  awesome.connect_signal(
-    "PROP::CPU",
+  signals.connect_cpu_usage(
     function(value)
       cpu_progress:set_value(value)
       cpu_value.text = value .. "%"
     end
   )
 
-  awesome.connect_signal(
-    "PROP::DISK",
+  signals.connect_disk_usage(
     function(value)
       disk_progress:set_value(value)
       disk_value.text = value .. "%"
