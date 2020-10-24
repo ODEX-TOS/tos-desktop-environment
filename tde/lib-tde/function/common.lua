@@ -66,7 +66,48 @@ local function sleep(time)
     end
 end
 
+--- Take any number bigger that 1 and return the number with its si prefix
+-- @tparam num number the number to prefix
+-- @tparam[opt] start number indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
+-- @staticfct num_to_si_prefix
+-- @usage -- returns 42K and 123M respectivly
+-- lib-tde.function.common.num_to_si_prefix(42000)
+-- lib-tde.function.common.num_to_si_prefix(123000000)
+local function num_to_si_prefix(num, start)
+    -- sanitize the input
+    local number = num
+    if type(num) == "string" then
+        number = tonumber(num) or 0
+    elseif not (type(num) == "number") then
+        return num
+    end
+
+    local prefix = {"k", "M", "G", "T", "P", "E"}
+    local index = start or 0
+    while number > 1000 do
+        index = index + 1
+        number = number / 1000
+    end
+    if index == 0 then
+        return number
+    end
+    return number .. prefix[index]
+end
+
+--- Take any byte and add the appropriate si prefix
+-- @tparam bytes number the amount of bytes to prefix
+-- @tparam[opt] start number indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
+-- @staticfct num_to_sbytes_to_grandnessi_prefix
+-- @usage -- returns 42KB and 123MB respectivly
+-- lib-tde.function.common.bytes_to_grandness(42000)
+-- lib-tde.function.common.bytes_to_grandness(123000000)
+local function bytes_to_grandness(bytes, start)
+    return num_to_si_prefix(bytes, start) .. "B"
+end
+
 return {
     split = split,
-    sleep = sleep
+    sleep = sleep,
+    num_to_si_prefix = num_to_si_prefix,
+    bytes_to_grandness = bytes_to_grandness
 }

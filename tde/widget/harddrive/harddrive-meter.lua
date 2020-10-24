@@ -37,13 +37,15 @@ local slider =
 }
 
 watch(
-  [[bash -c "df -h /home|grep '^/' | awk '{print $5}'"]],
+  [[bash -c "df -h /home|grep '^/' | awk '{print $2, $5}'"]],
   config.harddisk_poll,
   function(_, stdout)
-    local space_consumed = stdout:match("(%d+)") or 0
+    local space_consumed = stdout:match(" (%d+)") or 0
+    local space_total = stdout:match("(%d+[MGTP])") or "1GB"
     slider:set_value(tonumber(space_consumed))
     print("harddrive size: " .. space_consumed .. "%")
     awesome.emit_signal("PROP::DISK", tonumber(space_consumed))
+    awesome.emit_signal("PROP::DISK::TOTAL", space_total)
 
     collectgarbage("collect")
   end

@@ -1,4 +1,3 @@
-local os = require("os")
 local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
@@ -17,7 +16,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("Calendar")
+  local title = wibox.widget.textbox("About")
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -37,57 +36,6 @@ return function()
     )
   )
 
-  local cal_container = wibox.container.background()
-  cal_container.bg = beautiful.bg_modal
-  cal_container.shape = rounded()
-  cal_container.forced_width = settings_width - settings_nw - (m * 2)
-  cal_container.forced_height = settings_width - settings_nw - (m * 2)
-
-  local styles = {
-    focus = {
-      bg_color = beautiful.primary.hue_500,
-      shape = rounded()
-    }
-  }
-
-  local function decorate_cell(widget, flag, date)
-    local props = styles[flag] or {}
-    ret = widget
-    if flag == "focus" then
-      ret =
-        wibox.container.margin(
-        wibox.widget {
-          {
-            widget,
-            widget = wibox.container.place
-          },
-          shape = props.shape,
-          bg = props.bg_color,
-          widget = wibox.container.background
-        },
-        dpi(10),
-        dpi(10),
-        dpi(10),
-        dpi(10)
-      )
-    end
-    return ret
-  end
-
-  cal_container:setup {
-    layout = wibox.container.margin,
-    left = m,
-    right = 40,
-    {
-      date = os.date("*t"),
-      font = beautiful.font,
-      start_sunday = false,
-      long_weekdays = false,
-      widget = wibox.widget.calendar.month,
-      fn_embed = decorate_cell
-    }
-  }
-
   view:setup {
     layout = wibox.container.background,
     {
@@ -106,9 +54,9 @@ return function()
       },
       {
         layout = wibox.container.place,
-        valign = "top",
+        valign = "center",
         halign = "center",
-        cal_container
+        wibox.widget.textbox("test")
       }
     }
   }

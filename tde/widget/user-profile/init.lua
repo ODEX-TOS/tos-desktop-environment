@@ -90,6 +90,7 @@ awful.spawn.easy_async_with_shell(
     -- Capitalize first letter of username
     name = out:gsub("%W", "")
     name = name:sub(1, 1):upper() .. name:sub(2)
+    awesome.emit_signal("hostname::changed", name)
     profile_name.markup = '<span font="SFNS Display Bold 24">' .. name .. "</span>" --out:sub(1,1):upper()..out:sub(2)
 
     -- Bash script to check if user profile picture exists in /var/lib/AccountsService/icons/

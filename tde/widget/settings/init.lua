@@ -214,15 +214,16 @@ function make_nav()
 
   table.insert(
     root.elements.settings_views,
-    make_view(icons.calendar, "calendar", require("widget.settings.calendar")())
+    make_view(icons.calendar, "Calendar", require("widget.settings.calendar")())
   )
   table.insert(
     root.elements.settings_views,
-    make_view(icons.wifi, "connections", require("widget.settings.connections")())
+    make_view(icons.wifi, "Connections", require("widget.settings.connections")())
   )
-  table.insert(root.elements.settings_views, make_view(icons.chart, "system", require("widget.settings.system")()))
-  table.insert(root.elements.settings_views, make_view(icons.monitor, "display", require("widget.settings.display")()))
-  table.insert(root.elements.settings_views, make_view(icons.volume, "media", require("widget.settings.media")()))
+  table.insert(root.elements.settings_views, make_view(icons.chart, "System", require("widget.settings.system")()))
+  table.insert(root.elements.settings_views, make_view(icons.monitor, "Display", require("widget.settings.display")()))
+  table.insert(root.elements.settings_views, make_view(icons.volume, "Media", require("widget.settings.media")()))
+  table.insert(root.elements.settings_views, make_view(icons.about, "About", require("widget.settings.about")()))
 
   for _, value in ipairs(plugins) do
     if value.icon == nil then

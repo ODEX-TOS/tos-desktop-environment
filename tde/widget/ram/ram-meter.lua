@@ -49,6 +49,7 @@ gears.timer {
     local usage = (1 - (free / total)) * 100
     slider:set_value(usage)
     awesome.emit_signal("PROP::RAM", usage)
+    awesome.emit_signal("PROP::RAM::total", total)
     print("Ram usage: " .. usage .. "%")
   end
 }

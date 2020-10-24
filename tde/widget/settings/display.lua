@@ -211,10 +211,13 @@ return function()
       {
         layout = wibox.layout.align.horizontal,
         nil,
-        {
-          layout = wibox.container.place,
-          title
-        },
+        wibox.container.margin(
+          {
+            layout = wibox.container.place,
+            title
+          },
+          settings_index * 2
+        ),
         close
       },
       {
