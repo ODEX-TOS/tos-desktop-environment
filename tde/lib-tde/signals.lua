@@ -36,13 +36,13 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-tde.extractcover
+-- @tdemod lib-tde.signals
 ---------------------------------------------------------------------------
 
 local connections = {}
 
 --- Notify other TDE components that the exit_screen should be hidden
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct emit_module_exit_screen_hide
 -- @usage -- notify other components
 -- lib-tde.signals.emit_module_exit_screen_hide()
@@ -51,7 +51,7 @@ connections.emit_module_exit_screen_hide = function()
 end
 
 --- Trigger a callback function when the exit screen goes hidden
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_module_exit_screen_hide
 -- @usage -- notify other components
 -- lib-tde.signals.connect_module_exit_screen_hide(
@@ -71,7 +71,7 @@ connections.emit_module_exit_screen_show = function()
 end
 
 --- Trigger a callback function when the exit screen is beeing show
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_module_exit_screen_show
 -- @usage -- notify other components
 -- lib-tde.signals.connect_module_exit_screen_show(
@@ -83,7 +83,7 @@ connections.connect_module_exit_screen_show = function(func)
 end
 
 --- Notify other TDE components that the battery has updated its value
--- @tparam value number The current percentage of the battery
+-- @tparam number value The current percentage of the battery
 -- @staticfct emit_module_battery
 -- @usage -- notify other components when the battery is updated
 -- lib-tde.signals.emit_battery()
@@ -92,7 +92,7 @@ connections.emit_battery = function(value)
 end
 
 --- Trigger a callback function when the battery is updated
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_battery
 -- @usage -- notify other components when the battery updates
 -- lib-tde.signals.connect_battery(
@@ -104,7 +104,7 @@ connections.connect_battery = function(func)
 end
 
 --- Notify other TDE components that the battery charging has changed
--- @tparam value bool if it is charging
+-- @tparam bool value if it is charging
 -- @staticfct emit_module_battery_charging
 -- @usage -- notify other components when the battery charging changed
 -- lib-tde.signals.emit_battery_charging()
@@ -113,7 +113,7 @@ connections.emit_battery_charging = function(value)
 end
 
 --- Trigger a callback function when the battery charging changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_battery_charging
 -- @usage -- notify other components when the battery charging updates
 -- lib-tde.signals.connect_battery(
@@ -125,7 +125,7 @@ connections.connect_battery_charging = function(func)
 end
 
 --- Notify other TDE components that the screen brightness has changed
--- @tparam value number The brightness between 0 and 100
+-- @tparam number value The brightness between 0 and 100
 -- @staticfct emit_brightness
 -- @usage -- notify other components when the brightness changed
 -- lib-tde.signals.emit_brightness(100)
@@ -134,7 +134,7 @@ connections.emit_brightness = function(value)
 end
 
 --- Trigger a callback function when the brightness changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_brightness
 -- @usage -- notify other components when the brightness changed
 -- lib-tde.signals.connect_brightness(
@@ -146,7 +146,7 @@ connections.connect_brightness = function(func)
 end
 
 --- Notify other TDE components that the screen volume has changed
--- @tparam value number The volume between 0 and 100
+-- @tparam number value The volume between 0 and 100
 -- @staticfct emit_volume
 -- @usage -- notify other components when the volume changed
 -- lib-tde.signals.emit_volume(100)
@@ -155,7 +155,7 @@ connections.emit_volume = function(value)
 end
 
 --- Trigger a callback function when the volume changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_volume
 -- @usage -- notify other components when the volume changed
 -- lib-tde.signals.connect_volume(
@@ -178,7 +178,7 @@ connections.emit_weather = function(temp, desc, icon)
 end
 
 --- Trigger a callback function when the weather info changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_weather
 -- @usage -- notify other components when the weahter is updated
 -- lib-tde.signals.connect_weather(
@@ -191,7 +191,7 @@ connections.connect_weather = function(func)
 end
 
 --- Notify other TDE components that the username changed
--- @tparam value string The username
+-- @tparam string value The username
 -- @staticfct emit_username
 -- @usage -- notify other components when the user changed
 -- lib-tde.signals.emit_user("user_1")
@@ -200,7 +200,7 @@ connections.emit_username = function(value)
 end
 
 --- Trigger a callback function when the user changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_username
 -- @usage -- notify other components when the user changed
 -- lib-tde.signals.connect_username(
@@ -212,7 +212,7 @@ connections.connect_username = function(func)
 end
 
 --- Notify other TDE components that the distro name changed
--- @tparam value string The distribution name
+-- @tparam string value The distribution name
 -- @staticfct emit_distro
 -- @usage -- notify other components when the distro changed
 -- lib-tde.signals.emit_distro("TOS Linux")
@@ -221,7 +221,7 @@ connections.emit_distro = function(value)
 end
 
 --- Trigger a callback function when the distro changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_distro
 -- @usage -- notify other components when the distro changed
 -- lib-tde.signals.connect_distro(
@@ -233,7 +233,7 @@ connections.connect_distro = function(func)
 end
 
 --- Notify other TDE components that the uptime changed
--- @tparam value string The uptime
+-- @tparam string value The uptime
 -- @staticfct emit_uptime
 -- @usage -- notify other components when the uptime changed
 -- lib-tde.signals.emit_uptime("10 seconds")
@@ -242,7 +242,7 @@ connections.emit_uptime = function(value)
 end
 
 --- Trigger a callback function when the uptime changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_uptime
 -- @usage -- notify other components when the uptime changed
 -- lib-tde.signals.connect_uptime(
@@ -254,7 +254,7 @@ connections.connect_uptime = function(func)
 end
 
 --- Notify other TDE components what the current kernel version is
--- @tparam value string The kernel version
+-- @tparam string value The kernel version
 -- @staticfct emit_kernel
 -- @usage -- notify other components what the current kernel is
 -- lib-tde.signals.emit_kernel("v5.0.0-tos1")
@@ -263,7 +263,7 @@ connections.emit_kernel = function(value)
 end
 
 --- Trigger a callback function when the kernel changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_kernel
 -- @usage -- notify other components when the kernel changed
 -- lib-tde.signals.connect_kernel(
@@ -275,7 +275,7 @@ connections.connect_kernel = function(func)
 end
 
 --- Notify other TDE components howmany packages should be updated
--- @tparam value string The amount of updates
+-- @tparam string value The amount of updates
 -- @staticfct emit_packages_to_update
 -- @usage -- notify other components how much packages need to be updated
 -- lib-tde.signals.emit_kernel("7")
@@ -284,7 +284,7 @@ connections.emit_packages_to_update = function(value)
 end
 
 --- Trigger a callback function when packages to update changed
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_packages_to_update
 -- @usage -- notify other components when system packages need updates
 -- lib-tde.signals.connect_packages_to_update(
@@ -296,7 +296,7 @@ connections.connect_packages_to_update = function(func)
 end
 
 --- Notify other TDE components about the current cpu usage
--- @tparam value number The current cpu usage in percentage
+-- @tparam number value The current cpu usage in percentage
 -- @staticfct emit_cpu_usage
 -- @usage -- notify other components of the current cpu usage
 -- lib-tde.signals.emit_cpu_usage("32")
@@ -305,7 +305,7 @@ connections.emit_cpu_usage = function(value)
 end
 
 --- Trigger a callback function when the cpu usage has been updated
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_cpu_usage
 -- @usage -- notify other components when cpu usage changed
 -- lib-tde.signals.connect_cpu_usage(
@@ -317,7 +317,7 @@ connections.connect_cpu_usage = function(func)
 end
 
 --- Notify other TDE components about the current disk usage
--- @tparam value number The current disk usage in percentage
+-- @tparam number value The current disk usage in percentage
 -- @staticfct emit_disk_usage
 -- @usage -- notify other components of the current disk usage
 -- lib-tde.signals.emit_disk_usage("32")
@@ -326,7 +326,7 @@ connections.emit_disk_usage = function(value)
 end
 
 --- Trigger a callback function when the disk usage has been updated
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_disk_usage
 -- @usage -- notify other components when disk usage changed
 -- lib-tde.signals.connect_disk_usage(
@@ -338,7 +338,7 @@ connections.connect_disk_usage = function(func)
 end
 
 --- Notify other TDE components about the total disk space
--- @tparam value string The current total disk space in percentage
+-- @tparam string value The current total disk space in percentage
 -- @staticfct emit_disk_space
 -- @usage -- notify other components of the total disk space
 -- lib-tde.signals.emit_disk_space("467G")
@@ -347,7 +347,7 @@ connections.emit_disk_space = function(value)
 end
 
 --- Trigger a callback function when the disk space has been updated
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_disk_space
 -- @usage -- notify other components when disk space changed
 -- lib-tde.signals.connect_disk_space(
@@ -359,7 +359,7 @@ connections.connect_disk_space = function(func)
 end
 
 --- Notify other TDE components about the current ram usage
--- @tparam value number The current ram usage in percentage
+-- @tparam number value The current ram usage in percentage
 -- @staticfct emit_ram_usage
 -- @usage -- notify other components of the current ram usage
 -- lib-tde.signals.emit_ram_usage("32")
@@ -368,7 +368,7 @@ connections.emit_ram_usage = function(value)
 end
 
 --- Trigger a callback function when the ram usage has been updated
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_ram_usage
 -- @usage -- notify other components when ram usage changed
 -- lib-tde.signals.connect_ram_usage(
@@ -380,7 +380,7 @@ connections.connect_ram_usage = function(func)
 end
 
 --- Notify other TDE components about the total ram
--- @tparam value string The total ram available on the system in kilobytes
+-- @tparam string value The total ram available on the system in kilobytes
 -- @staticfct emit_ram_total
 -- @usage -- notify other components of the total ram in kilobytes
 -- lib-tde.signals.emit_ram_total("14000000")
@@ -389,7 +389,7 @@ connections.emit_ram_total = function(value)
 end
 
 --- Trigger a callback function for the total ram amount
--- @tparam func function The callback function that will be called when the event happens
+-- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_ram_total
 -- @usage -- notify other components when total ram changed
 -- lib-tde.signals.connect_ram_total(

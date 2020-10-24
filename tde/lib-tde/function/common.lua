@@ -21,8 +21,8 @@
 ---------------------------------------------------------------------------
 
 --- split the input to a table based on the seperator
--- @tparam inputstr string The string to split.
--- @tparam[opt] sep string a regular expression that splits the string (all matches are removed from the set).
+-- @tparam string inputstr The string to split.
+-- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @treturn table The table as a list of strings
 -- @staticfct split
 -- @usage -- This will return {1: "abc", 2: "def"}
@@ -52,7 +52,7 @@ local function split(inputstr, sep)
 end
 
 --- sleep for x seconds where x can be subseconds long
--- @tparam time number The time in seconds
+-- @tparam number time The time in seconds
 -- @staticfct sleep
 -- @usage -- lib-tde.function.common.sleep(1)
 -- lib-tde.function.common.sleep(5)
@@ -67,8 +67,8 @@ local function sleep(time)
 end
 
 --- Take any number bigger that 1 and return the number with its si prefix
--- @tparam num number the number to prefix
--- @tparam[opt] start number indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
+-- @tparam number num the number to prefix
+-- @tparam[opt] number start indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
 -- @staticfct num_to_si_prefix
 -- @usage -- returns 42.0K and 123.0M respectivly
 -- lib-tde.function.common.num_to_si_prefix(42000)
@@ -95,8 +95,8 @@ local function num_to_si_prefix(num, start)
 end
 
 --- Take any byte and add the appropriate si prefix
--- @tparam bytes number the amount of bytes to prefix
--- @tparam[opt] start number indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
+-- @tparam number bytes the amount of bytes to prefix
+-- @tparam[opt] number start indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
 -- @staticfct num_to_sbytes_to_grandnessi_prefix
 -- @usage -- returns 42.0KB and 123.0MB respectivly
 -- lib-tde.function.common.bytes_to_grandness(42000)
