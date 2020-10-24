@@ -29,9 +29,10 @@
 -- most are in the form
 --
 --     emit_property_ram("123450")
---     connect_property_ram(function(value)
+--     connect_property_ram(
+--      function(value)
 --        print("Received: " .. value)
---     end)
+--      end)
 --
 -- This module tries to improve reusage of know variables throughout the tde infrastructure
 --
