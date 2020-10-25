@@ -45,7 +45,7 @@ function make_mon(wall, id)
           "tos theme set " .. wall,
           function()
             bSelectWallpaper = false
-            root.elements.settings_views[4].view.refresh()
+            root.elements.settings_views[5].view.refresh()
           end
         )
       end
@@ -176,7 +176,7 @@ return function()
         function()
           -- TODO: change wallpaper
           bSelectWallpaper = true
-          root.elements.settings_views[4].view.refresh()
+          root.elements.settings_views[5].view.refresh()
         end
       )
     )

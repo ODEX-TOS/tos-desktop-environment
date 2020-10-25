@@ -38,6 +38,7 @@ theme.icons = theme_dir .. "/icons/"
 theme.font = "Roboto medium 10"
 theme.monitor_font = "Roboto medium 50"
 theme.gtk = gtk.get_theme_variables()
+theme.background_transparency = config["background_transparent"] or "66"
 
 -- get all lines from a file, returns an empty
 -- list/table if the file does not exist

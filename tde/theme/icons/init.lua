@@ -67,6 +67,7 @@ return {
   warning = theme(config["warning"] or dir .. "/warning.svg"),
   lan = theme(config["lan"] or dir .. "/lan.svg"),
   calendar = theme(config["calendar"] or dir .. "/calendar.svg"),
+  brush = theme(config["brush"] or dir .. "/brush.svg"),
   package = theme("/etc/xdg/awesome/widget/package-updater/icons/package.svg"),
   about = theme(dir .. "/info.svg")
 }

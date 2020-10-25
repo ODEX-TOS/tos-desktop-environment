@@ -69,6 +69,42 @@ function file_exists(file)
   return exists(file) and not exists(file .. "/")
 end
 
+-- TODO: unit test the file writing
+
+--- Write data to a new file
+-- @tparam file string The path to the file, can be both absolute or relative.
+-- @tparam data string The data to put into the file
+-- @treturn bool if the write was succesfull
+-- @staticfct write
+-- @usage -- This true
+-- lib-tde.file.write("hallo.txt", "this is content in the file")
+function write(file, data)
+  if type(file) ~= "string" then
+    return false
+  end
+  fd = io.open(file, "a")
+  fd:write(data .. "\n")
+  fd:close()
+  return true
+end
+
+--- Override the entire file
+-- @tparam file string The path to the file, can be both absolute or relative.
+-- @tparam data string The data to put into the file
+-- @treturn bool if the write was succesfull
+-- @staticfct overwrite
+-- @usage -- This true
+-- lib-tde.file.overwrite("hallo.txt", "this is content in the file")
+function overwrite(file, data)
+  if type(file) ~= "string" then
+    return false
+  end
+  fd = io.open(file, "w")
+  fd:write(data .. "\n")
+  fd:close()
+  return true
+end
+
 --- Check if a directory exists
 -- @tparam dir string The path to the directory, can be both absolute or relative.
 -- @treturn bool True if the directory exists false otherwise
@@ -213,5 +249,7 @@ return {
   exists = file_exists,
   dir_exists = dir_exists,
   list_dir = list_dir,
-  list_dir_full = list_dir_full
+  list_dir_full = list_dir_full,
+  write = write,
+  overwrite = overwrite
 }

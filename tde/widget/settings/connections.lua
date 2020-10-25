@@ -97,14 +97,14 @@ local function make_network_widget(ssid, active)
             awful.spawn.easy_async(
               "tos network connect " .. ssid,
               function(out)
-                root.elements.settings_views[2].view.refresh()
+                root.elements.settings_views[3].view.refresh()
               end
             )
           else
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
               function(out)
-                root.elements.settings_views[2].view.refresh()
+                root.elements.settings_views[3].view.refresh()
               end
             )
           end

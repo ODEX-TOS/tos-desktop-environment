@@ -331,8 +331,8 @@ return {
     hue_500 = "#607D8B",
     hue_600 = "#546E7A",
     hue_700 = "#455A64",
-    hue_800 = "#37474F",
-    hue_900 = "#263238"
+    hue_800 = "#000000",
+    hue_900 = "#000000"
   },
   -- Black
   black = {
@@ -360,7 +360,6 @@ return {
     hue_800 = "#FFFFFF",
     hue_900 = "#FFFFFF"
   },
-  
   light = {
     hue_50 = "#FFFFFF",
     hue_100 = "#FFFFFF",

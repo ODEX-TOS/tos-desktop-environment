@@ -112,7 +112,7 @@ local function new(args)
     forced_height = dpi(6),
     paddings = 0,
     shape = gears.shape.rounded_rect,
-    background_color = "#ffffff20",
+    background_color = beautiful.background.hue_700 .. beautiful.background_transparency,
     --beautiful.background.hue_800,
     color = beautiful.accent.hue_500 or "#fdfdfd",
     widget = wibox.widget.progressbar
@@ -125,7 +125,6 @@ local function new(args)
     bar_height = 0,
     bar_color = beautiful.primary.hue_500,
     handle_color = beautiful.accent.hue_500,
-    --beautiful.primary.hue_300,
     handle_shape = gears.shape.circle,
     handle_border_color = "#00000012",
     handle_border_width = dpi(3),
