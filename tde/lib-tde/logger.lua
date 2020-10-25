@@ -16,6 +16,8 @@ local filename = dir .. "/stdout.log"
 if not filehandle.dir_exists(dir) then
 	io.popen("mkdir -p " .. dir)
 end
+-- make the file empty on startup to reduce disk size
+filehandle.overwrite(filename, "")
 
 -- open the log file (if no handle exists already)
 
