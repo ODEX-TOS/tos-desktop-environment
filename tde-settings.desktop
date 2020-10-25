@@ -4,7 +4,7 @@ Name=TDE Settings
 
 Comment=Qt5 settings application
 
-Exec=awesome-client "root.elements.settings.enable_view_by_index(1, mouse.screen)"
+Exec=awesome-client "root.elements.settings.enable_view_by_index(-1, mouse.screen)"
 Icon=preferences-desktop-theme
 Terminal=false
 Type=Application

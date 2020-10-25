@@ -19,6 +19,10 @@ local settings_index = dpi(40)
 local settings_width = dpi(1100)
 local settings_height = dpi(800)
 local settings_nw = dpi(260)
+
+-- save the index state of last time
+local INDEX = 1
+
 local grabber = root.elements.settings_grabber
 if grabber == nil then
   grabber =
@@ -66,16 +70,35 @@ function close_views()
   end
 end
 
+local function setActiveView(i, link)
+  print("Active view: " .. i)
+  for index, widget in ipairs(root.elements.settings_views) do
+    if index == i or widget.link == link then
+      root.elements.settings_views[index].link.bg = beautiful.accent.hue_600
+      root.elements.settings_views[index].link.active = true
+      INDEX = index
+    else
+      root.elements.settings_views[index].link.bg = beautiful.bg_modal_title .. "00"
+      root.elements.settings_views[index].link.active = false
+    end
+  end
+end
+
+-- If you set the index to -1 then we go to the last remembered index
 function enable_view_by_index(i, s, loc)
-  if root.elements.settings_views[i] then
+  if not (i == -1) then
+    INDEX = i
+  end
+  if root.elements.settings_views[INDEX] then
     close_views()
     print("Starting keygrab")
     grabber:start()
 
-    root.elements.settings_views[i].view.visible = true
-    root.elements.settings_views[i].title.font = beautiful.title_font
-    if root.elements.settings_views[i].view.refresh then
-      root.elements.settings_views[i].view.refresh()
+    root.elements.settings_views[INDEX].view.visible = true
+    root.elements.settings_views[INDEX].title.font = beautiful.title_font
+    setActiveView(INDEX)
+    if root.elements.settings_views[INDEX].view.refresh then
+      root.elements.settings_views[INDEX].view.refresh()
     end
     if not s then
       return
@@ -138,7 +161,10 @@ function make_view(i, t, v, a)
   button:connect_signal(
     "mouse::leave",
     function()
-      button.bg = beautiful.bg_modal_title .. "00"
+      -- only reset it if it is not the current view
+      if not button.active then
+        button.bg = beautiful.bg_modal_title .. "00"
+      end
     end
   )
 
@@ -151,6 +177,7 @@ function make_view(i, t, v, a)
           close_views()
           view.visible = true
           title.font = beautiful.title_font
+          setActiveView(-1, button)
           if view.refresh then
             view.refresh()
           end

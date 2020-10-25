@@ -559,7 +559,7 @@ local globalKeys =
     config.settings,
     function()
       print("Opening settings application")
-      root.elements.settings.enable_view_by_index(1, mouse.screen)
+      root.elements.settings.enable_view_by_index(-1, mouse.screen)
     end,
     {description = "Open settings application", group = "Launcher"}
   )
