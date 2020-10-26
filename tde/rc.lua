@@ -56,7 +56,10 @@ require("module.titlebar")()
 
 -- Layout
 require("layout")
-awful.spawn.with_shell("/etc/xdg/awesome/autorun.sh &>/dev/null")
+
+local lockscreentime = general["screen_on_time"] or "120"
+awful.spawn.with_shell("/etc/xdg/awesome/autorun.sh " .. lockscreentime .. " &>/dev/null")
+
 -- Init all modules
 require("module.notifications")
 require("module.auto-start")

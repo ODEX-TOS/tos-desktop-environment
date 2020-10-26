@@ -7,9 +7,7 @@ local filesystem = require("lib-tde.file")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
-
--- result.widget contains the current widget/wibox to display
-local result = {}
+local configWriter = require("lib-tde.config-writer")
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -155,6 +153,46 @@ return function()
     end
   )
 
+  local screen_time = wibox.widget.slider()
+  screen_time.bar_shape = function(c, w, h)
+    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
+  end
+  screen_time.bar_height = dpi(30)
+  screen_time.bar_color = beautiful.bg_modal
+  screen_time.bar_active_color = beautiful.accent.hue_500
+  screen_time.handle_shape = gears.shape.circle
+  screen_time.handle_width = dpi(35)
+  screen_time.handle_color = beautiful.accent.hue_500
+  screen_time.handle_border_width = 1
+  screen_time.handle_border_color = "#00000012"
+  screen_time.minimum = 10
+  screen_time.maximum = 600
+  screen_time.value = tonumber(general["screen_on_time"]) or 120
+
+  local screen_time_tooltip =
+    awful.tooltip {
+    objects = {screen_time},
+    timer_function = function()
+      return (general["screen_on_time"] or "120") .. " seconds before sleeping"
+    end
+  }
+
+  screen_time:connect_signal(
+    "property::value",
+    function()
+      print("Updated screen time: " .. tostring(screen_time.value) .. "sec")
+      screen_time_tooltip.text = tostring(screen_time.value) .. " seconds before sleeping"
+      general["screen_on_time"] = tostring(screen_time.value)
+      configWriter.update_entry(
+        os.getenv("HOME") .. "/.config/tos/general.conf",
+        "screen_on_time",
+        tostring(screen_time.value)
+      )
+      awful.spawn("pkill -f autolock.sh")
+      awful.spawn("sh /etc/xdg/awesome/autolock.sh " .. tostring(screen_time.value))
+    end
+  )
+
   changewall:connect_signal(
     "mouse::enter",
     function()
@@ -246,6 +284,35 @@ return function()
             }
           }
         },
+        {
+          layout = wibox.container.margin,
+          top = m,
+          {
+            layout = wibox.container.background,
+            bg = beautiful.bg_modal,
+            shape = rounded(),
+            forced_height = (m * 6) + dpi(30),
+            {
+              layout = wibox.layout.fixed.vertical,
+              {
+                layout = wibox.container.margin,
+                margins = m,
+                {
+                  font = beautiful.font,
+                  text = "Screen on time",
+                  widget = wibox.widget.textbox
+                }
+              },
+              {
+                layout = wibox.container.margin,
+                left = m,
+                right = m,
+                bottom = m,
+                screen_time
+              }
+            }
+          }
+        },
         {layout = wibox.container.margin, top = m, monitors},
         {layout = wibox.container.margin, top = m, changewall}
       },
@@ -279,7 +346,7 @@ return function()
           output_done = function()
             --mon_size.w = (((settings_width - settings_nw) - (m * 4)) / #screens) - ((m / 2) * (#screens - 1))
             --mon_size.h = mon_size.w * (screen.primary.geometry.height / screen.primary.geometry.width)
-            monitors.forced_height = settings_height / 1.5
+            monitors.forced_height = settings_height / 2
             if #screen < 4 then
               layout.forced_num_cols = #screen
             end
