@@ -44,6 +44,19 @@ function make_mon(wall, id)
           function()
             bSelectWallpaper = false
             root.elements.settings_views[5].view.refresh()
+            local themeFile = os.getenv("HOME") .. "/.config/tos/theme"
+            -- our theme file exists
+            if filesystem.exists(themeFile) then
+              local newContent = ""
+              for _, line in ipairs(filesystem.lines(themeFile)) do
+                -- if the line is a file then it is a picture, otherwise it is a configuration option
+                if not filesystem.exists(line) then
+                  newContent = newContent .. line .. "\n"
+                end
+              end
+              newContent = newContent .. wall
+              filesystem.overwrite(themeFile, newContent)
+            end
           end
         )
       end
