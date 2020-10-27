@@ -70,7 +70,7 @@ return {
           filesystem.get_configuration_dir() .. "/configuration/rofi/appmenu/drun.rasi",
     rofidpimenu = "bash /etc/xdg/awesome/dpi.sh",
     rofiwifimenu = "bash /etc/xdg/awesome/wifi.sh" .. " " .. screen.primary.dpi,
-    lock = "mantablockscreen -sc",
+    lock = "light-locker-command -l",
     quake = (os.getenv("TERMINAL") or "st") .. " -T QuakeTerminal",
     duplicate_screens = "bash /etc/xdg/awesome/xrandr-duplicate.sh"
   },

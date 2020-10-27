@@ -44,9 +44,8 @@ if ! pgrep tos; then
     nohup tos theme daemon &>/dev/null &# launch a tos daemon
 fi
 
-if [[ "$(command -v mantablockscreen)" ]]; then
-    # create a cached image for the lock screen
-    mantablockscreen -i "$(tos theme list | head -n1)" &
+if [[ "$(command -v light-locker)" ]]; then
+    light-locker &>/dev/null &
 fi
 
 if [[ "$(command -v psi-notify)" ]]; then

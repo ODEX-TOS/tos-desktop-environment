@@ -6,7 +6,7 @@ timeone=${1:-120}
 timetwo=${2:-10}
 timethree=${3:-10}
 timefour=${4:-60}
-timetwolock=${5:-mantablockscreen -sc}
+timetwolock=${5:-light-locker-command -l}
 
 xidlehook \
         --not-when-fullscreen \
