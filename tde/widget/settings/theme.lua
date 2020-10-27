@@ -322,7 +322,7 @@ return function()
             make_color_entry("grey", 40),
             make_color_entry("blue_grey", 20),
             make_color_entry("black", 40),
-            make_color_entry("white", 60)
+            make_color_entry("light", 60)
           },
           m,
           m,

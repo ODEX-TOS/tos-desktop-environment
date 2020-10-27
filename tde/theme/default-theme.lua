@@ -78,6 +78,12 @@ function loadtheme(standard, override, prefix)
   return standard
 end
 
+local function darkLightSwitcher(dark, light)
+  if config["background"] == "light" then
+    return light
+  end
+  return dark
+end
 -- Colors Pallets
 
 -- Custom
@@ -126,11 +132,11 @@ local awesome_overrides = function(theme)
   theme.font = "Roboto medium 10"
   theme.title_font = "Roboto medium 14"
 
-  theme.fg_normal = color(config["foreground_normal"]) or "#ffffffde"
+  theme.fg_normal = color(config["foreground_normal"]) or darkLightSwitcher("#ffffffde", "#000000de")
 
-  theme.fg_focus = color(config["foreground_focus"]) or "#e4e4e4"
-  theme.fg_urgent = color(config["foreground_urgent"]) or "#CC9393"
-  theme.bat_fg_critical = color(config["foreground_critical"]) or "#232323"
+  theme.fg_focus = color(config["foreground_focus"]) or darkLightSwitcher("#e4e4e4", "#343434")
+  theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")
+  theme.bat_fg_critical = color(config["foreground_critical"]) or darkLightSwitcher("#232323", "#BEBEBE3")
 
   theme.bg_normal = theme.background.hue_800
   theme.bg_focus = color(config["background_focus"]) or "#5a5a5a"
