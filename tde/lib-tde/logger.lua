@@ -17,7 +17,9 @@ if not filehandle.dir_exists(dir) then
 	io.popen("mkdir -p " .. dir)
 end
 -- make the file empty on startup to reduce disk size
-filehandle.overwrite(filename, "")
+if filehandle.dir_exists(dir) then
+	filehandle.overwrite(filename, "")
+end
 
 -- open the log file (if no handle exists already)
 
