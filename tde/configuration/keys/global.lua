@@ -505,7 +505,11 @@ local globalKeys =
     function()
       print("Taking a full screenshot")
       if not send_notification_if_maim_missing() then
-        awful.spawn(apps.bins.full_screenshot)
+        if general["window_screen_mode"] == "none" then
+          awful.spawn(apps.bins.full_blank_screenshot)
+        else
+          awful.spawn(apps.bins.full_screenshot)
+        end
       end
     end,
     {description = "fullscreen screenshot", group = "Utility"}
@@ -516,7 +520,11 @@ local globalKeys =
     function()
       print("Taking an area screenshot")
       if not send_notification_if_maim_missing() then
-        awful.spawn(apps.bins.area_screenshot)
+        if general["window_screen_mode"] == "none" then
+          awful.spawn(apps.bins.area_blank_screenshot)
+        else
+          awful.spawn(apps.bins.area_screenshot)
+        end
       end
     end,
     {description = "area/selected screenshot", group = "Utility"}

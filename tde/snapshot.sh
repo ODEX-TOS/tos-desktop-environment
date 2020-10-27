@@ -67,7 +67,9 @@ function shot() {
 
 	check_dir
 
+	file_loc_tmp="${screenshot_dir}$(date +%Y%m%d_%H%M%S)tmp.png"
 	file_loc="${screenshot_dir}$(date +%Y%m%d_%H%M%S).png"
+
 	
 	maim_command="$1"
 	notif_message="$2"
@@ -76,7 +78,9 @@ function shot() {
 	if [[ ! -z "$3" ]]; then
 		${maim_command} | $3 "${file_loc}"
 	else
-		${maim_command} "${file_loc}"
+		${maim_command} "${file_loc_tmp}"
+		convert "${file_loc_tmp}" "${file_loc}"
+		rm "${file_loc_tmp}"
 	fi
 
 	# Exit if the user cancels the screenshot
@@ -91,8 +95,9 @@ function shot() {
 	notify-send 'Snap!' "${notif_message}" -a 'Screenshot tool' -i "${file_loc}"
 }
 
+
 # Check the args passed
-if [ -z "$1" ] || ([ "$1" != 'full' ] && [ "$1" != 'area' ] && [ "$1" != 'window' ] && [ "$1" != 'window_blank' ]);
+if [ -z "$1" ] || ([ "$1" != 'full' ] && [ "$1" != 'full_blank' ] && [ "$1" != 'area' ] && [ "$1" != 'area_blank' ] && [ "$1" != 'window' ] && [ "$1" != 'window_blank' ]);
 then
 	echo "
 	Requires an argument:
@@ -112,11 +117,20 @@ then
 elif [ "$1" = 'full' ];
 then
 	msg="Full screenshot saved and copied to clipboard!"
+	window 'maim -u -m 1' "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
+elif [ "$1" = 'full_blank' ];
+then
+	msg="Full screenshot saved and copied to clipboard!"
 	shot 'maim -u -m 1' "${msg}"
 elif [ "$1" = 'area' ];
 then
 	msg='Area screenshot saved and copied to clipboard!'
+	window 'maim -u -s -n -m 1' "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
+elif [ "$1" = 'area_blank' ];
+then
+	msg='Area screenshot saved and copied to clipboard!'
 	shot 'maim -u -s -n -m 1' "${msg}"
+
 elif [ "$1" = 'window' ];
 then
 	msg='Window screenshot saved and copied to clipboard!'

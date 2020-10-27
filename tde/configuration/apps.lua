@@ -84,8 +84,10 @@ return {
   },
   bins = {
     coverUpdate = require("lib-tde.extractcover").extractalbum,
-    full_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" full',
-    area_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" area',
+    full_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" full "' .. color .. '"',
+    full_blank_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" full_blank',
+    area_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" area "' .. color .. '"',
+    area_blank_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" area_blank',
     window_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" window "' .. color .. '"',
     window_blank_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" window_blank'
   }
