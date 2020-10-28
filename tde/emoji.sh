@@ -9,4 +9,5 @@ if [[ ! -z "$result" ]]; then
     chosen=$(echo "$result" | sed "s/ .*//")
     echo "$chosen" | tr -d '\n' | xclip -selection clipboard
     notify-send "Emoji" "'$chosen' copied to clipboard." -a "Emoji Keybind"
+    xdotool key Ctrl+V
 fi
