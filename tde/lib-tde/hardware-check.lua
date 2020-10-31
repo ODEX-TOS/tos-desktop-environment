@@ -33,7 +33,6 @@
 
 local fileHandle = require("lib-tde.file")
 
-
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
 -- @tparam cmd string The command to execute
 -- @treturn tuple<string, number> The first element is the standard output of the command (string), the second element is the exit code (number)
@@ -68,7 +67,7 @@ end
 -- @usage -- This True if a network card exists
 -- lib-tde.hardware-check.wifi()
 local function wifi()
-    local out, returnValue = osExecute("nmcli radio wifi")
+    local out, _ = osExecute("nmcli radio wifi")
     return out == "enabled" or out == "enabled\n"
 end
 
