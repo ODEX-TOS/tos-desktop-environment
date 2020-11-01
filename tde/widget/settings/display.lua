@@ -34,7 +34,7 @@ function make_mon(wall, id)
     forced_width = mon_size.w,
     forced_height = mon_size.h
   }
-  monitor:set_image(gears.surface.load_silently(_surface, (wall)))
+  monitor:set_image(wall)
   monitor:connect_signal(
     "button::press",
     function()
@@ -333,6 +333,25 @@ return function()
     }
   }
 
+  local function loadMonitors()
+    for k, v in ipairs(filesystem.list_dir("/usr/share/backgrounds/tos")) do
+      -- check if it is a file
+      if filesystem.exists(v) then
+        --layout:add(wibox.widget.base.empty_widget())
+        layout:add(make_mon(v, k))
+      end
+    end
+  end
+
+  local timer =
+    gears.timer {
+    timeout = 0.1,
+    call_now = false,
+    autostart = false,
+    single_shot = true,
+    callback = loadMonitors
+  }
+
   view.refresh = function()
     screens = {}
     layout:reset()
@@ -345,10 +364,8 @@ return function()
     )
     if bSelectWallpaper then
       layout.forced_num_cols = 4
-      for k, v in ipairs(filesystem.list_dir_full("/usr/share/backgrounds/tos")) do
-        --layout:add(wibox.widget.base.empty_widget())
-        layout:add(make_mon(v, k))
-      end
+      -- do an asynchronous render of all wallpapers
+      timer:start()
     else
       awful.spawn.with_line_callback(
         "tos theme active",
