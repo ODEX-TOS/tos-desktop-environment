@@ -22,8 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
-
 local modkey = require("configuration.keys.mod").modKey
 
 return awful.util.table.join(
@@ -36,19 +34,5 @@ return awful.util.table.join(
     end
   ),
   awful.button({modkey}, 1, awful.mouse.client.move),
-  awful.button({modkey}, 3, awful.mouse.client.resize),
-  awful.button(
-    {modkey},
-    4,
-    function()
-      awful.layout.inc(1)
-    end
-  ),
-  awful.button(
-    {modkey},
-    5,
-    function()
-      awful.layout.inc(-1)
-    end
-  )
+  awful.button({modkey}, 3, awful.mouse.client.resize)
 )
