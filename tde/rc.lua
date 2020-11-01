@@ -149,4 +149,5 @@ _G.client.connect_signal(
 -- Look into awesome-freedesktop for more information
 require("module.menu")
 
+require("module.installer")
 require("tutorial")
