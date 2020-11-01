@@ -52,7 +52,8 @@ end
 
 function getFloatingWindow()
   name = "float_"
-  local iterator = {"Xephyr"}
+  -- Add default applications that are always floating
+  local iterator = {"Xephyr", "Steam"}
   local i = 0
   while true do
     i = i + 1
