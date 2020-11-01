@@ -57,7 +57,7 @@ local function create_icon(icon, name, num, callback)
     widget:connect_signal(
         "mouse::enter",
         function()
-            box.bg = beautiful.background.hue_800
+            box.bg = beautiful.accent.hue_600 .. "99"
         end
     )
 
