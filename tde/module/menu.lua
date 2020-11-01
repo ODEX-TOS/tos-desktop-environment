@@ -22,12 +22,12 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local gears = require("gears")
 local beautiful = require("beautiful")
 local apps = require("configuration.apps")
 local icons = require("theme.icons")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local mousedrag = require("module.mousedrag")
 
 terminal = apps.default.terminal
 web_browser = os.getenv("BROWSER") or apps.default.web_browser
@@ -135,6 +135,10 @@ root.buttons(
 			1,
 			function()
 				mymainmenu:hide()
+				mousedrag.start()
+			end,
+			function()
+				mousedrag.stop()
 			end
 		)
 	)

@@ -150,4 +150,6 @@ _G.client.connect_signal(
 require("module.menu")
 
 require("module.installer")
+require("module.desktop")
+
 require("tutorial")

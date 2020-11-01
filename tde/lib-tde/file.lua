@@ -184,7 +184,7 @@ end
 -- @treturn table an iterable table containg all files in the directory
 -- @staticfct list_dir
 -- @usage -- This returns a table
--- lib-tde.file.dir_exists("/etc") -> {1:"/etc/passwd", 2:"/etc/shadow", 3:"/etc/hosts", ...}
+-- lib-tde.file.list_dir("/etc") -> {1:"/etc/passwd", 2:"/etc/shadow", 3:"/etc/hosts", ...}
 local function list_dir(str)
   if not (type(str) == "string") then
     return {}
@@ -210,7 +210,7 @@ end
 -- @treturn table an iterable table containg all files in the directory
 -- @staticfct list_dir
 -- @usage -- This returns a table
--- lib-tde.file.dir_exists("/etc") -> {1:"/etc/passwd", 2:"/etc/ssh/sshd_config", 3:"/etc/pacman/pacman.conf", ...}
+-- lib-tde.file.list_dir_full("/etc") -> {1:"/etc/passwd", 2:"/etc/ssh/sshd_config", 3:"/etc/pacman/pacman.conf", ...}
 local function list_dir_full(str)
   if not (type(str) == "string") then
     return {}
@@ -232,6 +232,13 @@ local function list_dir_full(str)
   return files
 end
 
+--- Function equivalent to basename in POSIX systems
+--@param str the path string
+function basename(str)
+  local name = string.gsub(str, "(.*/)(.*)", "%2")
+  return name
+end
+
 function log(filename)
   -- tests the functions above
   local lines = lines_from(filename)
@@ -251,5 +258,6 @@ return {
   list_dir = list_dir,
   list_dir_full = list_dir_full,
   write = write,
-  overwrite = overwrite
+  overwrite = overwrite,
+  basename = basename
 }
