@@ -98,7 +98,9 @@ end
 
 local function stop()
     timer:stop()
-    box.visible = false
+    if box then
+        box.visible = false
+    end
 end
 
 return {
