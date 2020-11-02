@@ -201,8 +201,10 @@ return function()
         "screen_on_time",
         tostring(screen_time.value)
       )
-      awful.spawn("pkill -f autolock.sh")
-      awful.spawn("sh /etc/xdg/awesome/autolock.sh " .. tostring(screen_time.value))
+      if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
+        awful.spawn("pkill -f autolock.sh")
+        awful.spawn("sh /etc/xdg/awesome/autolock.sh " .. tostring(screen_time.value))
+      end
     end
   )
 

@@ -271,6 +271,12 @@ return function()
           "draw_mode",
           "fast",
           "none"
+        ),
+        create_checkbox(
+          "Screen timeout",
+          "Put the system in sleep mode after a period of inactivity",
+          general["screen_timeout"] == "1" or general["screen_timeout"] == nil,
+          "screen_timeout"
         )
       },
       separator,

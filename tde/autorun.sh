@@ -72,7 +72,7 @@ if ! pgrep -f "$process"; then
 fi
 
 # autolock the system
-if [[ "$(command -v xidlehook)" ]]; then
+if [[ "$(command -v xidlehook)" && ! "$1" == ""]]; then
     echo "Lock screen time set to: $1 seconds"
     sh /etc/xdg/awesome/autolock.sh "$1" &
 fi

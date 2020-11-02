@@ -3,9 +3,9 @@
  Copyright (C) 2020 Gary V. Vaughan
 ]]
 --[[--
- Private argument checking lib-tdes.
+ Private argument checking helpers.
 
- Undocumented internal lib-tdes for bitwise operations on Lua 5.3+.
+ Undocumented internal helpers for bitwise operations on Lua 5.3+.
 
  @module posix._bitwise
 ]]

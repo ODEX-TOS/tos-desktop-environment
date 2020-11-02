@@ -224,9 +224,9 @@ local function run_test_group(tests)
     end
 
     for _, v in ipairs(tests) do
-        -- Run the lib-tde if "should_work" is missing
+        -- Run the helper if "should_work" is missing
         if v[4] == nil then
-            run_run_helper(unpack(v))
+            run_helper(unpack(v))
         else
             run_test(unpack(v))
         end

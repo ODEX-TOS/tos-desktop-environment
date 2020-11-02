@@ -14,10 +14,10 @@ if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-lua") then
             os.getenv("HOME") ..
                 "/.config/awesome/lib-tde/lib-lua/?/?.lua;" ..
                     os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-lua/?.lua"
-else
-    package.path =
-        package.path .. ";" .. "/etc/xdg/awesome/lib-tde/lib-lua/?/?.lua;" .. "/etc/xdg/awesome/lib-tde/lib-lua/?.lua"
 end
+
+package.path =
+    package.path .. ";" .. "/etc/xdg/awesome/lib-tde/lib-lua/?/?.lua;" .. "/etc/xdg/awesome/lib-tde/lib-lua/?.lua"
 
 -- same applies for the c libraries
 if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so") then
@@ -26,7 +26,6 @@ if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so") then
         ";" ..
             os.getenv("HOME") ..
                 "/.config/awesome/lib-tde/lib-so/?/?.so;" .. os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so/?.so"
-else
-    package.cpath =
-        package.cpath .. ";" .. "/etc/xdg/awesome/lib-tde/lib-so/?/?.so;" .. "/etc/xdg/awesome/lib-tde/lib-so/?.so"
 end
+package.cpath =
+    package.cpath .. ";" .. "/etc/xdg/awesome/lib-tde/lib-so/?/?.so;" .. "/etc/xdg/awesome/lib-tde/lib-so/?.so"
