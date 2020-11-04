@@ -83,7 +83,7 @@ local function create_icon(icon, name, num, callback, drag)
                 function()
                     timer:stop()
                     if type(drag) == "function" then
-                        drag(box.x, box.y)
+                        drag(name, box.x, box.y)
                     end
                     if timercount < 10 then
                         callback()
@@ -169,7 +169,7 @@ end
 
 local function from_file(file, index, x, y, drag)
     local name = filehandle.basename(file)
-    if name:match("desktop$") then
+    if name:match(".desktop$") then
         desktop_file(file, name, index or {x = x, y = y}, drag)
     else
         -- can be found here https://specifications.freedesktop.org/icon-naming-spec/latest/ar01s04.html

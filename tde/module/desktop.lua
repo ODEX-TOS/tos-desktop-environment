@@ -19,9 +19,11 @@ local function update_entry(name)
 
     for _, value in ipairs(filehandle.lines(config)) do
         if common.split(value, " ")[1] == name then
-            if widget_pos.x and widget_pos.y then
+            if widget_pos.x ~= nil and widget_pos.y ~= nil then
                 found = true
-                data = data .. name .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
+                data =
+                    data ..
+                    name:gsub(" ", "-") .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
             end
         else
             if value and not (value == "") then
@@ -31,7 +33,7 @@ local function update_entry(name)
     end
 
     if not found then
-        data = data .. name .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
+        data = data .. name:gsub(" ", "-") .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
     end
 
     filehandle.overwrite(config, data)
@@ -52,7 +54,10 @@ local function find_pos_by_name(name)
     local config = os.getenv("HOME") .. "/.cache/tde/desktop.conf"
     for _, value in ipairs(filehandle.lines(config)) do
         local data = common.split(value, " ")
-        if data[1] == name then
+        local lower_name = name:gsub(" ", "-"):gsub(".desktop", "")
+        data[1] = string.lower(data[1])
+        if data[1] == lower_name then
+            print("Match")
             local x = tonumber(data[2])
             local y = tonumber(data[3])
             return {x = x, y = y}
@@ -78,9 +83,9 @@ if filehandle.dir_exists(desktopLocation) then
             pos,
             x,
             y,
-            function()
+            function(name)
                 print("Updating location")
-                update_entry(filehandle.basename(file))
+                update_entry(name)
             end
         )
     end
@@ -97,8 +102,14 @@ gears.timer {
         for ev in handle:events() do
             local file = desktopLocation .. "/" .. ev.name
             if filehandle.exists(file) then
-                desktop_icon.from_file(file, desktop_icon.count() + offset + 1)
-                update_entry(ev.name)
+                desktop_icon.from_file(
+                    file,
+                    desktop_icon.count() + offset + 1,
+                    function(name)
+                        print("Updating location")
+                        update_entry(name)
+                    end
+                )
             else
                 print(ev.name .. " deleted")
                 desktop_icon.delete(ev.name)
