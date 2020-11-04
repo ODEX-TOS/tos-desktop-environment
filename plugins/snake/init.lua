@@ -1,19 +1,36 @@
+-- For those reading this
+-- This plugin is not designed to be used daily
+-- Instead it is a proof of concept of what you can do with our plugin system
+-- It makes your computer laggy for daily use (because a game is constantly running parallel to the rest of your system
+
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local gears = require("gears")
 local awful = require("awful")
 
+-- list of all "sections" of the snake
 local parts = {}
+
+-- the location of the fruit
 local fruit = nil
+
+-- information about the game area
 local screen_width = mouse.screen.workarea.width
 local screen_height = mouse.screen.workarea.height
 
+-- player direction offset
+-- Could be a vector
 local xoffset = -1
 local yoffset = 0
 
+-- size of the player and fruit
 local size = dpi(20)
 
+-- check if a number is 'close' to another number
+-- eg 7 and 10 have a margin of error of 3
+-- 10 and 50 have a margin of error of 40
+-- this function returns true when the margin is smaller that <margin>
 local function margin_of_error(point1, point2, margin)
     local smaller = 0
     local bigger = 0
@@ -30,11 +47,14 @@ local function margin_of_error(point1, point2, margin)
     return smaller + margin >= bigger
 end
 
+-- check if 2 rectangles are intersecting (rectangles of equal size)
 local function intersecting(source, target)
     -- target left top point is in the source circle
     return margin_of_error(source.x, target.x, size) and margin_of_error(source.y, target.y, size)
 end
 
+-- create one "section" of the snake at a specific x and y position
+-- if head and fruit define the color of the box
 local function createPart(x, y, head, fruit)
     local bg = head or fruit or beautiful.accent.hue_800
     local box =
@@ -56,7 +76,9 @@ local function createPart(x, y, head, fruit)
     return box
 end
 
+-- append an extra part to the snake
 local function add_snake_part()
+    -- No parts means we are generating the head (at the center of the screen)
     if #parts == 0 then
         local box =
             createPart(
@@ -66,6 +88,7 @@ local function add_snake_part()
         )
         table.insert(parts, box)
     else
+        -- find the location of the last element and append it after that position
         local head = parts[#parts]
         local x = head.x - (xoffset * size * 1.5)
         local y = head.y - (yoffset * size * 1.5)
@@ -74,6 +97,7 @@ local function add_snake_part()
     end
 end
 
+-- create a fruit (should be called only once)
 local function create_fruit()
     fruit =
         createPart(
@@ -84,11 +108,14 @@ local function create_fruit()
     )
 end
 
+-- move the fruit to a new position (randomly)
 local function update_fruit()
     fruit.x = math.random(size, math.floor((screen_width - size) / size)) * size
     fruit.y = math.random(size, math.floor((screen_height - size) / size)) * size
 end
 
+-- stop the game
+-- and free up resources
 local function stop()
     print("Stopping snake")
     for _, widget in ipairs(parts) do
@@ -100,6 +127,9 @@ local function stop()
     collectgarbage()
 end
 
+-- move the head into a direction 
+-- If we are out of bounds we wrap to the other side
+-- Much like a torus
 local function move_head(widget)
     widget.x = widget.x + (xoffset * size)
     widget.y = widget.y + (yoffset * size)
@@ -115,16 +145,21 @@ local function move_head(widget)
     end
 end
 
+-- start the game with a head and a tail
 add_snake_part()
 add_snake_part()
 
+-- init the fruit
 create_fruit()
 
+
+-- this is our main game loop (10 fps)
 gears.timer {
     timeout = 0.1,
     call_now = true,
     autostart = true,
     callback = function()
+        -- in our game loop we move the head and make all the parts follow it
         for _index, _ in ipairs(parts) do
             local index = (#parts + 1) - _index
             if not (index == 1) then
@@ -135,13 +170,19 @@ gears.timer {
             end
         end
         move_head(parts[1])
+        -- if the head intersects with the fruit we gain a section and move the fruit to a new position
         if intersecting(parts[1], fruit) then
             add_snake_part()
             update_fruit()
         end
+        -- TODO: check if the head is intersecting with any other snake section
+        -- If that is the case the snake "crashed" in itself and the game should stop
     end
 }
 
+-- input handling of the game
+-- For each input (Up, Down, Right, Left) we change the vector to point in the direction we are moving
+-- This will then be applied in the gameloop
 local input =
     awful.keygrabber {
     -- Note that it is using the key name and not the modifier name.
@@ -191,9 +232,11 @@ local input =
             end
         }
     },
+    -- Stop the game when we press Escape
     stop_key = "Escape",
     stop_event = "release",
     stop_callback = stop
 }
 
+-- start input handling
 input:start()
