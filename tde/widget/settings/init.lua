@@ -9,6 +9,7 @@ local icons = require("theme.icons")
 local naughty = require("naughty")
 local plugins = require("lib-tde.plugin-loader")("settings")
 local err = require("lib-tde.logger").error
+local signals = require("lib-tde.signals")
 
 root.elements = {}
 root.widget = {}
@@ -209,10 +210,9 @@ function make_nav()
 
   local user = wibox.widget.textbox("")
   user.font = beautiful.title_font
-  awful.spawn.easy_async_with_shell(
-    "whoami",
-    function(u)
-      user.text = u:gsub("^%s*(.-)%s*$", "%1")
+  signals.connect_username(
+    function(name)
+      user.text = name
     end
   )
   local img = os.getenv("HOME") .. "/.cache/tos/user-icons/user.jpg"

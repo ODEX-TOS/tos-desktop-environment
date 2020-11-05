@@ -83,6 +83,16 @@ function test_script_create_string_from_file_multi_line()
     rm_file("test_file_2")
 end
 
+function test_script_create_string_from_file_empty()
+    local data = ""
+    create_file("test_file_1", data)
+    create_file("test_file_2", data)
+    assert(files.string("test_file_1") == data)
+    assert(files.string("test_file_1") == files.string("test_file_2"))
+    rm_file("test_file_1")
+    rm_file("test_file_2")
+end
+
 function test_script_lines_from_file()
     local lines = {}
     lines[1] = "this is some test data"
@@ -95,6 +105,22 @@ function test_script_lines_from_file()
     for _, line in pairs(lines) do
         data = data .. line .. "\n"
     end
+
+    create_file("test_file_1", data)
+    -- we can't do a simple assert on a table since those have unique pointers
+    local result = files.lines("test_file_1")
+    assert(#result == #lines)
+    for index, line in pairs(result) do
+        assert(line == lines[index])
+    end
+
+    rm_file("test_file_1")
+end
+
+function test_script_lines_from_file_empty()
+    local lines = {}
+
+    local data = ""
 
     create_file("test_file_1", data)
     -- we can't do a simple assert on a table since those have unique pointers

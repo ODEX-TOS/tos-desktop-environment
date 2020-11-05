@@ -65,6 +65,7 @@ else
 end
 
 -- Init all modules
+require("module.settings")
 require("module.notifications")
 require("module.auto-start")
 require("module.decorate-client")
@@ -88,7 +89,6 @@ require("collision")()
 require("configuration.client")
 require("configuration.tags")
 _G.root.keys(require("configuration.keys.global"))
-require("module.settings")
 
 -- Create a wibox for each screen and add it
 awful.screen.connect_for_each_screen(

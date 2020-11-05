@@ -27,10 +27,12 @@ local mat_list_item = require("widget.material.list-item")
 local mat_slider = require("widget.material.slider")
 local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
-local watch = require("awful.widget.watch")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
+local gears = require("gears")
 local signals = require("lib-tde.signals")
+local filehandle = require("lib-tde.file")
+local common = require("lib-tde.function.common")
 
 local slider =
   wibox.widget {
@@ -38,20 +40,33 @@ local slider =
   widget = mat_slider
 }
 
-watch(
-  [[bash -c "df -h /home|grep '^/' | awk '{print $2, $5}'"]],
-  config.harddisk_poll,
-  function(_, stdout)
-    local space_consumed = stdout:match(" (%d+)") or 0
-    local space_total = stdout:match("(%d+[MGTP])") or "1GB"
-    slider:set_value(tonumber(space_consumed))
-    print("harddrive size: " .. space_consumed .. "%")
-    signals.emit_disk_usage(tonumber(space_consumed))
-    signals.emit_disk_space(space_total)
+gears.timer {
+  timeout = config.harddisk_poll,
+  call_now = true,
+  autostart = true,
+  callback = function()
+    local lines = filehandle.lines("/proc/partitions")
+
+    -- find all hardisk and their size
+    local size = 0
+    for _, line in ipairs(lines) do
+      local nvmeSize, nvmdName = line:match(" %d* *%d* *(%d*) (nvme...)$")
+      if nvmeSize ~= nil and nvmdName ~= nil then
+        size = size + tonumber(nvmeSize)
+      end
+
+      local sataSize, sataName = line:match(" %d* *%d* *(%d*) (sd[a-z])$")
+      if sataSize ~= nil and sataName ~= nil then
+        size = size + tonumber(sataSize)
+      end
+    end
+
+    signals.emit_disk_usage(10)
+    signals.emit_disk_space(common.bytes_to_grandness(size, 1))
 
     collectgarbage("collect")
   end
-)
+}
 
 local harddrive_meter =
   wibox.widget {

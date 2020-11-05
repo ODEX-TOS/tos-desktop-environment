@@ -121,6 +121,18 @@ function dir_exists(dir)
   return exists(dir)
 end
 
+--- Check is a file is empty, if the file doesn't exist an exception will be thrown
+-- @tparam filename string The path to the file, can be both absolute or relative.
+-- @treturn boolean if the file is empty or not
+-- @staticfct is_empty
+-- @usage --
+-- lib-tde.file.is_empty("/etc/hosts") -> false
+
+function is_empty(filename)
+  file = io.open(filename, "r")
+  return false
+end
+
 --- Get all lines from a file, returns an empty table if it doesn't exist
 -- @tparam file string The path to the file, can be both absolute or relative.
 -- @tparam[opt] match string A regular expression to filter out lines that should be ignored by default = ^.*$
@@ -136,6 +148,9 @@ function lines_from(file, match, head)
   if not file_exists(file) then
     return {}
   end
+  if is_empty(file) then
+    return {}
+  end
   lines = {}
   i = 0
   for line in io.lines(file) do
@@ -148,6 +163,16 @@ function lines_from(file, match, head)
     end
   end
   return lines
+end
+
+-- wrap the io.lines function in a protected call
+function _lines_from(file, match, head)
+  local res, err = pcall(lines_from(file, match, head))
+  if err then
+    print("file: " .. err)
+    return ""
+  end
+  return res
 end
 
 --- Put the content of a file into a string
@@ -165,6 +190,9 @@ function getString(file, match, head)
   if not file_exists(file) then
     return ""
   end
+  if is_empty(file) then
+    return ""
+  end
   i = 0
   string = ""
   for line in io.lines(file) do
@@ -177,6 +205,16 @@ function getString(file, match, head)
     end
   end
   return string
+end
+
+-- wrap the io.lines function in a protected call
+function _get_string(file, match, head)
+  local res, err = pcall(getString(file, match, head))
+  if err ~= nil then
+    print("file: " .. err)
+    return ""
+  end
+  return res
 end
 
 --- Return a table of filename found in a directory
@@ -237,6 +275,12 @@ end
 function basename(str)
   local name = string.gsub(str, "(.*/)(.*)", "%2")
   return name
+end
+
+--- Function to remove a file for the filesystem
+--@param filename string the path to the file
+function rm(filename)
+  return os.remove(filename)
 end
 
 function log(filename)

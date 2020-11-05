@@ -403,4 +403,46 @@ connections.connect_ram_total = function(func)
     awesome.connect_signal("ram::total", func)
 end
 
+--- Notify other TDE components about the current bluetooth status
+-- @tparam boolean value If bluetooth is on or off
+-- @staticfct emit_bluetooth_status
+-- @usage -- Notify other TDE components about the current bluetooth status
+-- lib-tde.signals.emit_bluetooth_status(true)
+connections.emit_bluetooth_status = function(value)
+    awesome.emit_signal("BLUETOOTH::status", value)
+end
+
+--- Trigger a callback function for the the current bluetooth status
+-- @tparam function func The callback function that will be called when the bluetooth status changes
+-- @staticfct connect_bluetooth_status
+-- @usage -- notify other components when bluetooth status changes
+-- lib-tde.signals.connect_bluetooth_status(
+--    function (value)
+--      print("Bluetooth active?: " .. tostring(value))
+--    end)
+connections.connect_bluetooth_status = function(func)
+    awesome.connect_signal("BLUETOOTH::status", func)
+end
+
+--- Notify other TDE components about the current wifi status
+-- @tparam boolean value If wifi is on or off
+-- @staticfct emit_wifi_status
+-- @usage -- Notify other TDE components about the current wifi status
+-- lib-tde.signals.emit_wifi_status(true)
+connections.emit_wifi_status = function(value)
+    awesome.emit_signal("WIFI::status", value)
+end
+
+--- Trigger a callback function for the the current wifi status
+-- @tparam function func The callback function that will be called when the bluetooth status changes
+-- @staticfct connect_wifi_status
+-- @usage -- notify other components when wifi status changes
+-- lib-tde.signals.connect_wifi_status(
+--    function (value)
+--      print("Wifi active?: " .. tostring(value))
+--    end)
+connections.connect_wifi_status = function(func)
+    awesome.connect_signal("WIFI::status", func)
+end
+
 return connections

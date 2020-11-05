@@ -111,7 +111,7 @@ return function()
 
   signals.connect_disk_space(
     function(value)
-      -- instead of 100G -> 100GB
+      print("Updating disk space")
       disk_text.text = value
     end
   )

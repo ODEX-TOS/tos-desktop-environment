@@ -290,19 +290,6 @@ return function()
     wibox.container.margin(uptime, dpi(20), 0, 0, dpi(20))
   }
 
-  local proc = wibox.container.background()
-  proc.bg = beautiful.bg_modal
-  proc.shape = rounded()
-
-  local proc_text = wibox.widget.textbox()
-  proc_text.font = beautiful.font
-
-  proc:setup {
-    layout = wibox.container.margin,
-    margins = m,
-    proc_text
-  }
-
   view:setup {
     layout = wibox.container.background,
     {
@@ -321,8 +308,7 @@ return function()
       },
       graph,
       {layout = wibox.container.margin, top = m, pac},
-      {layout = wibox.container.margin, top = m, bottom = m, general_info},
-      proc
+      {layout = wibox.container.margin, top = m, bottom = m, general_info}
     }
   }
 
@@ -351,14 +337,6 @@ return function()
     function(value)
       disk_progress:set_value(value)
       disk_value.text = value .. "%"
-    end
-  )
-
-  awful.widget.watch(
-    'sh -c "ps -eo comm:45,%mem,%cpu --sort=-%cpu,-%mem | head -n 6"',
-    conf.proc_poll,
-    function(w, o)
-      proc_text.text = o:gsub("^%s*(.-)%s*$", "%1")
     end
   )
 

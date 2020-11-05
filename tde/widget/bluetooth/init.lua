@@ -28,7 +28,6 @@
 -- Better with Blueman Manager
 --------------
 
-
 local watch = require("awful.widget.watch")
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
@@ -36,7 +35,7 @@ local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local theme = require("theme.icons.dark-light")
-
+local signals = require("lib-tde.signals")
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
@@ -97,7 +96,11 @@ watch(
     -- Check if there  bluetooth
     checker = stdout:match("Controller") -- If 'Controller' string is detected on stdout
     local widgetIconName
-    if (checker ~= nil) then
+
+    local status = (checker ~= nil)
+    signals.emit_bluetooth_status(status)
+
+    if status then
       widgetIconName = "bluetooth"
     else
       widgetIconName = "bluetooth-off"

@@ -31,6 +31,15 @@ local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local file = require("lib-tde.file")
 local gears = require("gears")
+local signals = require("lib-tde.signals")
+
+local noNetwork = true
+
+signals.connect_wifi_status(
+  function(status)
+    noNetwork = not status
+  end
+)
 
 local slider =
   wibox.widget {
@@ -44,7 +53,10 @@ gears.timer {
   call_now = true,
   autostart = true,
   callback = function()
-    local stdout = file.string("/sys/class/thermal/thermal_zone0/temp")
+    if noNetwork then
+      return
+    end
+    local stdout = file.string("/sys/class/thermal/thermal_zone0/temp") or ""
     if stdout == "" then
       return
     end

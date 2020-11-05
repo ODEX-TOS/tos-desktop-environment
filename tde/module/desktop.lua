@@ -57,7 +57,6 @@ local function find_pos_by_name(name)
         local lower_name = name:gsub(" ", "-"):gsub(".desktop", "")
         data[1] = string.lower(data[1])
         if data[1] == lower_name then
-            print("Match")
             local x = tonumber(data[2])
             local y = tonumber(data[3])
             return {x = x, y = y}
@@ -84,7 +83,6 @@ if filehandle.dir_exists(desktopLocation) then
             x,
             y,
             function(name)
-                print("Updating location")
                 update_entry(name)
             end
         )
@@ -106,7 +104,6 @@ gears.timer {
                     file,
                     desktop_icon.count() + offset + 1,
                     function(name)
-                        print("Updating location")
                         update_entry(name)
                     end
                 )

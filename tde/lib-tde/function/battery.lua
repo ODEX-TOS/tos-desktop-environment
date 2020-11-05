@@ -19,59 +19,66 @@
 ---------------------------------------------------------------------------
 
 -- TODO: don't use a shell command - instead check file using lua
+local filehandle = require("lib-tde.file")
 
---- Return how much percentage a battery currently is, if no battery exists return nil
--- @param stdout string The output of @{upowerBatteryScript}
--- @return number a number between 0 and 100 indicating the battery percentage
--- @staticfct getBatteryInformationFromUpower
--- @see upowerBatteryScript
--- @usage -- This will return a number like 87
--- awful.spawn.easy_async_with_shell(lib-tde.function.battery.upowerBatteryScript, function(stdout)
---      lib-tde.function.battery.getBatteryInformationFromUpower(stdout)
---end)
-local function getBatteryInformationFromUpower(stdout)
-    local battery = stdout:gsub("%%", "")
-    local value = tonumber(battery)
-    if value == nil then
-        return
+--- Check if a battery exists
+-- @return string The percentage of the battery
+-- @staticfct getBatteryPath
+-- @usage -- This will /sys/class/power_supply/BAT0 if it exists
+-- lib-tde.function.battery.getBatteryPath() -- return location of the battery state
+local function getBatteryPath()
+    -- check if battery 0 or 1 exists
+    local bat0 = "/sys/class/power_supply/BAT0"
+    local bat1 = "/sys/class/power_supply/BAT1"
+    if filehandle.dir_exists(bat0) then
+        return bat0
     end
-    return value
+    if filehandle.dir_exists(bat1) then
+        return bat1
+    end
+    return nil
 end
 
 --- Return true if the battery is charging
--- @param stdout string The output of @{chargedScript}
--- @return boolean a number between 0 and 100 indicating the battery percentage
+-- @return boolean True if it is charging
 -- @staticfct isBatteryCharging
--- @see chargedScript
--- @usage -- This will return True
--- awful.spawn.easy_async_with_shell(lib-tde.function.battery.chargedScript, function(stdout)
---      lib-tde.function.battery.isBatteryCharging(stdout)
--- end)
-local function isBatteryCharging(stdout)
-    status = tonumber(stdout)
-    return status == 1
+-- @usage -- This will return True if charging
+--  lib-tde.function.battery.isBatteryCharging() -- True
+local function isBatteryCharging()
+    local battery = getBatteryPath()
+    if battery then
+        local value = filehandle.string(battery .. "/status"):gsub("\n", "")
+        if value == "Charging" then
+            return true
+        end
+    end
+    return false
 end
 
---- A shell script to check what the current percentage of a battery is
--- @property upowerBatteryScript
--- @param string
-local upowerBatteryScript = [[
-	sh -c "
-	upower -i $(upower -e | grep BAT) | grep percentage | awk '{print $2}'
-"]]
+--- Return the percentage of the battery or nil (if no battery exists)
+-- @return number The percentage of the battery
+-- @staticfct getBatteryPercentage
+-- @usage -- This will 100 if fully charged
+-- lib-tde.function.battery.getBatteryPercentage() -- return percentage of battery
+local function getBatteryPercentage()
+    -- get back a battery location
+    local battery = getBatteryPath()
+    if battery == nil then
+        return nil
+    end
 
---- A shell script to check if a battery is beeing charged
--- @property chargedScript
--- @param string
-local chargedScript = [[
-	sh -c '
-	acpi_listen | grep --line-buffered ac_adapter
-']]
+    -- battery exists, lets get the percentage back
+    local value = filehandle.string(battery .. "/capacity")
+    if value then
+        value = value:gsub("\n", "")
+        return tonumber(value)
+    end
+    -- something went wrong parsing the value
+    return 0
+end
 
 return {
-    getBatteryInformationFromUpower = getBatteryInformationFromUpower,
-    upowerBatteryScript = upowerBatteryScript,
-    chargedScript = chargedScript,
-    checkBatteryOnlineScript = "cat /sys/class/power_supply/*/online",
-    isBatteryCharging = isBatteryCharging
+    isBatteryCharging = isBatteryCharging,
+    getBatteryPercentage = getBatteryPercentage,
+    getBatteryPath = getBatteryPath
 }

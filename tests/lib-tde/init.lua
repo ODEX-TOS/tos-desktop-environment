@@ -7,4 +7,4 @@ require("tests.lib-tde.plugin-loader")
 require("tests.lib-tde.sound")
 require("tests.lib-tde.function")
 require("tests.lib-tde.hardware-check")
-
+require("tests.lib-tde.signals")

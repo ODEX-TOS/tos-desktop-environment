@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
@@ -30,6 +29,8 @@ local file = require("lib-tde.file")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local theme = require("theme.icons.dark-light")
+local filehandle = require("lib-tde.file")
+local signals = require("lib-tde.signals")
 
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
@@ -37,22 +38,6 @@ local theme = require("theme.icons.dark-light")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/wifi/icons/"
 local interface = "wlp2s01"
-
--- This is the correct way
-local command = "ip route get 1.1.1.1 | grep -Po '(?<=dev\\s)\\w+' | cut -f1 -d ' ' > /tmp/interface.txt"
-
-awful.spawn.easy_async_with_shell(
-  command,
-  function()
-    awful.spawn.easy_async_with_shell(
-      "cat /tmp/interface.txt",
-      function(out)
-        interface = out
-        print("Connected to network interface: " .. out)
-      end
-    )
-  end
-)
 
 local connected = false
 local essid = "N/A"
@@ -66,20 +51,6 @@ local widget =
   },
   layout = wibox.layout.align.horizontal
 }
-
-local widget_button = clickable_container(wibox.container.margin(widget, dpi(14), dpi(14), dpi(7), dpi(7))) -- top and bottom margin  = 4
-widget_button:buttons(
-  gears.table.join(
-    awful.button(
-      {},
-      1,
-      nil,
-      function()
-        awful.spawn("wicd-client -n")
-      end
-    )
-  )
-)
 
 local widget_button = clickable_container(wibox.container.margin(widget, dpi(14), dpi(14), 7, 7)) -- default top bottom margin is 7
 widget_button:buttons(
@@ -135,14 +106,20 @@ gears.timer {
   autostart = true,
   callback = function()
     local widgetIconName = "wifi-strength"
-    local interface = file.lines("/proc/net/wireless", nil, 3)[3]
-    if interface == nil then
+    local interface_res = file.lines("/proc/net/wireless", nil, 3)[3]
+    if interface_res == nil then
       connected = false
+      signals.emit_wifi_status(false)
       widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. "-off" .. ".svg"))
       collectgarbage("collect")
       return
     end
-    local ssid, num, link = interface:match("(%w+):%s+(%d+)%s+(%d+)")
+
+    local interface_name, num, link = interface_res:match("(%w+):%s+(%d+)%s+(%d+)")
+
+    interface = interface_name
+    filehandle.overwrite("/tmp/interface.txt", interface_name)
+
     local wifi_strength = (tonumber(link) / 70) * 100
     if (wifi_strength ~= nil) then
       connected = true
@@ -157,6 +134,7 @@ gears.timer {
     if (connected and (essid == "N/A" or essid == nil)) then
       grabText()
     end
+    signals.emit_wifi_status(connected)
     collectgarbage("collect")
   end
 }

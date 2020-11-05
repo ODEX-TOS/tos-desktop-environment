@@ -22,13 +22,13 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local watch = require("awful.widget.watch")
 local mat_list_item = require("widget.material.list-item")
+local signals = require("lib-tde.signals")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/action-center/icons/"
 local checker
@@ -55,41 +55,17 @@ local function update_icon()
   end
 end
 
-local function check_wifi()
-  awful.spawn.easy_async_with_shell(
-    "nmcli general status",
-    function(stdout)
-      checker = stdout:match("disabled")
-      -- IF NOT NULL THEN WIFI IS DISABLED
-      -- IF NULL IT THEN WIFI IS ENABLED
-      if (checker ~= nil) then
-        mode = false
-        --awful.spawn('notify-send checker~=NOTNULL disabled')
-        update_icon()
-      else
-        mode = true
-        --awful.spawn('notify-send checker==NULL enabled')
-        update_icon()
-      end
-    end
-  )
-end
-
 local function toggle_wifi()
   if (mode == true) then
     awful.spawn("nmcli r wifi off")
     awful.spawn("notify-send 'Airplane Mode Enabled'")
-    mode = false
-    update_icon()
+    signals.emit_wifi_status(false)
   else
     awful.spawn("nmcli r wifi on")
     awful.spawn("notify-send 'Initializing WI-FI'")
-    mode = true
-    update_icon()
+    signals.emit_wifi_status(true)
   end
 end
-
-check_wifi()
 
 local wifi_button = clickable_container(wibox.container.margin(widget, dpi(7), dpi(7), dpi(7), dpi(7))) -- 4 is top and bottom margin
 wifi_button:buttons(
@@ -122,22 +98,20 @@ awful.tooltip(
   }
 )
 
-watch(
-  "nmcli general status",
-  5,
-  function(_, stdout)
-    -- Check if there  bluetooth
-    checker = stdout:match("disabled") -- If 'Controller' string is detected on stdout
-    local widgetIconName
-    if (checker == nil) then
+signals.connect_wifi_status(
+  function(active)
+    if active then
+      mode = true
       widgetIconName = "toggled-on"
+      update_icon()
     else
+      mode = false
       widgetIconName = "toggled-off"
+      update_icon()
     end
     widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
     collectgarbage("collect")
-  end,
-  widget
+  end
 )
 
 local settingsName =

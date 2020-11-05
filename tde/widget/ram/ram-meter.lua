@@ -45,6 +45,9 @@ gears.timer {
   autostart = true,
   callback = function()
     local stdout = file.lines("/proc/meminfo", nil, 3)
+    if #stdout < 3 then
+      return
+    end
     local total = string.gmatch(stdout[1], "%d+")()
     local free = string.gmatch(stdout[3], "%d+")()
     local usage = (1 - (free / total)) * 100

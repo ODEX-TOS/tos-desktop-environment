@@ -46,6 +46,9 @@ gears.timer {
   autostart = true,
   callback = function()
     stdout = file.string("/proc/stat", "^cpu")
+    if stdout == "" then
+      return
+    end
     local user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice =
       stdout:match("(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s")
 

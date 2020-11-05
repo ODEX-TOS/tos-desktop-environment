@@ -6,55 +6,28 @@ local naughty = require("naughty")
 local icons = require("theme.icons")
 local config = require("config")
 local battery_function = require("lib-tde.function.battery")
-
-local update_interval = config.battery_timeout
-
-local battery_script = battery_function.upowerBatteryScript
+local gears = require("gears")
 
 -- Subscribe to power supply status changes with acpi_listen
-local charger_script = battery_function.chargerScript
 local signals = require("lib-tde.signals")
 
--- Periodically get battery info
-awful.widget.watch(
-	battery_script,
-	update_interval,
-	function(widget, stdout)
-		local value = battery_function.getBatteryInformationFromUpower(stdout)
-		if value == nil then
-			return
+gears.timer {
+	timeout = config.battery_timeout,
+	call_now = true,
+	autostart = true,
+	callback = function()
+		local value = battery_function.getBatteryPercentage()
+		if value then
+			signals.emit_battery(value)
 		end
-		signals.emit_battery(value)
 	end
-)
-
+}
 local emit_charger_info = function()
-	awful.spawn.easy_async_with_shell(
-		battery_function.chargedScript,
-		function(out)
-			signals.emit_battery_charging(battery_function.isBatteryCharging(out))
-		end
-	)
+	signals.emit_battery_charging(battery_function.isBatteryCharging())
 end
 
 -- Run once to initialize widgets
 emit_charger_info()
-
--- Kill old acpi_listen process
-awful.spawn.easy_async_with_shell(
-	'ps x | grep "acpi_listen" | grep -v grep | awk \'{print $1}\' | xargs kill',
-	function()
-		-- Update charger status with each line printed
-		awful.spawn.with_line_callback(
-			charger_script,
-			{
-				stdout = function(_)
-					emit_charger_info()
-				end
-			}
-		)
-	end
-)
 
 -- Battery notification module
 -- Depends:

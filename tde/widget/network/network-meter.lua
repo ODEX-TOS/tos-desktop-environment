@@ -27,12 +27,22 @@ local mat_list_item = require("widget.material.list-item")
 local mat_slider = require("widget.material.slider")
 local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
-local watch = require("awful.widget.watch")
 local dpi = require("beautiful").xresources.apply_dpi
+local filehandle = require("lib-tde.file")
+local gears = require("gears")
+local common = require("lib-tde.function.common")
 local config = require("config")
 
 local biggest_upload = 1
 local biggest_download = 1
+
+local last_rx = 0
+local last_tx = 0
+
+-- only run the networking poll every x seconds
+local counter = 0
+
+local interface = filehandle.string("/tmp/interface.txt"):gsub("\n", "")
 
 local value_up =
   wibox.widget {
@@ -52,41 +62,61 @@ local value_down =
   widget = wibox.widget.textbox
 }
 
-watch(
-  "sh /etc/xdg/awesome/net-speed.sh",
-  config.network_poll,
-  function(_, stdout)
-    local download_text, upload_text = stdout:match("(.*);(.*)")
-    value_up:set_markup_silently(upload_text)
-    value_down:set_markup_silently(download_text)
-    print("Network download: " .. download_text)
-    print("Network upload: " .. upload_text)
-
-    if upload_text:match("M") then
-      upload_num = tonumber(upload_text:match("%S+"))
-      if upload_num > biggest_upload then
-        biggest_upload = upload_num
-      end
-      network_slider_up:set_value((upload_num / biggest_upload) * 100)
-    else
-      upload_num = tonumber(upload_text:match("%S+")) / 1000
-      network_slider_up:set_value((upload_num / biggest_upload) * 100)
-    end
-
-    if download_text:match("M") then
-      download_num = tonumber(download_text:match("%S+"))
-      if download_num > biggest_download then
-        biggest_download = download_num
-      end
-      network_slider_down:set_value((download_num / biggest_download) * 100)
-    else
-      download_num = tonumber(download_text:match("%S+")) / 1000
-      network_slider_down:set_value((download_num / biggest_download) * 100)
-    end
-
-    collectgarbage("collect")
+local function _draw_results(download, upload)
+  if download > biggest_download then
+    biggest_download = download
   end
-)
+
+  if upload > biggest_upload then
+    biggest_upload = upload
+  end
+
+  local download_text = common.bytes_to_grandness(download)
+  local upload_text = common.bytes_to_grandness(upload)
+
+  value_up:set_markup_silently(upload_text)
+  value_down:set_markup_silently(download_text)
+
+  if network_slider_up then
+    network_slider_up:set_value((upload / biggest_upload) * 100)
+  end
+  if network_slider_down then
+    network_slider_down:set_value((download / biggest_download) * 100)
+  end
+
+  print("Network download: " .. download_text)
+  print("Network upload: " .. upload_text)
+end
+
+gears.timer {
+  timeout = config.network_poll,
+  call_now = true,
+  autostart = true,
+  callback = function()
+    -- sanitizing the interface
+    if interface == nil then
+      interface = filehandle.string("/tmp/interface.txt"):gsub("\n", "")
+      return
+    end
+
+    counter = counter + 1
+
+    local valueRX = filehandle.string("/sys/class/net/" .. interface .. "/statistics/rx_bytes"):gsub("\n", "")
+    local valueTX = filehandle.string("/sys/class/net/" .. interface .. "/statistics/tx_bytes"):gsub("\n", "")
+
+    valueRX = tonumber(valueRX) or 0
+    valueTX = tonumber(valueTX) or 0
+
+    local download = math.ceil((valueRX - last_rx) / config.network_poll)
+    local upload = math.ceil((valueTX - last_tx) / config.network_poll)
+
+    if not (last_rx == 0) and not (last_tx == 0) then
+      _draw_results(download, upload)
+    end
+    last_rx = valueRX
+    last_tx = valueTX
+  end
+}
 
 function up(screen)
   network_slider_up =

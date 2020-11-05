@@ -34,6 +34,7 @@ local PATH_TO_ICONS = "/etc/xdg/awesome/widget/music/icons/"
 local apps = require("configuration.apps")
 local theme = require("theme.icons.dark-light")
 local dpi = require("beautiful").xresources.apply_dpi
+local filehandle = require("lib-tde.file")
 
 local bShowingWidget = false
 
@@ -122,17 +123,11 @@ local cover =
 }
 
 function checkCover()
-  local cmd = "if [[ -f /tmp/cover.jpg ]]; then print exists; fi"
-  awful.spawn.easy_async_with_shell(
-    cmd,
-    function(stdout)
-      if (stdout:match("%W")) then
-        cover.icon:set_image(gears.surface.load_uncached("/tmp/cover.jpg"))
-      else
-        cover.icon:set_image(gears.surface.load_uncached(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
-      end
-    end
-  )
+  if filehandle.exists("/tmp/cover.jpg") then
+    cover.icon:set_image(gears.surface.load_uncached("/tmp/cover.jpg"))
+  else
+    cover.icon:set_image(gears.surface.load_uncached(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
+  end
 end
 
 -- Update info
@@ -204,7 +199,9 @@ awesome.connect_signal(
       single_shot = true,
       callback = function()
         checkCover()
-        awful.spawn("if [ -f /tmp/cover.jpg ]; then rm /tmp/cover.jpg; fi", false)
+        if filehandle.exists("/tmp/cover.jpg") then
+          filehandle.rm("/tmp/cover.jpg")
+        end
       end
     }
   end

@@ -22,15 +22,12 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
-local naughty = require("naughty")
 local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
-local watch = require("awful.widget.watch")
 local mat_list_item = require("widget.material.list-item")
-local config = require("config")
+local signals = require("lib-tde.signals")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/action-center/icons/"
 
@@ -55,23 +52,6 @@ local update_imagebox = function()
   else
     button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-off" .. ".svg")
   end
-end
-
--- Check status
-local check_action_status = function()
-  awful.spawn.easy_async_with_shell(
-    "rfkill list bluetooth",
-    function(stdout)
-      if stdout:match("Soft blocked: yes") ~= nil then
-        action_status = false
-      else
-        action_status = true
-      end
-
-      -- Update imagebox
-      update_imagebox()
-    end
-  )
 end
 
 -- Power on Commands
@@ -144,11 +124,9 @@ awful.tooltip {
 }
 
 -- Status Checker
-watch(
-  "rfkill list bluetooth",
-  config.bluetooth_poll,
-  function(_, stdout)
-    if stdout:match("Soft blocked: yes") == nil then
+signals.connect_bluetooth_status(
+  function(status)
+    if status then
       action_status = true
       button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-on" .. ".svg")
     else
@@ -188,9 +166,6 @@ local action_widget =
   },
   layout = wibox.layout.fixed.vertical
 }
-
--- Update/Check status on startup
-check_action_status()
 
 -- Return widget
 return action_widget

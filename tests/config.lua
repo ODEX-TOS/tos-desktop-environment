@@ -36,12 +36,6 @@ function test_config_bluetooth_poll()
     assert(config.bluetooth_poll > 1)
 end
 
-function test_config_harddisk_poll()
-    assert(config.hardisk_poll)
-    assert(type(config.hardisk_poll) == "number")
-    assert(config.hardisk_poll > 120)
-end
-
 function test_config_temp_poll()
     assert(config.temp_poll)
     assert(type(config.temp_poll) == "number")
@@ -64,12 +58,6 @@ function test_config_cpu_poll()
     assert(config.cpu_poll)
     assert(type(config.cpu_poll) == "number")
     assert(config.cpu_poll > 1)
-end
-
-function test_config_proc_poll()
-    assert(config.proc_poll)
-    assert(type(config.proc_poll) == "number")
-    assert(config.proc_poll > 1)
 end
 
 function test_about_tde_and_tos()
