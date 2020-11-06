@@ -242,10 +242,6 @@ function make_nav()
   table.insert(root.elements.settings_views, make_view(icons.settings, "General", require("widget.settings.general")()))
   table.insert(
     root.elements.settings_views,
-    make_view(icons.calendar, "Calendar", require("widget.settings.calendar")())
-  )
-  table.insert(
-    root.elements.settings_views,
     make_view(icons.wifi, "Connections", require("widget.settings.connections")())
   )
   table.insert(root.elements.settings_views, make_view(icons.chart, "System", require("widget.settings.system")()))

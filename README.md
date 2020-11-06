@@ -39,6 +39,7 @@
 - [Usage](#usage)
   - [Unit Testing](#unit-test)
     - [Dockerized](#docker)
+  - [Profiling](#profiling)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -156,6 +157,22 @@ Alternativly we have provided a docker-compose file that does this all for you
 docker-compose up
 ```
 
+### Profiling
+
+When developing you can also perform some profiling.
+The `TDE profiler` listens for function calls and counts how many times the happen. For each function call we measure the time it took.
+This way we can have educated guesses where the time gets spent the most.
+Thus improving performance in the most critical parts of the system.
+
+Profiling can be done by executing the following command:
+
+```bash
+bash profiler.sh <time> <resultset>
+# for example (this does the profiling for 10 seconds and returns the top 100 functions)
+bash profiler.sh 10 100
+
+```
+
 <!-- ROADMAP -->
 
 ## Roadmap
@@ -204,24 +221,16 @@ Project Link:
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[repo-build]:
-  https://jenkins.odex.be/buildStatus/icon?job=tos-repo&style=flat-square&subject=tde-build
+[repo-build]: https://jenkins.odex.be/buildStatus/icon?job=tos-repo&style=flat-square&subject=tde-build
 [repo-url]: https://jenkins.odex.be/job/tos-repo/
-[contributors-shield]:
-  https://img.shields.io/github/contributors/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
-[contributors-url]:
-  https://github.com/ODEX-TOS/tos-desktop-environment/graphs/contributors
-[forks-shield]:
-  https://img.shields.io/github/forks/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[contributors-shield]: https://img.shields.io/github/contributors/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[contributors-url]: https://github.com/ODEX-TOS/tos-desktop-environment/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [forks-url]: https://github.com/ODEX-TOS/tos-desktop-environment/network/members
-[stars-shield]:
-  https://img.shields.io/github/stars/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[stars-shield]: https://img.shields.io/github/stars/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [stars-url]: https://github.com/ODEX-TOS/tos-desktop-environment/stargazers
-[issues-shield]:
-  https://img.shields.io/github/issues/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [issues-url]: https://github.com/ODEX-TOS/tos-desktop-environment/issues
-[license-shield]:
-  https://img.shields.io/github/license/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
-[license-url]:
-  https://github.com/ODEX-TOS/tos-desktop-environment/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[license-url]: https://github.com/ODEX-TOS/tos-desktop-environment/blob/master/LICENSE.txt
 [product-screenshot]: https://tos.odex.be/images/logo.svg

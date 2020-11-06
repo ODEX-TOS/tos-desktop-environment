@@ -32,6 +32,7 @@ local config = require("config")
 local file = require("lib-tde.file")
 local gears = require("gears")
 local signals = require("lib-tde.signals")
+local delayed_timer = require("lib-tde.function.delayed-timer")
 
 local noNetwork = true
 
@@ -48,11 +49,10 @@ local slider =
 }
 
 local max_temp = 80
-gears.timer {
-  timeout = config.temp_poll,
-  call_now = true,
-  autostart = true,
-  callback = function()
+
+delayed_timer(
+  config.temp_poll,
+  function()
     if noNetwork then
       return
     end
@@ -64,8 +64,9 @@ gears.timer {
     slider:set_value((temp / 1000) / max_temp * 100)
     print("Current temperature: " .. (temp / 1000) .. " °C")
     collectgarbage("collect")
-  end
-}
+  end,
+  config.temp_startup_delay
+)
 
 local temperature_meter =
   wibox.widget {

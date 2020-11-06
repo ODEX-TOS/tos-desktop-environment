@@ -31,6 +31,8 @@ local dpi = require("beautiful").xresources.apply_dpi
 local filehandle = require("lib-tde.file")
 local gears = require("gears")
 local common = require("lib-tde.function.common")
+local delayed_timer = require("lib-tde.function.delayed-timer")
+
 local config = require("config")
 
 local biggest_upload = 1
@@ -88,11 +90,9 @@ local function _draw_results(download, upload)
   print("Network upload: " .. upload_text)
 end
 
-gears.timer {
-  timeout = config.network_poll,
-  call_now = true,
-  autostart = true,
-  callback = function()
+delayed_timer(
+  config.network_poll,
+  function()
     -- sanitizing the interface
     if interface == nil then
       interface = filehandle.string("/tmp/interface.txt"):gsub("\n", "")
@@ -115,8 +115,9 @@ gears.timer {
     end
     last_rx = valueRX
     last_tx = valueTX
-  end
-}
+  end,
+  config.netwok_startup_delay
+)
 
 function up(screen)
   network_slider_up =

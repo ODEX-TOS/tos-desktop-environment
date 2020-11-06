@@ -34,17 +34,17 @@ local total_prev = 0
 local idle_prev = 0
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
+local delayed_timer = require("lib-tde.function.delayed-timer")
 
 local slider =
   wibox.widget {
   read_only = true,
   widget = mat_slider
 }
-gears.timer {
-  timeout = config.cpu_poll,
-  call_now = true,
-  autostart = true,
-  callback = function()
+
+delayed_timer(
+  config.cpu_poll,
+  function()
     stdout = file.string("/proc/stat", "^cpu")
     if stdout == "" then
       return
@@ -65,8 +65,9 @@ gears.timer {
     total_prev = total
     idle_prev = idle
     collectgarbage("collect")
-  end
-}
+  end,
+  config.cpu_startup_delay
+)
 
 local cpu_meter =
   wibox.widget {

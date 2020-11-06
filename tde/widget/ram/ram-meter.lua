@@ -32,18 +32,16 @@ local config = require("config")
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
 local gears = require("gears")
-
+local delayed_timer = require("lib-tde.function.delayed-timer")
 local slider =
   wibox.widget {
   read_only = true,
   widget = mat_slider
 }
 
-gears.timer {
-  timeout = config.ram_poll,
-  call_now = true,
-  autostart = true,
-  callback = function()
+delayed_timer(
+  config.ram_poll,
+  function()
     local stdout = file.lines("/proc/meminfo", nil, 3)
     if #stdout < 3 then
       return
@@ -55,8 +53,9 @@ gears.timer {
     signals.emit_ram_usage(usage)
     signals.emit_ram_total(total)
     print("Ram usage: " .. usage .. "%")
-  end
-}
+  end,
+  config.ram_startup_delay
+)
 
 local ram_meter =
   wibox.widget {

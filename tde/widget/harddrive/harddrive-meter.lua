@@ -33,6 +33,7 @@ local gears = require("gears")
 local signals = require("lib-tde.signals")
 local filehandle = require("lib-tde.file")
 local common = require("lib-tde.function.common")
+local delayed_timer = require("lib-tde.function.delayed-timer")
 
 local slider =
   wibox.widget {
@@ -40,11 +41,9 @@ local slider =
   widget = mat_slider
 }
 
-gears.timer {
-  timeout = config.harddisk_poll,
-  call_now = true,
-  autostart = true,
-  callback = function()
+delayed_timer(
+  config.harddisk_poll,
+  function()
     local lines = filehandle.lines("/proc/partitions")
 
     -- find all hardisk and their size
@@ -60,13 +59,14 @@ gears.timer {
         size = size + tonumber(sataSize)
       end
     end
-
+    -- TODO: Find real disk usage information
     signals.emit_disk_usage(10)
     signals.emit_disk_space(common.bytes_to_grandness(size, 1))
 
     collectgarbage("collect")
-  end
-}
+  end,
+  config.harddisk_startup_delay
+)
 
 local harddrive_meter =
   wibox.widget {
