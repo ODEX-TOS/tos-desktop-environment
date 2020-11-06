@@ -25,7 +25,6 @@
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
-local file = require("lib-tde.file")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local theme = require("theme.icons.dark-light")
@@ -106,7 +105,7 @@ gears.timer {
   autostart = true,
   callback = function()
     local widgetIconName = "wifi-strength"
-    local interface_res = file.lines("/proc/net/wireless", nil, 3)[3]
+    local interface_res = filehandle.lines("/proc/net/wireless", nil, 3)[3]
     if interface_res == nil then
       connected = false
       signals.emit_wifi_status(false)

@@ -8,7 +8,14 @@ export LUA_PATH="$LUA_PATH;"
 
 if [[ "$1" == "" ]]; then
     echo "Please specify how long to profile for"
+    echo "Alternativly you can supply a file as the first argument"
+    echo "Then we profile that file"
     exit 1
+fi
+
+if [[ -f "$1" ]]; then
+    "$LUA" profiler/init.lua "$1"
+    exit 0
 fi
 
 if [[ "$2" == "" ]]; then

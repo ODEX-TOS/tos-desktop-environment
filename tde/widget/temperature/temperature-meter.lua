@@ -30,7 +30,6 @@ local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local file = require("lib-tde.file")
-local gears = require("gears")
 local signals = require("lib-tde.signals")
 local delayed_timer = require("lib-tde.function.delayed-timer")
 

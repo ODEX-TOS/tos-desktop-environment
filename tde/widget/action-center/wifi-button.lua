@@ -26,7 +26,6 @@ local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
-local watch = require("awful.widget.watch")
 local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
 
