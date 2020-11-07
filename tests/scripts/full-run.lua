@@ -1,7 +1,0 @@
-require("tests.scripts.bluetooth-status")
-require("tests.scripts.cpu-value")
-require("tests.scripts.hard-drive-value")
-require("tests.scripts.network-value")
-require("tests.scripts.ram-value")
-require("tests.scripts.temp-value")
-require("tests.scripts.wifi")

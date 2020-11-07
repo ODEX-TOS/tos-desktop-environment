@@ -167,9 +167,18 @@ Thus improving performance in the most critical parts of the system.
 Profiling can be done by executing the following command:
 
 ```bash
-bash profiler.sh <time> <resultset>
-# for example (this does the profiling for 10 seconds and returns the top 100 functions)
-bash profiler.sh 10 100
+bash profiler.sh --help
+# for example profile tde (for 10 seconds) and return the top 100 functions (in terms of cpu time)
+bash profiler.sh -t 10 -F 100
+# Same as above but use realtime instead of cpu time
+bash profiler.sh -t 10 -F 100 -r
+
+# Save the result to tde-functions.result
+bash profiler.sh -t 10 -o tde-functions.result
+
+# Run the profiler on a file
+bash profiler.sh -f tests/scripts/full
+
 
 ```
 

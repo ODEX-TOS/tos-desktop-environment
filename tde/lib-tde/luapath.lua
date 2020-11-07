@@ -1,8 +1,8 @@
 local exists = require("lib-tde.file").dir_exists
 
 -- Used to enable custom widgets as a plugin mechanism for TDE
-package.path = package.path .. ";" .. os.getenv("HOME") .. "/.config/tde/?/init.lua"
-package.path = package.path .. ";" .. os.getenv("HOME") .. "/.config/tde/?.lua"
+package.path = os.getenv("HOME") .. "/.config/tde/?/init.lua;" .. package.path
+package.path = os.getenv("HOME") .. "/.config/tde/?.lua;" .. package.path
 
 -- Setup custom lua scripts (libraries)
 -- If the user dir exists then use that

@@ -40,16 +40,19 @@ local function getPluginSection(section)
     local i = 0
     while true do
         i = i + 1
-        name = section .. i
-        if getItem(name) ~= nil then
-            -- only require plugin if it exists
-            -- otherwise the user entered a wrong pluging
+        local name = section .. i
+        local value = getItem(name)
+        if value ~= nil then
             -- system plugins are also accepted and start with widget.
-            if getItem(name):find("^widget.") or dirExists(os.getenv("HOME") .. "/.config/tde/" .. getItem(name)) then
-                local plugin = prequire(getItem(name))
+            if value:sub(1, 7) == "widget." then
+                -- only require plugin if it exists
+                -- otherwise the user entered a wrong pluging
+                table.insert(iterator, require(value))
+            elseif dirExists(os.getenv("HOME") .. "/.config/tde/" .. value) then
+                local plugin = prequire(value)
                 if (plugin) then
-                    table.insert(iterator, plugin)
                     print("Plugin " .. name .. " is loaded in!")
+                    table.insert(iterator, plugin)
                 else
                     inValidPlugin(
                         name,

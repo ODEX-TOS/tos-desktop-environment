@@ -168,7 +168,7 @@ local function topbar_right_plugin(s)
     wibox.container.margin(s.systray, dpi(14), dpi(0), dpi(4), dpi(4))
   }
 
-  for index, value in ipairs(pluginsright) do
+  for _, value in ipairs(pluginsright) do
     table_widget:add(
       {
         value,

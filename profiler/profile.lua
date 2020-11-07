@@ -131,17 +131,17 @@ function profile.query(limit)
         if _tcalled[f] then
             dt = clock() - _tcalled[f]
         end
-        t[i] = {i, _labeled[f] or "?", _ncalls[f], _telapsed[f] + dt, _defined[f]}
+        t[i] = {i, _labeled[f] or "?", _ncalls[f], _telapsed[f] + dt, (_telapsed[f] + dt) / _ncalls[f], _defined[f]}
     end
     return t
 end
 
-local cols = {3, 29, 11, 24, 32}
+local cols = {3, 29, 11, 24, 24, 32}
 function profile.report(n)
     local out = {}
     local report = profile.query(n)
     for i, row in ipairs(report) do
-        for j = 1, 5 do
+        for j = 1, 6 do
             local s = row[j]
             local l2 = cols[j]
             s = tostring(s)
@@ -157,9 +157,9 @@ function profile.report(n)
     end
 
     local row =
-        " +-----+-------------------------------+-------------+--------------------------+----------------------------------+ \n"
+        " +-----+-------------------------------+-------------+--------------------------+--------------------------+----------------------------------+ \n"
     local col =
-        " | #   | Function                      | Calls       | Time                     | Code                             | \n"
+        " | #   | Function                      | Calls       | Time                     | Time per function call   | Code                             | \n"
     local sz = row .. col .. row
     if #out > 0 then
         sz = sz .. " | " .. table.concat(out, " | \n | ") .. " | \n"
