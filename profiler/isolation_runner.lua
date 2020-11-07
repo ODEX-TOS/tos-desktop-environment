@@ -10,7 +10,7 @@ _G.DISPLAY_ID = 100
 -- this string should tell us if we encountered what we expect from the Integration Test
 -- The last element is the stdout from awesomewm
 function run_rc_config_in_xephyr(config, starttime, endtime, funcs)
-    local timeout = starttime + endtime
+    local timeout = (tonumber(os.getenv("TOTAL_TIME")) + 1) or 10
 
     if os.getenv("MULTIPLIER") then
         timeout = timeout * tonumber(os.getenv("MULTIPLIER"))
@@ -29,7 +29,11 @@ function run_rc_config_in_xephyr(config, starttime, endtime, funcs)
     local ENV =
         "XDG_CURRENT_DESKTOP=TDE TDE_ENV=develop DISPLAY=" ..
         DISPLAY ..
-            " STARTTIME=" .. tostring(starttime) .. " ENDTIME=" .. tostring(endtime) .. " FUNCTIONS=" .. tostring(funcs)
+            " REALTIME='" ..
+                os.getenv("REALTIME") ..
+                    "' FUNCTIONS_AMOUNT='" ..
+                        os.getenv("FUNCTIONS_AMOUNT") ..
+                            "' OUTPUT='" .. os.getenv("OUTPUT") .. "' TOTAL_TIME='" .. os.getenv("TOTAL_TIME") .. "' "
     local launchCMD = "awesome --config " .. config
     local xephyrCommand = "DISPLAY=:0 Xephyr -br -ac -reset -once -terminate -screen 700x700 " .. DISPLAY .. " &"
     local command =
