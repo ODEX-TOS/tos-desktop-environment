@@ -5,16 +5,16 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-tde.file
+-- @tdemod lib-tde.config-writer
 ---------------------------------------------------------------------------
 
 local parser = require("parser")
 local file_handle = require("lib-tde.file")
 
---- Udate an entry in a configuration file
--- @tparam file string The path to the file, can be both absolute or relative.
--- @tparam field string The specific configuration field to update
--- @tparam value string The value that the configuration field should contain
+--- Update an entry in a configuration file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam string field The specific configuration field to update
+-- @tparam string value The value that the configuration field should contain
 -- @treturn bool if the write was succesfull
 -- @staticfct update_entry
 -- @usage -- This will create the content in hallo.txt to var=value

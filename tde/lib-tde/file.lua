@@ -273,8 +273,11 @@ end
 --- Function equivalent to basename in POSIX systems
 --@param str the path string
 function basename(str)
-  local name = string.gsub(str, "(.*/)(.*)", "%2")
-  return name
+  if type(str) == "string" then
+    local name = string.gsub(str, "(.*/)(.*)", "%2")
+    return name
+  end
+  return nil
 end
 
 --- Function to remove a file for the filesystem
@@ -303,5 +306,6 @@ return {
   list_dir_full = list_dir_full,
   write = write,
   overwrite = overwrite,
-  basename = basename
+  basename = basename,
+  rm = rm
 }

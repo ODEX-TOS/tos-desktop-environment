@@ -157,5 +157,45 @@ function test_directory_list_unexisting_dir_works_reqursive()
     assert(type(files.list_dir_full("/bdquqddqdsqdqsd")) == "table")
 end
 
+function test_file_remove_works()
+    assert(not files.exists("should_not_exist"))
+    assert(files.write("should_not_exist", ""))
+    assert(files.exists("should_not_exist"))
+    assert(files.rm("should_not_exist"))
+
+    -- make sure it doesn't exist anymore
+    assert(not files.exists("should_not_exist"))
+end
+
+function test_file_basename_works()
+    assert(files.basename("hello") == "hello")
+    assert(files.basename("/root/hello") == "hello")
+    assert(files.basename("/tmp/sec/test.log") == "test.log")
+    assert(files.basename("/file") == "file")
+    assert(files.basename("/a/deap/data/strucutre/is/present/here") == "here")
+end
+
+function test_file_basename_works_with_spaces()
+    assert(files.basename("hello world") == "hello world")
+    assert(files.basename("/root/hello world") == "hello world")
+    assert(files.basename("/tmp/sec/test log") == "test log")
+    assert(files.basename("/file with spaces") == "file with spaces")
+    assert(files.basename("/a/deap/data/strucutre is/present/here with/spaces in the name") == "spaces in the name")
+end
+
+function test_file_basename_validate_input()
+    assert(files.basename(nil) == nil)
+    assert(files.basename(10) == nil)
+    assert(files.basename(-10) == nil)
+    assert(files.basename(99991919) == nil)
+    assert(files.basename({}) == nil)
+    assert(
+        files.basename(
+            function()
+            end
+        ) == nil
+    )
+end
+
 rm_file("test_file_1")
 rm_file("test_file_2")
