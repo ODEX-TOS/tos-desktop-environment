@@ -18,7 +18,6 @@
 -- @tdemod lib-tde.function.battery
 ---------------------------------------------------------------------------
 
--- TODO: don't use a shell command - instead check file using lua
 local filehandle = require("lib-tde.file")
 
 --- Check if a battery exists
