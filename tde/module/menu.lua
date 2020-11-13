@@ -27,7 +27,13 @@ local beautiful = require("beautiful")
 local apps = require("configuration.apps")
 local icons = require("theme.icons")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
-local mousedrag = require("module.mousedrag")
+
+local mousedrag = nil
+local started = false
+
+if not (general["disable_desktop"] == "1") then
+	mousedrag = require("module.mousedrag")
+end
 
 terminal = apps.default.terminal
 web_browser = os.getenv("BROWSER") or apps.default.web_browser
@@ -135,10 +141,15 @@ root.buttons(
 			1,
 			function()
 				mymainmenu:hide()
-				mousedrag.start()
+				if not (general["disable_desktop"] == "1") then
+					mousedrag.start()
+					started = true
+				end
 			end,
 			function()
-				mousedrag.stop()
+				if not (general["disable_desktop"] == "1") and started then
+					mousedrag.stop()
+				end
 			end
 		)
 	)

@@ -153,7 +153,9 @@ _G.client.connect_signal(
 -- Look into awesome-freedesktop for more information
 require("module.menu")
 
-require("module.installer")
-require("module.desktop")
+if not (general["disable_desktop"] == "1") then
+  require("module.installer")
+  require("module.desktop")
+end
 
 require("tutorial")

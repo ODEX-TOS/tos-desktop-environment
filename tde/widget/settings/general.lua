@@ -277,6 +277,12 @@ return function()
           "Put the system in sleep mode after a period of inactivity",
           general["screen_timeout"] == "1" or general["screen_timeout"] == nil,
           "screen_timeout"
+        ),
+        create_checkbox(
+          "Disable Desktop",
+          "When enabled we don't draw icons or anything on the desktop",
+          general["disable_desktop"] == "1",
+          "disable_desktop"
         )
       },
       separator,
