@@ -94,6 +94,13 @@ local function translate(str)
     if not init_loaded then
         print("I18N - Cannot translate before initializing i18n use i18n.init() ", warn)
     end
+    -- TDE treads all input strings into translation as english
+    -- We always translate from english to an unknown language
+    -- This statement bypasses the overhead of translating (because we don't need to translate)
+    if system_language == "en" then
+        return str
+    end
+
     if translations then
         local translation = translations[str]
         if translation == nil then
