@@ -30,6 +30,7 @@
 ---------------------------------------------------------------------------
 
 local filehandle = require("lib-tde.file")
+local common = require("lib-tde.function.common")
 local gears = require("gears")
 err = "\27[0;31m[ ERROR "
 warn = "\27[0;33m[ WARN "
@@ -41,7 +42,8 @@ local translationsPath = gears.filesystem.get_configuration_dir() .. "/lib-tde/t
 
 local function detect_system_language()
     -- TODO: perform dynamic detection
-    system_language = "dutch"
+    local envLang = os.getenv("LANG")
+    system_language = common.split(envLang, "_")[1] or "en"
 end
 
 local function _init(default)
