@@ -52,6 +52,8 @@ local numOfUpdatesAvailable
 local numOfSecUpdatesAvailable
 local config = require("config")
 
+local securityUpdateNotShown = true
+
 local function split(str)
   lines = {}
   for s in str:gmatch("[^\r\n]+") do
@@ -120,19 +122,27 @@ local function notifySecurityUpdate(num)
   if num == "1" then
     str = "There is " .. num .. " security vulnerability. Please try and update the system to prevent risks."
   end
-  naughty.notification(
-    {
-      title = "Security Updates",
-      text = str,
-      icon = icon,
-      timeout = 10,
-      urgency = "critical",
-      app_name = "Security center"
-    }
-  )
+  if securityUpdateNotShown then
+    naughty.notify(
+      {
+        title = "Security Updates",
+        text = str,
+        icon = icon,
+        timeout = 10,
+        urgency = "critical",
+        app_name = "Security center"
+      }
+    ):connect_signal(
+      "destroyed",
+      function()
+        -- we already notified the users of the security update
+        -- we don't want to spam them every x minutes
+        securityUpdateNotShown = false
+      end
+    )
+  end
 end
 
-local last_battery_check = os.time()
 local COMMAND = "/bin/bash " .. "/etc/xdg/awesome/updater.sh"
 watch(
   COMMAND,
