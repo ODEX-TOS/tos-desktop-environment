@@ -227,7 +227,7 @@ local left_panel_func = function(screen)
       widget = mat_icon
     },
     wibox.widget {
-      text = "Global search",
+      text = i18n.translate("Global search"),
       font = "Iosevka Regular 12",
       widget = wibox.widget.textbox,
       align = center
@@ -256,7 +256,7 @@ local left_panel_func = function(screen)
       widget = mat_icon
     },
     wibox.widget {
-      text = "Change Application Scaling",
+      text = i18n.translate("Change Application Scaling"),
       font = "Iosevka Regular 12",
       widget = wibox.widget.textbox,
       align = center
@@ -286,7 +286,7 @@ local left_panel_func = function(screen)
       widget = mat_icon
     },
     wibox.widget {
-      text = "Full settings application",
+      text = i18n.translate("Full settings application"),
       font = "Iosevka Regular 12",
       widget = wibox.widget.textbox,
       align = center
@@ -317,7 +317,7 @@ local left_panel_func = function(screen)
       widget = mat_icon
     },
     wibox.widget {
-      text = "Connect to a wireless network",
+      text = i18n.translate("Connect to a wireless network"),
       font = "Iosevka Regular 12",
       widget = wibox.widget.textbox,
       align = center
@@ -347,7 +347,7 @@ local left_panel_func = function(screen)
       widget = mat_icon
     },
     wibox.widget {
-      text = "End work session",
+      text = i18n.translate("End work session"),
       font = "Iosevka Regular 12",
       widget = wibox.widget.textbox
     },
@@ -415,7 +415,7 @@ local left_panel_func = function(screen)
       separator,
       {
         wibox.widget {
-          text = "Network Settings",
+          text = i18n.translate("Network Settings"),
           font = "Iosevka Regular 10",
           align = "left",
           widget = wibox.widget.textbox
@@ -436,7 +436,7 @@ local left_panel_func = function(screen)
       separator,
       {
         wibox.widget {
-          text = "Screen Settings",
+          text = i18n.translate("Screen Settings"),
           font = "Iosevka Regular 10",
           align = "left",
           widget = wibox.widget.textbox
@@ -458,7 +458,7 @@ local left_panel_func = function(screen)
       separator,
       {
         wibox.widget {
-          text = "Settings application",
+          text = i18n.translate("Settings application"),
           font = "Iosevka Regular 10",
           align = "left",
           widget = wibox.widget.textbox

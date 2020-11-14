@@ -16,7 +16,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("Media")
+  local title = wibox.widget.textbox(i18n.translate("Media"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -36,14 +36,14 @@ return function()
     )
   )
 
-  local vol_heading = wibox.widget.textbox("Volume")
+  local vol_heading = wibox.widget.textbox(i18n.translate("Volume"))
   vol_heading.font = beautiful.font
 
-  local vol_footer = wibox.widget.textbox("test")
+  local vol_footer = wibox.widget.textbox(i18n.translate("test"))
   vol_footer.font = beautiful.font
   vol_footer.align = "right"
 
-  local mic_footer = wibox.widget.textbox("test")
+  local mic_footer = wibox.widget.textbox(i18n.translate("test"))
   mic_footer.font = beautiful.font
   mic_footer.align = "right"
 

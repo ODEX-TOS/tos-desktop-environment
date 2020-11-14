@@ -48,7 +48,7 @@ local function send_notification(title, text, icon, timeout, urgency)
 		icon = icon,
 		timeout = timeout,
 		urgency = urgency,
-		app_name = "Power Notification"
+		app_name = i18n.translate("Power Notification")
 	}
 
 	if last_notification and not last_notification.is_expired then
@@ -73,12 +73,12 @@ signals.connect_battery(
 
 			if battery < 6 and not battery_critical_already_notified then
 				battery_critical_already_notified = true
-				text = "Battery Critical!"
+				text = i18n.translate("Battery Critical!")
 				timeout = 0
 				urgency = "critical"
 			elseif battery < 16 and not battery_low_already_notified then
 				battery_low_already_notified = true
-				text = "Battery is low!"
+				text = i18n.translate("Battery is low!")
 				timeout = 6
 				urgency = "critical"
 			end
@@ -87,7 +87,7 @@ signals.connect_battery(
 			if battery ~= nil then
 				if battery > 99 and not battery_full_already_notified then
 					battery_full_already_notified = true
-					text = "Battery Full!"
+					text = i18n.translate("Battery Full!")
 					timeout = 6
 					urgency = "normal"
 				end
@@ -97,7 +97,7 @@ signals.connect_battery(
 		-- If text has been initialized, then we need to send a
 		-- notification
 		if text then
-			send_notification("Battery status", text, icon, timeout, urgency)
+			send_notification(i18n.translate("Battery status"), text, icon, timeout, urgency)
 		end
 	end
 )
@@ -114,12 +114,12 @@ signals.connect_battery_charging(
 		if plugged then
 			battery_critical_already_notified = false
 			battery_low_already_notified = false
-			text = "Plugged"
+			text = i18n.translate("Plugged")
 			icon = icons.batt_charging
 			urgency = "normal"
 		else
 			battery_full_already_notified = false
-			text = "Unplugged"
+			text = i18n.translate("Unplugged")
 			icon = icons.batt_discharging
 			urgency = "normal"
 		end
@@ -128,7 +128,7 @@ signals.connect_battery_charging(
 		if charger_first_time then
 			charger_first_time = false
 		else
-			send_notification("Charger Status", text, icon, 3, urgency)
+			send_notification(i18n.translate("Charger Status"), text, icon, 3, urgency)
 		end
 	end
 )

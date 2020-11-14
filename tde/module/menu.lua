@@ -53,15 +53,15 @@ beautiful.menu_border_color = "#00000075"
 -- Create a launcher widget and a main menu
 myawesomemenu = {
 	{
-		"Hotkeys",
+		i18n.translate("Hotkeys"),
 		function()
 			hotkeys_popup.show_help(nil, awful.screen.focused())
 		end
 	},
-	{"Edit config", editor_cmd .. " " .. awesome.conffile},
-	{"Restart", awesome.restart},
+	{i18n.translate("Edit config"), editor_cmd .. " " .. awesome.conffile},
+	{i18n.translate("Restart"), awesome.restart},
 	{
-		"Quit",
+		i18n.translate("Quit"),
 		function()
 			awesome.quit()
 		end
@@ -71,7 +71,7 @@ myawesomemenu = {
 -- Screenshot menu
 local screenshot = {
 	{
-		"Full",
+		i18n.translate("Full"),
 		function()
 			awful.spawn.easy_async_with_shell(
 				apps.bins.full_screenshot,
@@ -82,7 +82,7 @@ local screenshot = {
 		end
 	},
 	{
-		"Area",
+		i18n.translate("Area"),
 		function()
 			awful.spawn.easy_async_with_shell(
 				apps.bins.area_screenshot,
@@ -103,17 +103,17 @@ mymainmenu =
 		-- Not actually the size, but the quality of the icon
 		icon_size = 48,
 		before = {
-			{"Terminal", terminal, menubar.utils.lookup_icon("utilities-terminal")},
-			{"Web browser", web_browser, menubar.utils.lookup_icon("webbrowser-app")},
-			{"File Manager", file_manager, menubar.utils.lookup_icon("system-file-manager")},
-			{"Text Editor", text_editor, menubar.utils.lookup_icon("accessories-text-editor")}
+			{i18n.translate("Terminal"), terminal, menubar.utils.lookup_icon("utilities-terminal")},
+			{i18n.translate("Web browser"), web_browser, menubar.utils.lookup_icon("webbrowser-app")},
+			{i18n.translate("File Manager"), file_manager, menubar.utils.lookup_icon("system-file-manager")},
+			{i18n.translate("Text Editor"), text_editor, menubar.utils.lookup_icon("accessories-text-editor")}
 			-- other triads can be put here
 		},
 		after = {
 			{"TDE", myawesomemenu, icons.logo},
-			{"Screenshot", screenshot},
+			{i18n.translate("Screenshot"), screenshot},
 			{
-				"End Session",
+				i18n.translate("End Session"),
 				function()
 					print("Showing exit screen")
 					_G.exit_screen_show()

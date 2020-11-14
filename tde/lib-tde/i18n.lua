@@ -41,7 +41,7 @@ local translationsPath = gears.filesystem.get_configuration_dir() .. "/lib-tde/t
 
 local function detect_system_language()
     -- TODO: perform dynamic detection
-    system_language = "en"
+    system_language = "dutch"
 end
 
 local function _init(default)
@@ -93,7 +93,12 @@ local function translate(str)
         print("I18N - Cannot translate before initializing i18n use i18n.init() ", warn)
     end
     if translations then
-        return translations[str] or str
+        local translation = translations[str]
+        if translation == nil then
+            print("I18N - cannot find translation for '" .. str .. "'", warn)
+            return str
+        end
+        return translation
     end
     return str
 end

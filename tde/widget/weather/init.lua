@@ -50,7 +50,7 @@ weather_icon_widget =
 
 weather_header =
   wibox.widget {
-  text = "Weather & Temperature",
+  text = i18n.translate("Weather & Temperature"),
   font = "SFNS Display Regular 14",
   align = "center",
   valign = "center",
@@ -59,7 +59,7 @@ weather_header =
 
 weather_description =
   wibox.widget {
-  text = "No internet connection...",
+  text = i18n.translate("No internet connection..."),
   font = "SFNS Display Regular 16",
   align = "left",
   valign = "center",
@@ -68,7 +68,7 @@ weather_description =
 
 weather_temperature =
   wibox.widget {
-  text = "Try again later.",
+  text = i18n.translate("Try again later."),
   font = "SFNS Display Regular 12",
   align = "left",
   valign = "center",

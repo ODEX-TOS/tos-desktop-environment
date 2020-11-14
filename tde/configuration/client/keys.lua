@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 require("awful.autofocus")
 local config = require("configuration.keys.mod")
 local modkey = config.modKey
@@ -36,7 +35,7 @@ local clientKeys =
       c.fullscreen = not c.fullscreen
       c:raise()
     end,
-    {description = "toggle fullscreen", group = "client"}
+    {description = i18n.translate("toggle fullscreen"), group = i18n.translate("client")}
   ),
   awful.key(
     {modkey},
@@ -44,7 +43,7 @@ local clientKeys =
     function(c)
       c:kill()
     end,
-    {description = "close", group = "client"}
+    {description = i18n.translate("close"), group = i18n.translate("client")}
   ),
   awful.key(
     {modkey},
@@ -53,7 +52,7 @@ local clientKeys =
       c.floating = not c.floating
       c:raise()
     end,
-    {description = "toggle floating", group = "client"}
+    {description = i18n.translate("toggle floating"), group = i18n.translate("client")}
   )
 )
 

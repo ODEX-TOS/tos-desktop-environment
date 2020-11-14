@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
@@ -72,7 +71,7 @@ awful.tooltip(
     mode = "outside",
     align = "right",
     timer_function = function()
-      return "Home"
+      return i18n.translate("Home")
     end,
     preferred_positions = {"right", "left", "top", "bottom"}
   }

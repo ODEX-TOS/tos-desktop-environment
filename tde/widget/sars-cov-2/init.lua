@@ -38,8 +38,8 @@ watch(
   3600,
   function(_, stdout)
     array = split(split(stdout, "\n")[2], "%s*")
-    infected = "Infected: " .. (array[4] or "unknown")
-    death = "Deaths: " .. (array[7] or "unknown")
+    infected = i18n.translate("Infected: ") .. (array[4] or i18n.translate("unknown"))
+    death = i18n.translate("Deaths: ") .. (array[7] or i18n.translate("unknown"))
     covid_deceases.text = infected
     covid_deaths.text = death
   end
@@ -49,7 +49,7 @@ watch(
   [[curl -s https://ipapi.co/country_name]],
   3600,
   function(_, stdout)
-    covid_header.text = "Covid-19 cases in " .. stdout
+    covid_header.text = i18n.translate("Covid-19 cases in ") .. stdout
   end
 )
 
@@ -68,7 +68,7 @@ covid_icon_widget =
 
 covid_header =
   wibox.widget {
-  text = "Covid-19 cases in your country",
+  text = i18n.translate("Covid-19 cases in your country"),
   font = "SFNS Display Regular 14",
   align = "center",
   valign = "center",
@@ -77,7 +77,7 @@ covid_header =
 
 covid_deceases =
   wibox.widget {
-  text = "No internet connection...",
+  text = i18n.translate("No internet connection..."),
   font = "SFNS Display Regular 16",
   align = "left",
   valign = "center",
@@ -86,7 +86,7 @@ covid_deceases =
 
 covid_deaths =
   wibox.widget {
-  text = "Can't retreive deaths.",
+  text = i18n.translate("Can't retreive deaths."),
   font = "SFNS Display Regular 12",
   align = "left",
   valign = "center",

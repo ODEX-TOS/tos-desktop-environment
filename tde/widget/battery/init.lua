@@ -130,9 +130,9 @@ local return_button = function()
 		naughty.notification(
 			{
 				icon = widget_icon_dir .. "battery-alert.svg",
-				app_name = "System notification",
-				title = "Battery is dying!",
-				message = "Hey, I think we have a problem here. Save your work before it's to late!",
+				app_name = i18n.translate("System notification"),
+				title = i18n.translate("Battery is dying!"),
+				message = i18n.translate("Hey, I think we have a problem here. Save your work before it's to late!"),
 				urgency = "critical"
 			}
 		)
@@ -217,7 +217,7 @@ local return_button = function()
 			if status == "" then
 				battery_widget.spacing = dpi(0)
 				battery_percentage_text.visible = false
-				battery_tooltip:set_text("No battery detected!")
+				battery_tooltip:set_text(i18n.translate("No battery detected!"))
 				battery_imagebox.icon:set_image(gears.surface.load(theme(widget_icon_dir .. "battery-unknown" .. ".svg")))
 				return
 			end

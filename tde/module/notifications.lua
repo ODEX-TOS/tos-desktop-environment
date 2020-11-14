@@ -14,7 +14,7 @@ local clickable_container = require("widget.clickable-container")
 naughty.config.defaults.ontop = true
 naughty.config.defaults.icon_size = dpi(32)
 naughty.config.defaults.timeout = 0
-naughty.config.defaults.title = "System Notification"
+naughty.config.defaults.title = i18n.translate("System Notification")
 naughty.config.defaults.margin = dpi(16)
 naughty.config.defaults.border_width = 0
 naughty.config.defaults.position = "top_right"
@@ -97,9 +97,9 @@ naughty.connect_signal(
 		-- only show notification if it is not a startup error (could potentially fail to create a screen)
 		naughty.notification {
 			urgency = "critical",
-			title = "Oops, an error happened" .. (startup and " during startup!" or "!"),
+			title = i18n.translate("Oops, an error happened") .. (startup and i18n.translate(" during startup!") or "!"),
 			message = message,
-			app_name = "System Notification",
+			app_name = i18n.translate("System Notification"),
 			icon = beautiful.awesome_icon
 		}
 	end
@@ -180,7 +180,7 @@ naughty.connect_signal(
 												{
 													{
 														{
-															markup = (n.app_name or naughty.widget.title) or "System Notification",
+															markup = (n.app_name or naughty.widget.title) or i18n.translate("System Notification"),
 															font = "SF Pro Text Bold 10",
 															align = "center",
 															valign = "center",
@@ -263,7 +263,7 @@ naughty.connect_signal(
 				},
 				-- Margin of the fake BG to have a space between notification and the screen edge
 				margins = dpi(5),
-				 --beautiful.notification_margin,
+				--beautiful.notification_margin,
 				widget = wibox.container.margin
 			}
 		}

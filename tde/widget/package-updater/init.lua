@@ -99,18 +99,20 @@ awful.tooltip(
       if updateAvailable then
         local str = ""
         if numOfUpdatesAvailable == "1" then
-          str = numOfUpdatesAvailable .. " update is available!"
+          str = numOfUpdatesAvailable .. i18n.translate(" update is available!")
         else
-          str = numOfUpdatesAvailable .. " updates are available!"
+          str = numOfUpdatesAvailable .. i18n.translate(" updates are available!")
         end
         if numOfSecUpdatesAvailable == "1" then
-          return str .. "\nOf which " .. numOfSecUpdatesAvailable .. " is security related"
+          return str ..
+            "\n" .. i18n.translate("Of which ") .. numOfSecUpdatesAvailable .. i18n.translate(" is security related")
         elseif numOfSecUpdatesAvailable == "0" then
           return str
         end
-        return str .. "\nOf which " .. numOfSecUpdatesAvailable .. " are security related"
+        return str ..
+          "\n" .. i18n.translate("Of which ") .. numOfSecUpdatesAvailable .. i18n.translate(" are security related")
       else
-        return "We are up-to-date!"
+        return i18n.translate("We are up-to-date!")
       end
     end,
     preferred_positions = {"right", "left", "top", "bottom"}
@@ -118,19 +120,23 @@ awful.tooltip(
 )
 
 local function notifySecurityUpdate(num)
-  str = "There are " .. num .. " security vulnerabilities. Please try and update the system to prevent risks."
+  str =
+    i18n.translate("There are ") ..
+    num .. i18n.translate(" security vulnerabilities. Please try and update the system to prevent risks.")
   if num == "1" then
-    str = "There is " .. num .. " security vulnerability. Please try and update the system to prevent risks."
+    str =
+      i18n.translate("There is ") ..
+      num .. i18n.translate(" security vulnerability. Please try and update the system to prevent risks.")
   end
   if securityUpdateNotShown then
     naughty.notify(
       {
-        title = "Security Updates",
+        title = i18n.translate("Security Updates"),
         text = str,
         icon = icon,
         timeout = 10,
         urgency = "critical",
-        app_name = "Security center"
+        app_name = i18n.translate("Security center")
       }
     ):connect_signal(
       "destroyed",

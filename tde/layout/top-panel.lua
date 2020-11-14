@@ -78,7 +78,7 @@ awful.tooltip(
     mode = "outside",
     align = "right",
     timer_function = function()
-      return os.date("The date today is %B %d, %Y (%A).")
+      return os.date(i18n.translate("The date today is") .. " %B %d, %Y (%A).")
     end,
     preferred_positions = {"right", "left", "top", "bottom"},
     margin_leftright = dpi(8),

@@ -59,7 +59,7 @@ config = {
         return filesystem.get_configuration_dir() .. "/configuration/picom.conf "
     end,
     aboutText = "TOS Linux Alpha Edition\nMIT License\n© Meyers Tom 2019 - " ..
-        os.date("%Y") .. "\n\nThanks for using our product ♥"
+        os.date("%Y") .. "\n\n" .. i18n.translate("Thanks for using our product") .. " ♥"
 }
 
 return config

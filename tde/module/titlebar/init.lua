@@ -160,16 +160,16 @@ _private.button_margin_top = 2
 -- _private.button_margin_right = 0
 _private.tooltips_enabled = true
 _private.tooltip_messages = {
-    close = "close",
-    minimize = "minimize",
-    maximize_active = "unmaximize",
-    maximize_inactive = "maximize",
-    floating_active = "enable tiling mode",
-    floating_inactive = "enable floating mode",
-    ontop_active = "don't keep above other windows",
-    ontop_inactive = "keep above other windows",
-    sticky_active = "disable sticky mode",
-    sticky_inactive = "enable sticky mode"
+    close = i18n.translate("close"),
+    minimize = i18n.translate("minimize"),
+    maximize_active = i18n.translate("unmaximize"),
+    maximize_inactive = i18n.translate("maximize"),
+    floating_active = i18n.translate("enable tiling mode"),
+    floating_inactive = i18n.translate("enable floating mode"),
+    ontop_active = i18n.translate("don't keep above other windows"),
+    ontop_inactive = i18n.translate("keep above other windows"),
+    sticky_active = i18n.translate("disable sticky mode"),
+    sticky_inactive = i18n.translate("enable sticky mode")
 }
 _private.close_color = "#ee4266"
 _private.minimize_color = "#ffb400"
@@ -187,7 +187,6 @@ table.save = t.save
 table.load = t.load
 
 -- Load the color rules or create an empty table if there aren't any
-local gfilesys = require("gears.filesystem")
 local config_dir = os.getenv("HOME") .. "/.cache/tde"
 local color_rules_filename = "color_rules"
 local color_rules_filepath = config_dir .. "/titlebar/" .. color_rules_filename

@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
@@ -52,7 +51,7 @@ end
 
 social_header =
   wibox.widget {
-  text = "Social Media",
+  text = i18n.translate("Social Media"),
   font = "SFNS Display Regular 14",
   align = "center",
   valign = "center",

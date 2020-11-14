@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local gears = require("gears")
 
@@ -34,7 +33,7 @@ local inactive_button = "#ffffff" .. "20"
 
 local notif_text =
   wibox.widget {
-  text = "Notifications",
+  text = i18n.translate("Notifications"),
   font = "SFNS Display Regular 12",
   align = "center",
   valign = "center",
@@ -56,7 +55,7 @@ local wrap_notif =
 
 local widgets_text =
   wibox.widget {
-  text = "Widgets",
+  text = i18n.translate("Widgets"),
   font = "SFNS Display Regular 12",
   align = "center",
   valign = "center",

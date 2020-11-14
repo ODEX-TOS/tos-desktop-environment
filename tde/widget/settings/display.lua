@@ -98,7 +98,7 @@ return function()
   view.right = m
   view.bottom = m
 
-  local title = wibox.widget.textbox("Display")
+  local title = wibox.widget.textbox(i18n.translate("Display"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -186,7 +186,7 @@ return function()
     awful.tooltip {
     objects = {screen_time},
     timer_function = function()
-      return (general["screen_on_time"] or "120") .. " seconds before sleeping"
+      return (general["screen_on_time"] or "120") .. i18n.translate(" seconds before sleeping")
     end
   }
 
@@ -194,7 +194,7 @@ return function()
     "property::value",
     function()
       print("Updated screen time: " .. tostring(screen_time.value) .. "sec")
-      screen_time_tooltip.text = tostring(screen_time.value) .. " seconds before sleeping"
+      screen_time_tooltip.text = tostring(screen_time.value) .. i18n.translate(" seconds before sleeping")
       general["screen_on_time"] = tostring(screen_time.value)
       configWriter.update_entry(
         os.getenv("HOME") .. "/.config/tos/general.conf",
@@ -286,7 +286,7 @@ return function()
               margins = m,
               {
                 font = beautiful.font,
-                text = "Brightness",
+                text = i18n.translate("Brightness"),
                 widget = wibox.widget.textbox
               }
             },
@@ -314,7 +314,7 @@ return function()
                 margins = m,
                 {
                   font = beautiful.font,
-                  text = "Screen on time",
+                  text = i18n.translate("Screen on time"),
                   widget = wibox.widget.textbox
                 }
               },

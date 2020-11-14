@@ -50,7 +50,7 @@ local function send_plugin_error(msg)
   print("SETTINGS APP: " .. msg, err)
   naughty.notification(
     {
-      title = "Plugin error",
+      title = i18n.translate("Plugin error"),
       urgency = "critical",
       message = msg,
       timeout = 10
@@ -239,16 +239,34 @@ function make_nav()
   rule.bg = beautiful.background.hue_800
   rule.widget = wibox.widget.base.empty_widget()
 
-  table.insert(root.elements.settings_views, make_view(icons.settings, "General", require("widget.settings.general")()))
   table.insert(
     root.elements.settings_views,
-    make_view(icons.wifi, "Connections", require("widget.settings.connections")())
+    make_view(icons.settings, i18n.translate("General"), require("widget.settings.general")())
   )
-  table.insert(root.elements.settings_views, make_view(icons.chart, "System", require("widget.settings.system")()))
-  table.insert(root.elements.settings_views, make_view(icons.monitor, "Display", require("widget.settings.display")()))
-  table.insert(root.elements.settings_views, make_view(icons.volume, "Media", require("widget.settings.media")()))
-  table.insert(root.elements.settings_views, make_view(icons.brush, "Theme", require("widget.settings.theme")()))
-  table.insert(root.elements.settings_views, make_view(icons.about, "About", require("widget.settings.about")()))
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.wifi, i18n.translate("Connections"), require("widget.settings.connections")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.chart, i18n.translate("System"), require("widget.settings.system")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.monitor, i18n.translate("Display"), require("widget.settings.display")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.volume, i18n.translate("Media"), require("widget.settings.media")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.brush, i18n.translate("Theme"), require("widget.settings.theme")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.about, i18n.translate("About"), require("widget.settings.about")())
+  )
 
   for _, value in ipairs(plugins) do
     if value.icon == nil then

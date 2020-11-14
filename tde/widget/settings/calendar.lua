@@ -17,7 +17,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("Calendar")
+  local title = wibox.widget.textbox(i18n.translate("Calendar"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
