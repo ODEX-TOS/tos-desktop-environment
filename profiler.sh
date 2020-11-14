@@ -17,7 +17,7 @@ REALTIME=""
 
 
 function help() {
-    name=$(basename $0 .sh)
+    name=$(basename "$0" .sh)
     echo -e "$name : OPTIONS [htfFor]"
     echo ""
     echo -e "$name -h | --help \t\t\tShow this help message"
