@@ -16,8 +16,13 @@ if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-lua") then
                     os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-lua/?.lua"
 end
 
+if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/translations") then
+    package.path = package.path .. ";" .. os.getenv("HOME") .. "/.config/awesome/lib-tde/translations/?.lua"
+end
+
 package.path =
     package.path .. ";" .. "/etc/xdg/awesome/lib-tde/lib-lua/?/?.lua;" .. "/etc/xdg/awesome/lib-tde/lib-lua/?.lua"
+package.path = package.path .. ";" .. "/etc/xdg/awesome/lib-tde/translations/?.lua"
 
 -- same applies for the c libraries
 if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so") then
