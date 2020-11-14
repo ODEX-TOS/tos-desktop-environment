@@ -3,7 +3,6 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
-local conf = require("config")
 local icons = require("theme.icons")
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
@@ -20,7 +19,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("System")
+  local title = wibox.widget.textbox(i18n.translate("System"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -100,13 +99,13 @@ return function()
   disk_value.font = beautiful.font
   disk_value.visible = false
 
-  local ram_key = wibox.widget.textbox("RAM")
+  local ram_key = wibox.widget.textbox(i18n.translate("RAM"))
   ram_key.font = beautiful.font
 
-  local cpu_key = wibox.widget.textbox("CPU")
+  local cpu_key = wibox.widget.textbox(i18n.translate("CPU"))
   cpu_key.font = beautiful.font
 
-  local disk_key = wibox.widget.textbox("Disk")
+  local disk_key = wibox.widget.textbox(i18n.translate("Disk"))
   disk_key.font = beautiful.font
 
   ram:connect_signal(
@@ -223,10 +222,10 @@ return function()
   local pac_icon = wibox.container.margin(wibox.widget.imagebox(icons.package), dpi(12), dpi(12), dpi(12), dpi(12))
   pac_icon.forced_height = settings_index + m + m
 
-  local pac_title = wibox.widget.textbox("System Updates")
+  local pac_title = wibox.widget.textbox(i18n.translate("System Updates"))
   pac_title.font = beautiful.title_font
 
-  local pac_value = wibox.widget.textbox("None available")
+  local pac_value = wibox.widget.textbox(i18n.translate("None available"))
   pac_value.font = beautiful.title_font
 
   pac:setup {
@@ -255,30 +254,30 @@ return function()
   local hostName =
     wibox.widget {
     font = beautiful.title_font,
-    text = "Hostname: " .. file.string("/etc/hostname"):gsub("%\n", ""),
+    text = i18n.translate("Hostname: ") .. file.string("/etc/hostname"):gsub("%\n", ""),
     widget = wibox.widget.textbox
   }
   local uptime =
     wibox.widget {
     font = beautiful.title_font,
-    text = "Uptime: unknown",
+    text = i18n.translate("Uptime: unknown"),
     widget = wibox.widget.textbox
   }
   signals.connect_distro(
     function(value)
-      osName.text = "OS: " .. value
+      osName.text = i18n.translate("OS: ") .. value
     end
   )
 
   signals.connect_uptime(
     function(value)
-      uptime.text = "Uptime: " .. value
+      uptime.text = i18n.translate("Uptime: ") .. value
     end
   )
 
   signals.connect_kernel(
     function(value)
-      kernelVersion.text = "Kernel: " .. value
+      kernelVersion.text = i18n.translate("Kernel: ") .. value
     end
   )
 
@@ -322,7 +321,7 @@ return function()
 
   signals.connect_packages_to_update(
     function(value)
-      pac_value.text = "Packages to update: " .. value
+      pac_value.text = i18n.translate("Packages to update: ") .. value
     end
   )
 

@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 
 local dpi = require("beautiful").xresources.apply_dpi
@@ -48,7 +47,7 @@ function getTitle()
         musicTitle.title:set_text(stdout)
         print("Music title: " .. stdout)
       else
-        musicTitle.title:set_text("No active music player found.")
+        musicTitle.title:set_text(i18n.translate("No active music player found."))
         print("No music found")
       end
     end
@@ -75,7 +74,7 @@ function getArtist()
         musicArtist.artist:set_text(stdout)
         print("Music artist: " .. stdout)
       else
-        musicArtist.artist:set_text("Try and play some music :)")
+        musicArtist.artist:set_text(i18n.translate("Try and play some music :)"))
       end
     end
   )

@@ -76,8 +76,8 @@ local notif_message = function(msg)
 end
 
 -- Empty content
-local empty_title = "Spooky..."
-local empty_message = "There's nothing in here... Come back later."
+local empty_title = i18n.translate("Spooky...")
+local empty_message = i18n.translate("There's nothing in here... Come back later.")
 
 -- The function that generates notifications in right-panel
 local function notif_generate(title, message, icon, noti)

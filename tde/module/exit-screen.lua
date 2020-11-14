@@ -36,11 +36,11 @@ local signals = require("lib-tde.signals")
 -- Appearance
 local icon_size = beautiful.exit_screen_icon_size or dpi(90)
 
-local text = "Goodbye "
+local text = i18n.translate("Goodbye ")
 
 local user_name =
 	wibox.widget {
-	markup = text .. "user!",
+	markup = text .. i18n.translate("user!"),
 	font = "SF Pro Text UltraLight 48",
 	align = "center",
 	valign = "center",
@@ -139,7 +139,7 @@ reboot_command = function()
 	signals.emit_module_exit_screen_hide()
 end
 
-local poweroff = buildButton(icons.power, "Shutdown")
+local poweroff = buildButton(icons.power, i18n.translate("Shutdown"))
 poweroff:connect_signal(
 	"button::release",
 	function()
@@ -147,7 +147,7 @@ poweroff:connect_signal(
 	end
 )
 
-local reboot = buildButton(icons.restart, "Restart")
+local reboot = buildButton(icons.restart, i18n.translate("Restart"))
 reboot:connect_signal(
 	"button::release",
 	function()
@@ -155,7 +155,7 @@ reboot:connect_signal(
 	end
 )
 
-local suspend = buildButton(icons.sleep, "Sleep")
+local suspend = buildButton(icons.sleep, i18n.translate("Sleep"))
 suspend:connect_signal(
 	"button::release",
 	function()
@@ -163,7 +163,7 @@ suspend:connect_signal(
 	end
 )
 
-local exit = buildButton(icons.logout, "Logout")
+local exit = buildButton(icons.logout, i18n.translate("Logout"))
 exit:connect_signal(
 	"button::release",
 	function()
@@ -171,7 +171,7 @@ exit:connect_signal(
 	end
 )
 
-local lock = buildButton(icons.lock, "Lock")
+local lock = buildButton(icons.lock, i18n.translate("Lock"))
 lock:connect_signal(
 	"button::release",
 	function()

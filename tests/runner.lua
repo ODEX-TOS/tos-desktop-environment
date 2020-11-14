@@ -3,6 +3,13 @@
 -- this function gets overridden by TDE
 local realPrint = print
 
+print = function(data, logtype)
+    if logtype == nil then
+        logtype = "\27[0;32m[ INFO "
+    end
+    realPrint(logtype .. " ]\27[0m " .. data)
+end
+
 EXPORT_ASSERT_TO_GLOBALS = true
 require("tests.luaunit")
 

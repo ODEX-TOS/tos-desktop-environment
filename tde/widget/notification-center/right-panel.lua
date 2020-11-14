@@ -205,7 +205,7 @@ local right_panel = function(screen)
 
   local clear_all_text =
     wibox.widget {
-    text = "Clear All Notifications",
+    text = i18n.translate("Clear All Notifications"),
     font = "SFNS Display Regular 10",
     align = "center",
     valign = "bottom",

@@ -21,6 +21,7 @@ else
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
   export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/tde/lib-tde/translations/?.lua;"
   export LUA_PATH="$LUA_PATH;"
 
   export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"

@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
@@ -112,9 +111,9 @@ awful.tooltip(
     align = "right",
     timer_function = function()
       if checker == nil then
-        return "Backlight brightness mode is ON"
+        return i18n.translate("Backlight brightness mode is ON")
       else
-        return "OLED brightness mode is ON"
+        return i18n.translate("OLED brightness mode is ON")
       end
     end,
     preferred_positions = {"right", "left", "top", "bottom"}
@@ -123,7 +122,7 @@ awful.tooltip(
 
 local settingsName =
   wibox.widget {
-  text = "OLED brightness mode",
+  text = i18n.translate("OLED brightness mode"),
   font = "Iosevka Regular 10",
   align = "left",
   widget = wibox.widget.textbox

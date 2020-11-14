@@ -73,9 +73,9 @@ awful.tooltip(
     align = "right",
     timer_function = function()
       if connected then
-        return "Connected to " .. essid
+        return i18n.translate("Connected to ") .. essid
       else
-        return "Wireless network is disconnected"
+        return i18n.translate("Wireless network is disconnected")
       end
     end,
     preferred_positions = {"right", "left", "top", "bottom"},

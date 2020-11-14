@@ -58,7 +58,7 @@ end
 local power_on_cmd =
   [[
 rfkill unblock bluetooth
-echo 'power on' | bluetoothctl 
+echo 'power on' | bluetoothctl
 notify-send 'Initializing bluetooth Service...'
 ]]
 
@@ -115,9 +115,9 @@ awful.tooltip {
   align = "right",
   timer_function = function()
     if action_status == true then
-      return "Bluetooth Enabled"
+      return i18n.translate("Bluetooth Enabled")
     else
-      return "Bluetooth Disabled"
+      return i18n.translate("Bluetooth Disabled")
     end
   end,
   preferred_positions = {"right", "left", "top", "bottom"}
@@ -140,7 +140,7 @@ signals.connect_bluetooth_status(
 -- Action Name
 local action_name =
   wibox.widget {
-  text = "Bluetooth Connection",
+  text = i18n.translate("Bluetooth Connection"),
   font = "SFNS Display 11",
   align = "left",
   widget = wibox.widget.textbox

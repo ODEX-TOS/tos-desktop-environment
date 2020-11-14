@@ -38,9 +38,9 @@ local function send_notification_if_maim_missing()
   if not has_package_installed("maim") then
     require("naughty").notification(
       {
-        title = "cannot create screenshot",
-        message = "maim is not installed, install it using tde-contrib package",
-        app_name = "tde package notifier"
+        title = i18n.translate("Cannot create screenshot"),
+        message = i18n.translate("maim is not installed, install it using tde-contrib package"),
+        app_name = i18n.translate("tde package notifier")
       }
     )
     return true
@@ -52,7 +52,12 @@ end
 local globalKeys =
   awful.util.table.join(
   -- Hotkeys
-  awful.key({modkey}, "F1", hotkeys_popup.show_help, {description = "show help", group = "awesome"}),
+  awful.key(
+    {modkey},
+    "F1",
+    hotkeys_popup.show_help,
+    {description = i18n.translate("show help"), group = i18n.translate("awesome")}
+  ),
   -- Custom Keys
   awful.key(
     {modkey},
@@ -60,7 +65,7 @@ local globalKeys =
     function()
       xrandr.xrandr()
     end,
-    {description = "Launch screen layout mode", group = "Launcher"}
+    {description = i18n.translate("Launch screen layout mode"), group = i18n.translate("Launcher")}
   ),
   awful.key(
     {modkey},
@@ -69,7 +74,7 @@ local globalKeys =
       print("Spawning terminal")
       awful.spawn(apps.default.terminal)
     end,
-    {description = "Open Terminal", group = "Launcher"}
+    {description = i18n.translate("Open Terminal"), group = i18n.translate("Launcher")}
   ),
   awful.key(
     {modkey},
@@ -78,7 +83,7 @@ local globalKeys =
       print("Spawning rofi window switcher")
       awful.spawn(apps.default.rofiwindowswitch)
     end,
-    {description = "Open a Window Switcher", group = "launcher"}
+    {description = i18n.translate("Open a Window Switcher"), group = i18n.translate("launcher")}
   ),
   awful.key(
     {modkey},
@@ -87,7 +92,7 @@ local globalKeys =
       print("Spawning rofi app menu")
       awful.spawn(apps.default.rofiappmenu)
     end,
-    {description = "Open Rofi", group = "Launcher"}
+    {description = i18n.translate("Open Rofi"), group = i18n.translate("Launcher")}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -97,7 +102,7 @@ local globalKeys =
       print("Opening browser: " .. browser)
       awful.spawn(browser)
     end,
-    {description = "Open Browser", group = "Launcher"}
+    {description = i18n.translate("Open Browser"), group = i18n.translate("Launcher")}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -106,7 +111,7 @@ local globalKeys =
       print("Opening filemanager: thunar")
       awful.spawn("thunar")
     end,
-    {description = "Open file manager", group = "Launcher"}
+    {description = i18n.translate("Open file manager"), group = i18n.translate("Launcher")}
   ),
   awful.key(
     {"Control", "Shift"},
@@ -115,7 +120,7 @@ local globalKeys =
       print("Opening system monitor")
       awful.spawn("gnome-system-monitor")
     end,
-    {description = "Open system monitor", group = "Launcher"}
+    {description = i18n.translate("Open system monitor"), group = i18n.translate("Launcher")}
   ),
   -- Screen Shots
   -- Screen Shot and Save
@@ -148,12 +153,27 @@ local globalKeys =
       print("Toggeling systray visibility")
       awful.screen.focused().systray.visible = not awful.screen.focused().systray.visible
     end,
-    {description = "Toggle systray visibility", group = "custom"}
+    {description = i18n.translate("Toggle systray visibility"), group = i18n.translate("custom")}
   ),
   -- Tag browsing
-  awful.key({modkey}, config.previousWorkspace, awful.tag.viewprev, {description = "view previous", group = "tag"}),
-  awful.key({modkey}, config.nextWorkspace, awful.tag.viewnext, {description = "view next", group = "tag"}),
-  awful.key({modkey}, config.swapWorkspace, awful.tag.history.restore, {description = "go back", group = "tag"}),
+  awful.key(
+    {modkey},
+    config.previousWorkspace,
+    awful.tag.viewprev,
+    {description = i18n.translate("view previous"), group = i18n.translate(i18n.translate("tag"))}
+  ),
+  awful.key(
+    {modkey},
+    config.nextWorkspace,
+    awful.tag.viewnext,
+    {description = i18n.translate("view next"), group = i18n.translate(i18n.translate("tag"))}
+  ),
+  awful.key(
+    {modkey},
+    config.swapWorkspace,
+    awful.tag.history.restore,
+    {description = i18n.translate("go back"), group = i18n.translate(i18n.translate("tag"))}
+  ),
   -- Default client focus
   awful.key(
     {modkey},
@@ -161,7 +181,7 @@ local globalKeys =
     function()
       awful.client.focus.byidx(1)
     end,
-    {description = "focus next by index", group = "client"}
+    {description = i18n.translate("focus next by index"), group = i18n.translate("client")}
   ),
   awful.key(
     {modkey},
@@ -169,7 +189,7 @@ local globalKeys =
     function()
       awful.client.focus.byidx(-1)
     end,
-    {description = "focus previous by index", group = "client"}
+    {description = i18n.translate("focus previous by index"), group = i18n.translate("client")}
   ),
   awful.key(
     {modkey},
@@ -178,7 +198,7 @@ local globalKeys =
       print("Showing action center")
       _G.screen.primary.left_panel:toggle(true)
     end,
-    {description = "Open Control panel", group = "awesome"}
+    {description = i18n.translate("Open Control panel"), group = i18n.translate("awesome")}
   ),
   awful.key({modkey}, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
   awful.key(
@@ -190,7 +210,7 @@ local globalKeys =
         _G.client.focus:raise()
       end
     end,
-    {description = "go back", group = "client"}
+    {description = i18n.translate("go back"), group = i18n.translate("client")}
   ),
   -- Programms
   awful.key(
@@ -200,7 +220,7 @@ local globalKeys =
       print("Locking screen")
       awful.spawn(apps.default.lock)
     end,
-    {description = "lock the screen", group = "hotkeys"}
+    {description = i18n.translate("lock the screen"), group = i18n.translate("hotkeys")}
   ),
   awful.key(
     {modkey},
@@ -211,23 +231,28 @@ local globalKeys =
         _G.screen.primary.right_panel:toggle()
       end
     end,
-    {description = "Open Notification Center", group = "Launcher"}
+    {description = i18n.translate("Open Notification Center"), group = i18n.translate("Launcher")}
   ),
   -- Standard program
   awful.key(
     {modkey, "Control"},
     config.restart,
     _G.awesome.restart,
-    {description = "reload awesome", group = "awesome"}
+    {description = i18n.translate("reload awesome"), group = i18n.translate("awesome")}
   ),
-  awful.key({modkey, "Control"}, config.quit, _G.awesome.quit, {description = "quit awesome", group = "awesome"}),
+  awful.key(
+    {modkey, "Control"},
+    config.quit,
+    _G.awesome.quit,
+    {description = i18n.translate("quit awesome"), group = i18n.translate("awesome")}
+  ),
   awful.key(
     {altkey, "Shift"},
     "l",
     function()
       awful.tag.incmwfact(0.05)
     end,
-    {description = "increase master width factor", group = "layout"}
+    {description = i18n.translate("increase master width factor"), group = i18n.translate("layout")}
   ),
   awful.key(
     {altkey, "Shift"},
@@ -235,7 +260,7 @@ local globalKeys =
     function()
       awful.tag.incmwfact(-0.05)
     end,
-    {description = "decrease master width factor", group = "layout"}
+    {description = i18n.translate("decrease master width factor"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -243,7 +268,7 @@ local globalKeys =
     function()
       awful.tag.incnmaster(1, nil, true)
     end,
-    {description = "increase the number of master clients", group = "layout"}
+    {description = i18n.translate("increase the number of master clients"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -251,7 +276,7 @@ local globalKeys =
     function()
       awful.tag.incnmaster(-1, nil, true)
     end,
-    {description = "decrease the number of master clients", group = "layout"}
+    {description = i18n.translate("decrease the number of master clients"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey, "Control"},
@@ -259,7 +284,7 @@ local globalKeys =
     function()
       awful.tag.incncol(1, nil, true)
     end,
-    {description = "increase the number of columns", group = "layout"}
+    {description = i18n.translate("increase the number of columns"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey, "Control"},
@@ -267,7 +292,7 @@ local globalKeys =
     function()
       awful.tag.incncol(-1, nil, true)
     end,
-    {description = "decrease the number of columns", group = "layout"}
+    {description = i18n.translate("decrease the number of columns"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey},
@@ -275,7 +300,7 @@ local globalKeys =
     function()
       awful.layout.inc(1)
     end,
-    {description = "select next", group = "layout"}
+    {description = i18n.translate("select next"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -283,7 +308,7 @@ local globalKeys =
     function()
       awful.layout.inc(-1)
     end,
-    {description = "select previous", group = "layout"}
+    {description = i18n.translate("select previous"), group = i18n.translate("layout")}
   ),
   awful.key(
     {modkey, "Control"},
@@ -296,7 +321,7 @@ local globalKeys =
         c:raise()
       end
     end,
-    {description = "restore minimized", group = "client"}
+    {description = i18n.translate("restore minimized"), group = i18n.translate("client")}
   ),
   -- Dropdown application
   awful.key(
@@ -305,7 +330,7 @@ local globalKeys =
     function()
       _G.toggle_quake()
     end,
-    {description = "dropdown terminal", group = "Launcher"}
+    {description = i18n.translate("dropdown terminal"), group = i18n.translate("Launcher")}
   ),
   -- Brightness
   awful.key(
@@ -327,7 +352,7 @@ local globalKeys =
         _G.UpdateBrOSD()
       end
     end,
-    {description = "+10%", group = "hardware"}
+    {description = i18n.translate("+10%"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   awful.key(
     {},
@@ -348,7 +373,7 @@ local globalKeys =
         _G.UpdateBrOSD()
       end
     end,
-    {description = "-10%", group = "hardware"}
+    {description = i18n.translate("-10%"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   -- ALSA volume control
   awful.key(
@@ -365,7 +390,7 @@ local globalKeys =
         _G.UpdateVolOSD()
       end
     end,
-    {description = "volume up", group = "hardware"}
+    {description = i18n.translate("volume up"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   awful.key(
     {},
@@ -381,7 +406,7 @@ local globalKeys =
         _G.UpdateVolOSD()
       end
     end,
-    {description = "volume down", group = "hardware"}
+    {description = i18n.translate("volume down"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   awful.key(
     {},
@@ -397,7 +422,7 @@ local globalKeys =
         _G.UpdateVolOSD()
       end
     end,
-    {description = "toggle mute", group = "hardware"}
+    {description = i18n.translate("toggle mute"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   awful.key(
     {},
@@ -405,7 +430,7 @@ local globalKeys =
     function()
       print("Pressed Audio Next")
     end,
-    {description = "toggle mute", group = "hardware"}
+    {description = "toggle mute", group = i18n.translate("hardware")}
   ),
   awful.key(
     {},
@@ -414,7 +439,7 @@ local globalKeys =
       print("Showing exit screen")
       _G.exit_screen_show()
     end,
-    {description = "toggle exit screen", group = "hardware"}
+    {description = i18n.translate("toggle exit screen"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   awful.key(
     {},
@@ -423,7 +448,7 @@ local globalKeys =
       print("Showing exit screen")
       _G.exit_screen_show()
     end,
-    {description = "toggle exit screen", group = "hardware"}
+    {description = i18n.translate("toggle exit screen"), group = i18n.translate(i18n.translate("hardware"))}
   ),
   awful.key(
     {},
@@ -432,7 +457,7 @@ local globalKeys =
       print("Spawning arandr")
       awful.spawn("arandr")
     end,
-    {description = "arandr", group = "hotkeys"}
+    {description = i18n.translate("arandr"), group = "hotkeys"}
   ),
   -- Music player keys
   awful.key(
@@ -442,7 +467,7 @@ local globalKeys =
       print("toggeling music")
       awful.spawn("playerctl play-pause")
     end,
-    {description = "toggle music", group = "hardware"}
+    {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
   awful.key(
     {},
@@ -451,7 +476,7 @@ local globalKeys =
       print("toggeling music")
       awful.spawn("playerctl play-pause")
     end,
-    {description = "toggle music", group = "hardware"}
+    {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
   awful.key(
     {},
@@ -460,7 +485,7 @@ local globalKeys =
       print("Previous song")
       awful.spawn("playerctl previous")
     end,
-    {description = "go to the previous song", group = "hardware"}
+    {description = i18n.translate("go to the previous song"), group = i18n.translate("hardware")}
   ),
   awful.key(
     {},
@@ -469,7 +494,7 @@ local globalKeys =
       print("Next song")
       awful.spawn("playerctl next")
     end,
-    {description = "go to the next song", group = "hardware"}
+    {description = i18n.translate("go to the next song"), group = i18n.translate("hardware")}
   ),
   -- keys for keyboards without xf86 keys
   awful.key(
@@ -479,7 +504,7 @@ local globalKeys =
       print("toggeling music")
       awful.spawn("playerctl play-pause")
     end,
-    {description = "toggle music", group = "hardware"}
+    {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
   awful.key(
     {modkey},
@@ -488,7 +513,7 @@ local globalKeys =
       print("Previous song")
       awful.spawn("playerctl previous")
     end,
-    {description = "go to the previous song", group = "hardware"}
+    {description = i18n.translate("go to the previous song"), group = i18n.translate("hardware")}
   ),
   awful.key(
     {modkey},
@@ -497,7 +522,7 @@ local globalKeys =
       print("Next song")
       awful.spawn("playerctl next")
     end,
-    {description = "go to the next song", group = "hardware"}
+    {description = i18n.translate("go to the next song"), group = i18n.translate("hardware")}
   ),
   awful.key(
     {},
@@ -512,7 +537,7 @@ local globalKeys =
         end
       end
     end,
-    {description = "fullscreen screenshot", group = "Utility"}
+    {description = i18n.translate("fullscreen screenshot"), group = i18n.translate("Utility")}
   ),
   awful.key(
     {modkey},
@@ -527,7 +552,7 @@ local globalKeys =
         end
       end
     end,
-    {description = "area/selected screenshot", group = "Utility"}
+    {description = i18n.translate("area/selected screenshot"), group = i18n.translate("Utility")}
   ),
   awful.key(
     {modkey, "Shift"},
@@ -542,7 +567,7 @@ local globalKeys =
         end
       end
     end,
-    {description = "window screenshot", group = "Utility"}
+    {description = i18n.translate("window screenshot"), group = i18n.translate("Utility")}
   ),
   awful.key(
     {modkey},
@@ -551,7 +576,7 @@ local globalKeys =
       print("Opening rofi emoji menu")
       awful.spawn(apps.default.rofiemojimenu)
     end,
-    {description = "Show emoji selector", group = "Utility"}
+    {description = i18n.translate("Show emoji selector"), group = i18n.translate("Utility")}
   ),
   awful.key(
     {modkey},
@@ -560,7 +585,7 @@ local globalKeys =
       print("Opening rofi clipboard")
       awful.spawn(apps.default.roficlipboard)
     end,
-    {description = "Show clipboard history", group = "Utility"}
+    {description = i18n.translate("Show clipboard history"), group = i18n.translate("Utility")}
   ),
   awful.key(
     {modkey},
@@ -569,7 +594,7 @@ local globalKeys =
       print("Opening settings application")
       root.elements.settings.enable_view_by_index(-1, mouse.screen)
     end,
-    {description = "Open settings application", group = "Launcher"}
+    {description = i18n.translate("Open settings application"), group = "Launcher"}
   )
 )
 
@@ -580,10 +605,10 @@ for i = 1, 9 do
   -- Hack to only show tags 1 and 9 in the shortcut window (mod+s)
   local descr_view, descr_toggle, descr_move, descr_toggle_focus
   if i == 1 or i == 9 then
-    descr_view = {description = "view tag #", group = "tag"}
-    descr_toggle = {description = "toggle tag #", group = "tag"}
-    descr_move = {description = "move focused client to tag #", group = "tag"}
-    descr_toggle_focus = {description = "toggle focused client on tag #", group = "tag"}
+    descr_view = {description = i18n.translate("view tag #"), group = i18n.translate("tag")}
+    descr_toggle = {description = i18n.translate("toggle tag #"), group = i18n.translate("tag")}
+    descr_move = {description = i18n.translate("move focused client to tag #"), group = i18n.translate("tag")}
+    descr_toggle_focus = {description = i18n.translate("toggle focused client on tag #"), group = i18n.translate("tag")}
   end
   globalKeys =
     awful.util.table.join(

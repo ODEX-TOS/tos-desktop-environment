@@ -36,7 +36,7 @@ local separator =
 
 local actionTitle =
   wibox.widget {
-  text = "Action Center",
+  text = i18n.translate("Action Center"),
   font = "Iosevka Regular 10",
   align = "left",
   widget = wibox.widget.textbox

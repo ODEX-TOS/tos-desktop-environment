@@ -105,7 +105,7 @@ trash_tooltip =
 	objects = {trash_button},
 	mode = "outside",
 	align = "right",
-	markup = "Trash",
+	markup = i18n.translate("Trash"),
 	margin_leftright = dpi(8),
 	margin_topbottom = dpi(8),
 	preferred_positions = {"right", "left", "top", "bottom"}
@@ -145,14 +145,14 @@ local check_trash_list = function()
 				awful.spawn.easy_async_with_shell(
 					"gio list trash:///",
 					function(stdout)
-						trash_tooltip.markup = "<b>Trash contains:</b>\n" .. stdout:gsub("\n$", "")
+						trash_tooltip.markup = "<b>" .. i18n.translate("Trash contains:") .. "</b>\n" .. stdout:gsub("\n$", "")
 					end,
 					false
 				)
 			else
 				trash_widget.trash_icon:set_image(icon("user-trash") or (widget_icon_dir .. "user-trash-empty" .. ".svg"))
 
-				trash_tooltip.markup = "Trash empty"
+				trash_tooltip.markup = i18n.translate("Trash empty")
 			end
 		end,
 		false

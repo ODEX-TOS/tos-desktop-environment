@@ -29,7 +29,7 @@ local beautiful = require("beautiful")
 
 local quickTitle =
   wibox.widget {
-  text = "Quick settings",
+  text = i18n.translate("Quick settings"),
   font = "Iosevka Regular 10",
   align = "left",
   widget = wibox.widget.textbox

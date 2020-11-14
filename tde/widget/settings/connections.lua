@@ -264,7 +264,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("Connections")
+  local title = wibox.widget.textbox(i18n.translate("Connections"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -288,13 +288,13 @@ return function()
 
   local connections = wibox.layout.fixed.vertical()
 
-  local wireless = make_connection("wireless")
-  local wired = make_connection("wired")
+  local wireless = make_connection(i18n.translate("wireless"))
+  local wired = make_connection(i18n.translate("wired"))
   local network_settings =
     wibox.container.margin(
     wibox.widget {
       widget = wibox.widget.textbox,
-      text = "Network list",
+      text = i18n.translate("Network list"),
       font = "SF Pro Display Bold 24"
     },
     dpi(20),
@@ -362,7 +362,7 @@ return function()
     else
       -- TODO: set disconnected wifi icon
       wireless.icon:set_image(icons.wifi)
-      wireless.name.text = "Disconnected"
+      wireless.name.text = i18n.translate("Disconnected")
     end
 
     awful.spawn.easy_async_with_shell(
@@ -370,11 +370,11 @@ return function()
       function(o, e, r, c)
         if (c == 0) then
           wired.icon.text = icons.lan
-          wired.name.text = "connected"
+          wired.name.text = i18n.translate("connected")
         else
           -- TODO: set disconnected lan icon
           wired.icon.text = icons.lanx
-          wired.name.text = "Disconnected"
+          wired.name.text = i18n.translate("Disconnected")
         end
       end
     )

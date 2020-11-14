@@ -10,7 +10,7 @@ local icon = menubar.utils.lookup_icon("calamares") or icons.logo
 if show_installer then
     desktop_icon.create_icon(
         icon,
-        "Installer",
+        i18n.translate("Installer"),
         0,
         function()
             print("Starting installer")

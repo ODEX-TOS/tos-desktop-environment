@@ -80,7 +80,7 @@ return function()
   }
 
   local container = wibox.layout.fixed.vertical()
-  local device_name, device_text = generate_setting_panel("Device name")
+  local device_name, device_text = generate_setting_panel(i18n.translate("Device name"))
 
   signals.connect_username(
     function(value)
@@ -88,7 +88,7 @@ return function()
     end
   )
 
-  local memory_name, memory_text = generate_setting_panel("Memory")
+  local memory_name, memory_text = generate_setting_panel(i18n.translate("Memory"))
 
   signals.connect_ram_total(
     function(value)
@@ -96,10 +96,10 @@ return function()
     end
   )
 
-  local processor_name, processor_text = generate_setting_panel("Processor")
+  local processor_name, processor_text = generate_setting_panel(i18n.translate("Processor"))
   processor_text.text = string.gmatch(file.lines("/proc/cpuinfo", nil, 5)[5], ": (.*)")()
 
-  local graphics_name, graphics_text = generate_setting_panel("Graphics")
+  local graphics_name, graphics_text = generate_setting_panel(i18n.translate("Graphics"))
   -- gathered from https://github.com/dylanaraps/neofetch/blob/master/neofetch#L2401
   local value, _ =
     execute(
@@ -107,7 +107,7 @@ return function()
   )
   graphics_text.text = value
 
-  local disk_name, disk_text = generate_setting_panel("Disk capacity")
+  local disk_name, disk_text = generate_setting_panel(i18n.translate("Disk capacity"))
 
   signals.connect_disk_space(
     function(value)
@@ -116,7 +116,7 @@ return function()
     end
   )
 
-  local os_name_name, os_name_text = generate_setting_panel("OS Name")
+  local os_name_name, os_name_text = generate_setting_panel(i18n.translate("OS Name"))
   os_name_text.text = "TOS Linux"
 
   signals.connect_distro(
@@ -125,14 +125,14 @@ return function()
     end
   )
 
-  local os_type_name, os_type_text = generate_setting_panel("OS Type")
+  local os_type_name, os_type_text = generate_setting_panel(i18n.translate("OS Type"))
   local out, _ = execute("uname -m")
   os_type_text.text = out
 
-  local tde_version_name, tde_version_text = generate_setting_panel("TDE Version")
+  local tde_version_name, tde_version_text = generate_setting_panel(i18n.translate("TDE Version"))
   tde_version_text.text = require("release")
 
-  local windowing_system_name, windowing_system_text = generate_setting_panel("Disk capacity")
+  local windowing_system_name, windowing_system_text = generate_setting_panel(i18n.translate("Windowing system"))
   -- TDE currently only supports X11
   windowing_system_text.text = "X11"
 

@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
@@ -38,7 +37,7 @@ dont_disturb = false
 
 local dont_disturb_text =
   wibox.widget {
-  text = "Do Not Disturb",
+  text = i18n.translate("Do Not Disturb"),
   font = "SFNS Display 12",
   align = "left",
   widget = wibox.widget.textbox

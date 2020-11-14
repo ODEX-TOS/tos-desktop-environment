@@ -196,7 +196,7 @@ screen_rec_back_button =
 local screen_rec_back_txt =
 	wibox.widget {
 	{
-		text = "Back",
+		text = i18n.translate("Back"),
 		font = "SF Pro Display Bold 16",
 		align = "left",
 		valign = "center",
@@ -209,7 +209,7 @@ local screen_rec_back_txt =
 local screen_rec_res_txt =
 	wibox.widget {
 	{
-		text = "Resolution",
+		text = i18n.translate("Resolution"),
 		font = "SF Pro Display Bold 16",
 		align = "left",
 		valign = "center",
@@ -248,7 +248,7 @@ screen_rec_res_txtbox =
 local screen_rec_fps_txt =
 	wibox.widget {
 	{
-		text = "FPS",
+		text = i18n.translate("FPS"),
 		font = "SF Pro Display Bold 16",
 		align = "left",
 		valign = "center",
@@ -287,7 +287,7 @@ screen_rec_fps_txtbox =
 local screen_rec_offset_txt =
 	wibox.widget {
 	{
-		text = "Offset",
+		text = i18n.translate("Offset"),
 		font = "SF Pro Display Bold 16",
 		align = "left",
 		valign = "center",

@@ -66,7 +66,7 @@ local function create_primary_button()
   button:setup {
     layout = wibox.container.place,
     halign = "center",
-    wibox.container.margin(wibox.widget.textbox("Primary"), m, m, m / 2, m / 2)
+    wibox.container.margin(wibox.widget.textbox(i18n.translate("Primary")), m, m, m / 2, m / 2)
   }
   button:buttons(
     gears.table.join(
@@ -104,7 +104,7 @@ local function create_background_button()
   button:setup {
     layout = wibox.container.place,
     halign = "center",
-    wibox.container.margin(wibox.widget.textbox("Background"), m, m, m / 2, m / 2)
+    wibox.container.margin(wibox.widget.textbox(i18n.translate("Background")), m, m, m / 2, m / 2)
   }
   button:buttons(
     gears.table.join(
@@ -206,7 +206,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("Theme")
+  local title = wibox.widget.textbox(i18n.translate("Theme"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -244,7 +244,7 @@ return function()
   save:setup {
     layout = wibox.container.place,
     halign = "center",
-    wibox.container.margin(wibox.widget.textbox("Save"), m, m, m / 2, m / 2)
+    wibox.container.margin(wibox.widget.textbox(i18n.translate("Save")), m, m, m / 2, m / 2)
   }
   save:buttons(
     gears.table.join(

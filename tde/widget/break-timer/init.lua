@@ -68,7 +68,9 @@ local countdownSlider =
   callback = function()
     currentTime = currentTime + 1
     slider:set_value((currentTime / totalTime) * 100)
-    timerText:set_markup_silently("Break Left: <b>" .. numberInSecToMS(totalTime - currentTime) .. "</b>")
+    timerText:set_markup_silently(
+      i18n.translate("Break Left:") .. " <b>" .. numberInSecToMS(totalTime - currentTime) .. "</b>"
+    )
     if currentTime >= totalTime then
       currentTime = 0
     end
@@ -80,7 +82,7 @@ local delay =
   clickable_container(
   wibox.container.margin(
     wibox.widget {
-      markup = "Delay by 5 minutes",
+      markup = i18n.translate("Delay by 5 minutes"),
       align = "center",
       valign = "center",
       read_only = true,
@@ -112,7 +114,7 @@ local disable =
   clickable_container(
   wibox.container.margin(
     wibox.widget {
-      markup = "Disable for this session",
+      markup = i18n.translate("Disable for this session"),
       align = "center",
       valign = "center",
       read_only = true,
@@ -145,7 +147,7 @@ local skip =
   clickable_container(
   wibox.container.margin(
     wibox.widget {
-      markup = "Skip break",
+      markup = i18n.translate("Skip break"),
       align = "center",
       valign = "center",
       read_only = true,

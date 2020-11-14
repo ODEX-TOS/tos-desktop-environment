@@ -75,9 +75,9 @@ awful.tooltip(
     align = "right",
     timer_function = function()
       if checker ~= nil then
-        return "Bluetooth is on"
+        return i18n.translate("Bluetooth is on")
       else
-        return "Bluetooth is off"
+        return i18n.translate("Bluetooth is off")
       end
     end,
     preferred_positions = {"right", "left", "top", "bottom"}

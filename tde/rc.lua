@@ -27,6 +27,9 @@ require("lib-tde.logger")
 
 print("Booting up...")
 
+i18n = require("lib-tde.i18n")
+i18n.init("en")
+
 -- general conf is used by sentry (to opt out of it)
 general = require("parser")(os.getenv("HOME") .. "/.config/tos/general.conf")
 

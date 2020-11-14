@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
@@ -143,7 +142,7 @@ compton_button:buttons(
 
 local settingsName =
   wibox.widget {
-  text = "Window Effects",
+  text = i18n.translate("Window Effects"),
   font = "Iosevka Regular 10",
   align = "left",
   widget = wibox.widget.textbox

@@ -167,7 +167,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox("General")
+  local title = wibox.widget.textbox(i18n.translate("General"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -205,7 +205,7 @@ return function()
   save:setup {
     layout = wibox.container.place,
     halign = "center",
-    wibox.container.margin(wibox.widget.textbox("Update"), m, m, m / 2, m / 2)
+    wibox.container.margin(wibox.widget.textbox(i18n.translate("Update")), m, m, m / 2, m / 2)
   }
   save:buttons(
     gears.table.join(
@@ -247,69 +247,73 @@ return function()
       {
         layout = wibox.layout.flex.vertical,
         create_checkbox(
-          "Audio popup",
-          "Enable the 'pop' sound when changing the audio",
+          i18n.translate("Audio popup"),
+          i18n.translate("Enable the 'pop' sound when changing the audio"),
           general["audio_change_sound"] == "1",
           "audio_change_sound"
         ),
         create_checkbox(
-          "Error data opt out",
-          "Send error messages to the developers, this is useful for debugging and reducing errors/bugs",
+          i18n.translate("Error data opt out"),
+          i18n.translate("Send error messages to the developers, this is useful for debugging and reducing errors/bugs"),
           general["tde_opt_out"] == "1",
           "tde_opt_out"
         ),
         create_checkbox(
-          "Break timer",
-          "A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc",
+          i18n.translate("Break timer"),
+          i18n.translate(
+            "A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc"
+          ),
           general["break"] == "1",
           "break"
         ),
         create_checkbox(
-          "Titlebar drawing",
-          "Draw the titlebar above every application",
+          i18n.translate("Titlebar drawing"),
+          i18n.translate("Draw the titlebar above every application"),
           general["draw_mode"] == "fast",
           "draw_mode",
           "fast",
           "none"
         ),
         create_checkbox(
-          "Screen timeout",
-          "Put the system in sleep mode after a period of inactivity",
+          i18n.translate("Screen timeout"),
+          i18n.translate("Put the system in sleep mode after a period of inactivity"),
           general["screen_timeout"] == "1" or general["screen_timeout"] == nil,
           "screen_timeout"
         ),
         create_checkbox(
-          "Disable Desktop",
-          "When enabled we don't draw icons or anything on the desktop",
+          i18n.translate("Disable Desktop"),
+          i18n.translate("When enabled we don't draw icons or anything on the desktop"),
           general["disable_desktop"] == "1",
           "disable_desktop"
         )
       },
       separator,
       create_multi_option_array(
-        "Tagbar anchor location",
-        "The location where you want the tagbar to appear (default bottom)",
+        i18n.translate("Tagbar anchor location"),
+        i18n.translate("The location where you want the tagbar to appear (default bottom)"),
         {"bottom", "right", "left"},
         general["tag_bar_anchor"] or "bottom",
         "tag_bar_anchor"
       ),
       create_multi_option_array(
-        "Tagbar bar draw location",
-        "Draw the tagbar either on all screens, the main screen or don't draw it at all",
+        i18n.translate("Tagbar bar draw location"),
+        i18n.translate("Draw the tagbar either on all screens, the main screen or don't draw it at all"),
         {"all", "main", "none"},
         general["tag_bar_draw"] or "all",
         "tag_bar_draw"
       ),
       create_multi_option_array(
-        "Topbar draw location",
-        "Draw the topbar either on all screens, the main screen or don't draw it at all",
+        i18n.translate("Topbar draw location"),
+        i18n.translate("Draw the topbar either on all screens, the main screen or don't draw it at all"),
         {"all", "main", "none"},
         general["top_bar_draw"] or "all",
         "top_bar_draw"
       ),
       create_multi_option_array(
-        "Window screenshot mode",
-        "when making a screenshot of a window, you can either show the screenshot or make a pretty version with some shadows, and your theme color",
+        i18n.translate("Window screenshot mode"),
+        i18n.translate(
+          "when making a screenshot of a window, you can either show the screenshot or make a pretty version with some shadows, and your theme color"
+        ),
         {"shadow", "none"},
         general["window_screen_mode"] or "shadow",
         "window_screen_mode"
