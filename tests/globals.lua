@@ -33,6 +33,12 @@ mouse = {
     screen = ""
 }
 
+i18n = {
+    translate = function(str)
+        return str
+    end
+}
+
 -- general configuration file
 general = {
     audio_change_sound = "1"

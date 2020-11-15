@@ -17,6 +17,9 @@ function test_i18n_system_language()
 end
 
 function test_i18n_custome_translations()
+    -- we set the language to anything else than english
+    -- because translating from english to english is not valid
+    i18n.set_system_language("dutch")
     assert(i18n.translate("random") == "random")
     i18n.custom_translations(
         {
@@ -24,6 +27,7 @@ function test_i18n_custome_translations()
         }
     )
     assert(i18n.translate("random") == "modnar")
+    i18n.set_system_language("en")
 end
 
 function test_init_works()
