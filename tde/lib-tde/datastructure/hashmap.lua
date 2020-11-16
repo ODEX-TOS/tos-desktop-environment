@@ -4,6 +4,13 @@
 -- This file is a wrapper for lua's hashmap, intended for people who come from object oriented languages
 -- This api provides easy to use functions with which most people are familiar
 --
+-- Time complexity:
+--  - Lookup element    O(n) (worst case) on average O(1)
+--  - Insert element    O(n) (worst case) on average O(1)
+--  - Remove element    O(n) (worst case) on average O(1)
+--  - update element    O(n) (worst case) on average O(1)
+-- Usually the complexity is O(1) unless hash collisions happen then it could be O(x) with a max of O(n)
+--
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.datastructure.hashmap

@@ -1,3 +1,5 @@
+-- This profile shoud run in O(n) times
+
 require("lib-tde.luapath")
 local i18n = require("lib-tde.i18n")
 
