@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- Lua Implementation of a stack
--- This module describes the api usage of a stack (FIFO)
+-- This module describes the api usage of a stack (LIFO)
 -- You can push items on the stack and pop them of the stack
 --
 --    local stack = require("lib-tde.datastructure.stack")
@@ -14,9 +14,9 @@
 --    list.size() -- returns the size of the stack
 --
 -- Time complexity:
---  - Insert element    O(1)
---  - Remove element    O(1)
---  - List size         O(1)
+--  * Insert element    O(1)
+--  * Remove element    O(1)
+--  * List size         O(1)
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
