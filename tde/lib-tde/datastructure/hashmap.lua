@@ -13,7 +13,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-tde.datastructure.hashmap
+-- @tdedatamod lib-tde.datastructure.hashmap
 ---------------------------------------------------------------------------
 
 --- Create a new hashmap

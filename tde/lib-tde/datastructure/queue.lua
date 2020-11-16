@@ -20,7 +20,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-tde.datastructure.linkedList
+-- @tdedatamod lib-tde.datastructure.queue
 ---------------------------------------------------------------------------
 
 local linkedList = require("lib-tde.datastructure.linkedList")
