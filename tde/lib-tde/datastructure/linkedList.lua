@@ -32,6 +32,16 @@
 --         list.previous()
 --    end
 --
+-- Time complexity:
+--  - Lookup element    O(n)
+--  - Insert element    O(1)
+--  - Remove element    O(1)
+--  - update element    0(1)
+-- Linked lists are extremly good to update values and read them
+-- They are however bad at searching/traversing lists
+--
+--
+--
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.datastructure.linkedList
@@ -162,7 +172,6 @@ function genList()
     -- linkedList.removeNext() -- list.head.next becomes list.head.next.next
     list.removeNext = function()
         list.head.next = list.head.next.next
-        collectgarbage()
     end
 
     --- Remove the previous value and replace it by list.head.previous.previous
@@ -171,7 +180,6 @@ function genList()
     -- linkedList.removePrevious() -- list.head.previous becomes list.head.previous.previous
     list.removePrevious = function()
         list.head.previous = list.head.previous.previous
-        collectgarbage()
     end
 
     return list
