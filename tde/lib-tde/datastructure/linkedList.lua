@@ -33,10 +33,11 @@
 --    end
 --
 -- Time complexity:
---  * Lookup element    O(n)
---  * Insert element    O(1)
---  * Remove element    O(1)
---  * update element    0(1)
+--
+-- * Lookup element    O(n)
+-- * Insert element    O(1)
+-- * Remove element    O(1)
+-- * update element    0(1)
 -- Linked lists are extremly good to update values and read them
 -- They are however bad at searching/traversing lists
 --

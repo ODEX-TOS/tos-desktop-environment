@@ -14,9 +14,10 @@
 --    list.size() -- returns the size of the queue
 --
 -- Time complexity:
---  * Insert element    O(1)
---  * Remove element    O(1)
---  * List size         O(1)
+--
+-- * Insert element    O(1)
+-- * Remove element    O(1)
+-- * List size         O(1)
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
