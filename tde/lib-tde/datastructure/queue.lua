@@ -1,5 +1,6 @@
 ---------------------------------------------------------------------------
 -- Lua Implementation of a queue
+--
 -- This module describes the api usage of a queue (FIFO)
 -- You can push items on the queue and pop them of the queue
 --

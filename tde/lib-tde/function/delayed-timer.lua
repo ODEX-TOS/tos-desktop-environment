@@ -1,11 +1,11 @@
 ---------------------------------------------------------------------------
--- This module run a timer periodically, but has an initial delay before running
+-- This module run a timer periodically, but has an initial delay before running.
 --
--- Usually people use `gears.timer` however when starting the desktop environment every timer gets triggered at the same time
--- This can result in peaks of cpu usage followed by times with no cpu usage
--- This is fine for small programs, but if a program uses considerable cpu time this can cause "lag"
--- Delayed timer is used to "spread" the execution of async repeating code (for example polling)
--- This is how you use the api
+-- Usually people use `gears.timer` however when starting the desktop environment every timer gets triggered at the same time.
+-- This can result in peaks of cpu usage followed by times with no cpu usage.
+-- This is fine for small programs, but if a program uses considerable cpu time this can cause "lag".
+-- Delayed timer is used to "spread" the execution of async repeating code (for example polling).
+-- This is how you use the api:
 --
 --    -- this will print hello every 5 seconds, after an initial delay of 10 seconds
 --    -- It however by default calls the callback function on startup once
@@ -20,7 +20,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-tde.function.application_runner
+-- @tdemod lib-tde.function.delayed-timer
 ---------------------------------------------------------------------------
 
 local gears = require("gears")

@@ -23,9 +23,9 @@
 --SOFTWARE.
 ]]
 ---------------------------------------------------------------------------
--- functions to help with rounding widgets
+-- functions to help with rounding widgets.
 --
--- This package contains simple function to round your widgets
+-- This package contains simple function to round your widgets.
 --
 --     wibox.widget {
 --        text = "hello",

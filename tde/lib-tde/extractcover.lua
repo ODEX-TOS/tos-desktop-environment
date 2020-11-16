@@ -22,12 +22,11 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 ---------------------------------------------------------------------------
 -- Extract album cover from song
 --
 -- This is a helper module to extract metadata from music.
--- It depends on the external package playerctl 
+-- It depends on the external package playerctl.
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
@@ -37,8 +36,6 @@
 -- Extract album cover from song
 -- Will used by music/mpd widget
 -- Depends ffmpeg or perl-image-exiftool, song with hard-coded album cover
-
-
 
 local extract = {}
 -- TODO: get image information from spotify

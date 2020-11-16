@@ -1,5 +1,6 @@
 ---------------------------------------------------------------------------
 -- Lua Implementation of a stack
+--
 -- This module describes the api usage of a stack (LIFO)
 -- You can push items on the stack and pop them of the stack
 --

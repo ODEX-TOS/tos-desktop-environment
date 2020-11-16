@@ -1,12 +1,12 @@
 ---------------------------------------------------------------------------
--- General functions to manipulate your file and filesystems
+-- General functions to manipulate your file and filesystems.
 --
--- This module exposes an API to communicate with the filesystem
+-- This module exposes an API to communicate with the filesystem.
 --
--- Often you need to check what the environment is where you are running in
--- This often involves checking what files exist for example in `/proc` or `/sys``
+-- Often you need to check what the environment is where you are running in.
+-- This often involves checking what files exist for example in `/proc` or `/sys`
 --
--- Checking files is as easy as
+-- Checking files is as easy as:
 --
 --    lib-tde.file.exists("/etc/passwd") -- returns true on TOS
 --    lib-tde.file.exists("/this/does/not/exist") -- returns false

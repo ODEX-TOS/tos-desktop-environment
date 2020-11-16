@@ -1,9 +1,9 @@
 ---------------------------------------------------------------------------
--- This module helps with running applications as defined in autostart
+-- This module helps with running applications as defined in autostart.
 --
--- Running software that guaranteed running only once can be troublesome
--- For example you have written a shell script that launches a webserver
--- We would only want to start the webserver once
+-- Running software that guaranteed running only once can be troublesome.
+-- For example you have written a shell script that launches a webserver.
+-- We would only want to start the webserver once.
 --
 --    -- this will run the script
 --    lib-tde.function.application_runner.run_once(os.getenv("HOME") .. "/launch-webserver.sh") -- returns true

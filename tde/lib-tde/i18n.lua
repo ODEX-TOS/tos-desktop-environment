@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------
 -- This module handles translation inside of TDE
--- You can use the default translations of TDE inside of our plugin
+--
+-- You can use the default translations of TDE inside of our plugin.
 -- Alternativly you can add more translations into tde, which is useful if your translations don't exist yet
 --
 --     -- i18n is exposed to the plugin authors without needing to redeclare it

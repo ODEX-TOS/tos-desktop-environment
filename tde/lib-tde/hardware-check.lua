@@ -1,29 +1,29 @@
 ---------------------------------------------------------------------------
--- Perform queries on the hardware to validate certain components from existing
+-- Perform queries on the hardware to validate certain components from existing.
 --
--- Each piece of hardware is different and supports different components
--- For example a laptop vs desktop, usually a laptop has a battery whilst a desktop doesn't
--- You can query this api to discover certain components that should exist
+-- Each piece of hardware is different and supports different components.
+-- For example a laptop vs desktop, usually a laptop has a battery whilst a desktop doesn't.
+-- You can query this api to discover certain components that should exist.
 --
 --    lib-tde.hardware-check.battery() -- returns True if a battery exists
 --    lib-tde.hardware-check.wifi() -- returns True if wifi is supported
 --    lib-tde.hardware-check.bluetooth() -- returns True if bluetooth is supported
 --    lib-tde.hardware-check.sound() -- returns True if sound is working
 --
--- You can also use this module to verify if the environment is configured correctly
--- For example you can have hard dependencies on some software to get a plugin working
--- An example is the build in screen recorder that depends on ffmpeg beeing installed
+-- You can also use this module to verify if the environment is configured correctly.
+-- For example you can have hard dependencies on some software to get a plugin working.
+-- An example is the build in screen recorder that depends on ffmpeg beeing installed.
 --
 --    lib-tde.hardware-check.has_package_installed("ffmpeg") -- returns True if ffmpeg is installed
 --
--- Warning never try to use `lib-tde.hardware-check.execute` unless you known what you are doing
--- execute runs on the main thread and can cause input from not beeing handled
--- Which introduces lag to the system
--- Here is an example that locks the desktop for 2 seconds (where you can't do anything)
+-- Warning never try to use `lib-tde.hardware-check.execute` unless you known what you are doing.
+-- execute runs on the main thread and can cause input from not beeing handled.
+-- Which introduces lag to the system.
+-- Here is an example that locks the desktop for 2 seconds (where you can't do anything).
 --
 --    lib-tde.hardware-check.execute("sleep 2") -- block the main thread for 2 seconds
 --
--- This module is constantly updated to support new queries and new possible dependencies
+-- This module is constantly updated to support new queries and new possible dependencies.
 -- PR's are always welcome :)
 --
 -- @author Tom Meyers

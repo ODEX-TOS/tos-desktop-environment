@@ -1,7 +1,8 @@
 ---------------------------------------------------------------------------
--- Write/override a configuration file to contain new settings
--- Usefull when you want to override user settings
--- Such as in the settings app
+-- Write/override a configuration file to contain new settings.
+--
+-- Usefull when you want to override user settings.
+-- Such as in the settings app.
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers

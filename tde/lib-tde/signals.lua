@@ -25,8 +25,8 @@
 ---------------------------------------------------------------------------
 -- Internal signal delegator, this module manages signals from and to different components of TDE
 --
--- This package contains a lot of signals
--- most are in the form
+-- This package contains a lot of signals.
+-- most are in the form:
 --
 --     emit_property_ram("123450")
 --     connect_property_ram(
@@ -34,7 +34,7 @@
 --        print("Received: " .. value)
 --      end)
 --
--- This module tries to improve reusage of know variables throughout the tde infrastructure
+-- This module tries to improve reusage of know variables throughout the tde infrastructure.
 --
 --
 -- @author Tom Meyers

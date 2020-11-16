@@ -1,18 +1,19 @@
 ---------------------------------------------------------------------------
--- This module overrides the existing print function
--- The new print function also logs everything to $HOME/.cache/tde/stdout.log
--- This module describes the new api of the print function
+-- This module overrides the existing print function.
 --
--- Assume you want to print something
+-- The new print function also logs everything to `$HOME/.cache/tde/stdout.log`
+-- This module describes the new api of the print function.
+--
+-- Assume you want to print something:
 --
 --    print("This is a print message")
 --
--- This gets printed out to stdout and written to $HOME/.cache/tde/stdout.log
+-- This gets printed out to stdout and written to `$HOME/.cache/tde/stdout.log`
 --
--- You can give the user one of four logtypes: error, warning, debug and info
--- The default logtype is info
+-- You can give the user one of four logtypes: error, warning, debug and info.
+-- The default logtype is info.
 --
--- To get the logtype you must do the following
+-- To get the logtype you must do the following:
 --
 --    local logger = require("lib-tde.logger")
 --    print("This is an error"       , logger.error)
