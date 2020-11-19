@@ -42,6 +42,8 @@ local pluginsleft = require("lib-tde.plugin-loader")("topbar-left")
 -- Clock / Calendar 12h format
 local textclock = wibox.widget.textclock('<span font="Roboto bold 10">%l:%M %p</span>')
 
+local weak_hardware = general["weak_hardware"] == "0" or general["weak_hardware"] == nil
+
 -- Clock / Calendar 12AM/PM fornat
 -- local textclock = wibox.widget.textclock('<span font="Roboto Mono bold 11">%I\n%M</span>\n<span font="Roboto Mono bold 9">%p</span>')
 -- textclock.forced_height = 56
@@ -59,15 +61,13 @@ local function rounded_shape(size, partial)
   end
 end
 
-local function show_widget_or_default(widget, show)
-  if show then
-    return widget
+local function show_widget_or_default(widget, show, require_is_function)
+  if show and require_is_function then
+    return require(widget)()
+  elseif show then
+    return require(widget)
   end
-  return wibox.widget {
-    text = "",
-    visible = false,
-    widget = wibox.widget.textbox
-  }
+  return wibox.widget.base.empty_widget()
 end
 
 -- Alternative to naughty.notify - tooltip. You can compare both and choose the preferred one
@@ -176,17 +176,20 @@ local function topbar_right_plugin(s)
       }
     )
   end
-  table_widget:add(show_widget_or_default(require("widget.battery")(), hardware.hasBattery()))
-  table_widget:add(show_widget_or_default(require("widget.bluetooth"), hardware.hasBluetooth()))
-  table_widget:add(show_widget_or_default(require("widget.wifi"), hardware.hasWifi()))
+  table_widget:add(show_widget_or_default("widget.battery", hardware.hasBattery(), true))
+  table_widget:add(show_widget_or_default("widget.bluetooth", hardware.hasBluetooth()))
+  table_widget:add(show_widget_or_default("widget.wifi", hardware.hasWifi()))
   table_widget:add(require("widget.package-updater"))
   table_widget:add(
-    show_widget_or_default(require("widget.music"), hardware.hasSound() and hardware.has_package_installed("playerctl"))
+    show_widget_or_default(
+      "widget.music",
+      (hardware.hasSound() and hardware.has_package_installed("playerctl")) or weak_hardware
+    )
   ) --only add this when the data can be extracted from spotify
   table_widget:add(require("widget.about"))
-  table_widget:add(show_widget_or_default(require("widget.screen-recorder")(), hardware.hasFFMPEG()))
+  table_widget:add(show_widget_or_default("widget.screen-recorder", hardware.hasFFMPEG() or weak_hardware, true))
   table_widget:add(require("widget.search"))
-  table_widget:add(require("widget.notification-center"))
+  table_widget:add(show_widget_or_default("widget.notification-center", weak_hardware))
   return table_widget
 end
 
@@ -209,11 +212,11 @@ local function topbar_left_plugin(s)
     layout = wibox.layout.fixed.horizontal
   }
 
-  table_widget:add(require("widget.control-center"))
+  table_widget:add(show_widget_or_default("widget.control-center", weak_hardware))
   table_widget:add(TaskList(s))
   table_widget:add(add_button)
 
-  for index, value in ipairs(pluginsleft) do
+  for _, value in ipairs(pluginsleft) do
     table_widget:add(value)
   end
 

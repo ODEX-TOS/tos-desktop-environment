@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local TagList = require("widget.tag-list")
 local clickable_container = require("widget.material.clickable-container")
@@ -67,6 +66,11 @@ return function(screen, action_bar_width)
     return layoutBox
   end
 
+  local folders = nil
+  if general["weak_hardware"] == "0" or general["weak_hardware"] == nil then
+    folders = require("widget.xdg-folders")("bottom")
+  end
+
   return wibox.widget {
     id = "action_bar",
     layout = wibox.layout.align.horizontal,
@@ -79,7 +83,7 @@ return function(screen, action_bar_width)
       layout = wibox.layout.align.horizontal,
       -- Create a taglist widget
       TagList("bottom")(screen),
-      require("widget.xdg-folders")("bottom")
+      folders
       --[[wibox.widget {
               orientation = 'horizontal',
               forced_height = 10,

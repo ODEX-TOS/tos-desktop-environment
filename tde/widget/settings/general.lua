@@ -285,6 +285,12 @@ return function()
           i18n.translate("When enabled we don't draw icons or anything on the desktop"),
           general["disable_desktop"] == "1",
           "disable_desktop"
+        ),
+        create_checkbox(
+          i18n.translate("Weak Hardware"),
+          i18n.translate("Disable a lot of the 'nice' features in order to reduce hardware consumption"),
+          general["weak_hardware"] == "1",
+          "weak_hardware"
         )
       },
       separator,

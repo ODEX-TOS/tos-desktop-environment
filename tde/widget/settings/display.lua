@@ -12,7 +12,7 @@ local configWriter = require("lib-tde.config-writer")
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
-local settings_height = dpi(800)
+local settings_height = dpi(900)
 
 local settings_nw = dpi(260)
 
@@ -229,7 +229,7 @@ return function()
         function()
           -- TODO: change wallpaper
           bSelectWallpaper = true
-          root.elements.settings_views[5].view.refresh()
+          root.elements.settings_views[4].view.refresh()
         end
       )
     )

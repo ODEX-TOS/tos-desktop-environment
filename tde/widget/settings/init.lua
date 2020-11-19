@@ -18,7 +18,7 @@ root.elements.settings_views = {}
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
-local settings_height = dpi(800)
+local settings_height = dpi(900)
 local settings_nw = dpi(260)
 
 -- save the index state of last time

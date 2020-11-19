@@ -222,5 +222,7 @@ translations["wired"] = "bedraad"
 translations["Wireless connection"] = "Draadloze verbinding"
 translations["Wireless Connection"] = "Draadloze Verbinding"
 translations["wireless"] = "draadloos"
-
+translations["Weak Hardware"] = "Zwakke hardware"
+translations["Disable a lot of the 'nice' features in order to reduce hardware consumption"] =
+    "Schakel een hoop features uit om zodat zwakke hardware TDE ook kan draaien"
 return translations

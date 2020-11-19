@@ -40,6 +40,11 @@ local colorBG = beautiful.primary.hue_700
 local color = addHash(themefile["primary_hue_500"]) or color
 local colorBG = addHash(themefile["primary_hue_700"]) or colorBG
 
+local picom = "picom -b --dbus --experimental-backends --config " .. config.getComptonFile()
+if general["weak_hardware"] == "1" then
+  picom = ""
+end
+
 return {
   -- List of apps to start by default on some actions
   default = {
@@ -76,7 +81,7 @@ return {
   },
   -- List of apps to start once on start-up
   run_on_start_up = {
-    "picom -b --dbus --experimental-backends --config " .. config.getComptonFile(),
+    picom,
     "blueman-applet", -- Bluetooth tray icon
     "xfce4-power-manager", -- Power manager
     'sh -c "/etc/xdg/awesome/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
