@@ -42,8 +42,12 @@ local init_loaded = false
 local translationsPath = gears.filesystem.get_configuration_dir() .. "/lib-tde/translations"
 
 local function detect_system_language()
-    local envLang = os.getenv("LANG")
-    system_language = common.split(envLang, "_")[1] or "en"
+    local envLang = os.getenv("LANG") or "en_US.UTF-8"
+    if envLang == "" then
+        system_language = "en"
+    else
+        system_language = common.split(envLang, "_")[1] or "en"
+    end
 end
 
 local function _init(default)

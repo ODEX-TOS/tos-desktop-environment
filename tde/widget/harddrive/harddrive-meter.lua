@@ -53,6 +53,8 @@ delayed_timer(
     print("Hard drive size: " .. size_in_kb .. "kB")
     print("Hard drive usage: " .. usage .. "%")
 
+    slider:set_value(usage)
+
     signals.emit_disk_usage(usage)
     signals.emit_disk_space(common.bytes_to_grandness(size_in_kb, 1))
 
