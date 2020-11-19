@@ -44,24 +44,17 @@ local slider =
 delayed_timer(
   config.harddisk_poll,
   function()
-    local lines = filehandle.lines("/proc/partitions")
+    local statvfs = require "posix.sys.statvfs".statvfs
+    local res = statvfs("/")
+    local usage = (res.f_bfree / res.f_blocks) * 100
+    -- f_blocks is in 512 byte chunks
+    local size_in_kb = res.f_blocks / 2
 
-    -- find all hardisk and their size
-    local size = 0
-    for _, line in ipairs(lines) do
-      local nvmeSize, nvmdName = line:match(" %d* *%d* *(%d*) (nvme...)$")
-      if nvmeSize ~= nil and nvmdName ~= nil then
-        size = size + tonumber(nvmeSize)
-      end
+    print("Hard drive size: " .. size_in_kb .. "kB")
+    print("Hard drive usage: " .. usage .. "%")
 
-      local sataSize, sataName = line:match(" %d* *%d* *(%d*) (sd[a-z])$")
-      if sataSize ~= nil and sataName ~= nil then
-        size = size + tonumber(sataSize)
-      end
-    end
-    -- TODO: Find real disk usage information
-    signals.emit_disk_usage(10)
-    signals.emit_disk_space(common.bytes_to_grandness(size, 1))
+    signals.emit_disk_usage(usage)
+    signals.emit_disk_space(common.bytes_to_grandness(size_in_kb, 1))
 
     collectgarbage("collect")
   end,
