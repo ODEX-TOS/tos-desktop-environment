@@ -291,6 +291,12 @@ return function()
           i18n.translate("Disable a lot of the 'nice' features in order to reduce hardware consumption"),
           general["weak_hardware"] == "1",
           "weak_hardware"
+        ),
+        create_checkbox(
+          i18n.translate("Autofocus"),
+          i18n.translate("Automatically make the focus follow the mouse without clicking"),
+          general["autofocus"] == "1",
+          "autofocus"
         )
       },
       separator,

@@ -227,4 +227,7 @@ translations["Disable a lot of the 'nice' features in order to reduce hardware c
     "Schakel een hoop features uit om zodat zwakke hardware TDE ook kan draaien"
 
 translations[" before sleeping"] = " voor we in sluimermodus gaan"
+translations["Autofocus"] = "Autofocus"
+translations["Automatically make the focus follow the mouse without clicking"] =
+    "De focus volgt uw muis, zelfs wanneer je niet klikt."
 return translations
