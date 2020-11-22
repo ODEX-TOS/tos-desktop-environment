@@ -225,4 +225,6 @@ translations["wireless"] = "draadloos"
 translations["Weak Hardware"] = "Zwakke hardware"
 translations["Disable a lot of the 'nice' features in order to reduce hardware consumption"] =
     "Schakel een hoop features uit om zodat zwakke hardware TDE ook kan draaien"
+
+translations[" before sleeping"] = " voor we in sluimermodus gaan"
 return translations

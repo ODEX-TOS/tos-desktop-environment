@@ -8,6 +8,7 @@ local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 local configWriter = require("lib-tde.config-writer")
+local datetime = require("lib-tde.function.datetime")
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -186,7 +187,7 @@ return function()
     awful.tooltip {
     objects = {screen_time},
     timer_function = function()
-      return (general["screen_on_time"] or "120") .. i18n.translate(" seconds before sleeping")
+      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
     end
   }
 
@@ -194,7 +195,7 @@ return function()
     "property::value",
     function()
       print("Updated screen time: " .. tostring(screen_time.value) .. "sec")
-      screen_time_tooltip.text = tostring(screen_time.value) .. i18n.translate(" seconds before sleeping")
+      screen_time_tooltip.text = datetime.numberInSecToMS(screen_time.value) .. i18n.translate(" before sleeping")
       general["screen_on_time"] = tostring(screen_time.value)
       configWriter.update_entry(
         os.getenv("HOME") .. "/.config/tos/general.conf",
