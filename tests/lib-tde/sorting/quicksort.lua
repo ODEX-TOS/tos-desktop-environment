@@ -40,7 +40,7 @@ end
 
 function test_sorting_quicksort_custom_function_inverted_sort()
     local list = {1, 2, -1}
-    local truth = {1, 2, -1}
+    local truth = {2, 1, -1}
 
     -- invert the comparison
     local compare = function(smaller, bigger)
@@ -51,5 +51,20 @@ function test_sorting_quicksort_custom_function_inverted_sort()
 
     for index, element in ipairs(result) do
         assert(element == truth[index], "Expected: " .. truth[index] .. " but got " .. element)
+    end
+end
+
+function test_sorting_quicksort_works_with_string_size_sorting()
+    local comparison = function(small, big)
+        print("QUICK: " .. small .. " " .. big)
+        return #tostring(small) < #tostring(big)
+    end
+    local list = {"hello!", "he", "hello", "hel", "h", "hell"}
+    local expected = {"h", "he", "hel", "hell", "hello", "hello!"}
+
+    local result = quicksort(list, comparison)
+
+    for index, element in ipairs(result) do
+        assert(element == expected[index], "Expected: " .. expected[index] .. " but got " .. element)
     end
 end

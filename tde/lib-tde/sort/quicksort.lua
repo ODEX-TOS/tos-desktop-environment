@@ -31,12 +31,19 @@
 -- @tdedatamod lib-tde.sort.quicksort
 ---------------------------------------------------------------------------
 
---- Create a new hashmap
--- @treturn table A table containing the hashmap methods
--- @staticfct lib-tde.datastrucuture.hashmap
--- @usage -- This will create a new empty hashmap
--- lib-tde.datastrucuture.hashmap()
-return function(arr, func)
+--- Sort a list of items in 0(n log(n)) time
+-- @tparam table list The list to be sorted
+-- @tparam[opt] function func A comparison function -> takes 2 arguments should return true if the first argument is smaller
+-- @treturn table A list containing the sorted elements
+-- @staticfct lib-tde.sort.quicksort
+-- @usage -- This will sort the input list
+-- lib-tde.sort.quicksort(list)
+-- @usage -- This will sort the input list with a custom comparison function
+-- lib-tde.sort.quicksort(list, function(smaller, bigger)
+--    return #smaller < #bigger
+-- end)
+--
+return function(list, func)
     -- set our comparison function to the internal one or to the one provided by the user
     local comparision = function(smaller, bigger)
         return smaller < bigger
@@ -45,32 +52,32 @@ return function(arr, func)
         comparision = func
     end
 
-    local function partition(list, low, high)
-        local pivot = list[high]
+    local function partition(arr, low, high)
+        local pivot = arr[high]
         local index = low
         for j = low, high do
-            if comparision(list[j], pivot) then
-                local temp = list[index]
-                list[index] = list[j]
-                list[j] = temp
+            if comparision(arr[j], pivot) then
+                local temp = arr[index]
+                arr[index] = arr[j]
+                arr[j] = temp
                 index = index + 1
             end
         end
-        local temp = list[index]
-        list[index] = list[high]
-        list[high] = temp
+        local temp = arr[index]
+        arr[index] = arr[high]
+        arr[high] = temp
         return index
     end
 
-    local function quicksort(list, low, high)
-        if comparision(low, high) then
-            local part = partition(list, low, high)
-            quicksort(list, low, part - 1)
-            quicksort(list, part + 1, high)
+    local function quicksort(arr, low, high)
+        if low < high then
+            local part = partition(arr, low, high)
+            quicksort(arr, low, part - 1)
+            quicksort(arr, part + 1, high)
         end
     end
 
-    quicksort(arr, 1, #arr)
+    quicksort(list, 1, #list)
 
-    return arr
+    return list
 end
