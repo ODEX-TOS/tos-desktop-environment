@@ -8,7 +8,7 @@ local configFile = os.getenv("HOME") .. "/.config/tos/general.conf"
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 
-local m = dpi(10)
+local m = dpi(5)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
 local settings_nw = dpi(260)
@@ -205,7 +205,7 @@ return function()
   save:setup {
     layout = wibox.container.place,
     halign = "center",
-    wibox.container.margin(wibox.widget.textbox(i18n.translate("Update")), m, m, m / 2, m / 2)
+    wibox.container.margin(wibox.widget.textbox(i18n.translate("Update")), m * 2, m * 2, m * 2, m * 2)
   }
   save:buttons(
     gears.table.join(
