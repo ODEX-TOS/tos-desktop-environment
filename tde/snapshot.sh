@@ -49,6 +49,9 @@ function window() {
 	convert "${file_loc_tmp}" -gravity south -background "$COLOR" -splice 0x"$PADDING" "${file_loc_tmp}"
 
 	mv "$file_loc_tmp" "$file_loc"
+    
+    # compress the image
+    mogrify -quality 20 "${file_loc}"
 
 	# Exit if the user cancels the screenshot
 	# So it means there's no new screenshot image file
@@ -80,6 +83,8 @@ function shot() {
 	else
 		${maim_command} "${file_loc_tmp}"
 		convert "${file_loc_tmp}" "${file_loc}"
+        # compress the image
+        mogrify -quality 20 "${file_loc}"
 		rm "${file_loc_tmp}"
 	fi
 
