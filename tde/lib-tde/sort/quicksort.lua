@@ -28,7 +28,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdedatamod lib-tde.datastructure.hashmap
+-- @tdedatamod lib-tde.sort.quicksort
 ---------------------------------------------------------------------------
 
 --- Create a new hashmap
