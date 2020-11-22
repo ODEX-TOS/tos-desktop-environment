@@ -68,6 +68,8 @@ local function create_icon(icon, name, num, callback, drag)
         end
     }
 
+    local started = false
+
     box:buttons(
         gears.table.join(
             awful.button(
@@ -78,11 +80,16 @@ local function create_icon(icon, name, num, callback, drag)
                     local coords = mouse.coords()
                     xoffset = coords.x - box.x
                     yoffset = coords.y - box.y
-                    timer:start()
+                    if not started then
+                        timer:start()
+                        started = true
+                    end
                     timercount = 0
                 end,
                 function()
-                    timer:stop()
+                    if started then
+                        timer:stop()
+                    end
                     if type(drag) == "function" then
                         drag(name, box.x, box.y)
                     end
