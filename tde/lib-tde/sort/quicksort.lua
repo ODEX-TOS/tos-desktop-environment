@@ -38,7 +38,7 @@
 -- @staticfct lib-tde.sort.quicksort
 -- @usage -- This will sort the input list
 -- lib-tde.sort.quicksort(list)
--- @usage -- This will sort the input list with a custom comparison function
+-- @usage -- This will sort the input list with a custom comparison function (based on the string length)
 -- lib-tde.sort.quicksort(list, function(smaller, bigger)
 --    return #smaller < #bigger
 -- end)

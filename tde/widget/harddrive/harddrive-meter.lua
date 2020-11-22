@@ -47,16 +47,18 @@ delayed_timer(
     local statvfs = require "posix.sys.statvfs".statvfs
     local res = statvfs("/")
     local usage = (res.f_bfree / res.f_blocks) * 100
-    -- f_blocks is in 512 byte chunks
-    local size_in_kb = res.f_blocks / 2
 
-    print("Hard drive size: " .. size_in_kb .. "kB")
+    -- by default f_blocks is in 512 byte chunks
+    local block_size = res.f_frsize or 512
+    local size_in_bytes = res.f_blocks * block_size
+
+    print("Hard drive size: " .. size_in_bytes .. "b")
     print("Hard drive usage: " .. usage .. "%")
 
     slider:set_value(usage)
 
     signals.emit_disk_usage(usage)
-    signals.emit_disk_space(common.bytes_to_grandness(size_in_kb, 1))
+    signals.emit_disk_space(common.bytes_to_grandness(size_in_bytes))
 
     collectgarbage("collect")
   end,

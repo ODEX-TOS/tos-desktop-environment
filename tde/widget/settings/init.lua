@@ -37,6 +37,46 @@ if grabber == nil then
             root.elements.settings.close()
           end
         end
+      },
+      awful.key {
+        modifiers = {},
+        key = "Up",
+        on_press = function()
+          if INDEX > 1 then
+            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen)
+          end
+        end
+      },
+      awful.key {
+        modifiers = {},
+        key = "Down",
+        on_press = function()
+          if INDEX < #root.elements.settings_views then
+            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen)
+          end
+        end
+      },
+      awful.key {
+        modifiers = {"Control"},
+        key = "Tab",
+        on_press = function()
+          if INDEX < #root.elements.settings_views then
+            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen)
+          else
+            root.elements.settings.enable_view_by_index(1, mouse.screen)
+          end
+        end
+      },
+      awful.key {
+        modifiers = {"Control", "Shift"},
+        key = "Tab",
+        on_press = function()
+          if INDEX > 1 then
+            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen)
+          else
+            root.elements.settings.enable_view_by_index(#root.elements.settings_views, mouse.screen)
+          end
+        end
       }
     },
     -- Note that it is using the key name and not the modifier name.
