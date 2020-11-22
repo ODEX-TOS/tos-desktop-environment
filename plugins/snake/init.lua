@@ -24,6 +24,8 @@ local screen_height = mouse.screen.workarea.height
 local xoffset = -1
 local yoffset = 0
 
+local timer = nil
+
 -- size of the player and fruit
 local size = dpi(20)
 
@@ -90,8 +92,8 @@ local function add_snake_part()
     else
         -- find the location of the last element and append it after that position
         local head = parts[#parts]
-        local x = head.x - (xoffset * size * 1.5)
-        local y = head.y - (yoffset * size * 1.5)
+        local x = head.x - (xoffset * size * 1.7)
+        local y = head.y - (yoffset * size * 1.7)
         local box = createPart(x, y)
         table.insert(parts, box)
     end
@@ -118,21 +120,30 @@ end
 -- and free up resources
 local function stop()
     print("Stopping snake")
-    for _, widget in ipairs(parts) do
-        widget.visible = false
+    if parts ~= nil then
+        for _, widget in ipairs(parts) do
+            widget.visible = false
+        end
     end
-    fruit.visible = false
+    if fruit ~= nil then
+        fruit.visible = false
+    end
     parts = nil
     fruit = nil
+
+    if timer ~= nil then
+        timer:stop()
+    end
+
     collectgarbage()
 end
 
--- move the head into a direction 
+-- move the head into a direction
 -- If we are out of bounds we wrap to the other side
 -- Much like a torus
 local function move_head(widget)
-    widget.x = widget.x + (xoffset * size)
-    widget.y = widget.y + (yoffset * size)
+    widget.x = widget.x + (xoffset * size * 1.2)
+    widget.y = widget.y + (yoffset * size * 1.2)
     if widget.x < 0 then
         widget.x = screen_width
     elseif widget.x > screen_width then
@@ -152,9 +163,9 @@ add_snake_part()
 -- init the fruit
 create_fruit()
 
-
 -- this is our main game loop (10 fps)
-gears.timer {
+timer =
+    gears.timer {
     timeout = 0.1,
     call_now = true,
     autostart = true,
@@ -177,6 +188,11 @@ gears.timer {
         end
         -- TODO: check if the head is intersecting with any other snake section
         -- If that is the case the snake "crashed" in itself and the game should stop
+        for i, part in ipairs(parts) do
+            if not (i == 1) and intersecting(parts[1], part) then
+                stop()
+            end
+        end
     end
 }
 
