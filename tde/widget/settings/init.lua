@@ -10,6 +10,7 @@ local naughty = require("naughty")
 local plugins = require("lib-tde.plugin-loader")("settings")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
+local scrollbar = require("widget.scrollbar")
 
 root.elements = {}
 root.widget = {}
@@ -20,6 +21,9 @@ local settings_index = dpi(40)
 local settings_width = dpi(1100)
 local settings_height = dpi(900)
 local settings_nw = dpi(260)
+
+-- This gets populated by the scrollbar
+local body = {}
 
 -- save the index state of last time
 local INDEX = 1
@@ -150,6 +154,10 @@ function enable_view_by_index(i, s, loc)
       root.elements.settings.x = (s.workarea.width - settings_width - m) + s.workarea.x
     else
       root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
+    end
+    -- reset the scrollbar when we open the settings app
+    if not root.elements.settings.visible then
+      body:reset()
     end
     root.elements.settings.visible = true
   end
@@ -381,12 +389,14 @@ function make_nav()
     )
   )
 
+  body = scrollbar(nav_container)
+
   nav:setup {
     layout = wibox.container.place,
     {
       layout = wibox.layout.align.vertical,
       wibox.widget.base.empty_widget(),
-      nav_container,
+      body,
       {
         layout = wibox.container.margin,
         margins = m,

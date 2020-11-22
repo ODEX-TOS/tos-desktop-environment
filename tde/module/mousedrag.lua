@@ -68,10 +68,22 @@ local timer =
         endx = coords.x
         endy = coords.y
         local computation = calculate(startx, starty, endx, endy)
+
+        if computation.x == nil or computation.y == nil or computation.width == nil or computation.height == nil then
+            box.visible = false
+            return
+        end
+
+        if computation.x < 0 or computation.y < 0 or computation.width <= 0 or computation.height <= 0 then
+            box.visible = false
+
+            return
+        end
+
         box.x = computation.x
         box.y = computation.y
-        box.width = computation.width
-        box.height = computation.height
+        box.width = computation.width or 1
+        box.height = computation.height or 1
         box.visible = true
     end
 }

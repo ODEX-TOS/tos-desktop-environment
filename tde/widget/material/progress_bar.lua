@@ -41,6 +41,7 @@ function mat_slider:set_value(value)
     self._private.value = value
     self._private.progress_bar:set_value(self._private.value)
     self:emit_signal("property::value")
+  --self:emit_signal('widget::layout_changed')
   end
 end
 
@@ -63,7 +64,10 @@ end
 function mat_slider:layout(_, width, height)
   local layout = {}
   local size_field = 32
-  table.insert(layout, base.place_widget_at(self._private.progress_bar, 0, 0, width, height))
+  table.insert(
+    layout,
+    base.place_widget_at(self._private.progress_bar, 0, dpi(size_field / 2), width, height - dpi(size_field))
+  )
   return layout
 end
 
@@ -87,21 +91,14 @@ local function new(args)
 
   ret._private.progress_bar =
     wibox.widget {
-    bar_height = dpi(18),
-    bar_color = beautiful.bg_modal,
-    bar_active_color = beautiful.accent.hue_500,
-    handle_shape = gears.shape.circle,
-    handle_width = dpi(26),
-    handle_color = beautiful.accent.hue_600,
-    handle_border_width = 1,
-    handle_border_color = "#00000012",
-    minimum = 0,
-    maximum = 100,
+    max_value = 100,
     value = 25,
-    bar_shape = function(c, w, h)
-      gears.shape.rounded_rect(c, w, h, dpi(35))
-    end,
-    widget = wibox.widget.slider
+    forced_height = dpi(6),
+    paddings = 0,
+    shape = gears.shape.rounded_rect,
+    background_color = beautiful.bg_modal,
+    color = beautiful.accent.hue_500 or "#fdfdfd",
+    widget = wibox.widget.progressbar
   }
 
   ret._private.read_only = false
