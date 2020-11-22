@@ -199,7 +199,10 @@ end
 
 -- Adds a color rule entry to the color_rules table for the given client and saves to file
 local function set_color_rule(c, color)
-    _private.color_rules[c.instance] = color
+    if c.instance == nil then
+        return
+    end
+    _private.color_rules[c.instance] = color or _private.context_menu_theme.bg_normal
     save_color_rules()
 end
 
@@ -236,6 +239,9 @@ local function get_dominant_color(client)
     for x_pos = 0, x_lim, 2 do
         for y_pos = 0, 8, 1 do
             pb = pixbuf_get_from_surface(content, x_offset + x_pos, y_offset + y_pos, 1, 1)
+            if pb == nil then
+                return _private.context_menu_theme.bg_normal
+            end
             bytes = pb:get_pixels()
             color =
                 "#" ..
@@ -816,7 +822,7 @@ function _private.add_window_decorations(c)
         c:connect_signal(
             "property::maximized",
             function()
-                if c.maximized then
+                if c.maximized and client.focus then
                     local curr_screen_workarea = client.focus.screen.workarea
                     awful.titlebar.hide(c)
                     c.shape = nil
@@ -997,7 +1003,8 @@ function nice.initialize(args)
                 gtimer_weak_start_new(
                     0.25,
                     function()
-                        c._nice_base_color = untransparant(get_dominant_color(c))
+                        c._nice_base_color =
+                            untransparant(get_dominant_color(c) or _private.context_menu_theme.bg_normal)
                         set_color_rule(c, c._nice_base_color)
                         _private.add_window_decorations(c)
                         c:disconnect_signal("request::activate", c._cb_add_window_decorations)

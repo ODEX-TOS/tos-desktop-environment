@@ -80,6 +80,9 @@ local input_grabber =
 }
 
 local function make_network_widget(ssid, active)
+  -- make sure ssid is not nil
+  ssid = ssid or ""
+
   local box = wibox.container.background()
   box.bg = beautiful.bg_modal
   box.shape = rounded()

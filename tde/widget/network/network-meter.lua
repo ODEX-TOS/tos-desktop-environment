@@ -76,8 +76,8 @@ local function _draw_results(download, upload)
   local download_text = common.bytes_to_grandness(download)
   local upload_text = common.bytes_to_grandness(upload)
 
-  value_up:set_markup_silently(upload_text)
-  value_down:set_markup_silently(download_text)
+  value_up:set_markup_silently(gears.string.xml_escape(upload_text))
+  value_down:set_markup_silently(gears.string.xml_escape(download_text))
 
   if network_slider_up then
     network_slider_up:set_value((upload / biggest_upload) * 100)

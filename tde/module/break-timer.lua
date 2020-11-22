@@ -33,6 +33,9 @@ local breakTimerFunctions = require("lib-tde.function.datetime")
 _G.pause = {}
 local breakTimer = require("widget.break-timer")
 
+-- our timer is always running in the background until we stop it by pushing the disable button
+local started = true
+
 awful.screen.connect_for_each_screen(
   function(s)
     breakOverlay =
@@ -120,8 +123,9 @@ local breakTriggerTimer =
 _G.pause.disable = function()
   print("Disabeling break timer")
   -- only stop the timer if it is still running
-  if breakTriggerTimer.started then
+  if started then
     breakTriggerTimer:stop()
+    started = false
   end
 end
 

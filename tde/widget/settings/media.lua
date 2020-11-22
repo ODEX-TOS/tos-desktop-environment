@@ -65,6 +65,7 @@ return function()
     "property::value",
     function()
       awful.spawn.with_shell("tos volume set " .. tostring(vol_slider.value))
+      signals.emit_volume(vol_slider.value)
     end
   )
 
@@ -92,15 +93,6 @@ return function()
           mic_footer.markup =
             'Input: <span font="' .. beautiful.font .. '">' .. o:gsub("^%s*(.-)%s*$", "%1") .. "</span>"
         end
-      end
-    )
-
-    awful.spawn.easy_async_with_shell(
-      "bash -c 'amixer -D pulse sget Master'",
-      function(stdout)
-        local mute = string.match(stdout, "%[(o%D%D?)%]")
-        local volume = string.match(stdout, "(%d?%d?%d)%%")
-        vol_slider:set_value(tonumber(volume))
       end
     )
   end

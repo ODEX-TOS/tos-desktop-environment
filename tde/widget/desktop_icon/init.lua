@@ -6,6 +6,7 @@ local gears = require("gears")
 local icons = require("theme.icons")
 local menubar = require("menubar")
 local filehandle = require("lib-tde.file")
+local err = require("lib-tde.logger").error
 
 local width = dpi(100)
 local height = width
@@ -193,10 +194,11 @@ local function delete(name)
             i = index
         end
     end
-    if not (i == -1) then
-        icon_widgets[i].visible = false
-        icon_timers[i]:stop()
+    if i == -1 then
+        print("Trying to remove: " .. name .. " from the desktop but it no longer exists", err)
     end
+    icon_widgets[i].visible = false
+    icon_timers[i]:stop()
     table.remove(icon_widgets, i)
     table.remove(icon_timers, i)
     table.remove(text_name, i)

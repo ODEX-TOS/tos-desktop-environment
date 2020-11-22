@@ -10,6 +10,8 @@ local endy = -1
 
 local box = nil
 
+local started = false
+
 local function createBox(x, y, width, height)
     local box =
         wibox(
@@ -93,7 +95,10 @@ timer:connect_signal(
     function()
         if not mouse.coords().buttons[1] then
             box.visible = false
-            timer:stop()
+            if started then
+                timer:stop()
+                started = false
+            end
         end
     end
 )
@@ -105,11 +110,17 @@ local function start()
     if box == nil then
         box = createBox(startx, starty, 1, 1)
     end
-    timer:start()
+    if not started then
+        timer:start()
+        started = true
+    end
 end
 
 local function stop()
-    timer:stop()
+    if started then
+        timer:stop()
+        started = false
+    end
     if box then
         box.visible = false
     end
