@@ -171,6 +171,9 @@ end
 -- lib-tde.file.string("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type string
 function getString(file, match, head)
   local res = lines_from(file, match, head)
+  if type(res) == "string" then
+    return res
+  end
   return table.concat(res, "\n")
 end
 

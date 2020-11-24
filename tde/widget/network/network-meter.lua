@@ -43,9 +43,11 @@ local last_tx = 0
 
 -- only run the networking poll every x seconds
 local counter = 0
+local interface = nil
 
-local interface = filehandle.string("/tmp/interface.txt"):gsub("\n", "")
-
+if filehandle.exists("/tmp/interface.txt") then
+  interface = filehandle.string("/tmp/interface.txt"):gsub("\n", "")
+end
 local value_up =
   wibox.widget {
   markup = "...",
