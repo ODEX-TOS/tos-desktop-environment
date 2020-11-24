@@ -121,18 +121,6 @@ function dir_exists(dir)
   return exists(dir)
 end
 
---- Check is a file is empty, if the file doesn't exist an exception will be thrown
--- @tparam filename string The path to the file, can be both absolute or relative.
--- @treturn boolean if the file is empty or not
--- @staticfct is_empty
--- @usage --
--- lib-tde.file.is_empty("/etc/hosts") -> false
-
-function is_empty(filename)
-  file = io.open(filename, "r")
-  return false
-end
-
 --- Get all lines from a file, returns an empty table if it doesn't exist
 -- @tparam file string The path to the file, can be both absolute or relative.
 -- @tparam[opt] match string A regular expression to filter out lines that should be ignored by default = ^.*$
@@ -140,15 +128,11 @@ end
 -- @treturn table The lines in a file
 -- @staticfct lines
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
--- lib-tde.file.lines_from("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type table
+-- lib-tde.file.lines("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type table
 function lines_from(file, match, head)
-  if match == nil then
-    match = "^.*$"
-  end
+  local fullMatch = "^.*$"
+  match = match or fullMatch
   if not file_exists(file) then
-    return {}
-  end
-  if is_empty(file) then
     return {}
   end
   lines = {}
@@ -158,7 +142,9 @@ function lines_from(file, match, head)
     if head ~= nil and i > head then
       return lines
     end
-    if string.match(line, match) then
+    if match == fullMatch then
+      lines[#lines + 1] = line
+    elseif string.match(line, match) then
       lines[#lines + 1] = line
     end
   end
@@ -184,27 +170,7 @@ end
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
 -- lib-tde.file.string("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type string
 function getString(file, match, head)
-  if match == nil then
-    match = "^.*$"
-  end
-  if not file_exists(file) then
-    return ""
-  end
-  if is_empty(file) then
-    return ""
-  end
-  i = 0
-  string = ""
-  for line in io.lines(file) do
-    i = i + 1
-    if head ~= nil and i > head then
-      return string
-    end
-    if string.match(line, match) then
-      string = string .. line .. "\n"
-    end
-  end
-  return string
+  return table.concat(lines_from(file, match, head), "\n")
 end
 
 -- wrap the io.lines function in a protected call

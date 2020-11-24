@@ -42,8 +42,7 @@ local function split(inputstr, sep)
         return t
     end
     if inputstr == "" then
-        table.insert(t, "")
-        return t
+        return {""}
     end
     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
         table.insert(t, str)

@@ -64,7 +64,7 @@ function test_script_lines_in_file()
 end
 
 function test_script_create_string_from_file_single_line()
-    local data = "this is some test data\n"
+    local data = "this is some test data"
     create_file("test_file_1", data)
     create_file("test_file_2", data)
     assert(files.string("test_file_1") == data)
@@ -74,7 +74,7 @@ function test_script_create_string_from_file_single_line()
 end
 
 function test_script_create_string_from_file_multi_line()
-    local data = "this is some more test data\nwith_some_more_information\never a third line is present\n"
+    local data = "this is some more test data\nwith_some_more_information\never a third line is present"
     create_file("test_file_1", data)
     create_file("test_file_2", data)
     assert(files.string("test_file_1") == data)

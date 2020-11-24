@@ -11,7 +11,6 @@ function get_temp_usage()
     end
     local temp = stdout:match("(%d+)")
     print("Current temperature: " .. (temp / 1000) .. " °C")
-    collectgarbage("collect")
 end
 
 get_temp_usage()

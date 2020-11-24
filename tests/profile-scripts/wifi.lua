@@ -7,6 +7,7 @@ local filehandle = require("lib-tde.file")
 local interface = "wlp2s01"
 
 local function grabText()
+    -- would have populated the widget from the result of this call
     io.popen("iw dev " .. interface .. " link")
 end
 

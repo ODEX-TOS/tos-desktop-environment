@@ -62,7 +62,6 @@ delayed_timer(
     local temp = stdout:match("(%d+)")
     slider:set_value((temp / 1000) / max_temp * 100)
     print("Current temperature: " .. (temp / 1000) .. " °C")
-    collectgarbage("collect")
   end,
   config.temp_startup_delay
 )
