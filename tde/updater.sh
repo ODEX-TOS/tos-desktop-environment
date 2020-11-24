@@ -23,18 +23,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-#num=0
-#unique=$(yay -Sl | grep -E "\[installed: .*\]")
-#while read -r line ; do
-#        count=$(yay -Sl | grep " $(echo $line | cut -d ' ' -f2) " | wc -l)
-#        if [[ "$count" == *"1"* ]]; then
-#            num=$(($num+1))
-#        fi
-#done <<< "$unique"
-#echo "$num"
 # normal updates
 updates="$(checkupdates-tos)"
 echo "$updates" | wc -l
+
 # of which x security updates
 if [[ "$(command arch-audit)" ]]; then
     #arch-audit -u -r -C never -f "%n"
