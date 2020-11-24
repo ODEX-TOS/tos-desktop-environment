@@ -44,7 +44,7 @@ function make_mon(wall, id)
           "tos theme set " .. wall,
           function()
             bSelectWallpaper = false
-            root.elements.settings_views[5].view.refresh()
+            root.elements.settings_views[4].view.refresh()
             local themeFile = os.getenv("HOME") .. "/.config/tos/theme"
             -- our theme file exists
             if filesystem.exists(themeFile) then
@@ -58,6 +58,8 @@ function make_mon(wall, id)
               newContent = newContent .. wall
               filesystem.overwrite(themeFile, newContent)
             end
+            -- collect the garbage to remove the image cache from memory
+            collectgarbage("collect")
           end
         )
       end
@@ -358,6 +360,8 @@ return function()
   view.refresh = function()
     screens = {}
     layout:reset()
+    -- remove all images from memory (to save memory space)
+    collectgarbage("collect")
 
     awful.spawn.easy_async_with_shell(
       "brightness -g",

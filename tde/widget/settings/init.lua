@@ -113,6 +113,10 @@ function close_views()
   if grabber.is_running then
     grabber:stop()
   end
+  -- perform an entire garbage collection
+  -- this operation is heavy
+  -- however the settings app can open up a lot of images which will consume a lot of memory
+  collectgarbage("collect")
 end
 
 local function setActiveView(i, link)
