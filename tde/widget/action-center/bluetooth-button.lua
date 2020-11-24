@@ -133,7 +133,6 @@ signals.connect_bluetooth_status(
       action_status = false
       button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-off" .. ".svg")
     end
-    collectgarbage("collect")
   end
 )
 

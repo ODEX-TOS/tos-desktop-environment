@@ -110,7 +110,6 @@ gears.timer {
       connected = false
       signals.emit_wifi_status(false)
       widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. "-off" .. ".svg"))
-      collectgarbage("collect")
       return
     end
 
@@ -134,7 +133,6 @@ gears.timer {
       grabText()
     end
     signals.emit_wifi_status(connected)
-    collectgarbage("collect")
   end
 }
 

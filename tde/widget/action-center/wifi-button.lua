@@ -109,7 +109,6 @@ signals.connect_wifi_status(
       update_icon()
     end
     widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
-    collectgarbage("collect")
   end
 )
 

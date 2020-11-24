@@ -210,7 +210,7 @@ local function delete(name)
     table.remove(icon_timers, i)
     table.remove(text_name, i)
 
-    collectgarbage()
+    collectgarbage("collect")
 end
 
 local function location_from_name(name)

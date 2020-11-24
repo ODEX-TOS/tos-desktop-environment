@@ -59,7 +59,6 @@ local update = function()
     function(stdout)
       local brightness = string.match(stdout, "(%d+)")
       signals.emit_brightness(tonumber(brightness))
-      collectgarbage("collect")
     end
   )
 end

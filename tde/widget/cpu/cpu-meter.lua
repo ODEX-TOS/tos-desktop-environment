@@ -64,7 +64,6 @@ delayed_timer(
 
     total_prev = total
     idle_prev = idle
-    collectgarbage("collect")
   end,
   config.cpu_startup_delay
 )

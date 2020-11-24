@@ -173,7 +173,6 @@ watch(
     end
     widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. ".svg"))
     signals.emit_packages_to_update(numOfUpdatesAvailable)
-    collectgarbage("collect")
   end,
   widget
 )

@@ -59,7 +59,6 @@ local update = function()
       local volume = string.match(stdout, "(%d?%d?%d)%%")
       getIconByOutput(stdout)
       slider:set_value(tonumber(volume))
-      collectgarbage("collect")
     end
   )
 end

@@ -28,7 +28,6 @@
 -- Better with Blueman Manager
 --------------
 
-local watch = require("awful.widget.watch")
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
@@ -36,6 +35,8 @@ local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local theme = require("theme.icons.dark-light")
 local signals = require("lib-tde.signals")
+local delayed_timer = require("lib-tde.function.delayed-timer")
+
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
@@ -89,27 +90,30 @@ awful.tooltip(
 --beautiful.tooltip_fg = beautiful.fg_normal
 --beautiful.tooltip_bg = beautiful.bg_normal
 
-watch(
-  "bluetoothctl --monitor list",
+delayed_timer(
   config.bluetooth_poll,
-  function(_, stdout)
-    -- Check if there  bluetooth
-    checker = stdout:match("Controller") -- If 'Controller' string is detected on stdout
-    local widgetIconName
+  function()
+    awful.spawn.easy_async_with_shell(
+      "bluetoothctl --monitor list",
+      function(stdout)
+        -- Check if there  bluetooth
+        checker = stdout:match("Controller") -- If 'Controller' string is detected on stdout
+        local widgetIconName
 
-    local status = (checker ~= nil)
-    signals.emit_bluetooth_status(status)
+        local status = (checker ~= nil)
+        signals.emit_bluetooth_status(status)
 
-    if status then
-      widgetIconName = "bluetooth"
-    else
-      widgetIconName = "bluetooth-off"
-    end
-    widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. ".svg"))
-    print("Polling bluetooth status")
-    collectgarbage("collect")
+        if status then
+          widgetIconName = "bluetooth"
+        else
+          widgetIconName = "bluetooth-off"
+        end
+        widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. ".svg"))
+        print("Polling bluetooth status")
+      end
+    )
   end,
-  widget
+  0
 )
 
 return widget_button

@@ -200,7 +200,6 @@ local return_button = function()
 		end
 
 		battery_imagebox.icon:set_image(gears.surface.load(theme(widget_icon_dir .. icon_name .. ".svg")))
-		collectgarbage("collect")
 	end
 
 	gears.timer {

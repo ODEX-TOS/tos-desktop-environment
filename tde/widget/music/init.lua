@@ -149,7 +149,6 @@ musicPlayer:setup {
     nil,
     {
       spacing = dpi(4),
-      --require('widget.music.progressbar'),
       require("widget.music.music-info"),
       require("widget.music.media-buttons"),
       layout = wibox.layout.flex.vertical

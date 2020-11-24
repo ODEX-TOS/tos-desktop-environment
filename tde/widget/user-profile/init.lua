@@ -171,7 +171,6 @@ awful.widget.watch(
     uptime = stdout:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
     signals.emit_uptime(uptime)
-    collectgarbage("collect")
   end
 )
 

@@ -74,7 +74,6 @@ local countdownSlider =
     if currentTime >= totalTime then
       currentTime = 0
     end
-    collectgarbage("collect")
   end
 }
 

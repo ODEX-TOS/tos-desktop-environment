@@ -101,7 +101,6 @@ awful.widget.watch(
         else
             signals.emit_weather(temperature, description, icon_code)
         end
-        collectgarbage("collect")
     end
 )
 
