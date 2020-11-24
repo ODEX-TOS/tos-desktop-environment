@@ -33,10 +33,23 @@
 #done <<< "$unique"
 #echo "$num"
 # normal updates
-checkupdates-tos | wc -l
+updates="$(checkupdates-tos)"
+echo "$updates" | wc -l
 # of which x security updates
 if [[ "$(command arch-audit)" ]]; then
-    arch-audit -u -r -C never | wc -l
+    #arch-audit -u -r -C never -f "%n"
+    
+    updateFile=$(mktemp)
+    securityFile=$(mktemp)
+
+    echo "$updates" | awk '{print $1}' | sort > "$updateFile"
+    arch-audit -u -r -C never -f "%n" | sort > "$securityFile"
+
+    comm -1 -2 "$updateFile" "$securityFile" | wc -l
+
+    rm "$updateFile"
+    rm "$securityFile"
+
 else
     echo -n "" | wc -l
 fi
