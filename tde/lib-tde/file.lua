@@ -156,7 +156,7 @@ function _lines_from(file, match, head)
   local res, err = pcall(lines_from(file, match, head))
   if err then
     print("file: " .. err)
-    return ""
+    return {}
   end
   return res
 end
@@ -170,7 +170,8 @@ end
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
 -- lib-tde.file.string("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type string
 function getString(file, match, head)
-  return table.concat(lines_from(file, match, head), "\n")
+  local res = lines_from(file, match, head)
+  return table.concat(res, "\n")
 end
 
 -- wrap the io.lines function in a protected call
