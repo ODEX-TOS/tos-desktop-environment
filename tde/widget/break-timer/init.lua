@@ -25,7 +25,7 @@
 local wibox = require("wibox")
 
 local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("widget.material.slider")
+local mat_slider = require("widget.material.progress_bar")
 local clickable_container = require("widget.material.clickable-container")
 local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
