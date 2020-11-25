@@ -3,9 +3,9 @@ local args = ...
 
 -- Configuration file for ldoc
 
-project='awesome'
-title='awesome API documentation'
-description='API documentation for awesome, a highly configurable X window manager (version @AWESOME_VERSION@).'
+project='TDE'
+title='TDE API documentation'
+description='API documentation for TDE a desktop environment build on top of awesomeWM  @AWESOME_VERSION@).'
 
 -- More on it: https://github.com/stevedonovan/LDoc/blob/master/doc/doc.md#markdown-support
 format='discount'
@@ -20,14 +20,11 @@ merge=true
 use_markdown_titles=true
 wrap=true
 full_description = [[
-Welcome to the documentation for the awesome window manager. Below you find an
+Welcome to the documentation for TDE. Below you find an
 overview of the individual parts which links to the full documentation.
 
-If you are a new user, you may want to read @{07-my-first-awesome.md} to get
-started. In @{05-awesomerc.md}, the default configuration is explained.
+If you area new user you should read our wiki https://wiki.odex.be for more introductory information
 
-If you already used awesome in the past, @{89-NEWS.md} and @{17-porting-tips.md}
-should be useful for you.
 ]]
 topics={
     '00-authors.md',
@@ -419,6 +416,8 @@ sort_modules=true
 
 -- Add more project level (left side index) types.
 new_type("coreclassmod", "Core_components"  , true)
+new_type("tdemod"      , "TDE"              , true)
+new_type("tdedatamod"  , "Datastructures"   , true)
 new_type("inputmodule" , "Input_handling"   , true)
 new_type("ruleslib"    , "Declarative_rules", true)
 new_type("widgetmod"   , "Widgets"          , true)
@@ -447,11 +446,15 @@ file = {
 
     -- LUA libraries
     '../lib/',
+    '../tde/',
     -- Auto generated scripts
     '../script_files/',
     exclude = {
         -- exclude these modules, as they do not contain any written
         -- documentation
+        '../tde/lib-tde/lib-lua',
+        '../tde/lib-tde/lib-so',
+        '../tde/lib-tde/sentry',
         '../lib/awful/autofocus.lua',
         '../lib/awful/dbus.lua',
         '../lib/awful/_compat.lua',

@@ -67,14 +67,14 @@ end
 -- @tparam string message The warning message to print.
 -- @staticfct gears.debug.print_warning
 function debug.print_warning(message)
-    io.stderr:write(os.date("%Y-%m-%d %T W: awesome: ") .. tostring(message) .. "\n")
+    awesome.emit_signal("debug::error_msg", message)
 end
 
 --- Print an error message
 -- @tparam string message The error message to print.
 -- @staticfct gears.debug.print_error
 function debug.print_error(message)
-    io.stderr:write(os.date("%Y-%m-%d %T E: awesome: ") .. tostring(message) .. "\n")
+    awesome.emit_signal("debug::error_msg", message)
 end
 
 local displayed_deprecations = {}
