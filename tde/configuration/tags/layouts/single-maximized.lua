@@ -53,7 +53,6 @@ local function fmax(p, fs)
     else
         area = p.workarea
     end
-    local focused_client = client.focus
     for _, c in pairs(p.clients) do
         local g = {
             x = area.x,

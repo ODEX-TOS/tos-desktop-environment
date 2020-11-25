@@ -28,14 +28,14 @@ local theme_dir = filesystem.get_configuration_dir() .. "/theme"
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("theme.config")
 
-function color(value)
+local function color(value)
   if value == nil then
     return nil
   end
   return "#" .. value
 end
 
-function loadtheme(standard, override, prefix)
+local function loadtheme(standard, override, prefix)
   standard["hue_50"] = color(override[prefix .. "hue_50"]) or standard["hue_50"]
   standard["hue_100"] = color(override[prefix .. "hue_100"]) or standard["hue_100"]
   standard["hue_200"] = color(override[prefix .. "hue_200"]) or standard["hue_200"]
@@ -87,7 +87,7 @@ if config["background_900"] ~= nil then
   theme.background.hue_900 = "#" .. config["background_900"] .. (config["background_transparent"] or "66")
 end
 
-local awesome_overrides = function(theme)
+local awesome_overrides = function(_)
   --
 end
 return {

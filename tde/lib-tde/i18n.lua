@@ -33,8 +33,8 @@
 local filehandle = require("lib-tde.file")
 local common = require("lib-tde.function.common")
 local gears = require("gears")
-err = "\27[0;31m[ ERROR "
-warn = "\27[0;33m[ WARN "
+local err = "\27[0;31m[ ERROR "
+local warn = "\27[0;33m[ WARN "
 
 local system_language = "en"
 local translations = {}

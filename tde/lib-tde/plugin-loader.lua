@@ -24,8 +24,8 @@ local function inValidPlugin(name, msg)
     )
 end
 
-local function prequire(lib)
-    local status, lib = pcall(require, lib)
+local function prequire(library)
+    local status, lib = pcall(require, library)
     if (status) then
         return lib
     end
@@ -35,7 +35,7 @@ end
 
 local function getPluginSection(section)
     print(section .. " plugin loading started")
-    local section = section .. "_"
+    section = section .. "_"
     local iterator = {}
     local i = 0
     while true do
@@ -67,7 +67,6 @@ local function getPluginSection(section)
             return iterator
         end
     end
-    print(section .. " plugin loading ended")
 end
 
 return getPluginSection

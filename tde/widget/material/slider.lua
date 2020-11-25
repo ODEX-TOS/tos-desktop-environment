@@ -44,7 +44,7 @@ function mat_slider:set_value(value)
   end
 end
 
-function mat_slider:get_value(value)
+function mat_slider:get_value()
   return self._private.value
 end
 
@@ -56,13 +56,12 @@ function mat_slider:set_read_only(value)
   end
 end
 
-function mat_slider:get_read_only(value)
+function mat_slider:get_read_only()
   return self._private.read_only
 end
 
 function mat_slider:layout(_, width, height)
   local layout = {}
-  local size_field = 32
   table.insert(layout, base.place_widget_at(self._private.progress_bar, 0, 0, width, height))
   return layout
 end

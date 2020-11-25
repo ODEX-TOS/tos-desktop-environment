@@ -43,7 +43,11 @@ local last_tx = 0
 
 -- only run the networking poll every x seconds
 local counter = 0
-local interface = nil
+local interface
+local network_slider_up
+local network_slider_down
+local network_meter_up
+local network_meter_down
 
 if filehandle.exists("/tmp/interface.txt") then
   interface = filehandle.string("/tmp/interface.txt"):gsub("\n", "")
@@ -121,7 +125,7 @@ delayed_timer(
   config.netwok_startup_delay
 )
 
-function up(screen)
+local function up(screen)
   network_slider_up =
     wibox.widget {
     read_only = true,
@@ -146,7 +150,7 @@ function up(screen)
   return network_meter_up
 end
 
-function down(screen)
+local function down(screen)
   network_slider_down =
     wibox.widget {
     read_only = true,

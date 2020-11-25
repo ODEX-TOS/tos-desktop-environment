@@ -1,4 +1,3 @@
-local os = require("os")
 local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
@@ -57,7 +56,7 @@ local input_grabber =
   awful.keygrabber {
   auto_start = true,
   stop_event = "release",
-  keypressed_callback = function(self, mod, key, command)
+  keypressed_callback = function(_, _, key, _)
     if key == "BackSpace" then
       delete_key()
     end
@@ -65,7 +64,7 @@ local input_grabber =
       write_to_textbox(key)
     end
   end,
-  keyreleased_callback = function(self, mod, key, command)
+  keyreleased_callback = function(self, _, key, _)
     if key == "Return" then
       self:stop()
     end
@@ -99,14 +98,14 @@ local function make_network_widget(ssid, active)
           if active_text == "" then
             awful.spawn.easy_async(
               "tos network connect " .. ssid,
-              function(out)
+              function(_)
                 root.elements.settings_views[3].view.refresh()
               end
             )
           else
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
-              function(out)
+              function(_)
                 root.elements.settings_views[3].view.refresh()
               end
             )
@@ -198,7 +197,7 @@ local function make_network_widget(ssid, active)
   return container
 end
 
-function make_connection(t, n)
+local function make_connection(t, n)
   local container = wibox.container.margin()
   container.bottom = m
   container.forced_width = settings_width - settings_nw - (m * 2)
@@ -207,7 +206,7 @@ function make_connection(t, n)
   conx.bg = beautiful.bg_modal
   conx.shape = rounded()
 
-  local i = ""
+  local i
   if t == "wireless" then
     i = icons.wifi
   elseif t == "bluetooth" then
@@ -343,7 +342,7 @@ return function()
 
   view.refresh = function()
     if hardware.hasWifi() then
-      interface = file.string("/tmp/interface.txt")
+      local interface = file.string("/tmp/interface.txt")
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
       awful.spawn.easy_async_with_shell(
@@ -370,7 +369,7 @@ return function()
 
     awful.spawn.easy_async_with_shell(
       'sh -c \'ip link | grep ": en" | grep " UP "\'',
-      function(o, e, r, c)
+      function(_, _, _, c)
         if (c == 0) then
           wired.icon.text = icons.lan
           wired.name.text = i18n.translate("connected")

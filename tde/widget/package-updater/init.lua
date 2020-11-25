@@ -55,7 +55,7 @@ local config = require("config")
 local securityUpdateNotShown = true
 
 local function split(str)
-  lines = {}
+  local lines = {}
   for s in str:gmatch("[^\r\n]+") do
     table.insert(lines, s)
   end
@@ -97,7 +97,7 @@ awful.tooltip(
     align = "right",
     timer_function = function()
       if updateAvailable then
-        local str = ""
+        local str
         if numOfUpdatesAvailable == "1" then
           str = numOfUpdatesAvailable .. i18n.translate(" update is available!")
         else
@@ -120,7 +120,7 @@ awful.tooltip(
 )
 
 local function notifySecurityUpdate(num)
-  str =
+  local str =
     i18n.translate("There are ") ..
     num .. i18n.translate(" security vulnerabilities. Please try and update the system to prevent risks.")
   if num == "1" then

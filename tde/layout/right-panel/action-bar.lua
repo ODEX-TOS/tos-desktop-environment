@@ -79,6 +79,6 @@ return function(screen, action_bar_width)
       require("widget.xdg-folders")("left")
     },
     nil,
-    LayoutBox(s)
+    LayoutBox()
   }
 end

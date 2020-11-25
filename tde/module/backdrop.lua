@@ -25,7 +25,6 @@
 local wibox = require("wibox")
 local gears = require("gears")
 
-
 local function update_backdrop(w, c)
   local cairo = require("lgi").cairo
   local geo = c.screen.geometry

@@ -30,7 +30,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/xdg-folders/icons/"
 local menubar = require("menubar")
 
-function icon(item)
+local function icon(item)
   return menubar.utils.lookup_icon(item)
 end
 local dlWidget =
@@ -53,7 +53,7 @@ downloads_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open $HOME/Downloads",
-          function(stderr)
+          function(_)
           end,
           1
         )
@@ -75,6 +75,6 @@ awful.tooltip(
   }
 )
 
-dlWidget.icon:set_image(PATH_TO_ICONS .. "folder-download" .. ".svg")
+dlWidget.icon:set_image(icon("folder-documents") or (PATH_TO_ICONS .. "folder-download" .. ".svg"))
 
 return downloads_button

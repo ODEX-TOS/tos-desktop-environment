@@ -25,7 +25,7 @@
 local wibox = require("wibox")
 local gears = require("gears")
 
-function build(widget)
+local function build(widget)
   local container =
     wibox.widget {
     widget,

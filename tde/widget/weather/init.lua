@@ -35,7 +35,7 @@ local PATH_TO_ICONS = "/etc/xdg/awesome/widget/weather/icons/"
 -- Weather Updater
 require("widget.weather.weather-update")
 
-weather_icon_widget =
+local weather_icon_widget =
   wibox.widget {
   {
     id = "icon",
@@ -48,7 +48,9 @@ weather_icon_widget =
   layout = wibox.layout.fixed.horizontal
 }
 
-weather_header =
+_G.weather_icon_widget = weather_icon_widget
+
+local weather_header =
   wibox.widget {
   text = i18n.translate("Weather & Temperature"),
   font = "SFNS Display Regular 14",
@@ -57,7 +59,7 @@ weather_header =
   widget = wibox.widget.textbox
 }
 
-weather_description =
+local weather_description =
   wibox.widget {
   text = i18n.translate("No internet connection..."),
   font = "SFNS Display Regular 16",
@@ -66,7 +68,9 @@ weather_description =
   widget = wibox.widget.textbox
 }
 
-weather_temperature =
+_G.weather_description = weather_description
+
+local weather_temperature =
   wibox.widget {
   text = i18n.translate("Try again later."),
   font = "SFNS Display Regular 12",
@@ -74,6 +78,8 @@ weather_temperature =
   valign = "center",
   widget = wibox.widget.textbox
 }
+
+_G.weather_temperature = weather_temperature
 
 local weather_report =
   wibox.widget {

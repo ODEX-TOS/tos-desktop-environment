@@ -86,10 +86,8 @@ gdk.init({})
 
 -- => Local settings
 -- ============================================================
-local bottom_edge_height = 3
 local double_click_jitter_tolerance = 4
 local double_click_time_window_ms = 250
-local stroke_inner_bottom_lighten_mul = 0.4
 local stroke_inner_sides_lighten_mul = 0.4
 local stroke_outer_top_darken_mul = 0.7
 local title_color_dark = "#242424"
@@ -103,6 +101,17 @@ local function rel_lighten(lum)
 end
 local function rel_darken(lum)
     return -(lum * 70) + 100
+end
+
+-- remove transparancy from a hex color
+local function untransparant(color)
+    if tonumber(color:sub(2, 7), 16) < tonumber("200000", 16) then
+        return "#27272e"
+    end
+    if not (#color) == 9 then
+        return color
+    end
+    return color:sub(1, 7)
 end
 -- ------------------------------------------------------------
 
@@ -181,9 +190,10 @@ _private.sticky_color = primary_color
 
 -- => Saving and loading of color rules
 -- ============================================================
-local table = table
 local t = require("module.titlebar.table")
+-- luacheck: ignore 142 143
 table.save = t.save
+-- luacheck: ignore 142 143
 table.load = t.load
 
 -- Load the color rules or create an empty table if there aren't any
@@ -258,7 +268,7 @@ local function get_dominant_color(client)
             end
         end
     end
-    local mode
+    mode = nil
     local mode_c = 0
     for kolor, kount in pairs(tally) do
         if kount > mode_c then
@@ -422,7 +432,6 @@ local function create_titlebar_button(c, name, button_callback, property)
 end
 
 local function get_titlebar_mouse_bindings(c)
-    local client_color = c._nice_base_color
     -- Add functionality for double click to (un)maximize, and single click and hold to move
     local clicks = 0
     local tolerance = double_click_jitter_tolerance
@@ -469,7 +478,6 @@ local function get_titlebar_mouse_bindings(c)
                         _private.add_window_decorations(c)
                     end
                 )
-                local picked_color
                 add_item(
                     "Color Picker",
                     function()
@@ -649,45 +657,6 @@ local function create_titlebar_items(c, group)
 end
 -- ------------------------------------------------------------
 
--- Adds a window shade to the given client
-local function add_window_shade(c, src_top, src_bottom)
-    local geo = c:geometry()
-    local w = wibox()
-    w.width = geo.width
-    w.background = "transparent"
-    w.x = geo.x
-    w.y = geo.y
-    w.height = _private.titlebar_height + bottom_edge_height
-    w.ontop = true
-    w.visible = false
-    w.shape =
-        shapes.rounded_rect {
-        tl = _private.titlebar_radius,
-        tr = _private.titlebar_radius,
-        bl = 4,
-        br = 4
-    }
-    -- Need to use a manual layout because layout fixed seems to introduce a thin gap
-    src_top.point = {x = 0, y = 0}
-    src_top.forced_width = geo.width
-    src_bottom.point = {x = 0, y = _private.titlebar_height}
-    w.widget = {src_top, src_bottom, layout = wlayout.manual}
-    -- Clean up resources when a client is killed
-    c:connect_signal(
-        "request::unmanage",
-        function()
-            if c._nice_window_shade then
-                c._nice_window_shade.visible = false
-                c._nice_window_shade = nil
-            end
-            -- Clean up
-            collectgarbage("collect")
-        end
-    )
-    c._nice_window_shade_up = false
-    c._nice_window_shade = w
-end
-
 -- Shows the window contents
 function _private.shade_roll_down(c)
     if not c._nice_window_shade_up then
@@ -738,11 +707,9 @@ function _private.add_window_decorations(c)
     -- Inner strokes
     local stroke_color_inner_top = lighten(lighten_amount)
     local stroke_color_inner_sides = lighten(lighten_amount * stroke_inner_sides_lighten_mul)
-    local stroke_color_inner_bottom = lighten(lighten_amount * stroke_inner_bottom_lighten_mul)
     -- Outer strokes
     local stroke_color_outer_top = darken(darken_amount * stroke_outer_top_darken_mul)
     local stroke_color_outer_sides = darken(darken_amount)
-    local stroke_color_outer_bottom = darken(darken_amount)
     local titlebar_height = _private.titlebar_height
     local background_fill_top =
         gradient(lighten(titlebar_gradient_c1_lighten), client_color, titlebar_height, 0, titlebar_gradient_c2_offset)
@@ -808,16 +775,6 @@ function _private.add_window_decorations(c)
         layout = wlayout_align_horizontal
     }
 
-    local resize_button = {
-        abutton(
-            {},
-            1,
-            function()
-                c:activate {context = "mouse_click", action = "mouse_resize"}
-            end
-        )
-    }
-
     if _private.no_titlebar_maximized then
         c:connect_signal(
             "property::maximized",
@@ -872,7 +829,7 @@ local function validate_mb_bindings()
     local mb_specified = {false, false, false, false, false}
     local mb
     local mb_conflict_test
-    for i, action_mb in ipairs(action_mbs) do
+    for _, action_mb in ipairs(action_mbs) do
         mb = _private[action_mb]
         if mb then
             assert(mb >= 1 and mb <= 5, "Invalid mouse button specified!")
@@ -882,7 +839,6 @@ local function validate_mb_bindings()
             else
                 error(("%s and %s can not be bound to the same mouse button"):format(action_mb, mb_conflict_test))
             end
-        else
         end
     end
 end
@@ -911,7 +867,7 @@ function nice.initialize(args)
 
     validate_mb_bindings()
 
-    function full(s)
+    local function full(s)
         for _, c in pairs(s.clients) do
             if #s.tiled_clients >= 0 and (c.floating or c.first_tag.layout.name == "floating") then
                 awful.titlebar.show(c, "top")
@@ -959,7 +915,7 @@ function nice.initialize(args)
         end
     end
 
-    function fast(s)
+    local function fast(s)
         for _, c in pairs(s.clients) do
             if #s.tiled_clients >= 2 or (c.floating or c.first_tag.layout.name == "floating") then
                 awful.titlebar.show(c, "top")
@@ -975,24 +931,13 @@ function nice.initialize(args)
         end
     end
 
-    function none(s)
+    local function none(s)
         for _, c in pairs(s.clients) do
             awful.titlebar.hide(c, "top")
             c.shape = function(cr, w, h)
                 gears.shape.rectangle(cr, w, h)
             end
         end
-    end
-
-    -- remove transparancy from a hex color
-    function untransparant(color)
-        if tonumber(color:sub(2, 7), 16) < tonumber("200000", 16) then
-            return "#27272e"
-        end
-        if not (#color) == 9 then
-            return color
-        end
-        return color:sub(1, 7)
     end
 
     _G.client.connect_signal(
@@ -1064,9 +1009,9 @@ _G.client.connect_signal(
 -- Show the titlebar if it's not maximized layout
 _G.tag.connect_signal(
     "property::layout",
-    function(t)
-        local clients = t:clients()
-        for k, c in pairs(clients) do
+    function(tag)
+        local clients = tag:clients()
+        for _, c in pairs(clients) do
             if c.first_tag.layout.name ~= "max" then
                 awful.titlebar.show(c, "top")
             else

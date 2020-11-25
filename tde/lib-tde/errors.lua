@@ -68,6 +68,7 @@ awesome.connect_signal(
     end
 )
 
+local in_error = false
 awesome.connect_signal(
     "debug::error",
     function(err)

@@ -45,7 +45,7 @@ function mat_slider:set_value(value)
   end
 end
 
-function mat_slider:get_value(value)
+function mat_slider:get_value()
   return self._private.value
 end
 
@@ -57,7 +57,7 @@ function mat_slider:set_read_only(value)
   end
 end
 
-function mat_slider:get_read_only(value)
+function mat_slider:get_read_only()
   return self._private.read_only
 end
 

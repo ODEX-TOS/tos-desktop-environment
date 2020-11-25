@@ -42,12 +42,14 @@ local theme = require("theme.icons.dark-light")
 
 local icon = theme("/etc/xdg/awesome/widget/about/icons/info.svg")
 
+local aboutPage
+local aboutBackdrop
+
 screen.connect_signal(
   "request::desktop_decoration",
   function(s)
     -- Create the box
-    local offsetx = dpi(500)
-    local padding = dpi(10)
+
     aboutPage =
       wibox {
       bg = "#00000000",
@@ -92,7 +94,7 @@ local grabber =
   stop_event = "release"
 }
 
-function toggleAbout()
+local function toggleAbout()
   aboutBackdrop.visible = not aboutBackdrop.visible
   aboutPage.visible = not aboutPage.visible
   if aboutPage.visible then
@@ -185,8 +187,8 @@ aboutPage:setup {
   -- The real background color
   bg = beautiful.background.hue_800,
   -- The real, anti-aliased shape
-  shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 12)
+  shape = function(cr, shapeWidth, shapeHeight)
+    gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, 12)
   end,
   widget = wibox.container.background()
 }

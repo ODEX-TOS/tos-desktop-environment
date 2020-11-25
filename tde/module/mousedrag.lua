@@ -13,7 +13,7 @@ local box = nil
 local started = false
 
 local function createBox(x, y, width, height)
-    local box =
+    local _box =
         wibox(
         {
             ontop = false,
@@ -29,14 +29,14 @@ local function createBox(x, y, width, height)
             screen = mouse.screen
         }
     )
-    return box
+    return _box
 end
 
 local function calculate(sx, sy, ex, ey)
-    local x = 0
-    local y = 0
-    local width = 0
-    local height = 0
+    local x
+    local y
+    local width
+    local height
 
     if sx < ex then
         x = sx

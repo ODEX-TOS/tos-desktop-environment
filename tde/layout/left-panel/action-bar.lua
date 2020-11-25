@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local TagList = require("widget.tag-list")
 local clickable_container = require("widget.material.clickable-container")
@@ -80,6 +79,6 @@ return function(screen, action_bar_width)
       require("widget.xdg-folders")("left")
     },
     nil,
-    LayoutBox(s)
+    LayoutBox()
   }
 end

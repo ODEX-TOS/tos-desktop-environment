@@ -38,6 +38,14 @@ local plugins = require("lib-tde.plugin-loader")("notification")
 local body = {}
 
 local function notification_plugin()
+  local separator =
+    wibox.widget {
+    orientation = "vertical",
+    forced_height = 16,
+    opacity = 0.00,
+    widget = wibox.widget.separator
+  }
+
   local table_widget =
     wibox.widget {
     separator,
@@ -51,7 +59,7 @@ local function notification_plugin()
     table_widget
   }
 
-  for index, value in ipairs(plugins) do
+  for _, value in ipairs(plugins) do
     table_widget:add(
       {
         wibox.container.margin(value, dpi(15), dpi(15), dpi(0), dpi(10)),
@@ -62,10 +70,20 @@ local function notification_plugin()
   return table
 end
 
-panel_visible = false
-
 local right_panel = function(screen)
   local panel_width = dpi(350)
+
+  local backdrop =
+    wibox {
+    ontop = true,
+    screen = screen,
+    bg = "#00000000",
+    type = "dock",
+    x = screen.geometry.x,
+    y = screen.geometry.y,
+    width = screen.geometry.width,
+    height = screen.geometry.height
+  }
   local panel =
     wibox {
     ontop = true,
@@ -79,39 +97,48 @@ local right_panel = function(screen)
 
   panel.opened = false
 
-  local grabber =
-    awful.keygrabber {
-    keybindings = {
-      awful.key {
-        modifiers = {},
-        key = "Escape",
-        on_press = function()
-          panel.opened = false
-          closePanel()
-        end
-      }
-    },
-    -- Note that it is using the key name and not the modifier name.
-    stop_key = "Escape",
-    stop_event = "release"
-  }
-
-  local backdrop =
-    wibox {
-    ontop = true,
-    screen = screen,
-    bg = "#00000000",
-    type = "dock",
-    x = screen.geometry.x,
-    y = screen.geometry.y,
-    width = screen.geometry.width,
-    height = screen.geometry.height
-  }
-
   panel:struts(
     {
       right = 0
     }
+  )
+
+  local separator =
+    wibox.widget {
+    orientation = "horizontal",
+    opacity = 0.0,
+    forced_height = 15,
+    widget = wibox.widget.separator
+  }
+
+  local clear_all_text =
+    wibox.widget {
+    text = i18n.translate("Clear All Notifications"),
+    font = "SFNS Display Regular 10",
+    align = "center",
+    valign = "bottom",
+    widget = wibox.widget.textbox
+  }
+
+  local wrap_clear_text =
+    wibox.widget {
+    clear_all_text,
+    margins = dpi(5),
+    widget = wibox.container.margin
+  }
+  local clear_all_button = clickable_container(wibox.container.margin(wrap_clear_text, dpi(0), dpi(0), dpi(3), dpi(3)))
+  clear_all_button:buttons(
+    gears.table.join(
+      awful.button(
+        {},
+        1,
+        nil,
+        function()
+          _G.notification_clear_all()
+          _G.notification_firstime = true
+        end
+      )
+    )
   )
 
   local notification_widget =
@@ -141,23 +168,44 @@ local right_panel = function(screen)
     layout = wibox.layout.fixed.vertical
   }
 
-  openPanel = function()
-    panel_visible = true
+  local grabber
+
+  local openPanel = function()
     backdrop.visible = true
     panel.visible = true
-    grabber:start()
+    if grabber then
+      grabber:start()
+    end
     panel:emit_signal("opened")
   end
 
-  closePanel = function()
-    panel_visible = false
+  local closePanel = function()
     panel.visible = false
     backdrop.visible = false
-    grabber:stop()
+    if grabber then
+      grabber:stop()
+    end
     panel:emit_signal("closed")
     -- reset the scrollbar
     body:reset()
   end
+
+  grabber =
+    awful.keygrabber {
+    keybindings = {
+      awful.key {
+        modifiers = {},
+        key = "Escape",
+        on_press = function()
+          panel.opened = false
+          closePanel()
+        end
+      }
+    },
+    -- Note that it is using the key name and not the modifier name.
+    stop_key = "Escape",
+    stop_event = "release"
+  }
 
   -- Hide this panel when app dashboard is called.
   function panel:HideDashboard()
@@ -173,7 +221,7 @@ local right_panel = function(screen)
     end
   end
 
-  widgets = notification_plugin()
+  local widgets = notification_plugin()
   -- returns the state of the widgets
   -- first tuple element returns the notification section (type wibox.widget)
   -- the second tuple element returns the widget section (type wibox.widget)
@@ -202,43 +250,6 @@ local right_panel = function(screen)
       )
     )
   )
-
-  local clear_all_text =
-    wibox.widget {
-    text = i18n.translate("Clear All Notifications"),
-    font = "SFNS Display Regular 10",
-    align = "center",
-    valign = "bottom",
-    widget = wibox.widget.textbox
-  }
-  local wrap_clear_text =
-    wibox.widget {
-    clear_all_text,
-    margins = dpi(5),
-    widget = wibox.container.margin
-  }
-  local clear_all_button = clickable_container(wibox.container.margin(wrap_clear_text, dpi(0), dpi(0), dpi(3), dpi(3)))
-  clear_all_button:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        nil,
-        function()
-          _G.clear_all()
-          _G.firstime = true
-        end
-      )
-    )
-  )
-
-  local separator =
-    wibox.widget {
-    orientation = "horizontal",
-    opacity = 0.0,
-    forced_height = 15,
-    widget = wibox.widget.separator
-  }
 
   local headerSeparator =
     wibox.widget {

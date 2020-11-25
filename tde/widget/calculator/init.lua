@@ -15,7 +15,6 @@
 --  Just hover your cursor above the calculator widget and start typing
 --  Stop keygrabbing by leaving the calculator
 
-
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
@@ -25,6 +24,9 @@ local clickable_container = require("widget.material.clickable-container")
 
 local widget_icon_dir = "/etc/xdg/awesome/widget/calculator/icons/"
 local theme = require("theme.icons.dark-light")
+
+local mouse_entered_started_keygrab = false
+local start_button_keygrab = false
 
 local calculator_screen =
 	wibox.widget {
@@ -51,7 +53,7 @@ local calculator_screen =
 -- format integer numbers with delimiters every 3 numbers
 -- eg 123,456 or 12,345 or 345
 local formatInt = function(number, seperator)
-	sign = number:sub(1, 1)
+	local sign = number:sub(1, 1)
 	if (sign == "-") then
 		number = number:sub(2, #number)
 	else
@@ -102,8 +104,8 @@ end
 -- or 123;456 ^ 2
 local unsignedNumberFormat = function(calculation, seperator)
 	local i = 0
-	local j = 0
-	out = ""
+	local j
+	local out = ""
 	for number in string.gmatch(calculation, "%d+%.?%d*") do
 		i = i + 1
 		j = 0
@@ -141,8 +143,8 @@ local calculate = function()
 		return
 	end
 
-	func = assert(load("return " .. string_expression))
-	ans = tostring(func())
+	local func = assert(load("return " .. string_expression))
+	local ans = tostring(func())
 
 	-- Convert -nan to undefined
 	if ans == "-nan" then
@@ -157,7 +159,7 @@ local calculate = function()
 end
 
 local txt_on_screen = function()
-	screen_text = calculator_screen.calcu_screen.text
+	local screen_text = calculator_screen.calcu_screen.text
 
 	return screen_text == "inf" or screen_text == "undefined" or screen_text == "SYNTAX ERROR" or #screen_text == 1
 end
@@ -165,7 +167,7 @@ end
 -- Delete the last digit in screen
 
 local delete_value = function()
-	calcu_screen = calculator_screen.calcu_screen
+	local calcu_screen = calculator_screen.calcu_screen
 
 	-- Set the screen text to 0 if conditions met
 	if txt_on_screen() then
@@ -418,7 +420,7 @@ local calcu_keygrabber =
 		start_button_keygrab = false
 		kb_imagebox.image = theme(widget_icon_dir .. "kb-off" .. ".svg")
 	end,
-	keypressed_callback = function(self, mod, key, command)
+	keypressed_callback = function(_, _, key, _)
 		if #key == 1 and (key:match("%d+") or key:match("[%+%-%/%*%^%.]")) then
 			format_screen(key)
 		elseif key == "BackSpace" then
@@ -502,7 +504,6 @@ local calculator_body =
 --        # # #  ### #  # # ###### #           #
 --  #     # # #    # #   ## #    # #      #    #
 --   #####  #  ####  #    # #    # ######  ####
-local start_button_keygrab = false
 calculator_body:connect_signal(
 	"mouse::enter",
 	function()

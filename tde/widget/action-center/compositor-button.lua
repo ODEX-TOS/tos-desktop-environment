@@ -68,7 +68,7 @@ end
 -- then it will declared as value of frameCheker
 -- The rest is history
 local frameChecker
-function checkFrame()
+local function checkFrame()
   awful.spawn.easy_async_with_shell(
     cmd,
     function(stdout)
@@ -85,24 +85,24 @@ function checkFrame()
 end
 
 -- Commands that will be executed when I toggle the button
-blurDisable = {
+local blurDisable = {
   'sed -i -e "s/blur-background-frame = true/blur-background-frame = false/g" ' .. config.getComptonFile(),
   "sleep 1; picom --dbus --experimental-backends --config " .. config.getComptonFile(),
   'notify-send "Blur effect disabled"'
 }
-blurEnable = {
+local blurEnable = {
   'sed -i -e "s/blur-background-frame = false/blur-background-frame = true/g" ' .. config.getComptonFile(),
   "sleep 1; picom --dbus --experimental-backends --config " .. config.getComptonFile(),
   'notify-send "Blur effect enabled"'
 }
 
-local function run_once(cmd)
-  local findme = cmd
-  local firstspace = cmd:find(" ")
+local function run_once(blurCmd)
+  local findme = blurCmd
+  local firstspace = blurCmd:find(" ")
   if firstspace then
-    findme = cmd:sub(0, firstspace - 1)
+    findme = blurCmd:sub(0, firstspace - 1)
   end
-  awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, cmd))
+  awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, blurCmd))
 end
 
 local function toggle_compositor()

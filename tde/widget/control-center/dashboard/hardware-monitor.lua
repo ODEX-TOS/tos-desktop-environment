@@ -28,7 +28,7 @@ local beautiful = require("beautiful")
 
 local mat_list_item = require("widget.material.list-item")
 
-function build(screen)
+local function build(screen)
   local hardwareTitle =
     wibox.widget {
     text = i18n.translate("Hardware monitor"),

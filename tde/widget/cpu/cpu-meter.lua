@@ -29,7 +29,6 @@ local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
-local gears = require("gears")
 local total_prev = 0
 local idle_prev = 0
 local file = require("lib-tde.file")
@@ -45,11 +44,11 @@ local slider =
 delayed_timer(
   config.cpu_poll,
   function()
-    stdout = file.string("/proc/stat", "^cpu")
+    local stdout = file.string("/proc/stat", "^cpu")
     if stdout == "" then
       return
     end
-    local user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice =
+    local user, nice, system, idle, iowait, irq, softirq, steal, _, _ =
       stdout:match("(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s")
 
     local total = user + nice + system + idle + iowait + irq + softirq + steal

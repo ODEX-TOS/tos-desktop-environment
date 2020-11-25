@@ -76,8 +76,8 @@ local function fileinfo(file, lineno)
 
     local line = lines[lineno]
 
-    local pre = {}
-    local post = {}
+    local pre
+    local post
 
     if lineno < size then
         pre = {table.unpack(lines, 1, lineno - 1)}
@@ -105,7 +105,7 @@ end
 -- returns if the given file is a plugin or not
 local function isInPlugin(filename)
     -- find the base plugin directory
-    basePluginDir = os.getenv("HOME") .. "/.config/tde/"
+    local basePluginDir = os.getenv("HOME") .. "/.config/tde/"
     return filename:sub(1, #basePluginDir) == basePluginDir
 end
 
@@ -158,7 +158,7 @@ end
 -- error_catcher: used to catch an error from xpcall and return a correct
 -- error message
 local function error_catcher(err)
-    local trace, plugin = backtrace(catcher_trace_level)
+    local trace, _ = backtrace(catcher_trace_level)
     return {
         message = err,
         culprit = get_culprit(catcher_trace_level),

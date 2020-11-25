@@ -13,8 +13,29 @@ files["awesomerc.lua"].allow_defined_top = true
 -- This file itself
 files[".luacheckrc"].ignore = {"111", "112", "131"}
 
--- Theme files, ignore max line length
-files["themes/*"].ignore = {"631"}
+-- ignore file max line length
+-- ignore string containing trailing whitespace
+-- ignore mutating of global variables
+-- ifnore setting global variables
+files["**"].ignore = {"631", "613", "112", "122"}
+
+exclude_files = {
+    "lib-tde/lib-lua/cjson/util.lua",
+    "lib-tde/lib-lua/ltn12.lua",
+    "lib-tde/lib-lua/mime.lua",
+    "lib-tde/lib-lua/posix/_base.lua",
+    "lib-tde/lib-lua/posix/compat.lua",
+    "lib-tde/lib-lua/posix/deprecated.lua",
+    "lib-tde/lib-lua/posix/init.lua",
+    "lib-tde/lib-lua/socket.lua",
+    "lib-tde/lib-lua/socket/ftp.lua",
+    "lib-tde/lib-lua/socket/http.lua",
+    "lib-tde/lib-lua/socket/smtp.lua",
+    "lib-tde/lib-lua/socket/tp.lua",
+    "lib-tde/lib-lua/socket/url.lua",
+    "lib-tde/lib-lua/ssl.lua",
+    "lib-tde/lib-lua/ssl/https.lua"
+}
 
 -- Global objects defined by the C code
 read_globals = {
@@ -30,7 +51,10 @@ read_globals = {
     "tag",
     "window",
     "table.unpack",
-    "math.atan2"
+    "math.atan2",
+    "math.pow",
+    "reverse",
+    "center"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about
@@ -43,7 +67,20 @@ globals = {
     "screen",
     "mouse",
     "root",
-    "client"
+    "client",
+    "timer",
+    -- custom globals defined by tde
+    "awful",
+    "i18n",
+    "general",
+    "plugins",
+    "tags",
+    "keys",
+    "floating",
+    "backdrop",
+    "taglist_occupied",
+    "print",
+    "echo"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).

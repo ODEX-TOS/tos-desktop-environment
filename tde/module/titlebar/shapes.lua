@@ -54,23 +54,6 @@ local function duotone_gradient_vertical(color_1, color_2, height, offset_1, off
     return fill_pattern
 end
 
--- Returns a horizontal gradient pattern going from cololr_1 -> color_2
-local function duotone_gradient_horizontal(color, width)
-    local fill_pattern = cairo.Pattern.create_linear(0, 0, width, 0)
-    local r, g, b, a
-    r, g, b, a = hex2rgb(color)
-    fill_pattern:add_color_stop_rgba(0, r, g, b, a)
-    r, g, b, a = hex2rgb(color)
-    fill_pattern:add_color_stop_rgba(0.5, r, g, b, a)
-    r, g, b, a = hex2rgb("#00000000")
-    fill_pattern:add_color_stop_rgba(0.6, r, g, b, a)
-    r, g, b, a = hex2rgb(color)
-    fill_pattern:add_color_stop_rgba(0.7, r, g, b, a)
-    r, g, b, a = hex2rgb(color)
-    fill_pattern:add_color_stop_rgba(1, r, g, b, a)
-    return fill_pattern
-end
-
 -- Flips the given surface around the specified axis
 local function flip(surface, axis)
     local width = surface:get_width()
@@ -150,7 +133,6 @@ end
 
 -- Draws the middle of the titlebar
 local function create_edge_top_middle(args)
-    local client_color = args.color
     local height = args.height
     local width = args.width
     local surface = cairo.ImageSurface.create("ARGB32", width, height)

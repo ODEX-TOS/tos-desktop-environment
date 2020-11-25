@@ -22,22 +22,21 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local icons = require("theme.icons")
 local config = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")
 local menubar = require("menubar")
 
-function icon(item)
+local function icon(item)
   return menubar.utils.lookup_icon(item)
 end
 
-function getItem(item)
+local function getItem(item)
   return config[item] or nil
 end
 
-function getLayoutPerTag(number)
+local function getLayoutPerTag(number)
   local screen = "tag_" .. number
-  item = getItem(screen)
+  local item = getItem(screen)
   if item ~= nil then
     if item == "0" or item == "dwindle" then
       return awful.layout.suit.spiral.dwindle
@@ -62,7 +61,7 @@ function getLayoutPerTag(number)
   end
 end
 
-function getGapPerTag(number)
+local function getGapPerTag(number)
   local gap = "tag_gap_" .. number
   return tonumber(getItem(gap)) or 4
 end

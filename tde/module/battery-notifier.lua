@@ -55,11 +55,9 @@ local function send_notification(title, text, icon, timeout, urgency)
 		last_notification.title = args.title
 		last_notification.text = args.text
 		last_notification.icon = args.icon
-	else
-		last_notification = naughty.notification(args)
+		return
 	end
-
-	last_notification = notification
+	last_notification = naughty.notification(args)
 end
 
 -- Full / Low / Critical notifications
@@ -68,6 +66,7 @@ signals.connect_battery(
 		local text
 		local icon
 		local timeout
+		local urgency
 		if not charger_plugged then
 			icon = icons.batt_discharging
 
@@ -109,6 +108,7 @@ signals.connect_battery_charging(
 		charger_plugged = plugged
 		local text
 		local icon
+		local urgency
 		-- TODO if charger is plugged and battery is full, then set
 		-- battery_full_already_notified to true
 		if plugged then

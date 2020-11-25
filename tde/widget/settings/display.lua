@@ -12,10 +12,7 @@ local datetime = require("lib-tde.function.datetime")
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_width = dpi(1100)
 local settings_height = dpi(900)
-
-local settings_nw = dpi(260)
 
 local screens = {}
 local mon_size = {
@@ -25,7 +22,7 @@ local mon_size = {
 
 local bSelectWallpaper = false
 
-function make_mon(wall, id)
+local function make_mon(wall, id)
   local monitor =
     wibox.widget {
     widget = wibox.widget.imagebox,

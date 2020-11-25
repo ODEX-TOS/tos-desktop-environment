@@ -2,14 +2,11 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_width = dpi(1100)
-local settings_nw = dpi(260)
 
 return function()
   local view = wibox.container.margin()

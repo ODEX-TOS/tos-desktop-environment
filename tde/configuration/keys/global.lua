@@ -345,10 +345,10 @@ local globalKeys =
         awful.spawn("brightness -a 5")
       end
       awesome.emit_signal("widget::brightness")
-      if toggleBriOSD ~= nil then
+      if _G.toggleBriOSD ~= nil then
         _G.toggleBriOSD(true)
       end
-      if UpdateBrOSD ~= nil then
+      if _G.UpdateBrOSD ~= nil then
         _G.UpdateBrOSD()
       end
     end,
@@ -366,10 +366,10 @@ local globalKeys =
         awful.spawn("brightness -d 5")
       end
       awesome.emit_signal("widget::brightness")
-      if toggleBriOSD ~= nil then
+      if _G.toggleBriOSD ~= nil then
         _G.toggleBriOSD(true)
       end
-      if UpdateBrOSD ~= nil then
+      if _G.UpdateBrOSD ~= nil then
         _G.UpdateBrOSD()
       end
     end,
@@ -383,10 +383,10 @@ local globalKeys =
       print("Raising volume")
       awful.spawn("amixer -D pulse sset Master 5%+")
       awesome.emit_signal("widget::volume")
-      if toggleVolOSD ~= nil then
+      if _G.toggleVolOSD ~= nil then
         _G.toggleVolOSD(true)
       end
-      if UpdateVolOSD ~= nil then
+      if _G.UpdateVolOSD ~= nil then
         _G.UpdateVolOSD()
       end
     end,
@@ -399,10 +399,10 @@ local globalKeys =
       print("Lowering volume")
       awful.spawn("amixer -D pulse sset Master 5%-")
       awesome.emit_signal("widget::volume")
-      if toggleVolOSD ~= nil then
+      if _G.toggleVolOSD ~= nil then
         _G.toggleVolOSD(true)
       end
-      if UpdateVolOSD ~= nil then
+      if _G.UpdateVolOSD ~= nil then
         _G.UpdateVolOSD()
       end
     end,
@@ -415,10 +415,10 @@ local globalKeys =
       print("Toggeling volume")
       awful.spawn("amixer -D pulse set Master 1+ toggle")
       awesome.emit_signal("widget::volume")
-      if toggleVolOSD ~= nil then
+      if _G.toggleVolOSD ~= nil then
         _G.toggleVolOSD(true)
       end
-      if UpdateVolOSD ~= nil then
+      if _G.UpdateVolOSD ~= nil then
         _G.UpdateVolOSD()
       end
     end,

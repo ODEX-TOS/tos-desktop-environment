@@ -37,19 +37,19 @@ echo = print
 --- Indicate that this print message is an error
 -- @property error
 -- @param string
-LOG_ERROR = "\27[0;31m[ ERROR "
+local LOG_ERROR = "\27[0;31m[ ERROR "
 --- Indicate that this print message is a warning
 -- @property warn
 -- @param string
-LOG_WARN = "\27[0;33m[ WARN "
+local LOG_WARN = "\27[0;33m[ WARN "
 --- Indicate that this print message is a debug message
 -- @property debug
 -- @param string
-LOG_DEBUG = "\27[0;35m[ DEBUG "
+local LOG_DEBUG = "\27[0;35m[ DEBUG "
 --- Indicate that this print message is an info message
 -- @property info
 -- @param string
-LOG_INFO = "\27[0;32m[ INFO "
+local LOG_INFO = "\27[0;32m[ INFO "
 
 local dir = os.getenv("HOME") .. "/.cache/tde"
 local filename = dir .. "/stdout.log"
@@ -77,9 +77,9 @@ print = function(arg, log_type)
 	end
 	local file = io.open(filename, "a")
 
-	log = log_type or LOG_INFO
+	local log = log_type or LOG_INFO
 	local out = os.date("%H:%M:%S") .. "." .. math.floor(time() * 10000) % 10000
-	statement = log .. out:gsub("\n", "") .. " ]\27[0m "
+	local statement = log .. out:gsub("\n", "") .. " ]\27[0m "
 	for line in arg:gmatch("[^\r\n]+") do
 		-- print it to stdout
 		echo(statement .. line)

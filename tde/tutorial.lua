@@ -24,93 +24,13 @@
 ]]
 local naughty = require("naughty")
 
-function secondTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate("This sets the staking layout of your windows. Notice the pattern."),
-            timeout = 0,
-            position = "bottom_left"
-        }
-    ):connect_signal("destroyed", thirdTip)
+local function finish()
+    local HOME = os.getenv("HOME")
+    local FILE = HOME .. "/.cache/tutorial_tos"
+    io.open(FILE, "w"):write("tutorial is complete"):close()
 end
 
-function thirdTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate(
-                "Try to open a few terminals and see what happens. mod+Enter to open a terminal (windows key) Now click on the icon in the bottom right corner a few times"
-            ),
-            timeout = 0,
-            position = "bottom_left"
-        }
-    ):connect_signal("destroyed", fourthTip)
-end
-
-function fourthTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate("To kill a program use mod+q"),
-            timeout = 0,
-            position = "top_right"
-        }
-    ):connect_signal("destroyed", fifthTip)
-end
-
-function fifthTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate("To launch applications use mod+d. Try to start a few and kill them."),
-            timeout = 0,
-            position = "top_right"
-        }
-    ):connect_signal("destroyed", sixthTip)
-end
-
-function sixthTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate("Click on the gear logo (top left) to access general settings."),
-            timeout = 0,
-            position = "top_left"
-        }
-    ):connect_signal("destroyed", seventhTip)
-end
-
-function seventhTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate("To go to a new workspace try mod+2, launch a program and switch back with mod+1"),
-            timeout = 0,
-            position = "top_left"
-        }
-    ):connect_signal("destroyed", eightTip)
-end
-
-function eightTip()
-    naughty.notify(
-        {
-            app_name = "TOS tutorial!",
-            title = "",
-            message = i18n.translate("For the help menu use mod+f1."),
-            timeout = 0,
-            position = "top_left"
-        }
-    ):connect_signal("destroyed", ninthTip)
-end
-
-function ninthTip()
+local function ninthTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
@@ -124,17 +44,110 @@ function ninthTip()
     ):connect_signal("destroyed", finish)
 end
 
-function finish()
-    local HOME = os.getenv("HOME")
-    local FILE = HOME .. "/.cache/tutorial_tos"
-    io.open(FILE, "w"):write("tutorial is complete"):close()
+local function eightTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate("For the help menu use mod+f1."),
+            timeout = 0,
+            position = "top_left"
+        }
+    ):connect_signal("destroyed", ninthTip)
 end
+
+local function seventhTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate("To go to a new workspace try mod+2, launch a program and switch back with mod+1"),
+            timeout = 0,
+            position = "top_left"
+        }
+    ):connect_signal("destroyed", eightTip)
+end
+
+local function sixthTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate("Click on the gear logo (top left) to access general settings."),
+            timeout = 0,
+            position = "top_left"
+        }
+    ):connect_signal("destroyed", seventhTip)
+end
+
+local function fifthTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate("To launch applications use mod+d. Try to start a few and kill them."),
+            timeout = 0,
+            position = "top_right"
+        }
+    ):connect_signal("destroyed", sixthTip)
+end
+
+local function fourthTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate("To kill a program use mod+q"),
+            timeout = 0,
+            position = "top_right"
+        }
+    ):connect_signal("destroyed", fifthTip)
+end
+
+local function thirdTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate(
+                "Try to open a few terminals and see what happens. mod+Enter to open a terminal (windows key) Now click on the icon in the bottom right corner a few times"
+            ),
+            timeout = 0,
+            position = "bottom_left"
+        }
+    ):connect_signal("destroyed", fourthTip)
+end
+
+local function secondTip()
+    naughty.notify(
+        {
+            app_name = "TOS tutorial!",
+            title = "",
+            message = i18n.translate("This sets the staking layout of your windows. Notice the pattern."),
+            timeout = 0,
+            position = "bottom_left"
+        }
+    ):connect_signal("destroyed", thirdTip)
+end
+
+local func = {
+    secondTip = secondTip,
+    thirdTip = thirdTip,
+    fourthTip = fourthTip,
+    fifthTip = fifthTip,
+    sixthTip = sixthTip,
+    seventhTip = seventhTip,
+    eightTip = eightTip,
+    ninthTip = ninthTip,
+    finish = finish
+}
 
 local HOME = os.getenv("HOME")
 local FILE = HOME .. "/.cache/tutorial_tos"
 if require("lib-tde.file").exists(FILE) then
     print("Tutorial has already been shown")
-    return false
+    func["status"] = false
+    return func
 end
 
 print("Showing tutorial")
@@ -153,4 +166,5 @@ require("gears").timer.start_new(
     end
 )
 
-return true
+func["status"] = true
+return func

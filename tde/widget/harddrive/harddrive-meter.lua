@@ -29,9 +29,7 @@ local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
-local gears = require("gears")
 local signals = require("lib-tde.signals")
-local filehandle = require("lib-tde.file")
 local common = require("lib-tde.function.common")
 local delayed_timer = require("lib-tde.function.delayed-timer")
 

@@ -75,7 +75,7 @@ local toggle_action = function()
     action_status = false
     awful.spawn.easy_async_with_shell(
       power_off_cmd,
-      function(stdout)
+      function(_)
       end,
       false
     )
@@ -83,7 +83,7 @@ local toggle_action = function()
     action_status = true
     awful.spawn.easy_async_with_shell(
       power_on_cmd,
-      function(stdout)
+      function(_)
       end,
       false
     )
@@ -151,7 +151,7 @@ local content =
   widget_button,
   bg = "#ffffff20",
   shape = gears.shape.rect,
-  widget = wibox.container.background(settingsName),
+  widget = wibox.container.background(),
   layout = wibox.layout.ratio.horizontal
 }
 content:set_ratio(1, .85)

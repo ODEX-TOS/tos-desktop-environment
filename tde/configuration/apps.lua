@@ -25,7 +25,7 @@
 local filesystem = require("gears.filesystem")
 local config = require("config")
 
-function addHash(input)
+local function addHash(input)
   if input == nil then
     return nil
   end
@@ -37,8 +37,8 @@ local themefile = require("theme.config")
 local beautiful = require("beautiful")
 local color = beautiful.primary.hue_500
 local colorBG = beautiful.primary.hue_700
-local color = addHash(themefile["primary_hue_500"]) or color
-local colorBG = addHash(themefile["primary_hue_700"]) or colorBG
+color = addHash(themefile["primary_hue_500"]) or color
+colorBG = addHash(themefile["primary_hue_700"]) or colorBG
 
 local picom = "picom -b --dbus --experimental-backends --config " .. config.getComptonFile()
 if general["weak_hardware"] == "1" then

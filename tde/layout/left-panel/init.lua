@@ -28,7 +28,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local bottom_panel = function(screen, offset)
   local action_bar_width = dpi(45) -- 48
-  offsetY = dpi(26)
+  local offsetY = dpi(26)
   if offset then
     offsetY = 0
   end

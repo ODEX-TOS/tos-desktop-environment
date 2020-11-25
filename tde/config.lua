@@ -32,7 +32,7 @@ local file_exists = require("lib-tde.file").exists
 -- Otherwise all polls will run at the same time creating a peak of cpu usage
 -- By spreading them out using delays we get lower cpu usage
 
-config = {
+local config = {
     package_timeout = 180, -- how frequently we want to check if there are new updates in seconds
     battery_timeout = 20, -- How frequently we want to check our battery status in seconds
     player_reaction_time = 0.01, -- The time for the music player to respond to our play/pause action
@@ -52,7 +52,7 @@ config = {
     colors_config = HOME .. "/.config/tos/colors.conf",
     icons_config = HOME .. "/.config/tos/icons.conf",
     getComptonFile = function()
-        userfile = HOME .. "/.config/picom.conf"
+        local userfile = HOME .. "/.config/picom.conf"
         if (file_exists(userfile)) then
             return userfile
         end

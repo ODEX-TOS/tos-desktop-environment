@@ -32,7 +32,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 local widget_icon_dir = "/etc/xdg/awesome/widget/xdg-folders/icons/"
 local menubar = require("menubar")
 
-function icon(item)
+local function icon(item)
 	return menubar.utils.lookup_icon(item)
 end
 local trash_widget =
@@ -55,7 +55,7 @@ local trash_menu =
 				function()
 					awful.spawn.easy_async_with_shell(
 						"gio open trash:///",
-						function(stdout)
+						function(_)
 						end,
 						1
 					)
@@ -70,7 +70,7 @@ local trash_menu =
 						function()
 							awful.spawn.easy_async_with_shell(
 								"gio trash --empty",
-								function(stdout)
+								function(_)
 								end,
 								1
 							)
@@ -100,7 +100,7 @@ local trash_button =
 }
 
 -- Tooltip for trash_button
-trash_tooltip =
+local trash_tooltip =
 	awful.tooltip {
 	objects = {trash_button},
 	mode = "outside",
@@ -144,8 +144,8 @@ local check_trash_list = function()
 
 				awful.spawn.easy_async_with_shell(
 					"gio list trash:///",
-					function(stdout)
-						trash_tooltip.markup = "<b>" .. i18n.translate("Trash contains:") .. "</b>\n" .. stdout:gsub("\n$", "")
+					function(stdout_2)
+						trash_tooltip.markup = "<b>" .. i18n.translate("Trash contains:") .. "</b>\n" .. stdout_2:gsub("\n$", "")
 					end,
 					false
 				)

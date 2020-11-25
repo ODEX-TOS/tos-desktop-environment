@@ -35,6 +35,7 @@ local signals = require("lib-tde.signals")
 
 -- Appearance
 local icon_size = beautiful.exit_screen_icon_size or dpi(90)
+local exit_screen_hide
 
 local text = i18n.translate("Goodbye ")
 
@@ -110,30 +111,30 @@ local buildButton = function(icon, name)
 	return buildabutton
 end
 
-suspend_command = function()
+local suspend_command = function()
 	print("Suspending")
 	exit_screen_hide()
 	awful.spawn.with_shell(apps.default.lock .. " && systemctl suspend")
 end
 
-exit_command = function()
+local exit_command = function()
 	print("Stopping TDE")
 	_G.awesome.quit()
 end
 
-lock_command = function()
+local lock_command = function()
 	print("Locking computer")
 	exit_screen_hide()
 	awful.spawn.with_shell("sleep 1 && " .. apps.default.lock)
 end
 
-poweroff_command = function()
+local poweroff_command = function()
 	print("Powering off")
 	awful.spawn.with_shell("poweroff")
 	signals.emit_module_exit_screen_hide()
 end
 
-reboot_command = function()
+local reboot_command = function()
 	print("Rebooting")
 	awful.spawn.with_shell("reboot")
 	signals.emit_module_exit_screen_hide()
@@ -207,8 +208,8 @@ screen.connect_signal(
 			signals.emit_module_exit_screen_hide()
 
 			-- Hide exit_screen in all screens
-			for s in screen do
-				s.exit_screen.visible = false
+			for scrn in screen do
+				scrn.exit_screen.visible = false
 			end
 		end
 
@@ -216,7 +217,7 @@ screen.connect_signal(
 			awful.keygrabber {
 			auto_start = true,
 			stop_event = "release",
-			keypressed_callback = function(self, mod, key, command)
+			keypressed_callback = function(_, _, key, _)
 				if key == "s" then
 					suspend_command()
 				elseif key == "e" then
@@ -234,12 +235,12 @@ screen.connect_signal(
 		}
 
 		-- Exit screen show
-		exit_screen_show = function()
+		_G.exit_screen_show = function()
 			exit_screen_grabber:start()
 
 			-- Hide exit_screen in all screens to avoid duplication
-			for s in screen do
-				s.exit_screen.visible = false
+			for scrn in screen do
+				scrn.exit_screen.visible = false
 			end
 
 			-- Then open it in the focused one

@@ -33,13 +33,40 @@ local beautiful = require("beautiful")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/sars-cov-2/icons/"
 
+local covid_header =
+  wibox.widget {
+  text = i18n.translate("Covid-19 cases in your country"),
+  font = "SFNS Display Regular 14",
+  align = "center",
+  valign = "center",
+  widget = wibox.widget.textbox
+}
+
+local covid_deceases =
+  wibox.widget {
+  text = i18n.translate("No internet connection..."),
+  font = "SFNS Display Regular 16",
+  align = "left",
+  valign = "center",
+  widget = wibox.widget.textbox
+}
+
+local covid_deaths =
+  wibox.widget {
+  text = i18n.translate("Can't retreive deaths."),
+  font = "SFNS Display Regular 12",
+  align = "left",
+  valign = "center",
+  widget = wibox.widget.textbox
+}
+
 watch(
   [[bash -c "curl -s https://corona-stats.online/$(curl https://ipapi.co/country/)?minimal=true | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g'"]],
   3600,
   function(_, stdout)
-    array = split(split(stdout, "\n")[2], "%s*")
-    infected = i18n.translate("Infected: ") .. (array[4] or i18n.translate("unknown"))
-    death = i18n.translate("Deaths: ") .. (array[7] or i18n.translate("unknown"))
+    local array = split(split(stdout, "\n")[2], "%s*")
+    local infected = i18n.translate("Infected: ") .. (array[4] or i18n.translate("unknown"))
+    local death = i18n.translate("Deaths: ") .. (array[7] or i18n.translate("unknown"))
     covid_deceases.text = infected
     covid_deaths.text = death
   end
@@ -53,7 +80,7 @@ watch(
   end
 )
 
-covid_icon_widget =
+local covid_icon_widget =
   wibox.widget {
   {
     id = "icon",
@@ -64,33 +91,6 @@ covid_icon_widget =
     widget = wibox.widget.imagebox
   },
   layout = wibox.layout.fixed.horizontal
-}
-
-covid_header =
-  wibox.widget {
-  text = i18n.translate("Covid-19 cases in your country"),
-  font = "SFNS Display Regular 14",
-  align = "center",
-  valign = "center",
-  widget = wibox.widget.textbox
-}
-
-covid_deceases =
-  wibox.widget {
-  text = i18n.translate("No internet connection..."),
-  font = "SFNS Display Regular 16",
-  align = "left",
-  valign = "center",
-  widget = wibox.widget.textbox
-}
-
-covid_deaths =
-  wibox.widget {
-  text = i18n.translate("Can't retreive deaths."),
-  font = "SFNS Display Regular 12",
-  align = "left",
-  valign = "center",
-  widget = wibox.widget.textbox
 }
 
 local weather_report =

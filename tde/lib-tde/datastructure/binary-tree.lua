@@ -26,7 +26,8 @@ return function()
     Node.__index = Node
 
     function Node:new(data)
-        self = {}
+        -- luacheck: ignore 412
+        local self = {}
 
         self._data = data
         self.left = nil
@@ -40,8 +41,7 @@ return function()
         return self._data
     end
 
-    _tree = {}
-    _tree._root = nil
+    local _tree = {}
 
     local function contains(node, data)
         if node:data() == data then
@@ -64,7 +64,7 @@ return function()
     -- @staticfct lib-tde.datastrucuture.binary-tree.contains
     -- @usage -- Check if "tde" exists (in O(log(n)) time)
     -- tree.contains("tde")
-    function _contains(data)
+    local function _contains(data)
         if _tree._root == nil then
             return false
         end
@@ -97,7 +97,7 @@ return function()
     -- @staticfct lib-tde.datastrucuture.binary-tree.insert
     -- @usage -- Insert "tde" into the tree
     -- tree.insert("tde")
-    function _insert(data)
+    local function _insert(data)
         if _tree._root == nil then
             local node = Node:new(data)
             _tree._root = node
@@ -129,7 +129,7 @@ return function()
                 node = node.left
             else
                 node._data = node.right:data()
-                node.right, _ = remove(node.right, node:data())
+                node.right = remove(node.right, node:data())
             end
         end
 
@@ -141,11 +141,11 @@ return function()
     -- @staticfct lib-tde.datastrucuture.binary-tree.remove
     -- @usage -- Remove tde from the tree
     -- tree.remove("tde")
-    function _remove(data)
+    local function _remove(data)
         if _tree._root == nil then
             return nil
         end
-
+        local popped
         _tree._root, popped = remove(_tree._root, data)
 
         return popped

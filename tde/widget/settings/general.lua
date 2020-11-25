@@ -22,8 +22,7 @@ local function create_multi_option_array(name, tooltip, options, default, config
     font = beautiful.title_font,
     widget = wibox.widget.textbox
   }
-  local tooltip_widget =
-    awful.tooltip {
+  awful.tooltip {
     objects = {name_widget},
     timer_function = function()
       return tooltip
@@ -111,8 +110,7 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
     widget = wibox.widget.checkbox
   }
 
-  local tooltip_widget =
-    awful.tooltip {
+  awful.tooltip {
     objects = {name_widget},
     timer_function = function()
       return tooltip
@@ -124,7 +122,7 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
     function()
       print("Pressed")
       checkbox.checked = not checkbox.checked
-      value = off or "0"
+      local value = off or "0"
       if checkbox.checked then
         value = on or "1"
       end

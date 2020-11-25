@@ -46,7 +46,7 @@ local function exists(file)
   if file == "/" then
     return true
   end
-  local ok, err, code = os.rename(file, file)
+  local ok, _, code = os.rename(file, file)
   if not ok then
     if code == 13 then
       -- Permission denied, but it exists
@@ -62,7 +62,7 @@ end
 -- @staticfct exists
 -- @usage -- This true
 -- lib-tde.file.exists("/etc/passwd")
-function file_exists(file)
+local function file_exists(file)
   if type(file) ~= "string" then
     return false
   end
@@ -78,11 +78,11 @@ end
 -- @staticfct write
 -- @usage -- This true
 -- lib-tde.file.write("hallo.txt", "this is content in the file")
-function write(file, data)
+local function write(file, data)
   if type(file) ~= "string" then
     return false
   end
-  fd = io.open(file, "a")
+  local fd = io.open(file, "a")
   fd:write(data .. "\n")
   fd:close()
   return true
@@ -95,11 +95,11 @@ end
 -- @staticfct overwrite
 -- @usage -- This true
 -- lib-tde.file.overwrite("hallo.txt", "this is content in the file")
-function overwrite(file, data)
+local function overwrite(file, data)
   if type(file) ~= "string" then
     return false
   end
-  fd = io.open(file, "w")
+  local fd = io.open(file, "w")
   fd:write(data .. "\n")
   fd:close()
   return true
@@ -111,7 +111,7 @@ end
 -- @staticfct dir_exists
 -- @usage -- This true
 -- lib-tde.file.dir_exists("/etc")
-function dir_exists(dir)
+local function dir_exists(dir)
   if type(dir) ~= "string" then
     return false
   end
@@ -129,14 +129,14 @@ end
 -- @staticfct lines
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
 -- lib-tde.file.lines("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type table
-function lines_from(file, match, head)
+local function lines_from(file, match, head)
   local fullMatch = "^.*$"
   match = match or fullMatch
   if not file_exists(file) then
     return {}
   end
-  lines = {}
-  i = 0
+  local lines = {}
+  local i = 0
   for line in io.lines(file) do
     i = i + 1
     if head ~= nil and i > head then
@@ -151,16 +151,6 @@ function lines_from(file, match, head)
   return lines
 end
 
--- wrap the io.lines function in a protected call
-function _lines_from(file, match, head)
-  local res, err = pcall(lines_from(file, match, head))
-  if err then
-    print("file: " .. err)
-    return {}
-  end
-  return res
-end
-
 --- Put the content of a file into a string
 -- @tparam file string The path to the file, can be both absolute or relative.
 -- @tparam[opt] match string A regular expression to filter out lines that should be ignored by default = ^.*$
@@ -169,22 +159,12 @@ end
 -- @staticfct string
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
 -- lib-tde.file.string("/etc/hosts", "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.*", 100) -> is of type string
-function getString(file, match, head)
+local function getString(file, match, head)
   local res = lines_from(file, match, head)
   if type(res) == "string" then
     return res
   end
   return table.concat(res, "\n")
-end
-
--- wrap the io.lines function in a protected call
-function _get_string(file, match, head)
-  local res, err = pcall(getString(file, match, head))
-  if err ~= nil then
-    print("file: " .. err)
-    return ""
-  end
-  return res
 end
 
 --- Return a table of filename found in a directory
@@ -242,7 +222,7 @@ end
 
 --- Function equivalent to basename in POSIX systems
 --@param str the path string
-function basename(str)
+local function basename(str)
   if type(str) == "string" then
     local name = string.gsub(str, "(.*/)(.*)", "%2")
     return name
@@ -252,11 +232,11 @@ end
 
 --- Function to remove a file for the filesystem
 --@param filename string the path to the file
-function rm(filename)
+local function rm(filename)
   return os.remove(filename)
 end
 
-function log(filename)
+local function log(filename)
   -- tests the functions above
   local lines = lines_from(filename)
 

@@ -30,7 +30,6 @@ local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/action-center/icons/"
-local checker
 local mode
 
 local widget =
@@ -87,7 +86,7 @@ awful.tooltip(
     mode = "outside",
     align = "right",
     timer_function = function()
-      if checker == nil then
+      if mode then
         return "WI-FI is ON"
       else
         return "Airplane Mode"
@@ -99,6 +98,7 @@ awful.tooltip(
 
 signals.connect_wifi_status(
   function(active)
+    local widgetIconName
     if active then
       mode = true
       widgetIconName = "toggled-on"

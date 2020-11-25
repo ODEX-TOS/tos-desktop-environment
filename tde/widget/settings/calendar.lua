@@ -50,9 +50,9 @@ return function()
     }
   }
 
-  local function decorate_cell(widget, flag, date)
+  local function decorate_cell(widget, flag, _)
     local props = styles[flag] or {}
-    ret = widget
+    local ret = widget
     if flag == "focus" then
       ret =
         wibox.container.margin(

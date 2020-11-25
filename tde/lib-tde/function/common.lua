@@ -105,8 +105,8 @@ local function bytes_to_grandness(bytes, start)
     local number = bytes
     if type(bytes) == "string" then
         number = tonumber(bytes) or 0
-    elseif not (type(bytes) == "number") then
-        return num
+    elseif not (type(number) == "number") then
+        return number
     end
     return num_to_si_prefix(number, start) .. "B"
 end

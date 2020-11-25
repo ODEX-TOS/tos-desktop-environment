@@ -89,7 +89,7 @@ local switcher =
   }
 }
 
-function switch_mode(right_panel_mode)
+local function switch_mode(right_panel_mode)
   if right_panel_mode == "notif_mode" then
     -- Update button color
     wrap_notif.bg = active_button

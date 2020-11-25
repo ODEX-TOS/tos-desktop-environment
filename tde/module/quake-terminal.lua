@@ -28,7 +28,7 @@ local app = require("configuration.apps").default.quake
 local quake_id = "notnil"
 local quake_client
 local opened = false
-function create_shell()
+local function create_shell()
   quake_id =
     spawn(
     app,
@@ -38,17 +38,17 @@ function create_shell()
   )
 end
 
-function open_quake()
+local function open_quake()
   print("Opening quake terminal")
   quake_client.hidden = false
 end
 
-function close_quake()
+local function close_quake()
   print("Closing quake terminal")
   quake_client.hidden = true
 end
 
-toggle_quake = function()
+local toggle_quake = function()
   opened = not opened
   if not quake_client then
     create_shell()
@@ -60,6 +60,8 @@ toggle_quake = function()
     end
   end
 end
+
+_G.toggle_quake = toggle_quake
 
 _G.client.connect_signal(
   "manage",

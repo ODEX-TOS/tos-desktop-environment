@@ -33,7 +33,7 @@ local PATH_TO_ICONS = "/etc/xdg/awesome/widget/notification-center/icons/"
 local PATH_TO_WIDGET = "/etc/xdg/awesome/widget/notification-center/subwidgets/dont-disturb/"
 local theme = require("theme.icons.dark-light")
 
-dont_disturb = false
+local dont_disturb = false
 
 local dont_disturb_text =
   wibox.widget {
@@ -91,7 +91,7 @@ local function check_disturb_status()
         dont_disturb = false
         awful.spawn.easy_async_with_shell(
           "echo " .. "false" .. " > " .. PATH_TO_WIDGET .. "disturb_status",
-          function(stdout)
+          function(_)
           end,
           false
         )
@@ -112,7 +112,7 @@ local function toggle_disturb()
     dont_disturb = false
     awful.spawn.easy_async_with_shell(
       "echo " .. tostring(dont_disturb) .. " > " .. PATH_TO_WIDGET .. "disturb_status",
-      function(stdout)
+      function(_)
       end,
       false
     )
@@ -122,7 +122,7 @@ local function toggle_disturb()
     dont_disturb = true
     awful.spawn.easy_async_with_shell(
       "echo " .. tostring(dont_disturb) .. " > " .. PATH_TO_WIDGET .. "disturb_status",
-      function(stdout)
+      function(_)
       end,
       false
     )

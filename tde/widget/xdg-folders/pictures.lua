@@ -30,7 +30,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/xdg-folders/icons/"
 local menubar = require("menubar")
 
-function icon(item)
+local function icon(item)
   return menubar.utils.lookup_icon(item)
 end
 local picWidget =
@@ -53,7 +53,7 @@ pic_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open $HOME/Pictures",
-          function(stderr)
+          function(_)
           end,
           1
         )

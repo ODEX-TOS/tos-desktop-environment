@@ -102,7 +102,7 @@ local function send_plugin_error(msg)
   )
 end
 
-function close_views()
+local function close_views()
   gears.table.map(
     function(v)
       v.view.visible = false
@@ -134,7 +134,7 @@ local function setActiveView(i, link)
 end
 
 -- If you set the index to -1 then we go to the last remembered index
-function enable_view_by_index(i, s, loc)
+local function enable_view_by_index(i, s, loc)
   if not (i == -1) then
     INDEX = i
   end
@@ -167,7 +167,7 @@ function enable_view_by_index(i, s, loc)
   end
 end
 
-function make_view(i, t, v, a)
+local function make_view(i, t, v, a)
   local button = wibox.container.background()
   button.forced_height = m + settings_index + m
 
@@ -255,7 +255,7 @@ function make_view(i, t, v, a)
   return {link = button, view = view, title = title}
 end
 
-function make_nav()
+local function make_nav()
   local nav = wibox.container.background()
   nav.bg = beautiful.bg_modal_title
   nav.forced_width = settings_nw

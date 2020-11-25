@@ -56,7 +56,6 @@ end
 
 function test_sorting_quicksort_works_with_string_size_sorting()
     local comparison = function(small, big)
-        print("QUICK: " .. small .. " " .. big)
         return #tostring(small) < #tostring(big)
     end
     local list = {"hello!", "he", "hello", "hel", "h", "hell"}

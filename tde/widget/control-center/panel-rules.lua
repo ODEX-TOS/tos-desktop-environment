@@ -22,8 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
-
 local left_panel = require("widget.control-center.left-panel")
 
 -- Create a wibox for each screen connected
@@ -37,8 +35,8 @@ awful.screen.connect_for_each_screen(
 )
 
 -- Hide panel when clients go fullscreen
-showAgain = false
-function updateleftBarsVisibility()
+local showAgain = false
+local function updateleftBarsVisibility()
   for s in screen do
     if s.selected_tag then
       local fullscreen = s.selected_tag.fullscreenMode
@@ -57,7 +55,7 @@ end
 
 _G.tag.connect_signal(
   "property::selected",
-  function(t)
+  function(_)
     updateleftBarsVisibility()
   end
 )

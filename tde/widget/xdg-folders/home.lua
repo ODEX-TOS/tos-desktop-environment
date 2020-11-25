@@ -31,7 +31,7 @@ local menubar = require("menubar")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/xdg-folders/icons/"
 
-function icon(item)
+local function icon(item)
   return menubar.utils.lookup_icon(item)
 end
 
@@ -55,7 +55,7 @@ home_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open $HOME",
-          function(stderr)
+          function(_)
           end,
           1
         )

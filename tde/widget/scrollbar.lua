@@ -22,27 +22,14 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 
 -- @param show            : the widget to make scrollable
--- @param speed           : the speed at which to make the fade effect go slower (a smaller value = faster slowdown)
--- @param offset          : the initial offset at the top
--- @param fps             : how fast to update the scrolling effect. A lower fps is better for performance
--- @param bTopToBottom    : should the scrolling happen left to right or top to bottom
--- @param bIsInverted     : Should the movement be inverted
--- @param max_scroll      : The height of the widget until we stop scrolling
-return function(show, speed, offset, fps, bTopToBottom, bIsInverted, max_scroll)
-    offset = offset or 0
-    local speed = speed or 3
-    local bTopToBottom = bTopToBottom or true
-    local bIsInverted = bIsInverted or false
-    local max_scroll = max_scroll or 90000 -- if no max scrolling is present we set it to the max
+return function(show)
+    local offset = 0
+    local max_scroll = 90000 -- if no max scrolling is present we set it to the max
 
-    deltax = 0
-    deltay = 0
-
-    local widget = nil
+    local widget
     local size = 20
 
     for s in screen do
@@ -56,10 +43,6 @@ return function(show, speed, offset, fps, bTopToBottom, bIsInverted, max_scroll)
     -- The reset function will put the scrollbar to the top
     widget.reset = function()
         -- reset the internal state
-        prevx = nil
-        prevy = nil
-        deltax = 0
-        deltay = 0
         offset = 0
 
         -- move the widget back to its original position
@@ -71,31 +54,25 @@ return function(show, speed, offset, fps, bTopToBottom, bIsInverted, max_scroll)
             awful.button(
                 {},
                 4,
-                function(t)
-                    if (bTopToBottom) then
-                        if ((offset + size) > 0) then
-                            offset = 0
-                        else
-                            offset = offset + size
-                        end
-                        widget.top = offset
+                function(_)
+                    if ((offset + size) > 0) then
+                        offset = 0
+                    else
+                        offset = offset + size
                     end
-                    bAddingSize = true
+                    widget.top = offset
                 end
             ),
             awful.button(
                 {},
                 5,
-                function(t)
-                    if (bTopToBottom) then
-                        if (offset - 20 < -max_scroll) then
-                            offset = -max_scroll
-                        else
-                            offset = offset - size
-                        end
-                        widget.top = offset
+                function(_)
+                    if (offset - 20 < -max_scroll) then
+                        offset = -max_scroll
+                    else
+                        offset = offset - size
                     end
-                    bAddingSize = false
+                    widget.top = offset
                 end
             )
         )

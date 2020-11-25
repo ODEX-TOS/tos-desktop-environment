@@ -10,20 +10,20 @@ local icon_path = "/etc/xdg/awesome/theme/icons/laptop.svg"
 
 -- Get active outputs
 local function outputs()
-   local outputs = {}
+   local output_tbl = {}
    local xrandr = io.popen("xrandr -q --current")
 
    if xrandr then
       for line in xrandr:lines() do
          local output = line:match("^([%w-]+) connected ")
          if output then
-            outputs[#outputs + 1] = output
+            output_tbl[#output_tbl + 1] = output
          end
       end
       xrandr:close()
    end
 
-   return outputs
+   return output_tbl
 end
 
 local function arrange(out)
@@ -31,7 +31,7 @@ local function arrange(out)
 
    local choices = {}
    local previous = {{}}
-   for i = 1, #out do
+   for _ = 1, #out do
       -- Find all permutation of length `i`: we take the permutation
       -- of length `i-1` and for each of them, we create new
       -- permutations by adding each output at the end of it if it is
@@ -53,7 +53,7 @@ end
 
 -- Build available choices
 local function menu()
-   local menu = {}
+   local menu_tbl = {}
    local out = outputs()
    local choices = arrange(out)
 
@@ -88,22 +88,22 @@ local function menu()
          end
       end
 
-      menu[#menu + 1] = {label, cmd}
+      menu_tbl[#menu_tbl + 1] = {label, cmd}
       if #choice == 1 then
-         menu[#menu + 1] = {
+         menu_tbl[#menu_tbl + 1] = {
             'Duplicate <span weight="bold">' .. choice[1] .. "</span>",
             apps.default.duplicate_screens .. " " .. choice[1]
          }
       end
    end
 
-   return menu
+   return menu_tbl
 end
 
 -- Display xrandr notifications from choices
 local state = {cid = nil}
 
-local function naughty_destroy_callback(reason)
+local function naughty_destroy_callback(_)
    local action = state.index and state.menu[state.index - 1][2]
    if action then
       awful.spawn.easy_async_with_shell(
@@ -126,7 +126,7 @@ local function xrandr()
    end
 
    -- Select one and display the appropriate notification
-   local label, action
+   local label
    local next = state.menu[state.index]
    state.index = state.index + 1
 
@@ -134,7 +134,7 @@ local function xrandr()
       label = "Keep the current configuration"
       state.index = nil
    else
-      label, action = next[1], next[2]
+      label = next[1]
    end
    print("Display mode: " .. label)
    local noti =

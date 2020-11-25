@@ -90,7 +90,7 @@ awful.spawn.easy_async_with_shell(
   function(out)
     -- Update profile name
     -- Capitalize first letter of username
-    name = out:gsub("%W", "")
+    local name = out:gsub("%W", "")
     name = name:sub(1, 1):upper() .. name:sub(2)
     signals.emit_username(name)
     profile_name.markup = '<span font="SFNS Display Bold 24">' .. name .. "</span>" --out:sub(1,1):upper()..out:sub(2)
@@ -107,13 +107,13 @@ awful.spawn.easy_async_with_shell(
           local cmd_icon_check = "if test -f " .. PATH_TO_CACHE_ICON .. "user.jpg" .. "; then print 'exists'; fi"
           awful.spawn.easy_async_with_shell(
             cmd_icon_check,
-            function(stdout)
-              if stdout:match("exists") then
+            function(stdout2)
+              if stdout2:match("exists") then
                 -- If the file already copied, don't copy, just update the imagebox
                 profile_imagebox.icon:set_image(PATH_TO_CACHE_ICON .. "user.jpg")
               else
                 -- Image detected, now copy your profile picture to the widget directory icon folder
-                copy_cmd = "cp " .. PATH_TO_USERICON .. out .. " " .. PATH_TO_CACHE_ICON .. "user.jpg"
+                local copy_cmd = "cp " .. PATH_TO_USERICON .. out .. " " .. PATH_TO_CACHE_ICON .. "user.jpg"
                 awful.spawn(copy_cmd)
 
                 -- Add a timer to a delay
@@ -148,7 +148,7 @@ awful.spawn.easy_async_with_shell(
   "cat /etc/os-release | awk 'NR==1'| awk -F " .. "'" .. '"' .. "'" .. " '{print $2}'",
   function(out)
     -- Remove newline represented by `\n`
-    distroname = out:gsub("%\n", "")
+    local distroname = out:gsub("%\n", "")
     distro_name.markup = '<span font="SFNS Display Regular 12">' .. distroname .. "</span>"
     signals.emit_distro(distroname)
   end
@@ -158,7 +158,7 @@ awful.spawn.easy_async_with_shell(
 awful.spawn.easy_async_with_shell(
   "uptime -p",
   function(out)
-    uptime = out:gsub("%\n", "")
+    local uptime = out:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
     signals.emit_uptime(uptime)
   end
@@ -167,8 +167,8 @@ awful.spawn.easy_async_with_shell(
 awful.widget.watch(
   "uptime -p",
   600,
-  function(widget, stdout)
-    uptime = stdout:gsub("%\n", "")
+  function(_, stdout)
+    local uptime = stdout:gsub("%\n", "")
     uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
     signals.emit_uptime(uptime)
   end
@@ -178,7 +178,7 @@ awful.widget.watch(
 awful.spawn.easy_async_with_shell(
   "uname -r | cut -d '-' -f 1,2",
   function(out)
-    kernel = out:gsub("%\n", "")
+    local kernel = out:gsub("%\n", "")
     kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
     signals.emit_kernel(kernel)
   end

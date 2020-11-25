@@ -1,4 +1,3 @@
-
 local gears = require("gears")
 local beautiful = require("beautiful")
 local theme = require("theme.icons.dark-light")
@@ -36,9 +35,9 @@ local sr_close_button = screen_rec_ui.screen_rec_close_button
 
 local sr_back_button = screen_rec_ui.screen_rec_back_button
 
-sr_resolution_box = screen_rec_ui.screen_rec_res_txtbox
-sr_fps_box = screen_rec_ui.screen_rec_fps_txtbox
-sr_offset_box = screen_rec_ui.screen_rec_offset_txtbox
+local sr_resolution_box = screen_rec_ui.screen_rec_res_txtbox
+local sr_fps_box = screen_rec_ui.screen_rec_fps_txtbox
+local sr_offset_box = screen_rec_ui.screen_rec_offset_txtbox
 
 local sr_resolution_tbox = sr_resolution_box:get_children_by_id("res_tbox")[1]
 local sr_fps_tbox = sr_fps_box:get_children_by_id("fps_tbox")[1]
@@ -74,9 +73,9 @@ local sr_fps_default_markup = sr_fps_tbox:get_markup()
 local sr_offset_default_markup = sr_offset_tbox:get_markup()
 
 if status_audio then
-	screen_rec_audio_button.bg = "#53e2ae" .. "66"
+	sr_audio_button.bg = "#53e2ae" .. "66"
 else
-	screen_rec_audio_button.bg = beautiful.groups_bg
+	sr_audio_button.bg = beautiful.groups_bg
 end
 
 -- Textbox ui manipulators
@@ -153,16 +152,16 @@ end
 
 local sr_audio_mode = function()
 	if not status_recording and not status_countdown then
-		-- screen_rec_audio_button
+		-- sr_audio_button
 
 		if status_audio then
 			status_audio = false
 
-			screen_rec_audio_button.bg = beautiful.groups_bg
+			sr_audio_button.bg = beautiful.groups_bg
 		else
 			status_audio = true
 
-			screen_rec_audio_button.bg = "#53e2ae" .. "66"
+			sr_audio_button.bg = "#53e2ae" .. "66"
 		end
 	end
 end
@@ -211,12 +210,12 @@ local settings_updater =
 	awful.keygrabber {
 	auto_start = true,
 	stop_event = "release",
-	keypressed_callback = function(self, mod, key, command)
+	keypressed_callback = function(_, _, key, _)
 		if key == "BackSpace" then
 			delete_key()
 		end
 	end,
-	keyreleased_callback = function(self, mod, key, command)
+	keyreleased_callback = function(self, _, key, _)
 		if key == "Return" then
 			apply_new_settings()
 			self:stop()
@@ -384,7 +383,7 @@ local ui_open =
 	awful.keygrabber {
 	auto_start = true,
 	stop_event = "release",
-	keyreleased_callback = function(self, mod, key, command)
+	keyreleased_callback = function(self, _, key, _)
 		if key == "Escape" then
 			self:stop()
 			reset_textbox()
@@ -443,10 +442,10 @@ local sr_recording_start = function()
 	status_countdown = false
 	status_recording = true
 
-	local sr_screen = awful.screen.focused().recorder_screen
+	local sr_screen_loc = awful.screen.focused().recorder_screen
 
 	-- Hide recorder screen
-	sr_screen.visible = false
+	sr_screen_loc.visible = false
 
 	-- Manipulate UIs
 	sr_toggle_imgbox:set_image(theme(widget_icon_dir .. "recording-button" .. ".svg"))
@@ -457,7 +456,7 @@ end
 
 -- Stop Recording
 
-sr_recording_stop = function()
+local sr_recording_stop = function()
 	status_recording = false
 	status_audio = false
 

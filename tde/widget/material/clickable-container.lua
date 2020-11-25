@@ -25,7 +25,7 @@
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 
-function build(widget)
+local function build(widget)
 	local container =
 		wibox.widget {
 		widget,

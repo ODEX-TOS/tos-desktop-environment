@@ -35,6 +35,8 @@ local breakTimer = require("widget.break-timer")
 
 -- our timer is always running in the background until we stop it by pushing the disable button
 local started = true
+local breakOverlay
+local breakbackdrop
 
 awful.screen.connect_for_each_screen(
   function(s)
@@ -108,8 +110,8 @@ local breakTriggerTimer =
   timeout = tonumber(general["break_timeout"]) or (60 * 60 * 1),
   autostart = true,
   callback = function()
-    time_start = general["break_time_start"] or "00:00"
-    time_end = general["break_time_end"] or "23:59"
+    local time_start = general["break_time_start"] or "00:00"
+    local time_end = general["break_time_end"] or "23:59"
     if breakTimerFunctions.current_time_inbetween(time_start, time_end) then
       _G.pause.show(tonumber(general["break_time"]) or (60 * 5))
     else

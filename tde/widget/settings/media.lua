@@ -88,7 +88,7 @@ return function()
 
     awful.spawn.easy_async_with_shell(
       'pactl list sources | grep "Active Port:" | awk \'{print $3}\'',
-      function(o, e)
+      function(o, _)
         if o then
           mic_footer.markup =
             'Input: <span font="' .. beautiful.font .. '">' .. o:gsub("^%s*(.-)%s*$", "%1") .. "</span>"
@@ -127,7 +127,7 @@ return function()
               layout = wibox.layout.align.horizontal,
               vol_heading,
               nil,
-              mute
+              nil
             }
           },
           {

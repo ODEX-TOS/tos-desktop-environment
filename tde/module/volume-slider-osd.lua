@@ -36,7 +36,7 @@ awful.screen.connect_for_each_screen(
 
     local offsetx = dpi(56)
     local offsety = dpi(300)
-    volumeOverlay =
+    local volumeOverlay =
       wibox(
       {
         visible = nil,
@@ -49,51 +49,53 @@ awful.screen.connect_for_each_screen(
         y = (s.geometry.height / dpi(2)) - (offsety / dpi(2))
       }
     )
+    _G.volumeOverlay = volumeOverlay
+    -- Put its items in a shaped container
+    volumeOverlay:setup {
+      -- Container
+      {
+        -- Items go here
+        --wibox.widget.textbox("Hello!"),
+        wibox.container.rotate(vol_osd, "east"),
+        -- ...
+        layout = wibox.layout.fixed.vertical
+      },
+      -- The real background color
+      bg = "#000000" .. "66",
+      -- The real, anti-aliased shape
+      shape = gears.shape.rounded_rect,
+      widget = wibox.container.background()
+    }
+
+    local hideOSD =
+      gears.timer {
+      timeout = 5,
+      autostart = true,
+      callback = function()
+        volumeOverlay.visible = false
+      end
+    }
+
+    local function toggleVolOSD(bool)
+      if (not _G.menuopened) then
+        -- don't perform the toggle off if it is already off
+        if ((not bool) and (not volumeOverlay.visible)) then
+          return
+        end
+        volumeOverlay.visible = bool
+        if bool then
+          hideOSD:again()
+          if _G.toggleBriOSD ~= nil then
+            _G.toggleBriOSD(false)
+          end
+        else
+          hideOSD:stop()
+        end
+      end
+    end
+
+    _G.toggleVolOSD = toggleVolOSD
   end
 )
 
--- Put its items in a shaped container
-volumeOverlay:setup {
-  -- Container
-  {
-    -- Items go here
-    --wibox.widget.textbox("Hello!"),
-    wibox.container.rotate(vol_osd, "east"),
-    -- ...
-    layout = wibox.layout.fixed.vertical
-  },
-  -- The real background color
-  bg = "#000000" .. "66",
-  -- The real, anti-aliased shape
-  shape = gears.shape.rounded_rect,
-  widget = wibox.container.background()
-}
-
-local hideOSD =
-  gears.timer {
-  timeout = 5,
-  autostart = true,
-  callback = function()
-    volumeOverlay.visible = false
-  end
-}
-
-function toggleVolOSD(bool)
-  if (not _G.menuopened) then
-    -- don't perform the toggle off if it is already off
-    if ((not bool) and (not volumeOverlay.visible)) then
-      return
-    end
-    volumeOverlay.visible = bool
-    if bool then
-      hideOSD:again()
-      if toggleBriOSD ~= nil then
-        _G.toggleBriOSD(false)
-      end
-    else
-      hideOSD:stop()
-    end
-  end
-end
-
-return volumeOverlay
+return _G.volumeOverlay

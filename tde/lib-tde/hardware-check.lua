@@ -77,12 +77,12 @@ end
 -- @usage -- This True if a network card exists with bluetooth support
 -- lib-tde.hardware-check.bluetooth()
 local function bluetooth()
-    local out, returnValue = osExecute("systemctl is-active bluetooth")
+    local _, returnValue = osExecute("systemctl is-active bluetooth")
     -- only check if a bluetooth controller is found if the bluetooth service is active
     -- Otherwise the system will hang
     if returnValue == 0 then
         -- list all present controllers
-        local out2, returnValue2 = osExecute("bluetoothctl list")
+        local _, returnValue2 = osExecute("bluetoothctl list")
         return returnValue2 == 0
     end
     return false
@@ -98,7 +98,7 @@ local function has_package_installed(name)
     if name == "" or name == nil then
         return false
     end
-    local out, returnValue = osExecute("pacman -Q " .. name)
+    local _, returnValue = osExecute("pacman -Q " .. name)
     return returnValue == 0
 end
 
@@ -117,7 +117,7 @@ end
 -- @usage -- This True if a sound card exists
 -- lib-tde.hardware-check.sound()
 local function sound()
-    local out, returnValue = osExecute("pactl info | grep 'Sink'")
+    local _, returnValue = osExecute("pactl info | grep 'Sink'")
     return returnValue == 0
 end
 

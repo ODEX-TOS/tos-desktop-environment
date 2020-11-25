@@ -35,11 +35,11 @@ if not (general["disable_desktop"] == "1") then
 	mousedrag = require("module.mousedrag")
 end
 
-terminal = apps.default.terminal
-web_browser = os.getenv("BROWSER") or apps.default.web_browser
-file_manager = apps.default.file_manager
-text_editor = apps.default.editor
-editor_cmd = terminal .. " -e " .. (os.getenv("EDITOR") or "nano")
+local terminal = apps.default.terminal
+local web_browser = os.getenv("BROWSER") or apps.default.web_browser
+local file_manager = apps.default.file_manager
+local text_editor = apps.default.editor
+local editor_cmd = terminal .. " -e " .. (os.getenv("EDITOR") or "nano")
 
 beautiful.menu_font = "Iosevka Custom Regular 10"
 beautiful.menu_height = 34
@@ -51,7 +51,7 @@ beautiful.menu_border_width = 20
 beautiful.menu_border_color = "#00000075"
 
 -- Create a launcher widget and a main menu
-myawesomemenu = {
+local myawesomemenu = {
 	{
 		i18n.translate("Hotkeys"),
 		function()
@@ -97,7 +97,7 @@ local screenshot = {
 local freedesktop = require("freedesktop")
 local menubar = require("menubar")
 
-mymainmenu =
+local mymainmenu =
 	freedesktop.menu.build(
 	{
 		-- Not actually the size, but the quality of the icon
@@ -124,7 +124,7 @@ mymainmenu =
 		}
 	}
 )
-mylauncher = awful.widget.launcher({image = beautiful.awesome_icon, menu = mymainmenu})
+awful.widget.launcher({image = beautiful.awesome_icon, menu = mymainmenu})
 
 -- Embed mouse bindings
 root.buttons(
@@ -154,32 +154,3 @@ root.buttons(
 		)
 	)
 )
-
--- Used when enabling desktop icons
-
---[[
-for s in screen do
-    freedesktop.desktop.add_icons({
-		screen = s,
-		open_with = 'xdg-open',
-		iconsize = { width = dpi(64), height = dpi(64) },
-		baseicons = {
-			[1] = {
-				label = "This PC",
-				icon  = "computer",
-				onclick = "/"
-			},
-			[2] = {
-				label = "Home",
-				icon  = "user-home",
-				onclick = os.getenv("HOME")
-			},
-			[3] = {
-				label = "Trash",
-				icon  = "user-trash",
-				onclick = "trash://"
-			}
-		},
-	})
-end
---]]

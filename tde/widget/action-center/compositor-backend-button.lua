@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
@@ -69,7 +68,7 @@ end
 -- then it will declared as value of frameCheker
 -- The rest is history
 local frameChecker
-function checkFrame()
+local function checkFrame()
   awful.spawn.easy_async_with_shell(
     cmd,
     function(stdout)
@@ -87,25 +86,25 @@ function checkFrame()
 end
 
 -- Commands that will be executed when I toggle the button
-glxDisable = {
+local glxDisable = {
   'sed -i -e \'s/"glx";/"xrender";/g\' ' .. config.getComptonFile(),
   "picom -b --dbus --experimental-backends --config " .. config.getComptonFile(),
   'notify-send "Xrenderer backend enabled"'
 }
-glxEnable = {
+local glxEnable = {
   'sed -i -e \'s/"xrender";/"glx";/g\' ' .. config.getComptonFile(),
   "picom -b --dbus --experimental-backends --config " .. config.getComptonFile(),
   'notify-send "GLX effect enabled"'
 }
 
-local function run_once(cmd)
-  local findme = cmd
-  local firstspace = cmd:find(" ")
+local function run_once(glxCmd)
+  local findme = glxCmd
+  local firstspace = glxCmd:find(" ")
   if firstspace then
-    findme = cmd:sub(0, firstspace - 1)
+    findme = glxCmd:sub(0, firstspace - 1)
   end
-  print("Running command: " .. string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, cmd))
-  awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, cmd))
+  print("Running command: " .. string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, glxCmd))
+  awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, glxCmd))
 end
 
 local function toggle_compositor()

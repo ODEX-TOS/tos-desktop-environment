@@ -63,7 +63,7 @@ slider_osd:connect_signal(
   end
 )
 
-function UpdateBrOSD()
+local function UpdateBrOSD()
   if (_G.oled) then
     awful.spawn.easy_async_with_shell(
       "brightness -g -F",
@@ -82,6 +82,8 @@ function UpdateBrOSD()
     )
   end
 end
+
+_G.UpdateBrOSD = UpdateBrOSD
 
 local icon =
   wibox.widget {

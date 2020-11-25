@@ -30,7 +30,7 @@
 -- @staticfct lib-tde.datastrucuture.stack
 -- @usage -- This will create a new stack
 -- lib-tde.datastrucuture.stack()
-function genList()
+local function genList()
     local list = {}
 
     local _stack = {}

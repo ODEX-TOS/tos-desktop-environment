@@ -83,7 +83,7 @@ end
 local function load(sfile)
     local ftables, err = loadfile(sfile)
     if err then
-        return _, err
+        return nil, err
     end
     local tables = ftables()
     for idx = 1, #tables do

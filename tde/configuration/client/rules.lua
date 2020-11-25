@@ -28,15 +28,15 @@ local client_buttons = require("configuration.client.buttons")
 local config = tags
 local config_float = floating
 
-function getItem(item)
+local function getItem(item)
   return config[item] or nil
 end
 
-function getItemFloat(item)
+local function getItemFloat(item)
   return config_float[item] or nil
 end
 
-function getApplicationsPerTag(number)
+local function getApplicationsPerTag(number)
   local screen = "screen_" .. number .. "_"
   local iterator = {}
   local i = 0
@@ -50,8 +50,8 @@ function getApplicationsPerTag(number)
   end
 end
 
-function getFloatingWindow()
-  name = "float_"
+local function getFloatingWindow()
+  local name = "float_"
   -- Add default applications that are always floating
   local iterator = {"Xephyr", "Steam"}
   local i = 0

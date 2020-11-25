@@ -113,7 +113,7 @@ gears.timer {
       return
     end
 
-    local interface_name, num, link = interface_res:match("(%w+):%s+(%d+)%s+(%d+)")
+    local interface_name, _, link = interface_res:match("(%w+):%s+(%d+)%s+(%d+)")
 
     interface = interface_name
     filehandle.overwrite("/tmp/interface.txt", interface_name)

@@ -110,9 +110,9 @@ return function()
   local disk_name, disk_text = generate_setting_panel(i18n.translate("Disk capacity"))
 
   signals.connect_disk_space(
-    function(value)
+    function(payload)
       print("Updating disk space")
-      disk_text.text = value
+      disk_text.text = payload
     end
   )
 
@@ -120,8 +120,8 @@ return function()
   os_name_text.text = "TOS Linux"
 
   signals.connect_distro(
-    function(value)
-      os_name_text.text = value
+    function(payload)
+      os_name_text.text = payload
     end
   )
 

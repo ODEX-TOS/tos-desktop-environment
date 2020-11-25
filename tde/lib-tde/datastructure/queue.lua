@@ -32,7 +32,7 @@ local linkedList = require("lib-tde.datastructure.linkedList")
 -- @staticfct lib-tde.datastrucuture.queue
 -- @usage -- This will create a new queue
 -- lib-tde.datastrucuture.queue()
-function genList()
+local function genList()
     local list = {}
 
     local _queue = linkedList()

@@ -31,7 +31,6 @@ local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
-local gears = require("gears")
 local delayed_timer = require("lib-tde.function.delayed-timer")
 local slider =
   wibox.widget {

@@ -35,35 +35,15 @@ local surface = require("gears.surface")
 local shape = require("gears.shape")
 local util = require("awful.util")
 local client = require("awful.client")
-local tag = require("awful.tag")
 local alayout = require("awful.layout")
 local wibox = require("wibox")
-local cairo = require("lgi").cairo
 local beautiful = require("beautiful")
-local color = require("gears.color")
 local col_utils = require("collision.util")
 local grect = require("gears.geometry").rectangle
 local placement = require("awful.placement")
-local mat_color = require("theme.mat-colors")
-local config = require("theme.config")
 
-local arrow_color = mat_color[config["accent"] or "cyan"].hue_500 or mat_color.cyan.hue_800
-local bg_color = mat_color[config["background"] or "purple"].hue_800 or mat_color.purple.hue_800
-
-function color(value)
-  if value == nil then
-    return nil
-  end
-  return "#" .. value
-end
-
-if config["accent_hue_500"] ~= nil then
-  arrow_color = color(config["accent_hue_500"]) or arrow_color
-end
-if config["background_hue_800"] ~= nil then
-  bg_color = color(config["background_hue_800"]) or bg_color
-end
-bg_color = bg_color .. (config["background_transparent"] or "66")
+local arrow_color = beautiful.accent.hue_500
+local bg_color = beautiful.background.hue_500 .. "66"
 
 local module = {}
 local wiboxes, delta = nil, 100
@@ -130,9 +110,13 @@ local function init()
 end
 
 local function emulate_client(screen)
-  return {is_screen = true, screen = screen, geometry = function()
+  return {
+    is_screen = true,
+    screen = screen,
+    geometry = function()
       return capi.screen[screen].workarea
-    end}
+    end
+  }
 end
 
 local function display_wiboxes(cltbl, geomtbl, float, swap, c)
@@ -189,7 +173,7 @@ local function bydirection(dir, c, swap, max)
     c = emulate_client(capi.mouse.screen)
   end
 
-  local float = nil
+  local float
 
   if c.is_screen then
     float = false
@@ -222,15 +206,15 @@ local function bydirection(dir, c, swap, max)
     end
 
     --Add first client at the end to be able to rotate selection
-    for k, c in ipairs(roundr) do
-      local geo = c:geometry()
+    for _, clnt in ipairs(roundr) do
+      local geo = clnt:geometry()
       geomtbl[#geomtbl + 1] = {x = edge, width = geo.width, y = geo.y, height = geo.height}
-      cltbl[#geomtbl] = c
+      cltbl[#geomtbl] = clnt
     end
-    for k, c in ipairs(roundl) do
-      local geo = c:geometry()
+    for _, clnt in ipairs(roundl) do
+      local geo = clnt:geometry()
       geomtbl[#geomtbl + 1] = {x = -geo.width, width = geo.width, y = geo.y, height = geo.height}
-      cltbl[#geomtbl] = c
+      cltbl[#geomtbl] = clnt
     end
 
     -- Add rectangles for empty screens too
@@ -300,14 +284,14 @@ function module.global_bydirection(dir, c, swap, max)
   bydirection(dir, c or capi.client.focus, swap, max)
 end
 
-function module._global_bydirection_key(mod, key, event, direction, is_swap, is_max)
+function module._global_bydirection_key(_, _, _, direction, is_swap, is_max)
   bydirection(direction, capi.client.focus, is_swap, is_max)
   return true
 end
 
-function module.display(mod, key, event, direction, is_swap, is_max)
+function module.display(_, _, _, _, is_swap, _)
   local c = capi.client.focus
-  local cltbl, geomtbl = max and floating_clients() or client.tiled(), {}
+  local cltbl, geomtbl = client.tiled(), {}
   for i, cl in ipairs(cltbl) do
     geomtbl[i] = cl:geometry()
   end
@@ -329,15 +313,18 @@ function module._quit()
   if not wiboxes then
     return
   end
-  for k, v in ipairs({"left", "right", "up", "down", "center"}) do
+  for _, v in ipairs({"left", "right", "up", "down", "center"}) do
     wiboxes[v].visible = false
   end
 end
 
 return setmetatable(
   module,
-  {__call = function(_, ...)
+  {
+    __call = function(_, ...)
+      -- luacheck: ignore 113
       return new(...)
-    end}
+    end
+  }
 )
 -- kate: space-indent on; indent-width 4; replace-tabs on;

@@ -49,7 +49,7 @@ local playButton =
 }
 
 -- 'Public Function' , call it using '_G.checkIfPlaying()'
-function checkIfPlaying()
+local function checkIfPlaying()
   awful.spawn.easy_async_with_shell(
     "playerctl status",
     function(stdout)
@@ -61,6 +61,8 @@ function checkIfPlaying()
     end
   )
 end
+
+_G.checkIfPlaying = checkIfPlaying
 
 local play_button = clickable_container(wibox.container.margin(playButton, dpi(14), dpi(14), dpi(7), dpi(7))) -- 4 is top and bottom margin
 play_button:buttons(

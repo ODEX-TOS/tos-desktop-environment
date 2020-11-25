@@ -81,16 +81,17 @@ slider_osd:connect_signal(
   end
 )
 
-function UpdateVolOSD()
+local function UpdateVolOSD()
   awful.spawn.easy_async_with_shell(
     "bash -c 'amixer -D pulse sget Master'",
     function(stdout)
-      local mute = string.match(stdout, "%[(o%D%D?)%]")
       local volume = string.match(stdout, "(%d?%d?%d)%%")
       slider_osd:set_value(tonumber(volume))
     end
   )
 end
+
+_G.UpdateVolOSD = UpdateVolOSD
 
 local icon =
   wibox.widget {
@@ -108,7 +109,7 @@ button:connect_signal(
     awful.spawn.easy_async_with_shell(
       command,
       function(out)
-        muted = string.find(out, "off")
+        local muted = string.find(out, "off")
         if (muted ~= nil or muted == "off") then
           icon.image = icons.muted
           _G.volumeIcon1.image = icons.muted

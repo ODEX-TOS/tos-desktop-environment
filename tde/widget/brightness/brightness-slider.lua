@@ -65,7 +65,7 @@ end
 
 awesome.connect_signal(
   "widget::brightness",
-  function(value)
+  function(_)
     update()
   end
 )

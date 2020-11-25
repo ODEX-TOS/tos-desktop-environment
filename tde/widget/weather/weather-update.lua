@@ -34,20 +34,10 @@ local theme = require("theme.icons.dark-light")
 
 local PATH_TO_ICONS = "/etc/xdg/awesome/widget/weather/icons/"
 
--- Configuration
-local units = "metric" -- weather_units  metric(°C)/imperial(°F)
-
 -- Don't update too often, because your requests might get blocked for 24 hours
 local update_interval = config.weather_poll
 
 local signals = require("lib-tde.signals")
-
--- Check units
-if units == "metric" then
-    weather_temperature_symbol = "°C"
-elseif units == "imperial" then
-    weather_temperature_symbol = "°F"
-end
 
 --  Weather script using your API KEY
 local weather_details_script = "/bin/bash /etc/xdg/awesome/weather.sh"
@@ -86,7 +76,7 @@ gears.timer {
 awful.widget.watch(
     weather_details_script,
     update_interval,
-    function(widget, stdout)
+    function(_, stdout)
         local icon_code = string.sub(stdout, 1, 3)
         local weather_details = string.sub(stdout, 5)
         weather_details = string.gsub(weather_details, "^%s*(.-)%s*$", "%1")

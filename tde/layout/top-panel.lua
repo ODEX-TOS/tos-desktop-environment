@@ -193,13 +193,13 @@ local function topbar_right_plugin(s)
   return table_widget
 end
 
-local function topbar_center_plugin(s)
+local function topbar_center_plugin(_)
   local table_widget =
     wibox.widget {
     layout = wibox.layout.fixed.horizontal
   }
 
-  for index, value in ipairs(pluginscenter) do
+  for _, value in ipairs(pluginscenter) do
     table_widget:add(value)
   end
   table_widget:add(clock_widget)

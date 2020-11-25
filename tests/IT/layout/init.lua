@@ -90,7 +90,7 @@ end
 
 function Test_IT_notification_working()
     local config = os.getenv("PWD") .. "/tests/IT/layout/rc/notifications.lua"
-    local assertion, match, stdout = run_rc_config_in_xephyr(config, 5)
+    local assertion, match, stdout = run_rc_config_in_xephyr(config, 7)
     assert(assertion)
     print(stdout)
     print(tostring(match))

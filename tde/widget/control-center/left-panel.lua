@@ -30,11 +30,8 @@ local scrollbar = require("widget.scrollbar")
 
 local apps = require("configuration.apps")
 local dpi = require("beautiful").xresources.apply_dpi
-local clickable_container = require("widget.material.clickable-container")
 local mat_list_item = require("widget.material.list-item")
 local mat_icon = require("widget.material.icon")
-
-left_panel_visible = false
 
 -- body gets populated with a scrollbar widget once generated
 local body = {}
@@ -46,6 +43,19 @@ local left_panel_func = function(screen)
   -- the rofi width is defined in configuration/rofi/sidebar/rofi.rasi
   -- under the section window-> width
   local left_panel_width = dpi(450)
+
+  local backdrop =
+    wibox {
+    ontop = true,
+    screen = screen,
+    bg = "#00000000",
+    type = "dock",
+    x = screen.geometry.x,
+    y = screen.geometry.y,
+    width = screen.geometry.width,
+    height = screen.geometry.height
+  }
+
   local left_panel =
     wibox {
     ontop = true,
@@ -58,8 +68,32 @@ local left_panel_func = function(screen)
   }
 
   left_panel.opened = false
+  local grabber
 
-  local grabber =
+  local openleft_panel = function()
+    backdrop.visible = true
+    left_panel.visible = true
+    if grabber then
+      grabber:start()
+    end
+    left_panel:emit_signal("opened")
+  end
+
+  local closeleft_panel = function()
+    left_panel.visible = false
+    backdrop.visible = false
+
+    -- Change to notif mode on close
+    if grabber then
+      grabber:stop()
+    end
+    left_panel:emit_signal("closed")
+
+    -- reset the scrollbar
+    body:reset()
+  end
+
+  grabber =
     awful.keygrabber {
     keybindings = {
       awful.key {
@@ -76,43 +110,11 @@ local left_panel_func = function(screen)
     stop_event = "release"
   }
 
-  local backdrop =
-    wibox {
-    ontop = true,
-    screen = screen,
-    bg = "#00000000",
-    type = "dock",
-    x = screen.geometry.x,
-    y = screen.geometry.y,
-    width = screen.geometry.width,
-    height = screen.geometry.height
-  }
-
   left_panel:struts(
     {
       left = 0
     }
   )
-  openleft_panel = function()
-    left_panel_visible = true
-    backdrop.visible = true
-    left_panel.visible = true
-    grabber:start()
-    left_panel:emit_signal("opened")
-  end
-
-  closeleft_panel = function()
-    left_panel_visible = false
-    left_panel.visible = false
-    backdrop.visible = false
-
-    -- Change to notif mode on close
-    grabber:stop()
-    left_panel:emit_signal("closed")
-
-    -- reset the scrollbar
-    body:reset()
-  end
 
   local action_grabber =
     awful.keygrabber {
@@ -193,27 +195,6 @@ local left_panel_func = function(screen)
         1,
         function()
           left_panel:toggle()
-        end
-      )
-    )
-  )
-
-  local wrap_clear_text =
-    wibox.widget {
-    clear_all_text,
-    margins = dpi(5),
-    widget = wibox.container.margin
-  }
-  local clear_all_button = clickable_container(wibox.container.margin(wrap_clear_text, dpi(0), dpi(0), dpi(3), dpi(3)))
-  clear_all_button:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        nil,
-        function()
-          _G.clear_all()
-          _G.firstime = true
         end
       )
     )

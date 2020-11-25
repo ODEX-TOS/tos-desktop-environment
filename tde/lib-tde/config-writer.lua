@@ -34,7 +34,7 @@ local function update_entry(file, field, value)
     end
     -- our field already exists, we need to alter them
     local lines = file_handle.lines(file)
-    result = ""
+    local result = ""
     for i, line in ipairs(lines) do
         if string.match(line, "^ *" .. field .. ' *= *[\'"].*[\'"]') then
             result = result .. field .. '="' .. value .. '"\n'

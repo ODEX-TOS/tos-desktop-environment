@@ -1,4 +1,3 @@
-
 local naughty = require("naughty")
 
 local user_config = require("widget.screen-recorder.screen-recorder-config")
@@ -8,21 +7,21 @@ local scripts_tbl = {}
 local ffmpeg_pid = nil
 
 -- Get user settings
-user_resolution = user_config.user_resolution or "1920x1080"
-user_offset = user_config.user_offset or "0,0"
-user_audio = user_config.user_audio or false
-user_dir = user_config.user_save_directory or "$HOME/Videos/Recordings/"
-user_mic_lvl = user_config.user_mic_lvl or "10"
-user_fps = user_config.user_fps or "30"
+local user_resolution = user_config.user_resolution or "1920x1080"
+local user_offset = user_config.user_offset or "0,0"
+local user_audio = user_config.user_audio or false
+local user_dir = user_config.user_save_directory or "$HOME/Videos/Recordings/"
+local user_mic_lvl = user_config.user_mic_lvl or "10"
+local user_fps = user_config.user_fps or "30"
 
-update_user_settings = function(res, offset, fps, audio)
+local update_user_settings = function(res, offset, fps, audio)
 	user_resolution = res
 	user_offset = offset
 	user_fps = fps
 	user_audio = audio
 end
 
-check_settings = function()
+local check_settings = function()
 	-- For debugging purpose only
 	-- naughty.notification({
 	-- 	message=user_resolution .. ' ' .. user_offset .. tostring(user_audio)
@@ -40,7 +39,7 @@ local create_save_directory = function()
 
 	awful.spawn.easy_async_with_shell(
 		create_dir_cmd,
-		function(stdout)
+		function(_)
 		end
 	)
 end
@@ -53,7 +52,7 @@ local kill_existing_recording_ffmpeg = function()
 		[[
 		ps x | grep "ffmpeg -video_size" | grep -v grep | awk '{print $1}' | xargs kill
 		]],
-		function(stdout)
+		function(_)
 		end
 	)
 end
@@ -139,7 +138,7 @@ local ffmpeg_start_recording = function(audio, filename)
 						[[ -framerate ]] .. user_fps .. [[ -f x11grab \
 		-i :0.0+]] .. user_offset .. add_audio_str .. [[ $file_name
 		]],
-		function(stdout, stderr)
+		function(_, stderr)
 			if stderr and stderr:match("Invalid argument") then
 				naughty.notification(
 					{
@@ -179,12 +178,12 @@ local create_unique_filename = function(audio)
 	)
 end
 
-start_recording = function(audio_mode)
+local start_recording = function(audio_mode)
 	create_save_directory()
 	create_unique_filename(audio_mode)
 end
 
-stop_recording = function()
+local stop_recording = function()
 	ffmpeg_stop_recording()
 end
 

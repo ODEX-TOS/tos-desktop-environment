@@ -42,25 +42,25 @@ theme.background_transparency = config["background_transparent"] or "66"
 
 -- get all lines from a file, returns an empty
 -- list/table if the file does not exist
-function lines_from(file)
+local function lines_from(file)
   if not file_exists(file) then
     return "/usr/share/backgrounds/tos/default.png"
   end
-  lines = {}
+  local lines = {}
   for line in io.lines(file) do
     lines[#lines + 1] = line
   end
   return lines
 end
 
-function color(value)
+local function color(value)
   if value == nil then
     return nil
   end
   return "#" .. value
 end
 
-function loadtheme(standard, override, prefix)
+local function loadtheme(standard, override, prefix)
   standard["hue_50"] = color(override[prefix .. "hue_50"]) or standard["hue_50"]
   standard["hue_100"] = color(override[prefix .. "hue_100"]) or standard["hue_100"]
   standard["hue_200"] = color(override[prefix .. "hue_200"]) or standard["hue_200"]
@@ -108,11 +108,11 @@ theme.cpu_bar = color(config["cpu_bar"]) or "#f90273"
 theme.ram_bar = color(config["ram_bar"]) or "#017AFC"
 theme.disk_bar = color(config["disk_bar"]) or "#fdc400"
 
-local awesome_overrides = function(theme)
-  theme.dir = "/etc/xdg/awesome/theme"
+local awesome_overrides = function(awesome_theme)
+  awesome_theme.dir = "/etc/xdg/awesome/theme"
   --theme.dir             = os.getenv("HOME") .. "/code/awesome-pro/themes/pro-dark"
 
-  theme.icons = theme.dir .. "/icons/"
+  awesome_theme.icons = awesome_theme.dir .. "/icons/"
   local command = "tos theme list | head -n1 > /tmp/theme.txt"
 
   awful.spawn.easy_async_with_shell(
@@ -120,118 +120,122 @@ local awesome_overrides = function(theme)
     function()
       awful.spawn.easy_async_with_shell(
         "feh --bg-scale $(cat /tmp/theme.txt)",
-        function(out)
+        function(_)
         end
       )
     end
   )
 
   --theme.wallpaper = '~/Pictures/simple.png'
-  theme.wallpaper = lines_from("~/.config/tos/theme")[2]
-  --theme.wallpaper = '#e0e0e0'
-  theme.font = "Roboto medium 10"
-  theme.title_font = "Roboto medium 14"
+  awesome_theme.wallpaper = lines_from("~/.config/tos/theme")[2]
+  --awesome_theme.wallpaper = '#e0e0e0'
+  awesome_theme.font = "Roboto medium 10"
+  awesome_theme.title_font = "Roboto medium 14"
 
-  theme.fg_normal = color(config["foreground_normal"]) or darkLightSwitcher("#ffffffde", "#000000de")
+  awesome_theme.fg_normal = color(config["foreground_normal"]) or darkLightSwitcher("#ffffffde", "#000000de")
 
-  theme.fg_focus = color(config["foreground_focus"]) or darkLightSwitcher("#e4e4e4", "#343434")
-  theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")
-  theme.bat_fg_critical = color(config["foreground_critical"]) or darkLightSwitcher("#232323", "#BEBEBE3")
+  awesome_theme.fg_focus = color(config["foreground_focus"]) or darkLightSwitcher("#e4e4e4", "#343434")
+  awesome_theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")
+  awesome_theme.bat_fg_critical = color(config["foreground_critical"]) or darkLightSwitcher("#232323", "#BEBEBE3")
 
-  theme.bg_normal = theme.background.hue_800
-  theme.bg_focus = color(config["background_focus"]) or "#5a5a5a"
-  theme.bg_urgent = color(config["background_urgent"]) or "#3F3F3F"
-  theme.bg_systray = theme.background.hue_800
+  awesome_theme.bg_normal = awesome_theme.background.hue_800
+  awesome_theme.bg_focus = color(config["background_focus"]) or "#5a5a5a"
+  awesome_theme.bg_urgent = color(config["background_urgent"]) or "#3F3F3F"
+  awesome_theme.bg_systray = awesome_theme.background.hue_800
 
-  theme.bg_modal = color(config["background_modal"]) or "#ffffff20"
-  theme.bg_modal_title = color(config["background_modal_title"]) or "#ffffff30"
-  theme.bg_settings_display_number = "#00000070"
+  awesome_theme.bg_modal = color(config["background_modal"]) or "#ffffff20"
+  awesome_theme.bg_modal_title = color(config["background_modal_title"]) or "#ffffff30"
+  awesome_theme.bg_settings_display_number = "#00000070"
   -- Borders
 
-  theme.border_width = dpi(2)
-  theme.border_normal = theme.background.hue_800
-  theme.border_focus = theme.primary.hue_300
-  theme.border_marked = color(config["border_marked"]) or "#CC9393"
+  awesome_theme.border_width = dpi(2)
+  awesome_theme.border_normal = awesome_theme.background.hue_800
+  awesome_theme.border_focus = awesome_theme.primary.hue_300
+  awesome_theme.border_marked = color(config["border_marked"]) or "#CC9393"
 
   -- Notification
-  theme.transparent = "#00000000"
-  theme.notification_position = "top_right"
-  theme.notification_bg = theme.transparent
-  theme.notification_margin = dpi(5)
-  theme.notification_border_width = dpi(0)
-  theme.notification_border_color = theme.transparent
-  theme.notification_spacing = dpi(0)
-  theme.notification_icon_resize_strategy = "center"
-  theme.notification_icon_size = dpi(32)
+  awesome_theme.transparent = "#00000000"
+  awesome_theme.notification_position = "top_right"
+  awesome_theme.notification_bg = awesome_theme.transparent
+  awesome_theme.notification_margin = dpi(5)
+  awesome_theme.notification_border_width = dpi(0)
+  awesome_theme.notification_border_color = awesome_theme.transparent
+  awesome_theme.notification_spacing = dpi(0)
+  awesome_theme.notification_icon_resize_strategy = "center"
+  awesome_theme.notification_icon_size = dpi(32)
 
   -- UI Groups
 
-  theme.groups_title_bg = theme.bg_modal_title
-  theme.groups_bg = theme.bg_modal
-  theme.groups_radius = dpi(9)
+  awesome_theme.groups_title_bg = awesome_theme.bg_modal_title
+  awesome_theme.groups_bg = awesome_theme.bg_modal
+  awesome_theme.groups_radius = dpi(9)
 
   -- Menu
 
-  theme.menu_height = dpi(16)
-  theme.menu_width = dpi(160)
+  awesome_theme.menu_height = dpi(16)
+  awesome_theme.menu_width = dpi(160)
 
   -- Tooltips
-  theme.tooltip_bg = (color(config["tooltip_bg"]) or "#232323") .. "99"
-  --theme.tooltip_border_color = '#232323'
-  theme.tooltip_border_width = 0
-  theme.tooltip_shape = function(cr, w, h)
+  awesome_theme.tooltip_bg = (color(config["tooltip_bg"]) or "#232323") .. "99"
+  --awesome_theme.tooltip_border_color = '#232323'
+  awesome_theme.tooltip_border_width = 0
+  awesome_theme.tooltip_shape = function(cr, w, h)
     gears.shape.rounded_rect(cr, w, h, dpi(6))
   end
 
   -- Layout
 
-  theme.layout_max = darklight(theme.icons .. "layouts/arrow-expand-all.png")
-  theme.layout_tile = darklight(theme.icons .. "layouts/view-quilt.png")
-  theme.layout_dwindle = darklight(theme.icons .. "layouts/dwindle.png")
-  theme.layout_floating = darklight(theme.icons .. "layouts/floating.png")
-  theme.layout_fairv = darklight(theme.icons .. "layouts/fair.png")
-  theme.layout_magnifier = darklight(theme.icons .. "layouts/magnifier.png")
+  awesome_theme.layout_max = darklight(awesome_theme.icons .. "layouts/arrow-expand-all.png")
+  awesome_theme.layout_tile = darklight(awesome_theme.icons .. "layouts/view-quilt.png")
+  awesome_theme.layout_dwindle = darklight(awesome_theme.icons .. "layouts/dwindle.png")
+  awesome_theme.layout_floating = darklight(awesome_theme.icons .. "layouts/floating.png")
+  awesome_theme.layout_fairv = darklight(awesome_theme.icons .. "layouts/fair.png")
+  awesome_theme.layout_magnifier = darklight(awesome_theme.icons .. "layouts/magnifier.png")
 
   -- Taglist
   taglist_occupied = color(config["taglist_occupied"]) or "#ffffff"
-  theme.taglist_bg_empty = theme.background.hue_800 .. "99"
-  theme.taglist_bg_occupied =
+  awesome_theme.taglist_bg_empty = awesome_theme.background.hue_800 .. "99"
+  awesome_theme.taglist_bg_occupied =
     "linear:0," ..
     dpi(48) ..
       ":0,0:0," ..
         taglist_occupied ..
-          ":0.11," .. taglist_occupied .. ":0.11," .. theme.background.hue_800 .. "99" .. theme.background.hue_800
-  theme.taglist_bg_urgent =
-    "linear:0," ..
-    dpi(48) ..
-      ":0,0:0," ..
-        theme.accent.hue_500 ..
-          ":0.11," .. theme.accent.hue_500 .. ":0.11," .. theme.background.hue_800 .. ":1," .. theme.background.hue_800
-  theme.taglist_bg_focus =
-    "linear:0," ..
-    dpi(48) ..
-      ":0,0:0," ..
-        theme.primary.hue_500 ..
           ":0.11," ..
-            theme.primary.hue_500 ..
-              ":0.11," .. theme.background.hue_800 .. ":1," --[[':1,']] .. theme.background.hue_800
+            taglist_occupied .. ":0.11," .. awesome_theme.background.hue_800 .. "99" .. awesome_theme.background.hue_800
+  awesome_theme.taglist_bg_urgent =
+    "linear:0," ..
+    dpi(48) ..
+      ":0,0:0," ..
+        awesome_theme.accent.hue_500 ..
+          ":0.11," ..
+            awesome_theme.accent.hue_500 ..
+              ":0.11," .. awesome_theme.background.hue_800 .. ":1," .. awesome_theme.background.hue_800
+  awesome_theme.taglist_bg_focus =
+    "linear:0," ..
+    dpi(48) ..
+      ":0,0:0," ..
+        awesome_theme.primary.hue_500 ..
+          ":0.11," ..
+            awesome_theme.primary.hue_500 ..
+              ":0.11," .. awesome_theme.background.hue_800 .. ":1," --[[':1,']] .. awesome_theme.background.hue_800
 
   -- Tasklist
 
-  theme.tasklist_font = "Roboto Regular 10"
-  theme.tasklist_bg_normal = theme.background.hue_800 .. "99"
-  theme.tasklist_bg_focus =
+  awesome_theme.tasklist_font = "Roboto Regular 10"
+  awesome_theme.tasklist_bg_normal = awesome_theme.background.hue_800 .. "99"
+  awesome_theme.tasklist_bg_focus =
     "linear:0,0:0," ..
     dpi(48) ..
       ":0," ..
-        theme.background.hue_800 ..
-          ":0.95," .. theme.background.hue_800 .. ":0.95," .. theme.fg_normal .. ":1," .. theme.fg_normal
-  theme.tasklist_bg_urgent = theme.primary.hue_800
-  theme.tasklist_fg_focus = "#DDDDDD"
-  theme.tasklist_fg_urgent = theme.fg_normal
-  theme.tasklist_fg_normal = "#AAAAAA"
+        awesome_theme.background.hue_800 ..
+          ":0.95," ..
+            awesome_theme.background.hue_800 .. ":0.95," .. awesome_theme.fg_normal .. ":1," .. awesome_theme.fg_normal
+  awesome_theme.tasklist_bg_urgent = awesome_theme.primary.hue_800
+  awesome_theme.tasklist_fg_focus = "#DDDDDD"
+  awesome_theme.tasklist_fg_urgent = awesome_theme.fg_normal
+  awesome_theme.tasklist_fg_normal = "#AAAAAA"
 
-  theme.icon_theme = "Papirus-Dark"
+  awesome_theme.icon_theme = "Papirus-Dark"
 
   local out =
     io.popen(
@@ -239,12 +243,14 @@ local awesome_overrides = function(theme)
       [[then grep "gtk-icon-theme-name" ~/.config/gtk-3.0/settings.ini | awk -F= '{printf $2}'; fi]]
   ):read("*all")
   if out ~= nil then
-    theme.icon_theme = out
+    awesome_theme.icon_theme = out
   end
   --Client
-  theme.border_width = dpi(0)
-  theme.border_focus = theme.primary.hue_500
-  theme.border_normal = theme.background.hue_800
+  awesome_theme.border_width = dpi(0)
+  awesome_theme.border_focus = awesome_theme.primary.hue_500
+  awesome_theme.border_normal = awesome_theme.primary.hue_800
+  awesome_theme.border_color = awesome_theme.primary.hue_500
+  awesome_theme.snap_bg = awesome_theme.primary.hue_700
 end
 return {
   theme = theme,

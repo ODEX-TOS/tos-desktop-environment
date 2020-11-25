@@ -30,6 +30,8 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local vol_osd = require("widget.brightness.brightness-slider-osd")
 
+local brightnessOverlay
+
 awful.screen.connect_for_each_screen(
   function(s)
     -- Create the box
@@ -78,7 +80,7 @@ local hideOSD =
   end
 }
 
-function toggleBriOSD(bool)
+local function toggleBriOSD(bool)
   -- don't perform the toggle off if it is already off
   if ((not bool) and (not brightnessOverlay.visible)) then
     return
@@ -86,12 +88,13 @@ function toggleBriOSD(bool)
   brightnessOverlay.visible = bool
   if bool then
     hideOSD:again()
-    if toggleVolOSD ~= nil then
+    if _G.toggleVolOSD ~= nil then
       _G.toggleVolOSD(false)
     end
   else
     hideOSD:stop()
   end
 end
+_G.toggleBriOSD = toggleBriOSD
 
 return brightnessOverlay

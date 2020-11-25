@@ -35,8 +35,11 @@ local apps = require("configuration.apps")
 local theme = require("theme.icons.dark-light")
 local dpi = require("beautiful").xresources.apply_dpi
 local filehandle = require("lib-tde.file")
+local config = require("config")
 
 local bShowingWidget = false
+
+local musicPlayer
 
 screen.connect_signal(
   "request::desktop_decoration",
@@ -74,7 +77,7 @@ local grabber =
   stop_event = "release"
 }
 
-function togglePlayer()
+local function togglePlayer()
   musicPlayer.visible = not musicPlayer.visible
   if musicPlayer.visible then
     grabber:start()
@@ -122,7 +125,7 @@ local cover =
   layout = wibox.layout.fixed.vertical
 }
 
-function checkCover()
+local function checkCover()
   if filehandle.exists("/tmp/cover.jpg") then
     cover.icon:set_image(gears.surface.load_uncached("/tmp/cover.jpg"))
   else
@@ -130,14 +133,18 @@ function checkCover()
   end
 end
 
+_G.checkCover = checkCover
+
 -- Update info
-function updateInfo()
+local function updateInfo()
   _G.getTitle()
   _G.getArtist()
   apps.bins.coverUpdate()
   print("Song changed")
   awesome.emit_signal("song_changed")
 end
+
+_G.updateInfo = updateInfo
 
 musicPlayer:setup {
   expand = "none",
@@ -175,15 +182,14 @@ musicPlayer:connect_signal(
 
 -- Check every X seconds if song status is
 -- Changed outside this widget
-local updateWidget =
-  gears.timer {
+gears.timer {
   timeout = config.player_update,
   autostart = true,
   callback = function()
     -- only use cpu cycles when the widget is drawn
     if bShowingWidget then
       _G.checkIfPlaying()
-      updateInfo()
+      _G.updateInfo()
     end
   end
 }

@@ -30,7 +30,7 @@ local topBarDraw = general["top_bar_draw"] or "all"
 local tagBarDraw = general["tag_bar_draw"] or "main"
 local anchorTag = general["tag_bar_anchor"] or "bottom"
 
-function anchor(s)
+local function anchor(s)
   if anchorTag == "bottom" then
     -- Create the bottom bar
     s.bottom_panel = bottom_panel(s)
@@ -64,7 +64,7 @@ awful.screen.connect_for_each_screen(
 )
 
 -- Hide bars when app go fullscreen
-function updateBarsVisibility()
+local function updateBarsVisibility()
   for s in screen do
     if s.selected_tag then
       local fullscreen = s.selected_tag.fullscreenMode
@@ -77,7 +77,7 @@ end
 
 _G.tag.connect_signal(
   "property::selected",
-  function(t)
+  function(_)
     updateBarsVisibility()
   end
 )

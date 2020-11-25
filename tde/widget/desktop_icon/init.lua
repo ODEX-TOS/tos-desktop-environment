@@ -149,7 +149,7 @@ local function create_icon(icon, name, num, callback, drag)
     return box
 end
 
-local function desktop_file(file, name, index, drag)
+local function desktop_file(file, _, index, drag)
     local name = "Desktop file"
     local icon = "application-x-executable"
     local lines = filehandle.lines(file)

@@ -49,7 +49,7 @@ local genWidget = function(widgets)
   }
 end
 
-social_header =
+local social_header =
   wibox.widget {
   text = i18n.translate("Social Media"),
   font = "SFNS Display Regular 14",
@@ -79,7 +79,7 @@ reddit_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open https://reddit.com",
-          function(stderr)
+          function(_)
           end,
           1
         )
@@ -109,7 +109,7 @@ facebook_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open https://facebook.com",
-          function(stderr)
+          function(_)
           end,
           1
         )
@@ -138,7 +138,7 @@ twitter_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open https://twitter.com",
-          function(stderr)
+          function(_)
           end,
           1
         )
@@ -167,7 +167,7 @@ instagram_button:buttons(
       function()
         awful.spawn.easy_async_with_shell(
           "xdg-open https://instagram.com",
-          function(stderr)
+          function(_)
           end,
           1
         )

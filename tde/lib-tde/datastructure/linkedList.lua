@@ -55,7 +55,7 @@
 -- @staticfct lib-tde.datastrucuture.linkedList
 -- @usage -- This will create a new empty linked list
 -- lib-tde.datastrucuture.linkedList()
-function genList()
+local function genList()
     local list = {}
 
     --- The current pointer in the linked list

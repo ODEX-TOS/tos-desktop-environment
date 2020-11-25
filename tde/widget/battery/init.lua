@@ -139,7 +139,7 @@ local return_button = function()
 	end
 
 	local update_battery = function(status)
-		local status = status:gsub("%\n", "")
+		status = status:gsub("%\n", "")
 		local percentage = file.string("/sys/class/power_supply/BAT0/capacity")
 		-- some hardware counts from BAT1
 		if percentage == "" or percentage == nil then

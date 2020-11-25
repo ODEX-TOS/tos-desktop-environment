@@ -39,6 +39,9 @@ local PATH_TO_ICONS = "/etc/xdg/awesome/widget/notification-center/icons/"
 local notif_layout = wibox.layout.fixed.vertical(reverse)
 notif_layout.spacing = dpi(5)
 
+-- useful variable to check the notification's content
+_G.notification_firstime = true
+
 local notif_icon = function(ico_image)
   local noti_icon =
     wibox.widget {
@@ -82,7 +85,7 @@ local empty_message = i18n.translate("There's nothing in here... Come back later
 -- The function that generates notifications in right-panel
 local function notif_generate(title, message, icon, noti)
   -- naughty.list.actions
-  notif_actions =
+  local notif_actions =
     wibox.widget {
     notification = noti,
     base_layout = wibox.widget {
@@ -184,11 +187,11 @@ local function notif_generate(title, message, icon, noti)
   -- Delete notification if naughty.list.actions was pressed
   notif_actions:connect_signal(
     "button::press",
-    function(_, _, _, button)
+    function(_, _, _, _)
       -- Dont let the user make the notification center null
       if #notif_layout.children == 1 then
         notif_layout:reset(notif_layout)
-        firstime = true
+        _G.notification_firstime = true
         notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
       else
         notif_layout:remove_widgets(notif_template, true)
@@ -199,11 +202,11 @@ local function notif_generate(title, message, icon, noti)
   -- Delete notification if the generated notif was pressed
   notif_template:connect_signal(
     "button::press",
-    function(_, _, _, button)
+    function(_, _, _, _)
       -- Dont let the user make the notification center null
       if #notif_layout.children == 1 then
         notif_layout:reset(notif_layout)
-        firstime = true
+        _G.notification_firstime = true
         notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
       else
         notif_layout:remove_widgets(notif_template, true)
@@ -224,23 +227,22 @@ end
 add_empty()
 
 -- Clear all. Will be called in right-panel
-function clear_all()
+local function clear_all()
   -- Clear all notification
   notif_layout:reset(notif_layout)
   add_empty()
 end
 
--- useful variable to check the notification's content
-firstime = true
+_G.notification_clear_all = clear_all
 
 -- Check signal
 naughty.connect_signal(
   "request::display",
   function(n)
-    if firstime then
+    if _G.notification_firstime then
       -- Delete empty message if the 1st notif is generated
       notif_layout:remove(1)
-      firstime = false
+      _G.notification_firstime = false
     end
 
     -- Check and set icon to the notification message in panel

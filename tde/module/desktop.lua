@@ -72,14 +72,14 @@ if filehandle.dir_exists(desktopLocation) then
         local pos = find_pos_by_name(filehandle.basename(file))
         local x = pos.x
         local y = pos.y
-        local pos = index + offset
+        local position = index + offset
         if x and y then
-            pos = nil
+            position = nil
         end
 
         desktop_icon.from_file(
             file,
-            pos,
+            position,
             x,
             y,
             function(name)
@@ -90,7 +90,7 @@ if filehandle.dir_exists(desktopLocation) then
 end
 
 local handle = inotify.init({blocking = false})
-local wd = handle:addwatch(desktopLocation .. "/", inotify.IN_CREATE, inotify.IN_DELETE)
+handle:addwatch(desktopLocation .. "/", inotify.IN_CREATE, inotify.IN_DELETE)
 
 gears.timer {
     timeout = 1,
