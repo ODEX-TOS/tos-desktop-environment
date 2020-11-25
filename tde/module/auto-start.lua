@@ -27,7 +27,22 @@
 
 local apps = require("configuration.apps")
 local run_once = require("lib-tde.function.application_runner")
+local delayed_timer = require("lib-tde.function.delayed-timer")
 
 for _, app in ipairs(apps.run_on_start_up) do
   run_once(app)
+end
+
+-- TODO: remove this once the picom crash bug is fixed
+if not (general["weak_hardware"] == "1") then
+  delayed_timer(
+    2,
+    function()
+      -- picom crashed, we have to restart it again
+      if not awesome.composite_manager_running then
+        awful.spawn(apps.run_on_start_up[1])
+      end
+    end,
+    5
+  )
 end
