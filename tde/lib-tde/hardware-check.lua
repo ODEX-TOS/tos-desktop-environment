@@ -121,6 +121,21 @@ local function sound()
     return returnValue == 0
 end
 
+--- Returns the ip address of the default route
+-- @return string ipv4 address as a string
+-- @staticfct getDefaultIP
+-- @usage -- For example returns 192.168.1.12
+-- lib-tde.hardware-check.getDefaultIP()
+local function getDefaultIP()
+    -- we create a socket to 0.0.0.1 as that ip is guaranteed to be in the default gateway
+    -- however we never send a packet as that would leek user data
+    -- and would't work in private networks
+    local socket = require("socket").udp()
+    socket:setpeername("0.0.0.1", 81)
+    local ip = socket:getsockname() or "0.0.0.0"
+    return ip
+end
+
 return {
     hasBattery = battery,
     hasWifi = wifi,
@@ -128,5 +143,6 @@ return {
     hasFFMPEG = ffmpeg,
     hasSound = sound,
     has_package_installed = has_package_installed,
+    getDefaultIP = getDefaultIP,
     execute = osExecute
 }

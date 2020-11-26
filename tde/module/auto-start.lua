@@ -34,7 +34,7 @@ for _, app in ipairs(apps.run_on_start_up) do
 end
 
 -- TODO: remove this once the picom crash bug is fixed
-if not (general["weak_hardware"] == "1") then
+if not (general["weak_hardware"] == "1") and os.getenv("TDE_ENV") == "production" then
   delayed_timer(
     2,
     function()

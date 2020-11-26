@@ -12,3 +12,10 @@ function test_hardware_check_packages()
     assert(not hardware.has_package_installed(nil))
     assert(not hardware.has_package_installed(123))
 end
+
+function test_hardware_check_ip_valid_return()
+    local split = require("tde.lib-tde.function.common").split
+    local ip = hardware.getDefaultIP()
+    assert(type(ip) == "string")
+    assert(#split(ip, ".") == 4)
+end

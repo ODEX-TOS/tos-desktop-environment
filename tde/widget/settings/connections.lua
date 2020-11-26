@@ -207,19 +207,23 @@ local function make_connection(t, n)
   conx.shape = rounded()
 
   local i
-  if t == "wireless" then
+  local wireless = i18n.translate("wireless")
+  local bluetooth = i18n.translate("bluetooth")
+  local wired = i18n.translate("wired")
+
+  if t == wireless then
     i = icons.wifi
-  elseif t == "bluetooth" then
+  elseif t == bluetooth then
     i = icons.bluetooth
-  elseif t == "wired" then
+  elseif t == wired then
     i = icons.lan
   else
     i = ""
   end
-  if n == "disconnected" and t == "wireless" then
+  if n == "disconnected" and t == wireless then
     i = icons.wifi
   end
-  if n == "disconnected" and t == "wired" then
+  if n == "disconnected" and t == wired then
     i = icons.lan
   end
   local icon =
@@ -245,6 +249,13 @@ local function make_connection(t, n)
     font = beautiful.title_font
   }
 
+  local address =
+    wibox.widget {
+    widget = wibox.widget.textbox,
+    text = ip,
+    font = beautiful.title_font
+  }
+
   conx:setup {
     layout = wibox.layout.align.horizontal,
     {
@@ -252,13 +263,14 @@ local function make_connection(t, n)
       margins = m,
       wibox.container.margin(icon, dpi(10), dpi(10), dpi(10), dpi(10))
     },
-    name,
+    address,
+    wibox.container.margin(name, 0, m),
     {layout = wibox.container.margin, right = m, type}
   }
 
   container.widget = conx
 
-  return {widget = container, icon = icon, name = name}
+  return {widget = container, icon = icon, name = name, ip = address}
 end
 
 return function()
@@ -290,8 +302,8 @@ return function()
 
   local connections = wibox.layout.fixed.vertical()
 
-  local wireless = make_connection(i18n.translate("wireless"))
-  local wired = make_connection(i18n.translate("wired"))
+  local wireless = make_connection("wireless")
+  local wired = make_connection("wired")
   local network_settings =
     wibox.container.margin(
     wibox.widget {
@@ -345,6 +357,7 @@ return function()
       local interface = file.string("/tmp/interface.txt")
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
+      wireless.ip.text = hardware.getDefaultIP()
       awful.spawn.easy_async_with_shell(
         'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
         function(out)
@@ -365,6 +378,7 @@ return function()
       -- TODO: set disconnected wifi icon
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = i18n.translate("Disconnected")
+      wireless.ip.text = ""
     end
 
     awful.spawn.easy_async_with_shell(
@@ -373,10 +387,12 @@ return function()
         if (c == 0) then
           wired.icon.text = icons.lan
           wired.name.text = i18n.translate("connected")
+          wired.ip.text = hardware.getDefaultIP()
         else
           -- TODO: set disconnected lan icon
           wired.icon.text = icons.lanx
           wired.name.text = i18n.translate("Disconnected")
+          wired.ip.text = ""
         end
       end
     )

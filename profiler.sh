@@ -1,3 +1,4 @@
+#!/bin/bash
 LUA="lua5.3"
 
 export LUA_PATH="$PWD/tde/?/?.lua;$PWD/tde/?.lua;$PWD/tde/?/init.lua;"

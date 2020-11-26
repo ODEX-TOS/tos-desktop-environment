@@ -178,7 +178,7 @@ return function()
         layout = wibox.container.place,
         valign = "top",
         halign = "center",
-        container
+        wibox.container.margin(container, 0, 0, 0, m * 3)
       }
     }
   }
