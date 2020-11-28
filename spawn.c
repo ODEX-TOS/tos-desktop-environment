@@ -488,10 +488,10 @@ luaA_spawn(lua_State *L)
     if(use_sn)
     {
         context = sn_launcher_context_new(globalconf.sndisplay, globalconf.default_screen);
-        sn_launcher_context_set_name(context, "awesome");
-        sn_launcher_context_set_description(context, "awesome spawn");
+        sn_launcher_context_set_name(context, "TDE");
+        sn_launcher_context_set_description(context, "TDE spawn");
         sn_launcher_context_set_binary_name(context, argv[0]);
-        sn_launcher_context_initiate(context, "awesome", argv[0], globalconf.timestamp);
+        sn_launcher_context_initiate(context, "TDE", argv[0], globalconf.timestamp);
 
         /* app will have AWESOME_SPAWN_TIMEOUT seconds to complete,
          * or the timeout function will terminate the launch sequence anyway */

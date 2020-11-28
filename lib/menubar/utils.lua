@@ -32,16 +32,16 @@ local utils = {}
 -- Options section
 
 --- Terminal which applications that need terminal would open in.
--- @param[opt="xterm"] string
-utils.terminal = 'xterm'
+-- @param[opt="st"] string
+utils.terminal = "st"
 
 --- The default icon for applications that don't provide any icon in
 -- their .desktop files.
 local default_icon = nil
 
 --- Name of the WM for the OnlyShowIn entry in the .desktop file.
--- @param[opt="awesome"] string
-utils.wm_name = "awesome"
+-- @param[opt="TDE"] string
+utils.wm_name = "TDE"
 
 -- Maps keys in desktop entries to suitable getter function.
 -- The order of entries is as in the spec.
@@ -87,7 +87,7 @@ do
         Keywords = get_localestrings,
         StartupNotify = get_boolean,
         StartupWMClass = get_string,
-        URL = get_string,
+        URL = get_string
     }
 end
 
@@ -99,9 +99,14 @@ do
     -- check, we check for this problem: The following coroutine yields true on
     -- success (so resume() returns true, true). On failure, pcall returns
     -- false and a message, so resume() returns true, false, message.
-    local _, has_yieldable_pcall = coroutine.resume(coroutine.create(function()
-        return pcall(coroutine.yield, true)
-    end))
+    local _, has_yieldable_pcall =
+        coroutine.resume(
+        coroutine.create(
+            function()
+                return pcall(coroutine.yield, true)
+            end
+        )
+    )
     if has_yieldable_pcall then
         do_protected_call = protected_call.call
         call_callback = function(callback, ...)
@@ -116,40 +121,44 @@ do
 end
 
 local all_icon_sizes = {
-    'scalable',
-    '128x128',
-    '96x96',
-    '72x72',
-    '64x64',
-    '48x48',
-    '36x36',
-    '32x32',
-    '24x24',
-    '22x22',
-    '16x16',
-    '16',
-    '22',
-    '24',
-    '32',
-    '48',
-    '64',
-    '72',
-    '96',
-    '128'
+    "scalable",
+    "128x128",
+    "96x96",
+    "72x72",
+    "64x64",
+    "48x48",
+    "36x36",
+    "32x32",
+    "24x24",
+    "22x22",
+    "16x16",
+    "16",
+    "22",
+    "24",
+    "32",
+    "48",
+    "64",
+    "72",
+    "96",
+    "128"
 }
 
 --- List of supported icon exts.
-local supported_icon_file_exts = { png = 1, xpm = 2, svg = 3 }
+local supported_icon_file_exts = {png = 1, xpm = 2, svg = 3}
 
 local icon_lookup_path = nil
 
 --- Get a list of icon lookup paths.
 -- @treturn table A list of directories, without trailing slash.
 local function get_icon_lookup_path()
-    if icon_lookup_path then return icon_lookup_path end
+    if icon_lookup_path then
+        return icon_lookup_path
+    end
 
     local function ensure_args(t, paths)
-        if type(paths) == 'string' then paths = { paths } end
+        if type(paths) == "string" then
+            paths = {paths}
+        end
         return t or {}, paths
     end
 
@@ -166,7 +175,7 @@ local function get_icon_lookup_path()
 
     local function add_with_dir(t, paths, dir)
         t, paths = ensure_args(t, paths)
-        dir = { nil, dir }
+        dir = {nil, dir}
 
         for _, path in ipairs(paths) do
             dir[1] = path
@@ -176,60 +185,127 @@ local function get_icon_lookup_path()
     end
 
     icon_lookup_path = {}
-    local theme_priority = { 'hicolor' }
-    if theme.icon_theme then table.insert(theme_priority, 1, theme.icon_theme) end
+    local theme_priority = {"hicolor"}
+    if theme.icon_theme then
+        table.insert(theme_priority, 1, theme.icon_theme)
+    end
 
-    local paths = add_with_dir({}, glib.get_home_dir(), '.icons')
-    add_with_dir(paths, {
-        glib.get_user_data_dir(),           -- $XDG_DATA_HOME, typically $HOME/.local/share
-        unpack(glib.get_system_data_dirs()) -- $XDG_DATA_DIRS, typically /usr/{,local/}share
-    }, 'icons')
-    add_with_dir(paths, glib.get_system_data_dirs(), 'pixmaps')
+    local paths = add_with_dir({}, glib.get_home_dir(), ".icons")
+    add_with_dir(
+        paths,
+        {
+            glib.get_user_data_dir(), -- $XDG_DATA_HOME, typically $HOME/.local/share
+            unpack(glib.get_system_data_dirs()) -- $XDG_DATA_DIRS, typically /usr/{,local/}share
+        },
+        "icons"
+    )
+    add_with_dir(paths, glib.get_system_data_dirs(), "pixmaps")
 
     local icon_theme_paths = {}
     for _, theme_dir in ipairs(theme_priority) do
-        add_if_readable(icon_theme_paths,
-                        add_with_dir({}, paths, theme_dir))
+        add_if_readable(icon_theme_paths, add_with_dir({}, paths, theme_dir))
     end
 
     local app_in_theme_paths = {}
     for _, icon_theme_directory in ipairs(icon_theme_paths) do
         for _, size in ipairs(all_icon_sizes) do
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'apps' }))
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'categories' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "apps"
+                    }
+                )
+            )
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "categories"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'actions' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "actions"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'devices' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "devices"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'emblems' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "emblems"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'emotes' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "emotes"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'mimetypes' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "mimetypes"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'places' }))
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "places"
+                    }
+                )
+            )
 
-            table.insert(app_in_theme_paths,
-                         glib.build_filenamev({ icon_theme_directory,
-                                                size, 'status' }))
-
+            table.insert(
+                app_in_theme_paths,
+                glib.build_filenamev(
+                    {
+                        icon_theme_directory,
+                        size,
+                        "status"
+                    }
+                )
+            )
         end
     end
     add_if_readable(icon_lookup_path, app_in_theme_paths)
@@ -241,7 +317,9 @@ end
 -- @param s string to trim
 -- @staticfct menubar.utils.rtrim
 function utils.rtrim(s)
-    if not s then return end
+    if not s then
+        return
+    end
     if string.byte(s, #s) == 13 then
         return string.sub(s, 1, #s - 1)
     end
@@ -258,7 +336,7 @@ function utils.lookup_icon_uncached(icon_file)
     end
 
     local icon_file_ext = icon_file:match(".+%.(.*)$")
-    if icon_file:sub(1, 1) == '/' and supported_icon_file_exts[icon_file_ext] then
+    if icon_file:sub(1, 1) == "/" and supported_icon_file_exts[icon_file_ext] then
         -- If the path to the icon is absolute do not perform a lookup [nil if unsupported ext or missing]
         return gfs.file_readable(icon_file) and icon_file or nil
     else
@@ -300,7 +378,7 @@ end
 -- @return A table with file entries.
 -- @staticfct menubar.utils.parse_desktop_file
 function utils.parse_desktop_file(file)
-    local program = { show = true, file = file }
+    local program = {show = true, file = file}
 
     -- Parse the .desktop file.
     -- We are interested in [Desktop Entry] group only.
@@ -316,13 +394,15 @@ function utils.parse_desktop_file(file)
 
     for _, key in pairs(keyfile:get_keys("Desktop Entry")) do
         local getter = keys_getters[key] or function(kf, k)
-            return kf:get_string("Desktop Entry", k)
-        end
+                return kf:get_string("Desktop Entry", k)
+            end
         program[key] = getter(keyfile, key)
     end
 
     -- In case the (required) 'Name' entry was not found
-    if not program.Name or program.Name == '' then return nil end
+    if not program.Name or program.Name == "" then
+        return nil
+    end
 
     -- Don't show program if NoDisplay attribute is true
     if program.NoDisplay then
@@ -371,18 +451,18 @@ function utils.parse_desktop_file(file)
         -- Substitute Exec special codes as specified in
         -- http://standards.freedesktop.org/desktop-entry-spec/1.1/ar01s06.html
         if program.Name == nil then
-            program.Name = '['.. file:match("([^/]+)%.desktop$") ..']'
+            program.Name = "[" .. file:match("([^/]+)%.desktop$") .. "]"
         end
-        local cmdline = program.Exec:gsub('%%c', program.Name)
-        cmdline = cmdline:gsub('%%[fuFU]', '')
-        cmdline = cmdline:gsub('%%k', program.file)
+        local cmdline = program.Exec:gsub("%%c", program.Name)
+        cmdline = cmdline:gsub("%%[fuFU]", "")
+        cmdline = cmdline:gsub("%%k", program.file)
         if program.icon_path then
-            cmdline = cmdline:gsub('%%i', '--icon ' .. program.icon_path)
+            cmdline = cmdline:gsub("%%i", "--icon " .. program.icon_path)
         else
-            cmdline = cmdline:gsub('%%i', '')
+            cmdline = cmdline:gsub("%%i", "")
         end
         if program.Terminal == true then
-            cmdline = utils.terminal .. ' -e ' .. cmdline
+            cmdline = utils.terminal .. " -e " .. cmdline
         end
         program.cmdline = cmdline
     end
@@ -397,7 +477,6 @@ end
 -- @tparam table callback.programs Paths of found .desktop files.
 -- @staticfct menubar.utils.parse_dir
 function utils.parse_dir(dir_path, callback)
-
     local function get_readable_path(file)
         return file:get_path() or file:get_uri()
     end
@@ -420,7 +499,7 @@ function utils.parse_dir(dir_path, callback)
             for _, info in ipairs(list) do
                 local file_type = info:get_file_type()
                 local file_child = enum:get_child(info)
-                if file_type == 'REGULAR' then
+                if file_type == "REGULAR" then
                     local path = file_child:get_path()
                     if path then
                         local success, program = pcall(utils.parse_desktop_file, path)
@@ -430,7 +509,7 @@ function utils.parse_dir(dir_path, callback)
                             table.insert(programs, program)
                         end
                     end
-                elseif file_type == 'DIRECTORY' then
+                elseif file_type == "DIRECTORY" then
                     parser(file_child, programs)
                 end
             end
@@ -441,15 +520,17 @@ function utils.parse_dir(dir_path, callback)
         enum:async_close()
     end
 
-    gio.Async.start(do_protected_call)(function()
-        local result = {}
-        parser(gio.File.new_for_path(dir_path), result)
-        call_callback(callback, result)
-    end)
+    gio.Async.start(do_protected_call)(
+        function()
+            local result = {}
+            parser(gio.File.new_for_path(dir_path), result)
+            call_callback(callback, result)
+        end
+    )
 end
 
 function utils.compute_textbox_width(textbox, s)
-    gdebug.deprecate("Use 'width, _ = textbox:get_preferred_size(s)' directly.", {deprecated_in=4})
+    gdebug.deprecate("Use 'width, _ = textbox:get_preferred_size(s)' directly.", {deprecated_in = 4})
     s = screen[s or mouse.screen]
     local w, _ = textbox:get_preferred_size(s)
     return w
