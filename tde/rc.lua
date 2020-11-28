@@ -71,7 +71,6 @@ end
 require("module.settings")
 require("module.notifications")
 require("module.auto-start")
-require("module.decorate-client")
 require("module.exit-screen")
 require("module.quake-terminal")
 require("module.brightness-slider-osd")

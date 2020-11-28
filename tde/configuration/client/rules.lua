@@ -251,6 +251,17 @@ awful.rules.rules = {
       ontop = true
     }
   },
+  {
+    rule_any = {
+      class = "Toolkit"
+    },
+    properties = {
+      floating = true,
+      skip_decoration = true,
+      placement = awful.placement.centered,
+      ontop = true
+    }
+  },
   -- Polkit
   -- TODO: Detect the polkit type automatically
   {
