@@ -253,13 +253,15 @@ awful.rules.rules = {
   },
   {
     rule_any = {
-      class = "Toolkit"
+      class = {"Toolkit"},
+      name = {"Picture-in-Picture"}
     },
     properties = {
       floating = true,
       skip_decoration = true,
       placement = awful.placement.centered,
-      ontop = true
+      ontop = true,
+      sticky = true
     }
   },
   -- Polkit
