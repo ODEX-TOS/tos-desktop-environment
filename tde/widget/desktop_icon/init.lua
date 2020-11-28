@@ -81,13 +81,16 @@ local function create_icon(icon, name, num, callback, drag)
                     xoffset = coords.x - box.x
                     yoffset = coords.y - box.y
                     if not started then
-                        timer:start()
                         started = true
+                        print("TIMER: started")
+                        timer:start()
                     end
                     timercount = 0
                 end,
                 function()
                     if started then
+                        started = false
+                        print("TIMER: stopped")
                         timer:stop()
                     end
                     if type(drag) == "function" then
