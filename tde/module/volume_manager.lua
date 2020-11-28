@@ -1,7 +1,8 @@
 local signals = require("lib-tde.signals")
 local sound = require("lib-tde.sound")
 
-local pop_counter = 0
+local pop_counter = 1
+local startup = true
 
 signals.connect_volume(
     function(value)
@@ -25,11 +26,15 @@ signals.connect_volume_update(
                 local volume = string.match(out, "(%d?%d?%d)%%")
                 signals.emit_volume(tonumber(volume))
                 signals.emit_volume_is_muted(muted ~= nil or muted == "off")
-                if _G.toggleVolOSD ~= nil then
-                    _G.toggleVolOSD(true)
-                end
-                if _G.UpdateVolOSD ~= nil then
-                    _G.UpdateVolOSD()
+                if not startup then
+                    if _G.toggleVolOSD ~= nil then
+                        _G.toggleVolOSD(true)
+                    end
+                    if _G.UpdateVolOSD ~= nil then
+                        _G.UpdateVolOSD()
+                    end
+                else
+                    startup = false
                 end
             end
         )
