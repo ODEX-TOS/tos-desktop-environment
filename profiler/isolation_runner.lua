@@ -34,7 +34,7 @@ function run_rc_config_in_xephyr(config, starttime, endtime, funcs)
                     "' FUNCTIONS_AMOUNT='" ..
                         os.getenv("FUNCTIONS_AMOUNT") ..
                             "' OUTPUT='" .. os.getenv("OUTPUT") .. "' TOTAL_TIME='" .. os.getenv("TOTAL_TIME") .. "' "
-    local launchCMD = "awesome --config " .. config
+    local launchCMD = "tde --config " .. config
     local xephyrCommand = "DISPLAY=:0 Xephyr -br -ac -reset -once -terminate -screen 700x700 " .. DISPLAY .. " &"
     local command =
         "timeout " ..
