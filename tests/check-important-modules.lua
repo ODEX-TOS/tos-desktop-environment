@@ -107,10 +107,6 @@ function test_configuration_mod_key_tde_module_titlebar_init_lua()
     assert(exists("tde/module/titlebar/init.lua"))
 end
 
-function test_configuration_mod_key_tde_module_decorate_client_lua()
-    assert(exists("tde/module/decorate-client.lua"))
-end
-
 function test_configuration_mod_key_tde_configuration_apps_lua()
     assert(exists("tde/configuration/apps.lua"))
 end

@@ -37,7 +37,7 @@ function test_init_works()
 end
 
 function test_dutch_translations()
-    i18n.set_system_language("dutch")
+    i18n.set_system_language("nl")
     local home = i18n.translate("home")
     local connection = i18n.translate("Wireless connection")
 
