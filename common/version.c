@@ -34,8 +34,7 @@
 /** \brief Print version message and quit program.
  * \param executable program name
  */
-void
-eprint_version(void)
+void eprint_version(void)
 {
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
@@ -48,7 +47,7 @@ eprint_version(void)
         lua_pop(L, 1);
 
     /* Either push version number or error message onto stack */
-    (void) luaL_dostring(L, "return require('lgi.version')");
+    (void)luaL_dostring(L, "return require('lgi.version')");
 
 #ifdef WITH_DBUS
     const char *has_dbus = "yes";
@@ -66,7 +65,7 @@ eprint_version(void)
     const char *has_execinfo = "no";
 #endif
 
-    printf("awesome %s (%s)\n"
+    printf("TDE %s (%s)\n"
            " • Compiled against %s (running with %s)\n"
            " • API level: %d\n"
            " • D-Bus support: %s\n"
@@ -76,20 +75,19 @@ eprint_version(void)
            " • LGI version: %s\n"
            " • Transparency enabled: %s\n"
            " • Custom search paths: %s\n",
-        /* version      */ AWESOME_VERSION,
-        /* release      */ AWESOME_RELEASE,
-        /* Lua linked   */ LUA_RELEASE,
-        /* Lua runtime  */ lua_tostring(L, -2),
-        /* API Level    */ globalconf.api_level,
-        /* DBus         */ has_dbus,
-        /* XCB Error    */ has_xcb_errors,
-        /* Execinfo     */ has_execinfo,
-        /* XRandR major */ XCB_RANDR_MAJOR_VERSION,
-        /* XRandR minor */ XCB_RANDR_MINOR_VERSION,
-        /* LGI version  */ lua_tostring(L, -1),
-        /* ARGB support */ globalconf.had_overriden_depth ? "no"  : "yes",
-        /* Search path  */ globalconf.have_searchpaths    ? "yes" : "no"
-    );
+           /* version      */ AWESOME_VERSION,
+           /* release      */ AWESOME_RELEASE,
+           /* Lua linked   */ LUA_RELEASE,
+           /* Lua runtime  */ lua_tostring(L, -2),
+           /* API Level    */ globalconf.api_level,
+           /* DBus         */ has_dbus,
+           /* XCB Error    */ has_xcb_errors,
+           /* Execinfo     */ has_execinfo,
+           /* XRandR major */ XCB_RANDR_MAJOR_VERSION,
+           /* XRandR minor */ XCB_RANDR_MINOR_VERSION,
+           /* LGI version  */ lua_tostring(L, -1),
+           /* ARGB support */ globalconf.had_overriden_depth ? "no" : "yes",
+           /* Search path  */ globalconf.have_searchpaths ? "yes" : "no");
     lua_close(L);
 
     exit(EXIT_SUCCESS);
@@ -113,9 +111,7 @@ awesome_release_string(void)
     return AWESOME_RELEASE;
 }
 
-
-int
-awesome_default_api_level(void)
+int awesome_default_api_level(void)
 {
     return AWESOME_API_LEVEL;
 }

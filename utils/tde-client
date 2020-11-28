@@ -54,10 +54,10 @@ a_dbus_send()
 print_help()
 {
     echo "Usage: tde-client [-h|--help] [command [command...]]
-awesome window manager remote execution
+tos desktop environment remote execution
 
-tde-client is a remote command line interface to awesome.
-It communicates with awesome via D-Bus, allowing remote execution of Lua code.
+tde-client is a remote command line interface to TDE.
+It communicates with TDE via D-Bus, allowing remote execution of Lua code.
 
 Run without a command to enter REPL (read-eval-print-loop) mode.
 For examples see \`man tde-client\`."
