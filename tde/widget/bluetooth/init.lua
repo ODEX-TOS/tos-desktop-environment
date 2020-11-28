@@ -22,12 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--------------------------------------------------
--- Bluetooth Widget for Awesome Window Manager
--- Shows the bluetooth status using the bluetoothctl command
--- Better with Blueman Manager
---------------
-
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")

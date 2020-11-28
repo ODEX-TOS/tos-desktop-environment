@@ -22,16 +22,12 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local capi = {button = _G.button}
 local clickable_container = require("widget.clickable-container")
 local modkey = require("configuration.keys.mod").modKey
---- Common method to create buttons.
--- @tab buttons
--- @param object
--- @treturn table
+
 local function create_buttons(buttons, object)
 	if buttons then
 		local btns = {}

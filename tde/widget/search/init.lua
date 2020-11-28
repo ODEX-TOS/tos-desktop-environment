@@ -22,12 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--------------------------------------------------
--- Rofi widget for Awesome Window Manager
--- Shows the application list
--- Better with Compton tryone fork for blur fx
---------------
-
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")

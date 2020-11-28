@@ -1,4 +1,4 @@
---- Separating Multiple Monitor functions as a separeted module (taken from awesome wiki)
+-- Separating Multiple Monitor functions as a separeted module (taken from awesome wiki)
 -- TODO: add a display duplication option
 local gtable = require("gears.table")
 
