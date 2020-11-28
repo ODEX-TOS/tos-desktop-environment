@@ -230,4 +230,7 @@ translations[" before sleeping"] = " voor we in sluimermodus gaan"
 translations["Autofocus"] = "Autofocus"
 translations["Automatically make the focus follow the mouse without clicking"] =
     "De focus volgt uw muis, zelfs wanneer je niet klikt."
+translations["Tab between applications"] = "Tab tussen verschillende applicaties"
+translations["Tab between applications in reverse order"] =
+    "Tab tussen verschillende applicaties in tegengestelde richting"
 return translations

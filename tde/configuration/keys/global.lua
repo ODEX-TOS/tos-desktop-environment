@@ -129,7 +129,8 @@ local globalKeys =
     function()
       print("Tabbing between applications")
       _G.switcher.switch(1, "Mod1", "Alt_L", "Shift", "Tab")
-    end
+    end,
+    {description = i18n.translate("Tab between applications"), group = i18n.translate("Laucher")}
   ),
   awful.key(
     {"Mod1", "Shift"},
@@ -137,7 +138,8 @@ local globalKeys =
     function()
       print("Reverse tabbing between applications")
       _G.switcher.switch(-1, "Mod1", "Alt_L", "Shift", "Tab")
-    end
+    end,
+    {description = i18n.translate("Tab between applications in reverse order"), group = i18n.translate("Laucher")}
   ),
   -- Screen Shots
   -- Screen Shot and Save
