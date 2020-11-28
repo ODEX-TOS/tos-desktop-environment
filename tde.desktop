@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=TDE
+Comment=Desktop environment build ontop of awesomewm
+TryExec=tde
+Exec=tde
+Type=Application
