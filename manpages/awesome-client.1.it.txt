@@ -1,26 +1,26 @@
-awesome-client(1)
+tde-client(1)
 =================
 
 NOME
 ----
 
-awesome-client - esecutore remoto per il gestore di finestre awesome
+tde-client - esecutore remoto per il gestore di finestre awesome
 
 SINOSSI
 -------
 
-awesome-client [-h|--help] [command [command...]]
+tde-client [-h|--help] [command [command...]]
 
 DESCRIZIONE
 -----------
 
-awesome-client è un'interfaccia a riga di comando per awesome.
+tde-client è un'interfaccia a riga di comando per awesome.
 Comunica con awesome via D-Bus, consentendo l'esecuzione remota di
 codice Lua.
 
 UTILIZZO
 --------
-awesome-client riceve comandi dall'ingresso standard e li invia via
+tde-client riceve comandi dall'ingresso standard e li invia via
 D-Bus ad awesome.
 Se 'rlwrap' è installato, sarà utilizzato per fornire un'interfaccia da
 riga di comando per le funzionalità di readline.
@@ -31,13 +31,13 @@ comando.
 EXAMPLES
 -------
 ....
-$ awesome-client 'return 1+1, "Hello, world"'
+$ tde-client 'return 1+1, "Hello, world"'
    double 2
    string "Hello, world"
 
 # The following does not return anything on the command line,
 # but will show a notification.
-$ awesome-client '
+$ tde-client '
   naughty = require("naughty")
   naughty.notify({
   title="CLI Notification",
@@ -47,7 +47,7 @@ $ awesome-client '
 # Entering read-eval-print-loop mode
 # This mode will send every line to awesome, exactly the same as passing
 # multiple commands on the command line.
-$ awesome-client
+$ tde-client
 awesome# return 1+1
    double 2
 awesome# return 1+1, "Hello, world"

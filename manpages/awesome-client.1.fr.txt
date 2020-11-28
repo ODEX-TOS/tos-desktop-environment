@@ -1,26 +1,26 @@
-awesome-client(1)
+tde-client(1)
 =================
 
 NOM
 ----
 
-awesome-client - exécution à distance du gestionnaire de fenêtres awesome
+tde-client - exécution à distance du gestionnaire de fenêtres awesome
 
 SYNOPSIS
 --------
 
-awesome-client [-h|--help] [command [command...]]
+tde-client [-h|--help] [command [command...]]
 
 DESCRIPTION
 ------------
 
-awesome-client est une interface en ligne de commande à distance pour
+tde-client est une interface en ligne de commande à distance pour
 awesome.
 Il communique avec awesome via D-Bus, permettant d'exécuter du code Lua à distance.
 
 UTILISATION
 -----------
-awesome-client lit les commandes à partir de l'entrée standard et les envoie à awesome via D-Bus.
+tde-client lit les commandes à partir de l'entrée standard et les envoie à awesome via D-Bus.
 Si 'rlwrap' est installé, il sera utilisé pour fournir une interface en ligne de commande de readline.
 
 Le module 'awful.remote' doit être chargé pour que cette commande fonctionne.
@@ -28,13 +28,13 @@ Le module 'awful.remote' doit être chargé pour que cette commande fonctionne.
 EXAMPLES
 -------
 ....
-$ awesome-client 'return 1+1, "Hello, world"'
+$ tde-client 'return 1+1, "Hello, world"'
    double 2
    string "Hello, world"
 
 # The following does not return anything on the command line,
 # but will show a notification.
-$ awesome-client '
+$ tde-client '
   naughty = require("naughty")
   naughty.notify({
   title="CLI Notification",
@@ -44,7 +44,7 @@ $ awesome-client '
 # Entering read-eval-print-loop mode
 # This mode will send every line to awesome, exactly the same as passing
 # multiple commands on the command line.
-$ awesome-client
+$ tde-client
 awesome# return 1+1
    double 2
 awesome# return 1+1, "Hello, world"
@@ -71,5 +71,5 @@ Ce document est une traduction, réalisée par Jean-Luc Duflot <jl POING
 duflot CHEZ laposte POING net> le 20 février 2012.
 
 L'équipe de traduction a fait le maximum pour réaliser une adaptation française de qualité.
-La version anglaise la plus à jour de ce document est toujours consultable via la commande : LANGUAGE=en man awesome-client.
+La version anglaise la plus à jour de ce document est toujours consultable via la commande : LANGUAGE=en man tde-client.
 N'hésitez pas à signaler à l'auteur ou au traducteur, selon le cas, toute erreur dans cette page de manuel.

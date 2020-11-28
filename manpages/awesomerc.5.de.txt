@@ -43,7 +43,7 @@ Ein Pango-Markup Beispiel: <span weight="bold" foreground="#336699">...</span>.
 
 SIEHE AUCH
 ----------
-awesome(1) awesome-client(1)
+awesome(1) tde-client(1)
 
 AUTOREN
 -------

@@ -190,7 +190,7 @@ SEGNALI
 
 VEDI ANCHE
 ----------
-*awesomerc*(5) *awesome-client*(1)
+*awesomerc*(5) *tde-client*(1)
 
 BUGS
 ----

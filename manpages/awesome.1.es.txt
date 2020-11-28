@@ -188,7 +188,7 @@ La señal SIGHUP provoca que *awesome* se reinicie.
 
 VÉASE TAMBIÉN
 ------------
-*awesomerc*(5) *awesome-client*(1)
+*awesomerc*(5) *tde-client*(1)
 
 FALLOS
 ------

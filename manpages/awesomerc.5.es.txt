@@ -51,7 +51,7 @@ Un ejemplo de lenguaje de marcado Pango:
 
 VÉASE TAMBIÉN
 -------------
-awesome(1) awesome-client(1)
+awesome(1) tde-client(1)
 
 AUTORES
 -------
