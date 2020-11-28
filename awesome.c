@@ -88,7 +88,7 @@ init_rng(void)
     lua_getfield(L, -1, "randomseed");
 
     /* Push a seed */
-    lua_pushnumber(L, ((unsigned long)g_random_int()<<32)+g_random_int());
+    lua_pushnumber(L, ((unsigned long)g_random_int() << 32) + g_random_int());
 
     /* Call math.randomseed */
     lua_call(L, 1, 0);
@@ -105,24 +105,23 @@ init_rng(void)
 
 /** Call before exiting.
  */
-void
-awesome_atexit(bool restart)
+void awesome_atexit(bool restart)
 {
     lua_State *L = globalconf_get_lua_State();
     lua_pushboolean(L, restart);
     signal_object_emit(L, &global_signals, "exit", 1);
 
     /* Move clients where we want them to be and keep the stacking order intact */
-    foreach(c, globalconf.stack)
+    foreach (c, globalconf.stack)
     {
         xcb_reparent_window(globalconf.connection, (*c)->window, globalconf.screen->root,
-                (*c)->geometry.x, (*c)->geometry.y);
+                            (*c)->geometry.x, (*c)->geometry.y);
     }
 
     /* Save the client order.  This is useful also for "hard" restarts. */
     xcb_window_t *wins = p_alloca(xcb_window_t, globalconf.clients.len);
     int n = 0;
-    foreach(client, globalconf.clients)
+    foreach (client, globalconf.clients)
         wins[n++] = (*client)->window;
 
     xcb_change_property(globalconf.connection, XCB_PROP_MODE_REPLACE,
@@ -145,7 +144,7 @@ awesome_atexit(bool restart)
      * Work around this by placing the focus where we like it to be.
      */
     xcb_set_input_focus(globalconf.connection, XCB_INPUT_FOCUS_POINTER_ROOT,
-            XCB_NONE, globalconf.timestamp);
+                        XCB_NONE, globalconf.timestamp);
     xcb_aux_sync(globalconf.connection);
 
     xkb_free();
@@ -170,7 +169,8 @@ restore_client_order(xcb_get_property_cookie_t prop_cookie)
     xcb_get_property_reply_t *reply;
 
     reply = xcb_get_property_reply(globalconf.connection, prop_cookie, NULL);
-    if (!reply || reply->format != 32 || reply->value_len == 0) {
+    if (!reply || reply->format != 32 || reply->value_len == 0)
+    {
         p_delete(&reply);
         return;
     }
@@ -178,7 +178,7 @@ restore_client_order(xcb_get_property_cookie_t prop_cookie)
     windows = xcb_get_property_value(reply);
     for (uint32_t i = 0; i < reply->value_len; i++)
         /* Find windows[i] and swap it to where it belongs */
-        foreach(c, globalconf.clients)
+        foreach (c, globalconf.clients)
             if ((*c)->window == windows[i])
             {
                 client_t *tmp = *c;
@@ -207,16 +207,16 @@ scan(xcb_query_tree_cookie_t tree_c)
                                   tree_c,
                                   NULL);
 
-    if(!tree_r)
+    if (!tree_r)
         return;
 
     /* This gets the property and deletes it */
     prop_cookie = xcb_get_property_unchecked(globalconf.connection, true,
-                          globalconf.screen->root, AWESOME_CLIENT_ORDER,
-                          XCB_ATOM_WINDOW, 0, UINT_MAX);
+                                             globalconf.screen->root, AWESOME_CLIENT_ORDER,
+                                             XCB_ATOM_WINDOW, 0, UINT_MAX);
 
     /* Get the tree of the children windows of the current root window */
-    if(!(wins = xcb_query_tree_children(tree_r)))
+    if (!(wins = xcb_query_tree_children(tree_r)))
         fatal("cannot get tree children");
 
     tree_c_len = xcb_query_tree_children_length(tree_r);
@@ -224,7 +224,7 @@ scan(xcb_query_tree_cookie_t tree_c)
     xcb_get_property_cookie_t state_wins[tree_c_len];
     xcb_get_geometry_cookie_t geom_wins[tree_c_len];
 
-    for(i = 0; i < tree_c_len; i++)
+    for (i = 0; i < tree_c_len; i++)
     {
         attr_wins[i] = xcb_get_window_attributes_unchecked(globalconf.connection,
                                                            wins[i]);
@@ -233,7 +233,7 @@ scan(xcb_query_tree_cookie_t tree_c)
         geom_wins[i] = xcb_get_geometry_unchecked(globalconf.connection, wins[i]);
     }
 
-    for(i = 0; i < tree_c_len; i++)
+    for (i = 0; i < tree_c_len; i++)
     {
         attr_r = xcb_get_window_attributes_reply(globalconf.connection,
                                                  attr_wins[i],
@@ -242,9 +242,7 @@ scan(xcb_query_tree_cookie_t tree_c)
 
         long state = xwindow_get_state_reply(state_wins[i]);
 
-        if(!geom_r || !attr_r || attr_r->override_redirect
-           || attr_r->map_state == XCB_MAP_STATE_UNMAPPED
-           || state == XCB_ICCCM_WM_STATE_WITHDRAWN)
+        if (!geom_r || !attr_r || attr_r->override_redirect || attr_r->map_state == XCB_MAP_STATE_UNMAPPED || state == XCB_ICCCM_WM_STATE_WITHDRAWN)
         {
             p_delete(&attr_r);
             p_delete(&geom_r);
@@ -280,19 +278,19 @@ acquire_WM_Sn(bool replace)
                       0, NULL);
     xwindow_set_class_instance(globalconf.selection_owner_window);
     xwindow_set_name_static(globalconf.selection_owner_window,
-            "Awesome WM_Sn selection owner window");
+                            "Awesome WM_Sn selection owner window");
 
     atom_name = xcb_atom_name_by_screen("WM_S", globalconf.default_screen);
-    if(!atom_name)
+    if (!atom_name)
         fatal("error getting WM_Sn atom name");
 
     atom_q = xcb_intern_atom_unchecked(globalconf.connection, false,
-                                               a_strlen(atom_name), atom_name);
+                                       a_strlen(atom_name), atom_name);
 
     p_delete(&atom_name);
 
     atom_r = xcb_intern_atom_reply(globalconf.connection, atom_q, NULL);
-    if(!atom_r)
+    if (!atom_r)
         fatal("error getting WM_Sn atom");
 
     globalconf.selection_atom = atom_r->atom;
@@ -300,8 +298,8 @@ acquire_WM_Sn(bool replace)
 
     /* Is the selection already owned? */
     get_sel_reply = xcb_get_selection_owner_reply(globalconf.connection,
-            xcb_get_selection_owner(globalconf.connection, globalconf.selection_atom),
-            NULL);
+                                                  xcb_get_selection_owner(globalconf.connection, globalconf.selection_atom),
+                                                  NULL);
     if (!get_sel_reply)
         fatal("GetSelectionOwner for WM_Sn failed");
     if (!replace && get_sel_reply->owner != XCB_NONE)
@@ -314,11 +312,12 @@ acquire_WM_Sn(bool replace)
     {
         /* Wait for the old owner to go away */
         xcb_get_geometry_reply_t *geom_reply = NULL;
-        do {
+        do
+        {
             p_delete(&geom_reply);
             geom_reply = xcb_get_geometry_reply(globalconf.connection,
-                    xcb_get_geometry(globalconf.connection, get_sel_reply->owner),
-                    NULL);
+                                                xcb_get_geometry(globalconf.connection, get_sel_reply->owner),
+                                                NULL);
         } while (geom_reply != NULL);
     }
     p_delete(&get_sel_reply);
@@ -334,7 +333,7 @@ acquire_WM_Sn(bool replace)
     ev.data.data32[2] = globalconf.selection_owner_window;
     ev.data.data32[3] = ev.data.data32[4] = 0;
 
-    xcb_send_event(globalconf.connection, false, globalconf.screen->root, 0xFFFFFF, (char *) &ev);
+    xcb_send_event(globalconf.connection, false, globalconf.screen->root, 0xFFFFFF, (char *)&ev);
 }
 
 static void
@@ -346,24 +345,24 @@ acquire_timestamp(void)
     xcb_generic_event_t *event;
     xcb_window_t win = globalconf.screen->root;
     xcb_atom_t atom = XCB_ATOM_RESOURCE_MANAGER; /* Just something random */
-    xcb_atom_t type = XCB_ATOM_STRING; /* Equally random */
+    xcb_atom_t type = XCB_ATOM_STRING;           /* Equally random */
 
     xcb_grab_server(globalconf.connection);
     xcb_change_window_attributes(globalconf.connection, win,
-            XCB_CW_EVENT_MASK, (uint32_t[]) { XCB_EVENT_MASK_PROPERTY_CHANGE });
+                                 XCB_CW_EVENT_MASK, (uint32_t[]){XCB_EVENT_MASK_PROPERTY_CHANGE});
     xcb_change_property(globalconf.connection, XCB_PROP_MODE_APPEND, win,
-            atom, type, 8, 0, "");
+                        atom, type, 8, 0, "");
     xcb_change_window_attributes(globalconf.connection, win,
-            XCB_CW_EVENT_MASK, (uint32_t[]) { 0 });
+                                 XCB_CW_EVENT_MASK, (uint32_t[]){0});
     xutil_ungrab_server(globalconf.connection);
 
     /* Now wait for the event */
-    while((event = xcb_wait_for_event(globalconf.connection)))
+    while ((event = xcb_wait_for_event(globalconf.connection)))
     {
         /* Is it the event we are waiting for? */
-        if(XCB_EVENT_RESPONSE_TYPE(event) == XCB_PROPERTY_NOTIFY)
+        if (XCB_EVENT_RESPONSE_TYPE(event) == XCB_PROPERTY_NOTIFY)
         {
-            xcb_property_notify_event_t *ev = (void *) event;
+            xcb_property_notify_event_t *ev = (void *)event;
             globalconf.timestamp = ev->time;
             p_delete(&event);
             break;
@@ -381,7 +380,8 @@ acquire_timestamp(void)
 
 static xcb_generic_event_t *poll_for_event(void)
 {
-    if (globalconf.pending_event) {
+    if (globalconf.pending_event)
+    {
         xcb_generic_event_t *event = globalconf.pending_event;
         globalconf.pending_event = NULL;
         return event;
@@ -395,13 +395,13 @@ a_xcb_check(void)
 {
     xcb_generic_event_t *mouse = NULL, *event;
 
-    while((event = poll_for_event()))
+    while ((event = poll_for_event()))
     {
         /* We will treat mouse events later.
          * We cannot afford to treat all mouse motion events,
          * because that would be too much CPU intensive, so we just
          * take the last we get after a bunch of events. */
-        if(XCB_EVENT_RESPONSE_TYPE(event) == XCB_MOTION_NOTIFY)
+        if (XCB_EVENT_RESPONSE_TYPE(event) == XCB_MOTION_NOTIFY)
         {
             p_delete(&mouse);
             mouse = event;
@@ -409,8 +409,7 @@ a_xcb_check(void)
         else
         {
             uint8_t type = XCB_EVENT_RESPONSE_TYPE(event);
-            if(mouse && (type == XCB_ENTER_NOTIFY || type == XCB_LEAVE_NOTIFY
-                        || type == XCB_BUTTON_PRESS || type == XCB_BUTTON_RELEASE))
+            if (mouse && (type == XCB_ENTER_NOTIFY || type == XCB_LEAVE_NOTIFY || type == XCB_BUTTON_PRESS || type == XCB_BUTTON_RELEASE))
             {
                 /* Make sure enter/motion/leave/press/release events are handled
                  * in the correct order */
@@ -422,7 +421,7 @@ a_xcb_check(void)
         }
     }
 
-    if(mouse)
+    if (mouse)
     {
         event_handle(mouse);
         p_delete(&mouse);
@@ -434,9 +433,9 @@ a_xcb_io_cb(GIOChannel *source, GIOCondition cond, gpointer data)
 {
     /* a_xcb_check() already handled all events */
 
-    if(xcb_connection_has_error(globalconf.connection))
+    if (xcb_connection_has_error(globalconf.connection))
         fatal("X server connection broke (error %d)",
-                xcb_connection_has_error(globalconf.connection));
+              xcb_connection_has_error(globalconf.connection));
 
     return TRUE;
 }
@@ -454,7 +453,8 @@ a_glib_poll(GPollFD *ufds, guint nfsd, gint timeout)
     awesome_refresh();
 
     /* Check if the Lua stack is the way it should be */
-    if (lua_gettop(L) != 0) {
+    if (lua_gettop(L) != 0)
+    {
         warn("Something was left on the Lua stack, this is a bug!");
         luaA_dumpstack(L);
         lua_settop(L, 0);
@@ -470,11 +470,14 @@ a_glib_poll(GPollFD *ufds, guint nfsd, gint timeout)
     gettimeofday(&now, NULL);
     timersub(&now, &last_wakeup, &length_time);
     length = length_time.tv_sec + length_time.tv_usec * 1.0f / 1e6;
-    if (length > main_loop_iteration_limit && main_loop_iteration_booted > main_loop_iteration_booted_ignore_time) {
+    if (length > main_loop_iteration_limit && main_loop_iteration_booted > main_loop_iteration_booted_ignore_time)
+    {
         warn("Last main loop iteration took %.6f seconds!", length);
         main_loop_iteration_limit = length;
-    } else if(main_loop_iteration_booted <= main_loop_iteration_booted_ignore_time) {
-        main_loop_iteration_booted++; 
+    }
+    else if (main_loop_iteration_booted <= main_loop_iteration_booted_ignore_time)
+    {
+        main_loop_iteration_booted++;
     }
 
     /* Actually do the polling, record time of wakeup and check for new xcb events */
@@ -501,7 +504,7 @@ signal_child(int signum)
 {
     assert(signum == SIGCHLD);
     int res = write(sigchld_pipe[1], " ", 1);
-    (void) res;
+    (void)res;
     assert(res == 1);
 }
 
@@ -516,7 +519,8 @@ reap_children(GIOChannel *channel, GIOCondition condition, gpointer user_data)
     if (result < 0)
         fatal("Error reading from signal pipe: %s", strerror(errno));
 
-    while ((child = waitpid(-1, &status, WNOHANG)) > 0) {
+    while ((child = waitpid(-1, &status, WNOHANG)) > 0)
+    {
         spawn_child_exited(child, status);
     }
     if (child < 0 && errno != ECHILD)
@@ -534,8 +538,7 @@ exit_on_signal(gpointer data)
     return TRUE;
 }
 
-void
-awesome_restart(void)
+void awesome_restart(void)
 {
     awesome_atexit(true);
     execvp(awesome_argv[0], awesome_argv);
@@ -563,8 +566,7 @@ true_config_callback(const char *unused)
  * \param argv Who knows.
  * \return EXIT_SUCCESS I hope.
  */
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     string_array_t searchpath;
     int xfd;
@@ -572,9 +574,7 @@ main(int argc, char **argv)
     xcb_query_tree_cookie_t tree_c;
 
     /* The default values for the init flags */
-    int default_init_flags = INIT_FLAG_NONE
-        | INIT_FLAG_ARGB
-        | INIT_FLAG_AUTO_SCREEN;
+    int default_init_flags = INIT_FLAG_NONE | INIT_FLAG_ARGB | INIT_FLAG_AUTO_SCREEN;
 
     /* Make stdout/stderr line buffered. */
     setvbuf(stdout, NULL, _IOLBF, 0);
@@ -602,15 +602,15 @@ main(int argc, char **argv)
         confpath = options_check_args(argc, argv, &default_init_flags, &searchpath);
 
     /* Get XDG basedir data */
-    if(!xdgInitHandle(&xdg))
+    if (!xdgInitHandle(&xdg))
         fatal("Function xdgInitHandle() failed, is $HOME unset?");
 
     /* add XDG_CONFIG_DIR as include path */
-    const char * const *xdgconfigdirs = xdgSearchableConfigDirectories(&xdg);
-    for(; *xdgconfigdirs; xdgconfigdirs++)
+    const char *const *xdgconfigdirs = xdgSearchableConfigDirectories(&xdg);
+    for (; *xdgconfigdirs; xdgconfigdirs++)
     {
         /* Append /awesome to *xdgconfigdirs */
-        const char *suffix = "/awesome";
+        const char *suffix = "/tde";
         size_t len = a_strlen(*xdgconfigdirs) + a_strlen(suffix) + 1;
         char *entry = p_new(char, len);
         a_strcat(entry, len, *xdgconfigdirs);
@@ -627,7 +627,7 @@ main(int argc, char **argv)
 
         /* Try to parse it */
         lua_State *L = luaL_newstate();
-        if(luaL_loadfile(L, config))
+        if (luaL_loadfile(L, config))
         {
             const char *err = lua_tostring(L, -1);
             fprintf(stderr, "%s\n", err);
@@ -636,7 +636,7 @@ main(int argc, char **argv)
         p_delete(&config);
         lua_close(L);
 
-        if(!success)
+        if (!success)
         {
             fprintf(stderr, "✘ Configuration file syntax error.\n");
             return EXIT_FAILURE;
@@ -667,7 +667,7 @@ main(int argc, char **argv)
     g_unix_signal_add(SIGTERM, exit_on_signal, NULL);
     g_unix_signal_add(SIGHUP, restart_on_signal, NULL);
 
-    struct sigaction sa = { .sa_handler = signal_fatal, .sa_flags = SA_RESETHAND };
+    struct sigaction sa = {.sa_handler = signal_fatal, .sa_flags = SA_RESETHAND};
     sigemptyset(&sa.sa_mask);
     sigaction(SIGABRT, &sa, 0);
     sigaction(SIGBUS, &sa, 0);
@@ -688,24 +688,24 @@ main(int argc, char **argv)
 
     /* X stuff */
     globalconf.connection = xcb_connect(NULL, &globalconf.default_screen);
-    if(xcb_connection_has_error(globalconf.connection))
+    if (xcb_connection_has_error(globalconf.connection))
         fatal("cannot open display (error %d)", xcb_connection_has_error(globalconf.connection));
 
     globalconf.screen = xcb_aux_get_screen(globalconf.connection, globalconf.default_screen);
     globalconf.default_visual = draw_default_visual(globalconf.screen);
-    if(default_init_flags & INIT_FLAG_ARGB)
+    if (default_init_flags & INIT_FLAG_ARGB)
         globalconf.visual = draw_argb_visual(globalconf.screen);
-    if(!globalconf.visual)
+    if (!globalconf.visual)
         globalconf.visual = globalconf.default_visual;
     globalconf.default_depth = draw_visual_depth(globalconf.screen, globalconf.visual->visual_id);
     globalconf.default_cmap = globalconf.screen->default_colormap;
-    if(globalconf.default_depth != globalconf.screen->root_depth)
+    if (globalconf.default_depth != globalconf.screen->root_depth)
     {
         // We need our own color map if we aren't using the default depth
         globalconf.default_cmap = xcb_generate_id(globalconf.connection);
         xcb_create_colormap(globalconf.connection, XCB_COLORMAP_ALLOC_NONE,
-                globalconf.default_cmap, globalconf.screen->root,
-                globalconf.visual->visual_id);
+                            globalconf.default_cmap, globalconf.screen->root,
+                            globalconf.visual->visual_id);
     }
 
 #ifdef WITH_XCB_ERRORS
@@ -777,10 +777,10 @@ main(int argc, char **argv)
     {
         xcb_shape_query_version_reply_t *reply =
             xcb_shape_query_version_reply(globalconf.connection,
-                    xcb_shape_query_version_unchecked(globalconf.connection),
-                    NULL);
+                                          xcb_shape_query_version_unchecked(globalconf.connection),
+                                          NULL);
         globalconf.have_input_shape = reply && (reply->major_version > 1 ||
-                (reply->major_version == 1 && reply->minor_version >= 1));
+                                                (reply->major_version == 1 && reply->minor_version >= 1));
         p_delete(&reply);
     }
 
@@ -789,7 +789,7 @@ main(int argc, char **argv)
     globalconf.have_xfixes = query && query->present;
     if (globalconf.have_xfixes)
         xcb_discard_reply(globalconf.connection,
-                xcb_xfixes_query_version(globalconf.connection, 1, 0).sequence);
+                          xcb_xfixes_query_version(globalconf.connection, 1, 0).sequence);
 
     event_init();
 
@@ -818,20 +818,18 @@ main(int argc, char **argv)
                       -1, -1, 1, 1, 0,
                       XCB_COPY_FROM_PARENT, globalconf.visual->visual_id,
                       XCB_CW_BACK_PIXEL | XCB_CW_BORDER_PIXEL |
-                      XCB_CW_OVERRIDE_REDIRECT | XCB_CW_COLORMAP,
-                      (const uint32_t [])
-                      {
+                          XCB_CW_OVERRIDE_REDIRECT | XCB_CW_COLORMAP,
+                      (const uint32_t[]){
                           globalconf.screen->black_pixel,
                           globalconf.screen->black_pixel,
                           1,
-                          globalconf.default_cmap
-                      });
+                          globalconf.default_cmap});
     xwindow_set_class_instance(globalconf.focus.window_no_focus);
     xwindow_set_name_static(globalconf.focus.window_no_focus, "Awesome no input window");
     xcb_map_window(globalconf.connection, globalconf.focus.window_no_focus);
     xcb_create_gc(globalconf.connection, globalconf.gc, globalconf.focus.window_no_focus,
                   XCB_GC_FOREGROUND | XCB_GC_BACKGROUND,
-                  (const uint32_t[]) { globalconf.screen->black_pixel, globalconf.screen->white_pixel });
+                  (const uint32_t[]){globalconf.screen->black_pixel, globalconf.screen->white_pixel});
 
     /* Get the window tree associated to this screen */
     tree_c = xcb_query_tree_unchecked(globalconf.connection,
@@ -861,7 +859,7 @@ main(int argc, char **argv)
         /* Disable automatic screen creation, awful.screen has a fallback */
         globalconf.ignore_screens = true;
 
-        if(!luaA_parserc(&xdg, confpath))
+        if (!luaA_parserc(&xdg, confpath))
             fatal("couldn't find any rc file");
     }
 
