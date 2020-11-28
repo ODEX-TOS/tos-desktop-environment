@@ -446,15 +446,15 @@ file = {
 
     -- LUA libraries
     '../lib/',
-    '../tde/',
+    '../tde-src/',
     -- Auto generated scripts
     '../script_files/',
     exclude = {
         -- exclude these modules, as they do not contain any written
         -- documentation
-        '../tde/lib-tde/lib-lua',
-        '../tde/lib-tde/lib-so',
-        '../tde/lib-tde/sentry',
+        '../tde-src/lib-tde/lib-lua',
+        '../tde-src/lib-tde/lib-so',
+        '../tde-src/lib-tde/sentry',
         '../lib/awful/autofocus.lua',
         '../lib/awful/dbus.lua',
         '../lib/awful/_compat.lua',
