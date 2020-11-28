@@ -69,5 +69,7 @@ return {
   calendar = theme(config["calendar"] or dir .. "/calendar.svg"),
   brush = theme(config["brush"] or dir .. "/brush.svg"),
   package = theme("/etc/xdg/tde/widget/package-updater/icons/package.svg"),
-  about = theme(dir .. "/info.svg")
+  about = theme(dir .. "/info.svg"),
+  --pngs
+  unknown = theme(dir .. "/noicon.png")
 }

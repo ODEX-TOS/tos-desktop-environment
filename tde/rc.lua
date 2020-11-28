@@ -78,6 +78,7 @@ require("module.brightness-slider-osd")
 require("module.volume-slider-osd")
 require("module.plugin-module")
 require("module.volume_manager")
+_G.switcher = require("module.application-switch")
 
 -- Only activate the break timer if users what it
 -- The default implementation of TOS doesn't use it

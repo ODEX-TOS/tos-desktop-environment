@@ -123,6 +123,22 @@ local globalKeys =
     end,
     {description = i18n.translate("Open system monitor"), group = i18n.translate("Launcher")}
   ),
+  awful.key(
+    {"Mod1"},
+    "Tab",
+    function()
+      print("Tabbing between applications")
+      _G.switcher.switch(1, "Mod1", "Alt_L", "Shift", "Tab")
+    end
+  ),
+  awful.key(
+    {"Mod1", "Shift"},
+    "Tab",
+    function()
+      print("Reverse tabbing between applications")
+      _G.switcher.switch(-1, "Mod1", "Alt_L", "Shift", "Tab")
+    end
+  ),
   -- Screen Shots
   -- Screen Shot and Save
   awful.key(
