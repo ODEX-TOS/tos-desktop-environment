@@ -132,7 +132,10 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.font = "Roboto medium 10"
   awesome_theme.title_font = "Roboto medium 14"
 
-  awesome_theme.fg_normal = color(config["foreground_normal"]) or darkLightSwitcher("#ffffffde", "#000000de")
+  awesome_theme.fg_white = "#ffffffde"
+  awesome_theme.fg_black = "#292929"
+  awesome_theme.fg_normal =
+    color(config["foreground_normal"]) or darkLightSwitcher(awesome_theme.fg_white, awesome_theme.fg_black)
 
   awesome_theme.fg_focus = color(config["foreground_focus"]) or darkLightSwitcher("#e4e4e4", "#343434")
   awesome_theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")

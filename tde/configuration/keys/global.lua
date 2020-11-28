@@ -32,6 +32,7 @@ local modkey = config.modKey
 local altkey = config.altKey
 local apps = require("configuration.apps")
 local xrandr = require("lib-tde.xrandr")
+local signals = require("lib-tde.signals")
 
 -- returns true if we cannot create a screenshot
 local function send_notification_if_maim_missing()
@@ -382,13 +383,7 @@ local globalKeys =
     function()
       print("Raising volume")
       awful.spawn("amixer -D pulse sset Master 5%+")
-      awesome.emit_signal("widget::volume")
-      if _G.toggleVolOSD ~= nil then
-        _G.toggleVolOSD(true)
-      end
-      if _G.UpdateVolOSD ~= nil then
-        _G.UpdateVolOSD()
-      end
+      signals.emit_volume_update()
     end,
     {description = i18n.translate("volume up"), group = i18n.translate(i18n.translate("hardware"))}
   ),
@@ -398,13 +393,7 @@ local globalKeys =
     function()
       print("Lowering volume")
       awful.spawn("amixer -D pulse sset Master 5%-")
-      awesome.emit_signal("widget::volume")
-      if _G.toggleVolOSD ~= nil then
-        _G.toggleVolOSD(true)
-      end
-      if _G.UpdateVolOSD ~= nil then
-        _G.UpdateVolOSD()
-      end
+      signals.emit_volume_update()
     end,
     {description = i18n.translate("volume down"), group = i18n.translate(i18n.translate("hardware"))}
   ),
@@ -414,13 +403,7 @@ local globalKeys =
     function()
       print("Toggeling volume")
       awful.spawn("amixer -D pulse set Master 1+ toggle")
-      awesome.emit_signal("widget::volume")
-      if _G.toggleVolOSD ~= nil then
-        _G.toggleVolOSD(true)
-      end
-      if _G.UpdateVolOSD ~= nil then
-        _G.UpdateVolOSD()
-      end
+      signals.emit_volume_update()
     end,
     {description = i18n.translate("toggle mute"), group = i18n.translate(i18n.translate("hardware"))}
   ),

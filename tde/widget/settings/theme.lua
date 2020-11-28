@@ -123,7 +123,8 @@ local function create_background_button()
   return button
 end
 
-local function make_color_entry(name, slide)
+-- the font_black option is always optional and tells use if the font color must be black (because the background color is otherwise unreadable)
+local function make_color_entry(name, slide, font_black)
   local pallete = mat_colors[name] or mat_colors["purple"]
   local button = wibox.container.background()
   button.bg = pallete.hue_600
@@ -140,10 +141,19 @@ local function make_color_entry(name, slide)
       button.bg = pallete.hue_600
     end
   )
+  local color = beautiful.fg_white
+  if font_black then
+    color = beautiful.fg_black
+  end
+  local text =
+    wibox.widget {
+    markup = '<span foreground="' .. color .. '">' .. gears.string.xml_escape(name) .. "</span>",
+    widget = wibox.widget.textbox
+  }
   button:setup {
     layout = wibox.container.place,
     halign = "center",
-    wibox.container.margin(wibox.widget.textbox(name), m, m, m / 2, m / 2)
+    wibox.container.margin(text, m, m, m / 2, m / 2)
   }
 
   button:buttons(
@@ -322,7 +332,7 @@ return function()
             make_color_entry("grey", 40),
             make_color_entry("blue_grey", 20),
             make_color_entry("black", 40),
-            make_color_entry("light", 60)
+            make_color_entry("light", 60, true)
           },
           m,
           m,

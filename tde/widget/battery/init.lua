@@ -72,18 +72,6 @@ local return_button = function()
 	}
 
 	local battery_button = clickable_container(wibox.container.margin(battery_widget, dpi(8), dpi(8), dpi(8), dpi(8)))
-	battery_button:buttons(
-		gears.table.join(
-			awful.button(
-				{},
-				1,
-				nil,
-				function()
-					awful.spawn("xfce4-power-manager-settings", false)
-				end
-			)
-		)
-	)
 
 	local battery_tooltip =
 		awful.tooltip {

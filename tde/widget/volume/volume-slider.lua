@@ -27,28 +27,17 @@ local mat_list_item = require("widget.material.list-item")
 local mat_slider = require("widget.material.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
-local spawn = require("awful.spawn")
 local signals = require("lib-tde.signals")
-
-local sound = require("lib-tde.sound")
 
 local slider =
   wibox.widget {
   read_only = false,
   widget = mat_slider
 }
-_G.volume1 = slider
 slider:connect_signal(
   "property::value",
   function()
-    spawn("amixer -D pulse sset Master " .. slider.value .. "%")
-    -- Only play sound when beeing drawn, we also remove the OSD from the screen
-    _G.volume2:set_value(slider.value)
     signals.emit_volume(slider.value)
-    if (_G.menuopened) then
-      _G.toggleVolOSD(false)
-      sound()
-    end
   end
 )
 
@@ -58,75 +47,31 @@ local icon =
   widget = wibox.widget.imagebox
 }
 
-local function getIconByOutput(out)
-  local muted = string.find(out, "off")
-  if (muted ~= nil or muted == "off") then
-    icon.image = icons.muted
-    _G.volumeIcon2.image = icons.muted
-  else
-    icon.image = icons.volume
-    _G.volumeIcon2.image = icons.volume
-  end
-end
-
-local update = function()
-  awful.spawn.easy_async_with_shell(
-    "amixer -D pulse sget Master",
-    function(stdout)
-      local volume = string.match(stdout, "(%d?%d?%d)%%")
-      getIconByOutput(stdout)
-      slider:set_value(tonumber(volume))
-    end
-  )
-end
--- The emit will come from the OSD
-awesome.connect_signal(
-  "widget::volume",
-  function(_)
-    update()
-  end
-)
-
--- The emit will come from the OSD
-awesome.connect_signal(
-  "widget::volume:update",
+signals.connect_volume(
   function(value)
-    slider:set_value(tonumber(value))
+    local number = tonumber(value)
+    if not (number == slider.value) then
+      slider:set_value(number)
+    end
   end
 )
 
 local button = mat_icon_button(icon)
-_G.volumeIcon1 = icon
-
-local function getIcon()
-  local command = "amixer -D pulse sget Master"
-  awful.spawn.easy_async_with_shell(
-    command,
-    function(out)
-      getIconByOutput(out)
-    end
-  )
-end
-
-getIcon() -- set the icon property to the current volume state
-update()
 
 local function toggleIcon()
-  local command = "amixer -D pulse set Master +1 toggle"
-  awful.spawn.easy_async_with_shell(
-    command,
-    function(out)
-      local muted = string.find(out, "off")
-      if (muted ~= nil or muted == "off") then
-        icon.image = icons.muted
-        _G.volumeIcon2.image = icons.muted
-      else
-        icon.image = icons.volume
-        _G.volumeIcon2.image = icons.volume
-      end
-    end
-  )
+  awful.spawn("amixer -D pulse set Master +1 toggle")
+  signals.emit_volume_update()
 end
+
+signals.connect_volume_is_muted(
+  function(muted)
+    if (muted) then
+      icon.image = icons.muted
+    else
+      icon.image = icons.volume
+    end
+  end
+)
 
 button:connect_signal("button::press", toggleIcon)
 

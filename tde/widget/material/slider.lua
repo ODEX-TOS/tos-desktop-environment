@@ -103,6 +103,13 @@ local function new(args)
     widget = wibox.widget.slider
   }
 
+  ret._private.progress_bar:connect_signal(
+    "property::value",
+    function()
+      ret:set_value(ret._private.progress_bar.value)
+    end
+  )
+
   ret._private.read_only = false
 
   return ret

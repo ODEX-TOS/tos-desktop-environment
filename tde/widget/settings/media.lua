@@ -64,14 +64,16 @@ return function()
   vol_slider:connect_signal(
     "property::value",
     function()
-      awful.spawn.with_shell("tos volume set " .. tostring(vol_slider.value))
       signals.emit_volume(vol_slider.value)
     end
   )
 
   signals.connect_volume(
     function(value)
-      vol_slider:set_value(tonumber(value))
+      local number = tonumber(value)
+      if not (number == vol_slider.value) then
+        vol_slider:set_value(tonumber(value))
+      end
     end
   )
 

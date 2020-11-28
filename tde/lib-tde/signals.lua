@@ -169,6 +169,47 @@ connections.connect_volume = function(func)
     awesome.connect_signal("volume::update", func)
 end
 
+--- Request an update to check to volume value
+-- @staticfct emit_volume_update
+-- @usage -- Notify that you changed the state of volume
+-- lib-tde.signals.emit_volume_update()
+connections.emit_volume_update = function(value)
+    awesome.emit_signal("volume::update::request", value)
+end
+
+--- Trigger a callback function when a client requests a volume update
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_volume_update
+-- @usage -- listen for clients that need the latest volume state
+-- lib-tde.signals.connect_volume_update(
+--    function ()
+--      print("Request to search for latest volume state")
+--    end)
+connections.connect_volume_update = function(func)
+    awesome.connect_signal("volume::update::request", func)
+end
+
+--- Notify other TDE components that the volume mute state changed
+-- @tparam bool value True if the volume is muted
+-- @staticfct emit_volume_is_muted
+-- @usage -- notify other components when the volume mute state changed
+-- lib-tde.signals.emit_volume_is_muted(true)
+connections.emit_volume_is_muted = function(value)
+    awesome.emit_signal("volume::update::muted", value)
+end
+
+--- Trigger a callback function when the volume mute state changed
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_volume_is_muted
+-- @usage -- notify other components when the volume mute state changed
+-- lib-tde.signals.connect_volume_is_muted(
+--    function (isMuted)
+--      print("Is volume enabled? " .. tostring(isMuted))
+--    end)
+connections.connect_volume_is_muted = function(func)
+    awesome.connect_signal("volume::update::muted", func)
+end
+
 --- Notify other TDE components that the weather updated
 -- @tparam temp string The temperature in string representation
 -- @tparam desc string A short desciption about the weather

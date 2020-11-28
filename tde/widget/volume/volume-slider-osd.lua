@@ -32,11 +32,7 @@ local mat_list_item = require("widget.material.list-item")
 local mat_slider = require("widget.material.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
-local spawn = require("awful.spawn")
-
-local sound = require("lib-tde.sound")
-
-local bootup = true
+local signal = require("lib-tde.signals")
 
 local slider_osd =
   wibox.widget {
@@ -44,54 +40,21 @@ local slider_osd =
   widget = mat_slider
 }
 
-local function single_shot_play()
-  if bootup then
-    bootup = false
-  else
-    sound()
-  end
-end
-
-_G.volume2 = slider_osd
 slider_osd:connect_signal(
   "property::value",
   function()
-    if (not _G.menuopened) then
-      spawn("amixer -D pulse sset Master " .. slider_osd.value .. "%")
-      single_shot_play()
-      awesome.emit_signal("widget::volume:update", slider_osd.value)
-    end
+    signal.emit_volume(slider_osd.value)
   end
 )
 
--- A hackish way for the OSD not to hide
--- when the user is dragging the slider
--- Slider or the handle does not have a
--- Signal that handles the 'on drag' event
--- So here we are.
-slider_osd:connect_signal(
-  "button::press",
-  function()
-    slider_osd:connect_signal(
-      "property::value",
-      function()
-        _G.toggleVolOSD(true)
-      end
-    )
+signal.connect_volume(
+  function(value)
+    local number = tonumber(value)
+    if not (number == slider_osd.value) then
+      slider_osd:set_value(number)
+    end
   end
 )
-
-local function UpdateVolOSD()
-  awful.spawn.easy_async_with_shell(
-    "bash -c 'amixer -D pulse sget Master'",
-    function(stdout)
-      local volume = string.match(stdout, "(%d?%d?%d)%%")
-      slider_osd:set_value(tonumber(volume))
-    end
-  )
-end
-
-_G.UpdateVolOSD = UpdateVolOSD
 
 local icon =
   wibox.widget {
@@ -101,25 +64,21 @@ local icon =
 
 local button = mat_icon_button(icon)
 
-_G.volumeIcon2 = icon
 button:connect_signal(
   "button::press",
   function()
-    local command = "amixer -D pulse set Master +1 toggle"
-    awful.spawn.easy_async_with_shell(
-      command,
-      function(out)
-        local muted = string.find(out, "off")
-        if (muted ~= nil or muted == "off") then
-          icon.image = icons.muted
-          _G.volumeIcon1.image = icons.muted
-        else
-          icon.image = icons.volume
-          _G.volumeIcon1.image = icons.volume
-          sound()
-        end
-      end
-    )
+    awful.spawn("amixer -D pulse set Master +1 toggle")
+    signal.emit_volume_update()
+  end
+)
+
+signal.connect_volume_is_muted(
+  function(muted)
+    if (muted) then
+      icon.image = icons.muted
+    else
+      icon.image = icons.volume
+    end
   end
 )
 

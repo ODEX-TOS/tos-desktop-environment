@@ -252,7 +252,7 @@ local function make_connection(t, n)
   local address =
     wibox.widget {
     widget = wibox.widget.textbox,
-    text = ip,
+    text = "",
     font = beautiful.title_font
   }
 
