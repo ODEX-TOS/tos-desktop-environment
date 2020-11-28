@@ -98,7 +98,7 @@ set(AWE_SRCS
 
 set(AWE_MAN_SRCS
     ${SOURCE_DIR}/manpages/awesome.1.txt
-    ${SOURCE_DIR}/manpages/awesome-client.1.txt
+    ${SOURCE_DIR}/manpages/tde-client.1.txt
     ${SOURCE_DIR}/manpages/awesomerc.5.txt)
 set(AWE_MAN_LANGS it es fr de ru)
 
@@ -370,7 +370,7 @@ endif()
 
 # {{{ Installation
 install(TARGETS ${PROJECT_AWE_NAME} RUNTIME DESTINATION bin)
-install(FILES "utils/awesome-client" DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+install(FILES "utils/tde-client" DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 install(DIRECTORY ${BUILD_DIR}/lib DESTINATION ${AWESOME_DATA_PATH}
     PATTERN "*.in" EXCLUDE)
 install(FILES ${BUILD_DIR}/awesomerc.lua DESTINATION ${AWESOME_SYSCONFDIR}

@@ -1,6 +1,7 @@
 # NEWS
 
 <a name="v44"></a>
+
 # DRAFT Awesome window manager framework version 4.4 changes DRAFT
 
 <center> <img src="../images/AUTOGEN_wibox_logo_logo_and_name.svg" /> </center>
@@ -14,67 +15,68 @@ This document was last updated at commit v4.3-197-g9085ed631.
 
 ## New features
 
-* `awful.screen` now has a `request::wallpaper` and a
-  `request::desktop_decoration` signal. They make some workflow implementation
-  cleaner.
-* Lua code can interact with the selection contents via the new
-  `selection.acquire`, `selection.getter`, and `selection.watcher` objects
-* Pending delayed calls (`gears.timer.delayed_call`) can be dispatched via
-  `gears.timer.run_delayed_calls_now()`
-* `naughty` was rewritten TODO TODO say more about this TODO TODO
-* The `rules` argument in `awful.spawn.once` and `.single_instance` is now
-  optional
-* The `wibox.container.background` now has a `border_strategy` property to
-  define how the content is resized when a border is present.
-* The `wibox.container.margin` now allows tables in the `margins` property.
-* The declarative widget syntax now allows to directly use functions instead of
-  `{widget = myfunction}`.
-* The `awful.widget.tasklist` now resizes the client icons properly.
-* The `awful.widget.tasklist` and `awful.widget.taglist` will now set the
-  `client` and `tag` properly respectively on each widget of the template
-  automatically. This reduces the amount of boilerplate code.
+-   `awful.screen` now has a `request::wallpaper` and a
+    `request::desktop_decoration` signal. They make some workflow implementation
+    cleaner.
+-   Lua code can interact with the selection contents via the new
+    `selection.acquire`, `selection.getter`, and `selection.watcher` objects
+-   Pending delayed calls (`gears.timer.delayed_call`) can be dispatched via
+    `gears.timer.run_delayed_calls_now()`
+-   `naughty` was rewritten TODO TODO say more about this TODO TODO
+-   The `rules` argument in `awful.spawn.once` and `.single_instance` is now
+    optional
+-   The `wibox.container.background` now has a `border_strategy` property to
+    define how the content is resized when a border is present.
+-   The `wibox.container.margin` now allows tables in the `margins` property.
+-   The declarative widget syntax now allows to directly use functions instead of
+    `{widget = myfunction}`.
+-   The `awful.widget.tasklist` now resizes the client icons properly.
+-   The `awful.widget.tasklist` and `awful.widget.taglist` will now set the
+    `client` and `tag` properly respectively on each widget of the template
+    automatically. This reduces the amount of boilerplate code.
 
 ## Noteworthy fixes
 
-* `$SOURCE_DATE_EPOCH` is honored in more places when generating the
-  documentation
-* Fix setting shapes via `awful.rules`
-* Set `_NET_WM_DESKTOP` for sticky windows correctly
-* Under complicated circumstances, AwesomeWM could have run Lua code while
-  having the X11 server grabbed. This had the potential to cause deadlocks with
-  Lua code using `io.popen`. Usage of `io.popen` is still strongly discouraged.
-* `wibox{ input_passthrough = true }` now works correctly. Previously, the
-  property could only be set on already-constructed wiboxes.
+-   `$SOURCE_DATE_EPOCH` is honored in more places when generating the
+    documentation
+-   Fix setting shapes via `awful.rules`
+-   Set `_NET_WM_DESKTOP` for sticky windows correctly
+-   Under complicated circumstances, AwesomeWM could have run Lua code while
+    having the X11 server grabbed. This had the potential to cause deadlocks with
+    Lua code using `io.popen`. Usage of `io.popen` is still strongly discouraged.
+-   `wibox{ input_passthrough = true }` now works correctly. Previously, the
+    property could only be set on already-constructed wiboxes.
 
 ## Behavior changes
 
-* `wibox.container.background` applies shapes differently. The new approach
-  should be more consistent with a border.
-* The `shape_clip` option of `wibox.container.background` was removed. The code
-  now always behaves as if this option is set to `true`. The old behaviour can
-  be simulated with `wibox.layout.stack`.
-* Awesome now initialises Lua's random number generator from a good source
-* `naughty.dbus` now uses Gio for talking to DBus. This is a first step in the
-  deprecation of Awesome's own DBus bindings and could lead to behaviour changes
-  on DBus.
-* The client `keys` and `buttons` property now return `awful.key`
-  and `awful.buttons` objects rather than the lower level `key` and `button`
-  objects. If you used these low level APIs to add keys and buttons dynamically,
-  please migrate your code to the corresponding `:append_` and `:remove_`
-  client methods.
- * `beautiful.border_width` and `beautiful.border_color` are now honored even
-   when the part related to borders is removed from `rc.lua`. Set them
-   appropriately in your theme or disconnect the default `request::border`
-   handler.
- * The order by which the client rules compute the geometry have changed
-   slightly. The border is now applied before the titlebar offset. This should
-   not affect most users unless you had mitigated the bug it fixes by adding
-   the titlebar offset in your rules.
- * Setting `awful.rules.rules` now append the rules to the existing set.
-   Clearing the rules was never officially supported. If you *really* want the
-   old behavior, use `awful.rules.rules = {}; awful.rules.rules = my_new_rules`.
+-   `wibox.container.background` applies shapes differently. The new approach
+    should be more consistent with a border.
+-   The `shape_clip` option of `wibox.container.background` was removed. The code
+    now always behaves as if this option is set to `true`. The old behaviour can
+    be simulated with `wibox.layout.stack`.
+-   Awesome now initialises Lua's random number generator from a good source
+-   `naughty.dbus` now uses Gio for talking to DBus. This is a first step in the
+    deprecation of Awesome's own DBus bindings and could lead to behaviour changes
+    on DBus.
+-   The client `keys` and `buttons` property now return `awful.key`
+    and `awful.buttons` objects rather than the lower level `key` and `button`
+    objects. If you used these low level APIs to add keys and buttons dynamically,
+    please migrate your code to the corresponding `:append_` and `:remove_`
+    client methods.
+-   `beautiful.border_width` and `beautiful.border_color` are now honored even
+    when the part related to borders is removed from `rc.lua`. Set them
+    appropriately in your theme or disconnect the default `request::border`
+    handler.
+-   The order by which the client rules compute the geometry have changed
+    slightly. The border is now applied before the titlebar offset. This should
+    not affect most users unless you had mitigated the bug it fixes by adding
+    the titlebar offset in your rules.
+-   Setting `awful.rules.rules` now append the rules to the existing set.
+    Clearing the rules was never officially supported. If you _really_ want the
+    old behavior, use `awful.rules.rules = {}; awful.rules.rules = my_new_rules`.
 
 <a name="v43"></a>
+
 # Awesome window manager framework version 4.3 changes
 
 Awesome v4.3 is the third release of the 4.x API. It comes after one and a half
@@ -85,53 +87,53 @@ with existing user configurations.
 
 ## New features
 
- * `gears.string` now has a `endswith` and `startswith` functions
- * `luarocks` modules are now automatically available in Awesome
- * A generic way to create or use widgets has been added
-   (`wibox.widget.base.make_widget_from_value`)
- * It is now possible to connect to signals from all instances of a widget at once
- * The calendar widget now supports margins
- * The documentation has a new theme
- * Wiboxes now have `to_widget()` and `save_to_svg()` methods.
- * The client objects now have a `immobilized_horizontal` and
-   `immobilized_vertical` property to know if they can currently be moved or
-   resized (for example, it is set to false when maximized)
- * `gears.timer` objects now have a `call_now` method.
- * The hotkey popup now supports `termite` keybindings
- * The menubar loads faster
- * Wiboxes have an `input_passthrough` property to send mouse clicks
-   to the object below.
- * The `taglist` and `tasklist` now support the declarative constructor syntax
- * There is now an `awesome.pixbuf_to_surface` to convert a `GdkPixbuf` to
-   a cairo surface.
- * The notifications icon can now be resized and limited with
-   `notification\_icon_\size`
- * A `gears.sort` module has been added with graph resolution
- * `awesome-client` now runs code in a protected context
- * The <a href="./03-declarative-layout.md.html">widget documentation</a> has
-   been extended to be more friendly to new users.
- * There is a new `beautiful.maximized_hide_border` theme option to hide the
-   border for maximized clients.
- * The `client` `startup_id` field is now writable. This is useful when the
-   client native implementation is not present or too buggy to be used.
- * The `awful.widget.prompt` now has a `with_shell` option to allow Bash/ZSH
-   aliases, function and environment variables to be used in commands.
- * The `awful.titlebar`s now have a `fallback_name` when a client has no `name`
-   property.
- * Clients now have a `motif_wm_hints` property to reflect some hints using the
-   Motif X11 property extension. This is used by some modern toolkits including
-   GTK.
- * Clients now have a `requests_no_titlebar` property to expose when a client
-   has client side titlebars (also known as decorations and CSD)
- * The hotkey popup now has a `show_awesome_keys` option.
- * The `awful.widget.prompt` now has more of the `awful.prompt` constructor
-   arguments.
- * It is now possible to set a list of layouts per tag instead of a single
-   global one.
- * There is now a `awful.layout.get_tag_layout_index()` function to get the
-   index of the current layout in the global layout list
-   (`awful.layout.layouts`)
- * The `wibox.layout.manual` layout now has an `:insert()` method.
+-   `gears.string` now has a `endswith` and `startswith` functions
+-   `luarocks` modules are now automatically available in Awesome
+-   A generic way to create or use widgets has been added
+    (`wibox.widget.base.make_widget_from_value`)
+-   It is now possible to connect to signals from all instances of a widget at once
+-   The calendar widget now supports margins
+-   The documentation has a new theme
+-   Wiboxes now have `to_widget()` and `save_to_svg()` methods.
+-   The client objects now have a `immobilized_horizontal` and
+    `immobilized_vertical` property to know if they can currently be moved or
+    resized (for example, it is set to false when maximized)
+-   `gears.timer` objects now have a `call_now` method.
+-   The hotkey popup now supports `termite` keybindings
+-   The menubar loads faster
+-   Wiboxes have an `input_passthrough` property to send mouse clicks
+    to the object below.
+-   The `taglist` and `tasklist` now support the declarative constructor syntax
+-   There is now an `awesome.pixbuf_to_surface` to convert a `GdkPixbuf` to
+    a cairo surface.
+-   The notifications icon can now be resized and limited with
+    `notification\_icon_\size`
+-   A `gears.sort` module has been added with graph resolution
+-   `tde-client` now runs code in a protected context
+-   The <a href="./03-declarative-layout.md.html">widget documentation</a> has
+    been extended to be more friendly to new users.
+-   There is a new `beautiful.maximized_hide_border` theme option to hide the
+    border for maximized clients.
+-   The `client` `startup_id` field is now writable. This is useful when the
+    client native implementation is not present or too buggy to be used.
+-   The `awful.widget.prompt` now has a `with_shell` option to allow Bash/ZSH
+    aliases, function and environment variables to be used in commands.
+-   The `awful.titlebar`s now have a `fallback_name` when a client has no `name`
+    property.
+-   Clients now have a `motif_wm_hints` property to reflect some hints using the
+    Motif X11 property extension. This is used by some modern toolkits including
+    GTK.
+-   Clients now have a `requests_no_titlebar` property to expose when a client
+    has client side titlebars (also known as decorations and CSD)
+-   The hotkey popup now has a `show_awesome_keys` option.
+-   The `awful.widget.prompt` now has more of the `awful.prompt` constructor
+    arguments.
+-   It is now possible to set a list of layouts per tag instead of a single
+    global one.
+-   There is now a `awful.layout.get_tag_layout_index()` function to get the
+    index of the current layout in the global layout list
+    (`awful.layout.layouts`)
+-   The `wibox.layout.manual` layout now has an `:insert()` method.
 
 ### Better DPI handling
 
@@ -158,9 +160,9 @@ This is used by default in `awful.spawn`. The reliability of attaching
 properties to `spawn` calls has been improved. On top of this, three new
 functions were added
 
- * `awful.spawn.once`
- * `awful.spawn.single_instance`
- * `awful.spawn.raise_or_spawn`
+-   `awful.spawn.once`
+-   `awful.spawn.single_instance`
+-   `awful.spawn.raise_or_spawn`
 
 They allow to specify that a command should only have one running instance.
 This works across restart too, so all hacks to handle restarting Awesome are
@@ -220,40 +222,39 @@ display widgets on the screen:
 
 [![The ratio strategies](../images/AUTOGEN_awful_popup_wiboxtypes.svg)](../classes/awful.popup.html)
 
-
 The `awful.widget.layoutlist` allows to easily display and select the client
 layout from a widget:
 
 [![The layoutbox](../images/AUTOGEN_awful_widget_layoutlist_bar.svg)](../classes/awful.widget.layoutlist.html)
 
-
 ## Noteworthy fixes
 
- * There is no longer an error when a tag defined by name in `awful.rules` is
-   not found.
- * The menubar is now generally more robust thanks to a variety of improvements
- * Many dead links in the documentation have been fixed
- * The `textclock` is now generally more robust with formatting issues,
-   timezones and declarative constructors.
- * The last screen is never removed. Previously, some laptops removed all screens
-   during suspend, causing all clients to go to the first tag or getting lost
-   completely.
- * The new default `rc.lua` uses `request::activate` to set the focus. This
-   fixes many corner case such as unfocusable clients getting the focus.
- * Calling `awful.spawn` with a set of properties is now more reliable.
- * `awful.key.execute` is now much more reliable.
+-   There is no longer an error when a tag defined by name in `awful.rules` is
+    not found.
+-   The menubar is now generally more robust thanks to a variety of improvements
+-   Many dead links in the documentation have been fixed
+-   The `textclock` is now generally more robust with formatting issues,
+    timezones and declarative constructors.
+-   The last screen is never removed. Previously, some laptops removed all screens
+    during suspend, causing all clients to go to the first tag or getting lost
+    completely.
+-   The new default `rc.lua` uses `request::activate` to set the focus. This
+    fixes many corner case such as unfocusable clients getting the focus.
+-   Calling `awful.spawn` with a set of properties is now more reliable.
+-   `awful.key.execute` is now much more reliable.
 
 ## Behavior changes
 
-* Previously, when accessing a screen by RandR output name caused a Lua error
-  when no output with the given name exists. This was changed to now return
-  `nil` instead. This could break code that uses `pcall` to check if a screen
-  exists. This code now needs to be changed to check for a `nil` return instead.
-  In practice it is unlikely anyone will notice the difference.
-* In the previous release, unfocusable clients might also not be raised.
-  It was decided that this is a bug and the default behavior was changed.
+-   Previously, when accessing a screen by RandR output name caused a Lua error
+    when no output with the given name exists. This was changed to now return
+    `nil` instead. This could break code that uses `pcall` to check if a screen
+    exists. This code now needs to be changed to check for a `nil` return instead.
+    In practice it is unlikely anyone will notice the difference.
+-   In the previous release, unfocusable clients might also not be raised.
+    It was decided that this is a bug and the default behavior was changed.
 
 <a name="v42"></a>
+
 # Awesome window manager framework version 4.2 changes
 
 Awesome v4.2 is the second release of the 4.x API. It mostly fixes the bugs
@@ -262,38 +263,38 @@ have been resolved or decided to be obsolete.
 
 ## Noteworthy fixes
 
- * The annoying maximization regression from v4.1 has been fixed
- * Fixes broken drag&drop with some applications like FlowBlade
- * Changing the keyboard layout using `xmodmap` is now much faster
- * Fixes a regression that prevents Awesome to start when the wallpaper is invalid
- * The client history is now more reliable
- * Another instance where clients ended up in the wrong screen has been fixed
- * Awesome will no longer generate zombie processes when restarted
- * All official themes now support HiDPI screens
- * The `magnifier` layout has been fixed
- * The menubar has been fixed for Lua 5.1 users
+-   The annoying maximization regression from v4.1 has been fixed
+-   Fixes broken drag&drop with some applications like FlowBlade
+-   Changing the keyboard layout using `xmodmap` is now much faster
+-   Fixes a regression that prevents Awesome to start when the wallpaper is invalid
+-   The client history is now more reliable
+-   Another instance where clients ended up in the wrong screen has been fixed
+-   Awesome will no longer generate zombie processes when restarted
+-   All official themes now support HiDPI screens
+-   The `magnifier` layout has been fixed
+-   The menubar has been fixed for Lua 5.1 users
 
 ## New features
 
- * The hotkey popup has been extended to support Firefox, Qutebrowser and TMUX
- * Naughty (the notification system) has a new `ignore_suspend` flag
- * The `textclock` widget now supports timezones
- * New utility functions have been added:
-   * `gears.string.split`
-   * `gears.table.map`
-   * `gears.filesystem.make_parent_directories`
- * New widget functions (moved out of the `gears` module):
-   * `wibox.widget.draw_to_cairo_context`
-   * `wibox.widget.draw_to_svg_file`
-   * `wibox.widget.draw_to_image_surface`
- * Maximization requests from clients can now be intercepted using a
-   `request::geometry` signal handler.
- * A new `wibox.layout.manual` layout has been added (see below)
- * Two new `calendar` widgets have been added, a widget and a popup (see below)
- * The `ratio` layout now supports various strategies to redistribute space
- * The `stack` layout now supports offsets
- * The notifications now have a `naughty.destroy_all_notifications()` function
- * The `xresources` theme now supports the titlebar `hover` and `press` states
+-   The hotkey popup has been extended to support Firefox, Qutebrowser and TMUX
+-   Naughty (the notification system) has a new `ignore_suspend` flag
+-   The `textclock` widget now supports timezones
+-   New utility functions have been added:
+    -   `gears.string.split`
+    -   `gears.table.map`
+    -   `gears.filesystem.make_parent_directories`
+-   New widget functions (moved out of the `gears` module):
+    -   `wibox.widget.draw_to_cairo_context`
+    -   `wibox.widget.draw_to_svg_file`
+    -   `wibox.widget.draw_to_image_surface`
+-   Maximization requests from clients can now be intercepted using a
+    `request::geometry` signal handler.
+-   A new `wibox.layout.manual` layout has been added (see below)
+-   Two new `calendar` widgets have been added, a widget and a popup (see below)
+-   The `ratio` layout now supports various strategies to redistribute space
+-   The `stack` layout now supports offsets
+-   The notifications now have a `naughty.destroy_all_notifications()` function
+-   The `xresources` theme now supports the titlebar `hover` and `press` states
 
 The stack layout offsets:
 
@@ -313,18 +314,18 @@ The new calendar widgets are very flexible and can be themed down to the very sm
 [![The calendar widget](../images/AUTOGEN_wibox_widget_calendar_fn_embed_cell.svg)](../classes/wibox.widget.calendar.html)
 [![The calendar widget](../images/AUTOGEN_wibox_widget_calendar_font.svg)](../classes/wibox.widget.calendar.html)
 
-
 ## Behavior changes
 
- * The client `property::floating` is now also emitted when the floating
-   state changes implicitly, e.g. because the client gets maximized or
-   fullscreened.
- * Building Awesome from its root source directory is no longer supported and
-   will print an error.
+-   The client `property::floating` is now also emitted when the floating
+    state changes implicitly, e.g. because the client gets maximized or
+    fullscreened.
+-   Building Awesome from its root source directory is no longer supported and
+    will print an error.
 
 <hr />
 
 <a name="v41"></a>
+
 # Awesome window manager framework version 4.1 changes
 
 Awesome v4.1 is the first stable release for the Awesome 4.0 API. It adds
@@ -470,28 +471,28 @@ thank all users who [submitted screenshot](https://github.com/awesomeWM/awesome/
 
 ## Noteworthy fixes
 
- * Some applications such as VLC and Terminator had large unpainted areas
- * The magnifier layout has been fixed
- * Un-maximization misbehaved
- * Docking area is now per-tag again
- * CMake missing dependencies detection is fixed
- * Support for FreeBSD and OpenBSD have been restored.
- * Dialog and transient window can be moved to other screens again
- * The fallback mode (when Awesome fails to load `rc.lua`) is now more robust
+-   Some applications such as VLC and Terminator had large unpainted areas
+-   The magnifier layout has been fixed
+-   Un-maximization misbehaved
+-   Docking area is now per-tag again
+-   CMake missing dependencies detection is fixed
+-   Support for FreeBSD and OpenBSD have been restored.
+-   Dialog and transient window can be moved to other screens again
+-   The fallback mode (when Awesome fails to load `rc.lua`) is now more robust
 
 ## Behavior changes
 
 This is a stable release and we tried to minimize any upgrade impact. However
 various bugfixes induced minor, not noticeable, changes:
 
- * HiDPI support fix changed the default theme "taglist square". This is only
-   true if the original theme file is used (not a copy).
- * Maximization now honor the screen padding. There is an option to restore the
-   previous behavior.
- * Un-maximized clients are now restored to their current screen instead of the
-   screen where they were maximized.
- * Hotkey popup no longer enable the Vim module by default due to user
-   complaints
+-   HiDPI support fix changed the default theme "taglist square". This is only
+    true if the original theme file is used (not a copy).
+-   Maximization now honor the screen padding. There is an option to restore the
+    previous behavior.
+-   Un-maximized clients are now restored to their current screen instead of the
+    screen where they were maximized.
+-   Hotkey popup no longer enable the Vim module by default due to user
+    complaints
 
 `awful.util` has been split into multiple modules in the `gears` library to
 reduce the dependency graph. This allows for better unit testing. `awful.util`
@@ -500,15 +501,15 @@ new code should use the functions from `gears` instead of `awful.util`.
 
 ## Other
 
- * The minimal LGI version is now 0.8.0. It was found that Awesome 4.0 also had
-   an issue in the menubar module when used with 0.7.3.
- * GTK+3 is now required to run the integration tests.
+-   The minimal LGI version is now 0.8.0. It was found that Awesome 4.0 also had
+    an issue in the menubar module when used with 0.7.3.
+-   GTK+3 is now required to run the integration tests.
 
 <hr />
 
 <a name="v4"></a>
-# Awesome window manager framework version 4.0 changes
 
+# Awesome window manager framework version 4.0 changes
 
 Awesome 4.0 is the first release of the v4 API level, breaking the proven
 v3.5 API level after 4 years. This requires to port the existing user
@@ -524,20 +525,20 @@ existing users.
 #### Mouse move and resize handlers
 
 The code used to resize and move clients has been refactored to allow plugins
-to be attached.  This includes:
+to be attached. This includes:
 
-* display the client geometry in the wibar
-* implement a resize grid
-* implement delayed resizing (like Windows 3.11 and TWM)
-* have touch-friendly resize handles (implemented by the Collision extension)
-* allow window snapping (implemented)
-* allow edge tiling (like Windows 7+ (AeroSnap) , KDE and Gnome) (implemented)
-* move to the next tag when dragged to the edge (like KDE3) (disabled by default)
+-   display the client geometry in the wibar
+-   implement a resize grid
+-   implement delayed resizing (like Windows 3.11 and TWM)
+-   have touch-friendly resize handles (implemented by the Collision extension)
+-   allow window snapping (implemented)
+-   allow edge tiling (like Windows 7+ (AeroSnap) , KDE and Gnome) (implemented)
+-   move to the next tag when dragged to the edge (like KDE3) (disabled by default)
 
 **See:**
 
-* `mouse`
-* `client` `request::geometry`
+-   `mouse`
+-   `client` `request::geometry`
 
 .
 
@@ -562,13 +563,12 @@ It can be disabled by setting
 It is now possible to display the list of active keyboard shortcuts by pressing
 `mod4 + s` (`hotkeys_popup.show_help`).
 
-
 **See:**
 
-* `awful.hotkeys_popup`
-* `awful.hotkeys_popup.keys`
-* `awful.hotkeys_popup.keys.vim`
-* `awful.hotkeys_popup.widget`
+-   `awful.hotkeys_popup`
+-   `awful.hotkeys_popup.keys`
+-   `awful.hotkeys_popup.keys.vim`
+-   `awful.hotkeys_popup.widget`
 
 ### New tag and layout properties
 
@@ -580,9 +580,9 @@ Adds an empty space between clients.
 
 **See:**
 
-* `tag`
-* `tag.gap`
-* `tag.gap_single_client`
+-   `tag`
+-   `tag.gap`
+-   `tag.gap_single_client`
 
 #### Master fill policies
 
@@ -594,8 +594,8 @@ clients.
 
 **See:**
 
-* `tag`
-* `tag.master_fill_policy`
+-   `tag`
+-   `tag.master_fill_policy`
 
 #### Volatile
 
@@ -605,7 +605,7 @@ dedicated to a single client.
 
 **See:**
 
-* `tag.volatile`
+-   `tag.volatile`
 
 #### The corner layout
 
@@ -614,14 +614,14 @@ horizontal row of slave clients.
 
 ### New client properties
 
-* `client.focusable` is now read/write (compared to read only in the previous
-  versions)
-* `client.valid` tells if the client still really exist or if the object is waiting to
-  be deleted
-* `client.floating` is now a client property
-* `client.x` / `client.y` / `client.width` / `client.height` are
-  `client.geometry` aliases
-* `client.first_tag` is a convenience wrapper for `c:tags()[1]`
+-   `client.focusable` is now read/write (compared to read only in the previous
+    versions)
+-   `client.valid` tells if the client still really exist or if the object is waiting to
+    be deleted
+-   `client.floating` is now a client property
+-   `client.x` / `client.y` / `client.width` / `client.height` are
+    `client.geometry` aliases
+-   `client.first_tag` is a convenience wrapper for `c:tags()[1]`
 
 #### Client signaling
 
@@ -635,19 +635,19 @@ clients.
 All of the new client properties can be used in rules. In addition, the
 following ones have been added:
 
-* `placement`: use the `awful.placement` method (or combinations) to place the
-  client. While older version of Awesome allowed to use callbacks here, it
-  didn't support all corner cases such as titlebar offsets and border_width.
-* `titlebars_enabled`: older versions of Awesome had a global variable to
-  enable or disable titlebars. This is now delegated to the rules.
-* `new_tag`: allows to create a tag for the client instead of using an existing
-  one.
-* The `tag` property has been expanded to also find tags from their name.
-* The `tags` property now tries to merge the current tags into the array to fix
-  some other properties.
-* All geometry properties are now executed at once to avoid side effects.
-* The `focus` is now going through the focus filters instead of being applied
-  as-is (see the focus filter section).
+-   `placement`: use the `awful.placement` method (or combinations) to place the
+    client. While older version of Awesome allowed to use callbacks here, it
+    didn't support all corner cases such as titlebar offsets and border_width.
+-   `titlebars_enabled`: older versions of Awesome had a global variable to
+    enable or disable titlebars. This is now delegated to the rules.
+-   `new_tag`: allows to create a tag for the client instead of using an existing
+    one.
+-   The `tag` property has been expanded to also find tags from their name.
+-   The `tags` property now tries to merge the current tags into the array to fix
+    some other properties.
+-   All geometry properties are now executed at once to avoid side effects.
+-   The `focus` is now going through the focus filters instead of being applied
+    as-is (see the focus filter section).
 
 #### User rules
 
@@ -655,9 +655,9 @@ It is now possible to register new rules by adding them to some `awful.rules`
 arrays. This can be used by modules to add extra functionalities or to avoid
 boilerplate code in callbacks.
 
-* `awful.rules.high_priority_properties`: before most other rules are executed.
-* `awful.rules.extra_properties`: together with normal rules.
-* `awful.rules.delayed_properties`: after most other rules, but before `focus`.
+-   `awful.rules.high_priority_properties`: before most other rules are executed.
+-   `awful.rules.extra_properties`: together with normal rules.
+-   `awful.rules.delayed_properties`: after most other rules, but before `focus`.
 
 Those extra rules also have the capability to mutate the current rule array.
 
@@ -744,9 +744,9 @@ configuration features such as empty colors and shape.
 
 **See:**
 
-* <a href="./03-declarative-layout.md.html">The declarative layout system</a>
-* `awful.widget.tasklist`
-* `awful.widget.taglist`
+-   <a href="./03-declarative-layout.md.html">The declarative layout system</a>
+-   `awful.widget.tasklist`
+-   `awful.widget.taglist`
 
 ### New APIs
 
@@ -780,7 +780,6 @@ the property APIs are now supported.
     mytextbox.text = "Foobar"
     myimagebox.resize = not myimagebox.resize
 
-
 Awesome 4.0 restores a feature found in older versions of Awesome.
 All widgets now have properties again. While all `:set_foo(bar)` type accessors
 are still fully (and forever) supported, it is now possible to do `.foo = bar`
@@ -795,7 +794,7 @@ is possible to do it again.
 
 **See:**
 
-* <a href="./03-declarative-layout.md.html">The declarative layout system</a>
+-   <a href="./03-declarative-layout.md.html">The declarative layout system</a>
 
 Most documentation examples have been adapted to use this syntax instead of the
 imperative one. Both syntaxes are fully supported.
@@ -826,7 +825,6 @@ For example:
         layout = wibox.layout.fized.horizontal
     }
 
-
 #### The request API
 
 Awesome used to blindly allow requests from clients to steal focus or move
@@ -834,21 +832,21 @@ them around. There are now handlers to block such requests.
 The `request::` API is also used internally in Awesome itself to make
 previously hard-coded behavior more flexible.
 
-* `request::activate`: When a client requests focus and/or being raised.
-* `request::geometry`: When a client requests a position.
-* `request::screen`: When a client needs a screen.
-* `request::select`: When a tag wants to be selected.
-* `request::tag`: When a client needs a tag.
-* `request::titlebars`: When a client needs a titlebar.
-* `request::urgent`: When a client requests attention.
+-   `request::activate`: When a client requests focus and/or being raised.
+-   `request::geometry`: When a client requests a position.
+-   `request::screen`: When a client needs a screen.
+-   `request::select`: When a tag wants to be selected.
+-   `request::tag`: When a client needs a tag.
+-   `request::titlebars`: When a client needs a titlebar.
+-   `request::urgent`: When a client requests attention.
 
 **See:**
 
-* `awful.ewmh.tag`
-* `awful.ewmh.geometry`
-* `awful.ewmh.activate`
-* `awful.ewmh.urgent`
-* awful.`mouse.resize_handler`
+-   `awful.ewmh.tag`
+-   `awful.ewmh.geometry`
+-   `awful.ewmh.activate`
+-   `awful.ewmh.urgent`
+-   awful.`mouse.resize_handler`
 
 The defaults handlers are mostly located in the `awful.ewmh` module and comply
 with what the specification defines.
@@ -864,14 +862,14 @@ of view this API allows for rich floating window management using
 
 It provides generic placement functions that work with:
 
-* `client`s
-* `wibox`es
-* the `mouse`
-* anything with a `:geometry()` method
+-   `client`s
+-   `wibox`es
+-   the `mouse`
+-   anything with a `:geometry()` method
 
 **See:**
 
-* `awful.placement`
+-   `awful.placement`
 
 #### The shape API
 
@@ -879,12 +877,11 @@ It provides generic placement functions that work with:
 
 This new API allows nicer visuals and more complex themes.
 
-
 Also note that the client shape functionality was broken in 3.5 and has been
 fixed.
 **See:**
 
-* `gears.shape`
+-   `gears.shape`
 
 #### The hierarchy API
 
@@ -900,8 +897,8 @@ This allows for interactive widgets such as a slider.
 
 **See:**
 
-* `wibox.hierarchy`
-* <a href="./04-new-widgets.md.html">Creating new widget</a>
+-   `wibox.hierarchy`
+-   <a href="./04-new-widgets.md.html">Creating new widget</a>
 
 ### New themes
 
@@ -921,13 +918,10 @@ Note that this only works if the client properly supports the freedesktop.org
 startup notifications protocol. For example, to open a new `urxvt` in a new tag
 from the command line, use:
 
-
-    awesome-client  "require('awful.spawn')('urxvt', {new_tag=true})"
-
+    tde-client  "require('awful.spawn')('urxvt', {new_tag=true})"
 
 As another example, to launch a centered floating terminal in the currently
 selected tag of screen number 2:
-
 
     awful.spawn("urxvt", {
         tag       = screen[2].selected_tag,
@@ -937,8 +931,8 @@ selected tag of screen number 2:
 
 **See:**
 
-* `awful.spawn`
-* `awful.rules`
+-   `awful.spawn`
+-   `awful.rules`
 
 All rule properties can be used, including the newly introduced placement ones
 (like above).
@@ -952,7 +946,7 @@ shortcuts to spawn the clients with arguments and callbacks.
 
 **See:**
 
-* `awful.prompt`
+-   `awful.prompt`
 
 ### Focus stealing filters.
 
@@ -964,9 +958,9 @@ itself, now goes through the request filters.
 
 **See:**
 
-* `awful.ewmh.add_activate_filter`
-* `awful.ewmh.remove_activate_filter`
-* `awful.ewmh.activate`
+-   `awful.ewmh.add_activate_filter`
+-   `awful.ewmh.remove_activate_filter`
+-   `awful.ewmh.activate`
 
 ### Notification actions
 
@@ -974,7 +968,7 @@ Awesome now supports XDG notification (aka, naughty) actions.
 
 **See:**
 
-* `naughty`
+-   `naughty`
 
 ### Custom xproperties support
 
@@ -991,39 +985,39 @@ includes a widget to view the current layout.
 
 **See:**
 
-* `awesome.xkb_set_layout_group`
-* `awesome.xkb_get_layout_group`
-* `awesome.xkb_get_group_names`
-* `wibox.widget.keyboardlayout`
+-   `awesome.xkb_set_layout_group`
+-   `awesome.xkb_get_layout_group`
+-   `awesome.xkb_get_group_names`
+-   `wibox.widget.keyboardlayout`
 
 ### Other minor features
 
-* `awesome.composite_manager_running` allows to detect if a compositor is
-  running
-* a new `--replace` command line option is available (similar to other window
-  managers)
-* clients now have an unified `maximized` property additionally to only
-  _horizontal and _vertical
-* `awful.layout.layouts` is now where the client layout array is stored
-* the `systray` elements order can be reversed and spacing can be added
-* it is now possible to get the layout of unselected tags (use with caution)
-* tags can be swapped, former XMonad users with multiple screens can rejoice
-* whole screens can now be swapped
-* virtual screens can be created, moved and resized
-* paths can be added to Lua's search path via the `--search` argument
-* RandR 1.5 MONITOR support
-* access to the X resource management database
-* titlebars are now controlled using `awful.rules` and enabled by default
-* `awesome-client` now supports Lua code as its first argument (instead of
-  reading from stdin)
-* preferred client icon size can now be configured (see
-  `awesome.set_preferred_icon_size`)
-* there is now an `awesome.startup_errors` string with the startup error (if
-  any)
-* Initial support for HiDPI monitors / different DPI per screen
-* early support for stateful client layouts
-* the `--version` command line option now provides more details and system
-  information
+-   `awesome.composite_manager_running` allows to detect if a compositor is
+    running
+-   a new `--replace` command line option is available (similar to other window
+    managers)
+-   clients now have an unified `maximized` property additionally to only
+    \_horizontal and \_vertical
+-   `awful.layout.layouts` is now where the client layout array is stored
+-   the `systray` elements order can be reversed and spacing can be added
+-   it is now possible to get the layout of unselected tags (use with caution)
+-   tags can be swapped, former XMonad users with multiple screens can rejoice
+-   whole screens can now be swapped
+-   virtual screens can be created, moved and resized
+-   paths can be added to Lua's search path via the `--search` argument
+-   RandR 1.5 MONITOR support
+-   access to the X resource management database
+-   titlebars are now controlled using `awful.rules` and enabled by default
+-   `tde-client` now supports Lua code as its first argument (instead of
+    reading from stdin)
+-   preferred client icon size can now be configured (see
+    `awesome.set_preferred_icon_size`)
+-   there is now an `awesome.startup_errors` string with the startup error (if
+    any)
+-   Initial support for HiDPI monitors / different DPI per screen
+-   early support for stateful client layouts
+-   the `--version` command line option now provides more details and system
+    information
 
 ## Breaking changes
 
@@ -1039,10 +1033,9 @@ configuration</a>.
 
 ### There can be off-screen clients unless rc.lua is adapted
 
-
 **To fix from bash/zsh without a config change:**
 
-    echo 'for _,c in ipairs(client.get()) do require("awful.placement").no_offscreen(c) end' | awesome-client
+    echo 'for _,c in ipairs(client.get()) do require("awful.placement").no_offscreen(c) end' | tde-client
 
 And add the following to the global rc.lua `awful.rule` section:
 
@@ -1054,10 +1047,10 @@ move them to the `placement` rule property.
 
 **See:**
 
-* `awful.placement`
-* `awful.placement.no_overlap`
-* `awful.placement.no_offscreen`
-* `awful.rules`
+-   `awful.placement`
+-   `awful.placement.no_overlap`
+-   `awful.placement.no_offscreen`
+-   `awful.rules`
 
 ### Screens are no longer static
 
@@ -1070,9 +1063,9 @@ the screen object, as the integer representation is mostly deprecated.
 
 **See:**
 
-* `screen`
-* `screen.connect_for_each_screen`
-* `screen.disconnect_for_each_screen`
+-   `screen`
+-   `screen.connect_for_each_screen`
+-   `screen.disconnect_for_each_screen`
 
 ### Screens are now objects
 
@@ -1083,7 +1076,7 @@ now broken. Use screen objects instead of numbers.
 
 **See:**
 
-* `screen`
+-   `screen`
 
 ### Awesome no longer restarts when a new screen is added
 
@@ -1096,9 +1089,8 @@ restore the old behavior by adding the following at the end:
 
 **See:**
 
-* `screen`
-* `screen.list`
-
+-   `screen`
+-   `screen.list`
 
 ### Widgets' `:fit()` and `:draw()` methods signature changed and `:layout()` is mandatory for layouts and containers
 
@@ -1121,16 +1113,15 @@ is no exception. The private API of all widgets has been broken.
 
 ### Spawn changes
 
-* It has been moved into its own module (`awful.spawn`).
-* Some methods have been deprecated. It is not recommended to use blocking
-  methods in Awesome. We made sure to make your life harder if you wish to
-  ignore this warning.
-  Really, using blocking calls in rc.lua has very nasty side effects.
-
+-   It has been moved into its own module (`awful.spawn`).
+-   Some methods have been deprecated. It is not recommended to use blocking
+    methods in Awesome. We made sure to make your life harder if you wish to
+    ignore this warning.
+    Really, using blocking calls in rc.lua has very nasty side effects.
 
 **See:**
 
-* `awful.spawn`
+-   `awful.spawn`
 
 ### Prompt changes
 
@@ -1138,10 +1129,9 @@ Most arguments have been deprecated, they are now taken from the `args`
 argument-by-name table. This was done because the number of optional arguments
 was getting out of control.
 
-
 **See:**
 
-* `awful.prompt.run`
+-   `awful.prompt.run`
 
 ### Timers are no longer part of the C API
 
@@ -1154,70 +1144,70 @@ undertaking in 4.0 to make the API coherent and well documented.
 
 Those functions have been renamed or converted to methods:
 
-* awful.`client.jumpto`
-* awful.`client.visible`
-* awful.`client.tiled`
-* awful.`client.moveresize`
-* awful.`client.movetotag`
-* awful.`client.toggletag`
-* awful.`client.movetoscreen`
-* awful.`client.mark`
-* awful.`client.unmark`
-* awful.`client.ismarked`
-* awful.`client.togglemarked`
-* awful.`client.floating.set`
-* awful.`client.isfixed`
-* awful.`client.floating.get`
-* awful.`client.floating.toggle`
-* awful.`client.dockable.get`
-* awful.`client.dockable.set`
-* awful.`client.property.get`
-* awful.`client.property.set`
-* awful.`client.get_transient_for_matching`
-* awful.`client.is_transient_for`
-* awful.`mouse.client_under_pointer`
-* awful.`mouse.client.dragtotag.border`
-* awful.`mouse.client.corner`
-* awful.`screen.getdistance_sq`
-* awful.`screen.padding`
-* awful.`tag.move`
-* awful.`tag.swap`
-* awful.`tag.delete`
-* awful.`tag.gettags`
-* awful.`tag.setscreen`
-* awful.`tag.getscreen`
-* awful.`tag.selectedlist`
-* awful.`tag.selected`
-* awful.`tag.setmwfact`
-* awful.`tag.getmwfact`
-* awful.`tag.setlayout`
-* awful.`tag.setvolatile`
-* awful.`tag.getvolatile`
-* awful.`tag.setgap`
-* awful.`tag.getgap`
-* awful.`tag.setmfpol`
-* awful.`tag.getmfpol`
-* awful.`tag.setnmaster`
-* awful.`tag.getnmaster`
-* awful.`tag.seticon`
-* awful.`tag.geticon`
-* awful.`tag.setncol`
-* awful.`tag.getncol`
-* awful.`tag.getidx`
-* awful.`tag.viewonly`
-* awful.`tag.getdata`
-* awful.`tag.getproperty`
-* awful.`tag.setproperty`
-* awful.`tag.withcurrent`
-* `awful.util.get_rectangle_in_direction`
-* `awful.wibox.get_position`
-* `awful.wibox.set_position`
-* `awful.wibox.attach`
-* `awful.wibox.align`
-* `awful.wibox.stretch`
-* `awful.widget.progressbar.set_vertical`
-* `awful.widget.progressbar.set_height`
-* `awful.widget.progressbar.set_width`
+-   awful.`client.jumpto`
+-   awful.`client.visible`
+-   awful.`client.tiled`
+-   awful.`client.moveresize`
+-   awful.`client.movetotag`
+-   awful.`client.toggletag`
+-   awful.`client.movetoscreen`
+-   awful.`client.mark`
+-   awful.`client.unmark`
+-   awful.`client.ismarked`
+-   awful.`client.togglemarked`
+-   awful.`client.floating.set`
+-   awful.`client.isfixed`
+-   awful.`client.floating.get`
+-   awful.`client.floating.toggle`
+-   awful.`client.dockable.get`
+-   awful.`client.dockable.set`
+-   awful.`client.property.get`
+-   awful.`client.property.set`
+-   awful.`client.get_transient_for_matching`
+-   awful.`client.is_transient_for`
+-   awful.`mouse.client_under_pointer`
+-   awful.`mouse.client.dragtotag.border`
+-   awful.`mouse.client.corner`
+-   awful.`screen.getdistance_sq`
+-   awful.`screen.padding`
+-   awful.`tag.move`
+-   awful.`tag.swap`
+-   awful.`tag.delete`
+-   awful.`tag.gettags`
+-   awful.`tag.setscreen`
+-   awful.`tag.getscreen`
+-   awful.`tag.selectedlist`
+-   awful.`tag.selected`
+-   awful.`tag.setmwfact`
+-   awful.`tag.getmwfact`
+-   awful.`tag.setlayout`
+-   awful.`tag.setvolatile`
+-   awful.`tag.getvolatile`
+-   awful.`tag.setgap`
+-   awful.`tag.getgap`
+-   awful.`tag.setmfpol`
+-   awful.`tag.getmfpol`
+-   awful.`tag.setnmaster`
+-   awful.`tag.getnmaster`
+-   awful.`tag.seticon`
+-   awful.`tag.geticon`
+-   awful.`tag.setncol`
+-   awful.`tag.getncol`
+-   awful.`tag.getidx`
+-   awful.`tag.viewonly`
+-   awful.`tag.getdata`
+-   awful.`tag.getproperty`
+-   awful.`tag.setproperty`
+-   awful.`tag.withcurrent`
+-   `awful.util.get_rectangle_in_direction`
+-   `awful.wibox.get_position`
+-   `awful.wibox.set_position`
+-   `awful.wibox.attach`
+-   `awful.wibox.align`
+-   `awful.wibox.stretch`
+-   `awful.widget.progressbar.set_vertical`
+-   `awful.widget.progressbar.set_height`
+-   `awful.widget.progressbar.set_width`
 
 Note that for 4.0, only a warning will be printed if these functions are used.
 They will eventually be removed.
@@ -1242,16 +1232,16 @@ convention.
 Using the old name will print a warning and will alias into the new module.
 Note that theses aliases are temporary and will be removed.
 
-* `awful.wibox`
-* `awful.widget.graph`
-* `awful.widget.progressbar`
-* `awful.widget.textclock`
-* `wibox.layout.constraint`
-* `wibox.layout.margin`
-* `wibox.layout.mirror`
-* `wibox.layout.rotate`
-* `wibox.layout.scroll`
-* `wibox.widget.background`
+-   `awful.wibox`
+-   `awful.widget.graph`
+-   `awful.widget.progressbar`
+-   `awful.widget.textclock`
+-   `wibox.layout.constraint`
+-   `wibox.layout.margin`
+-   `wibox.layout.mirror`
+-   `wibox.layout.rotate`
+-   `wibox.layout.scroll`
+-   `wibox.widget.background`
 
 ### The mouse finder module is gone
 
@@ -1284,26 +1274,26 @@ See the README for an extensive list.
 Awesome 4.0 now uses LDoc and MarkDown based documentation. We also introduced
 official guides into our documentation:
 
-* <a href="./90-FAQ.md.html">FAQ</a>
-* <a href="./02-contributing.md.html">Contributing</a>
-* <a href="./03-declarative-layout.md.html">The declarative layout system</a>
-* <a href="./04-new-widgets.md.html">Creating new widget</a>
-* <a href="./05-awesomerc.md.html">Default configuration file documentation</a>
-* <a href="./06-appearance.md.html">Change Awesome appearance</a>
-* <a href="./16-using-cairo.md.html">Using Cairo and LGI</a>
+-   <a href="./90-FAQ.md.html">FAQ</a>
+-   <a href="./02-contributing.md.html">Contributing</a>
+-   <a href="./03-declarative-layout.md.html">The declarative layout system</a>
+-   <a href="./04-new-widgets.md.html">Creating new widget</a>
+-   <a href="./05-awesomerc.md.html">Default configuration file documentation</a>
+-   <a href="./06-appearance.md.html">Change Awesome appearance</a>
+-   <a href="./16-using-cairo.md.html">Using Cairo and LGI</a>
 
 The new documentation is vastly superior to the previous one and includes
 previously missing elements such as:
 
-* a hundred images (from zero)
-* more than a hundred new code examples, most of them unit tested (from very,
-  very few)
-* all signals (previously partially documented in the wiki)
-* all theme variables
-* the object properties
-* references throughout the documentation
-* variable types (previously mostly undocumented)
-* many auto-generated pages instead of manually curated (and out of date) ones
+-   a hundred images (from zero)
+-   more than a hundred new code examples, most of them unit tested (from very,
+    very few)
+-   all signals (previously partially documented in the wiki)
+-   all theme variables
+-   the object properties
+-   references throughout the documentation
+-   variable types (previously mostly undocumented)
+-   many auto-generated pages instead of manually curated (and out of date) ones
 
 ### The old wiki is closing down
 
@@ -1332,18 +1322,18 @@ visibility count and reduced our infrastructure maintenance cost.
 
 Awesome went from 0% to 75% unit test coverage. We now have 4 testing systems:
 
-* Linting (checks the code quality and consistency)
-* Unit testing
-* Documentation examples, documentation images and user interface appearance
-  tests
-* Integration tests
+-   Linting (checks the code quality and consistency)
+-   Unit testing
+-   Documentation examples, documentation images and user interface appearance
+    tests
+-   Integration tests
 
 We also have a test matrix for:
 
-* Different Lua versions
-* Different screen resolutions
-* Installation paths
-* Dependencies versions
+-   Different Lua versions
+-   Different screen resolutions
+-   Installation paths
+-   Dependencies versions
 
 ### Packaging support
 

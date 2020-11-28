@@ -30,7 +30,6 @@ instance:
 
     CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/opt/awesome" make
 
-
 ### Installing current git master as a package receipts
 
 #### Arch Linux AUR
@@ -52,63 +51,62 @@ make package
 sudo apt install *.deb
 ```
 
-
 ### Build dependencies
 
 Awesome has the following dependencies (besides a more-or-less standard POSIX
 environment):
 
-- [CMake >= 3.0.0](https://cmake.org)
-- [Lua >= 5.1.0](https://www.lua.org) or [LuaJIT](http://luajit.org)
-- [LGI >= 0.8.0](https://github.com/pavouk/lgi)
-- [xproto >= 7.0.15](https://www.x.org/archive//individual/proto/)
-- [libxcb >= 1.6](https://xcb.freedesktop.org/) with support for the RandR, XTest, Xinerama, SHAPE and
-  XKB extensions
-- [libxcb-cursor](https://xcb.freedesktop.org/)
-- [libxcb-util >= 0.3.8](https://xcb.freedesktop.org/)
-- [libxcb-keysyms >= 0.3.4](https://xcb.freedesktop.org/)
-- [libxcb-icccm >= 0.3.8](https://xcb.freedesktop.org/)
-- [libxcb-xfixes](https://xcb.freedesktop.org/)
-- [xcb-util-xrm >= 1.0](https://github.com/Airblader/xcb-util-xrm)
-- [libxkbcommon](http://xkbcommon.org/) with X11 support enabled
-- [libstartup-notification >=
-  0.10](https://www.freedesktop.org/wiki/Software/startup-notification/)
-- [cairo](https://www.cairographics.org/) with support for XCB and GObject
-  introspection
-- [Pango](http://www.pango.org/) with support for Cairo and GObject
-  introspection
-- [GLib >= 2.40](https://wiki.gnome.org/Projects/GLib) with support for GObject
-  introspection
-- [GIO](https://developer.gnome.org/gio/stable/) with support for GObject
-  introspection
-- [GdkPixbuf](https://wiki.gnome.org/Projects/GdkPixbuf)
-- libX11 with xcb support
-- [Imagemagick's convert utility](http://www.imagemagick.org/script/index.php)
-- [libxdg-basedir >= 1.0.0](https://github.com/devnev/libxdg-basedir)
+-   [CMake >= 3.0.0](https://cmake.org)
+-   [Lua >= 5.1.0](https://www.lua.org) or [LuaJIT](http://luajit.org)
+-   [LGI >= 0.8.0](https://github.com/pavouk/lgi)
+-   [xproto >= 7.0.15](https://www.x.org/archive//individual/proto/)
+-   [libxcb >= 1.6](https://xcb.freedesktop.org/) with support for the RandR, XTest, Xinerama, SHAPE and
+    XKB extensions
+-   [libxcb-cursor](https://xcb.freedesktop.org/)
+-   [libxcb-util >= 0.3.8](https://xcb.freedesktop.org/)
+-   [libxcb-keysyms >= 0.3.4](https://xcb.freedesktop.org/)
+-   [libxcb-icccm >= 0.3.8](https://xcb.freedesktop.org/)
+-   [libxcb-xfixes](https://xcb.freedesktop.org/)
+-   [xcb-util-xrm >= 1.0](https://github.com/Airblader/xcb-util-xrm)
+-   [libxkbcommon](http://xkbcommon.org/) with X11 support enabled
+-   [libstartup-notification >=
+    0.10](https://www.freedesktop.org/wiki/Software/startup-notification/)
+-   [cairo](https://www.cairographics.org/) with support for XCB and GObject
+    introspection
+-   [Pango](http://www.pango.org/) with support for Cairo and GObject
+    introspection
+-   [GLib >= 2.40](https://wiki.gnome.org/Projects/GLib) with support for GObject
+    introspection
+-   [GIO](https://developer.gnome.org/gio/stable/) with support for GObject
+    introspection
+-   [GdkPixbuf](https://wiki.gnome.org/Projects/GdkPixbuf)
+-   libX11 with xcb support
+-   [Imagemagick's convert utility](http://www.imagemagick.org/script/index.php)
+-   [libxdg-basedir >= 1.0.0](https://github.com/devnev/libxdg-basedir)
 
 Additionally, the following optional dependencies exist:
 
-- [DBus](https://www.freedesktop.org/wiki/Software/dbus/) for DBus integration
-  and the `awesome-client` utility
-- [asciidoctor](https://asciidoctor.org/) for generating man pages
-- [gzip](http://www.gzip.org/) for compressing man pages
-- [ldoc >= 1.4.5](https://stevedonovan.github.io/ldoc/) for generating the
-  documentation
-- [busted](https://olivinelabs.com/busted/) for running unit tests
-- [luacheck](https://github.com/mpeterv/luacheck) for static code analysis
-- [LuaCov](https://keplerproject.github.io/luacov/) for collecting code coverage
-  information
-- libexecinfo on systems where libc does not provide `backtrace_symbols()` to
-  generate slightly better backtraces on crashes
-- `Xephyr` or `Xvfb` for running integration tests
-- [GTK+ >= 3.10](https://www.gtk.org/) for `./themes/gtk/`
-- [xcb-errors](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors) for
-  pretty-printing of X11 errors
-- [libRSVG](https://wiki.gnome.org/action/show/Projects/LibRsvg) for displaying
-  SVG files without scaling artifacts
-- [wmctrl](http://tripie.sweb.cz/utils/wmctrl) for testing WM interactions
-  with external actions
-- [xterm](https://invisible-island.net/xterm/) for various test cases
+-   [DBus](https://www.freedesktop.org/wiki/Software/dbus/) for DBus integration
+    and the `tde-client` utility
+-   [asciidoctor](https://asciidoctor.org/) for generating man pages
+-   [gzip](http://www.gzip.org/) for compressing man pages
+-   [ldoc >= 1.4.5](https://stevedonovan.github.io/ldoc/) for generating the
+    documentation
+-   [busted](https://olivinelabs.com/busted/) for running unit tests
+-   [luacheck](https://github.com/mpeterv/luacheck) for static code analysis
+-   [LuaCov](https://keplerproject.github.io/luacov/) for collecting code coverage
+    information
+-   libexecinfo on systems where libc does not provide `backtrace_symbols()` to
+    generate slightly better backtraces on crashes
+-   `Xephyr` or `Xvfb` for running integration tests
+-   [GTK+ >= 3.10](https://www.gtk.org/) for `./themes/gtk/`
+-   [xcb-errors](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors) for
+    pretty-printing of X11 errors
+-   [libRSVG](https://wiki.gnome.org/action/show/Projects/LibRsvg) for displaying
+    SVG files without scaling artifacts
+-   [wmctrl](http://tripie.sweb.cz/utils/wmctrl) for testing WM interactions
+    with external actions
+-   [xterm](https://invisible-island.net/xterm/) for various test cases
 
 ## Running Awesome
 
@@ -161,9 +159,11 @@ You can join us in the `#awesome` channel on the [OFTC](http://www.oftc.net/) IR
 [IRC Webchat](https://webchat.oftc.net/?channels=awesome)
 
 #### Stack Overflow
+
 You can ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/awesome-wm).
 
 #### Reddit
+
 We also have a [awesome subreddit](https://www.reddit.com/r/awesomewm/) where you can share your work and ask questions.
 
 ## Reporting issues
@@ -176,6 +176,7 @@ You can submit pull requests on the [github repository](https://github.com/aweso
 Please read the [contributing guide](https://github.com/awesomeWM/awesome/blob/master/docs/02-contributing.md) for any coding, documentation or patch guidelines.
 
 ## Status
+
 [![Build Status](https://travis-ci.com/awesomeWM/awesome.svg?branch=master)](https://travis-ci.com/awesomeWM/awesome)
 
 ## Documentation

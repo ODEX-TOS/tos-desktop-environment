@@ -4,7 +4,7 @@
 
 ### Why call it Awesome?
 
-The name *Awesome* comes from the English word *awesome* often used by the
+The name _Awesome_ comes from the English word _awesome_ often used by the
 character [Barney Stinson](http://en.wikipedia.org/wiki/Barney_Stinson)
 from the TV series HIMYM.
 
@@ -25,17 +25,17 @@ The first is a display driver issue where painting on the screen takes long
 time. All input events (keyboard and mouse) are processed in the main thread.
 The drawing is also locking the main thread to avoid artifacts and race
 ccontiditions. If there is a delay with the painting, it will delay the inputs.
-The solution to this problem is using a compositing manager such as 
+The solution to this problem is using a compositing manager such as
 [compton](https://github.com/chjj/compton) or the older `xcompmgr`. This will
 move painting to another process and fully mitigate the issue.
 
 The second one is when using `io.popen` or other blocking functions in `rc.lua`
 and most commonly manifests itself as occasional freezes instead of a generic delay.
 Do **not** use such functions and prefer `awful.spawn.easy_async`,
-`awful.widget.watch` or the GIO async API. Even if you *think* a command is
+`awful.widget.watch` or the GIO async API. Even if you _think_ a command is
 fast enough and won't impact the main event loop iteration time, you are wrong.
-*Every* calls to `io.open` are impacted by the system `iowait` queue and can
-spend hundreds of milliseconds blocked *before* being executed. Note that
+_Every_ calls to `io.open` are impacted by the system `iowait` queue and can
+spend hundreds of milliseconds blocked _before_ being executed. Note that
 some common widget or probe libraries such as
 [Vicious](https://github.com/Mic92/vicious) do not follow this
 advice currently and are known to cause input lag on some systems (but not all).
@@ -112,9 +112,9 @@ You can use a filter when creating taglist.
 
 Possible filters:
 
-* `awful.widget.taglist.filter.all` - default, show all tags in taglist
-* `awful.widget.taglist.filter.noempty` - show only non-empty tags in taglist (like dynamic tags)
-* `awful.widget.taglist.filter.selected` - show only selected tags in taglist
+-   `awful.widget.taglist.filter.all` - default, show all tags in taglist
+-   `awful.widget.taglist.filter.noempty` - show only non-empty tags in taglist (like dynamic tags)
+-   `awful.widget.taglist.filter.selected` - show only selected tags in taglist
 
 To show only non-empty tags on taglist:
 
@@ -168,7 +168,6 @@ your `globalkeys`:
         awful.menu.menu_keys.down = { "Down", "Alt_L" }
         awful.menu.clients({theme = { width = 250 }}, { keygrabber=true, coords={x=525, y=330} })
     end),
-
 
 ### How to control titlebars?
 
@@ -251,7 +250,7 @@ effect. The default keybinding for restarting Awesome is "Mod4 + Control + r".
 You can use the `xprop` utility, you are interested in `WM_CLASS` and `WM_NAME`
 from its output:
 
-  $ xprop WM_CLASS WM_NAME
+$ xprop WM_CLASS WM_NAME
 
 When the cursor changes to "+" click on the client of interest. From the
 terminal output you can use the following to match clients in Awesome:
@@ -348,20 +347,20 @@ the upper right corner of the screen.
 
 You can use the keybinding "Mod4+Ctrl+r" or by selecting restart in the menu.
 You could call `awesome.restart` either from the Lua prompt widget, or via
-`awesome-client`:
+`tde-client`:
 
-    $ awesome-client 'awesome.restart()'
+    $ tde-client 'awesome.restart()'
 
 You can also send the `SIGHUP` signal to the Awesome process. Find the PID using
 `ps`, `pgrep` or use `pkill`:
 
-  $ pkill -HUP awesome
+$ pkill -HUP awesome
 
 You can quit Awesome by using "Mod4+Shift+q" keybinding or by selecting quit in
 the menu. You could call `awesome.quit` either from the Lua prompt widget,
-or by passing it to `awesome-client`.
+or by passing it to `tde-client`.
 
-    $ echo 'awesome.quit()' | awesome-client
+    $ echo 'awesome.quit()' | tde-client
 
 You can also send the `SIGINT` signal to the Awesome process. Find the PID using `ps`, `pgrep` or use `pkill`:
 
@@ -380,8 +379,7 @@ sets of tags. See the next entry on how to find out where the problem lurks.
 ### Where are logs, error messages or something?
 
 When hacking your own configuration, something inevitably would go wrong.
-Awesome prints error messages to its `stderr` stream. When run with usual `$
-startx`, it'd be printed right in tty. If you use something more complicated
+Awesome prints error messages to its `stderr` stream. When run with usual `$ startx`, it'd be printed right in tty. If you use something more complicated
 (some kind of DM, like kdm or gdm), stderr is usually redirected somewhere else.
 To see where, run the following command:
 

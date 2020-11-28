@@ -85,7 +85,7 @@ if ! $AWESOME --version; then
     echo "$AWESOME cannot be run." >&2
     exit 1
 fi
-AWESOME_CLIENT="$source_dir/utils/awesome-client"
+AWESOME_CLIENT="$source_dir/utils/tde-client"
 D=:5
 SIZE="${TESTS_SCREEN_SIZE:-1024x768}"
 
@@ -193,9 +193,9 @@ start_awesome() {
     awesome_pid=$!
     cd - >/dev/null
 
-    # Wait until the interface for awesome-client is ready (D-Bus interface).
+    # Wait until the interface for tde-client is ready (D-Bus interface).
     # Do this with dbus-send so that we can specify a low --reply-timeout
-    wait_until_success "wait for awesome startup via awesome-client" "dbus-send --reply-timeout=100 --dest=org.awesomewm.awful --print-reply / org.awesomewm.awful.Remote.Eval 'string:return 1' 2>&1"
+    wait_until_success "wait for awesome startup via tde-client" "dbus-send --reply-timeout=100 --dest=org.awesomewm.awful --print-reply / org.awesomewm.awful.Remote.Eval 'string:return 1' 2>&1"
 }
 
 if command -v tput >/dev/null; then
@@ -233,7 +233,7 @@ for f in $tests; do
     fi
 
     # Execute the test file in awesome.
-    DISPLAY=$D "$AWESOME_CLIENT" 2>&1 "dofile('$f')" || echo "Error: awesome-client failed" >> "$awesome_log"
+    DISPLAY=$D "$AWESOME_CLIENT" 2>&1 "dofile('$f')" || echo "Error: tde-client failed" >> "$awesome_log"
 
     # Tail the log and quit, when awesome quits.
     # Use a single `grep`, otherwise `--line-buffered` would be required.
