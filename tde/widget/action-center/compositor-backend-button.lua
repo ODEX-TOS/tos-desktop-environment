@@ -28,7 +28,7 @@ local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/action-center/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/action-center/icons/"
 local config = require("config")
 
 local cmd = 'grep -F \'"glx";\' ' .. config.getComptonFile() .. "| tr -d '[\\-\\;\\=\\ ]' "

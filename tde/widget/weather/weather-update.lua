@@ -32,7 +32,7 @@ local gears = require("gears")
 local config = require("config")
 local theme = require("theme.icons.dark-light")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/weather/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/weather/icons/"
 
 -- Don't update too often, because your requests might get blocked for 24 hours
 local update_interval = config.weather_poll
@@ -40,7 +40,7 @@ local update_interval = config.weather_poll
 local signals = require("lib-tde.signals")
 
 --  Weather script using your API KEY
-local weather_details_script = "/bin/bash /etc/xdg/awesome/weather.sh"
+local weather_details_script = "/bin/bash /etc/xdg/tde/weather.sh"
 
 -- Sometimes it's too slow for internet to connect so the weather widget
 -- will not update until the next 20mins so this is helpful to update it

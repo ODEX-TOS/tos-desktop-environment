@@ -6,7 +6,7 @@ local naughty = require("naughty")
 local apps = require("configuration.apps")
 
 -- A path to a fancy icon
-local icon_path = "/etc/xdg/awesome/theme/icons/laptop.svg"
+local icon_path = "/etc/xdg/tde/theme/icons/laptop.svg"
 
 -- Get active outputs
 local function outputs()

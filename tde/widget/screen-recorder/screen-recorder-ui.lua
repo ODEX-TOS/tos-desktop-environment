@@ -6,7 +6,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local clickable_container = require("widget.material.clickable-container")
 
-local widget_icon_dir = "/etc/xdg/awesome/widget/screen-recorder/icons/"
+local widget_icon_dir = "/etc/xdg/tde/widget/screen-recorder/icons/"
 local theme = require("theme.icons.dark-light")
 
 local record_tbl = {}

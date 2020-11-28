@@ -67,33 +67,33 @@ return {
     rofiappmenu = "rofi -dpi " ..
       screen.primary.dpi ..
         " -show drun -theme " .. filesystem.get_configuration_dir() .. "/configuration/rofi/appmenu/drun.rasi",
-    rofiemojimenu = "bash /etc/xdg/awesome/emoji.sh " .. screen.primary.dpi,
-    rofiwindowswitch = "bash /etc/xdg/awesome/application-switch.sh" .. " " .. screen.primary.dpi,
+    rofiemojimenu = "bash /etc/xdg/tde/emoji.sh " .. screen.primary.dpi,
+    rofiwindowswitch = "bash /etc/xdg/tde/application-switch.sh" .. " " .. screen.primary.dpi,
     roficlipboard = "rofi -dpi " ..
       screen.primary.dpi ..
         ' -modi "clipboard:greenclip print" -show clipboard -theme ' ..
           filesystem.get_configuration_dir() .. "/configuration/rofi/appmenu/drun.rasi",
-    rofidpimenu = "bash /etc/xdg/awesome/dpi.sh",
-    rofiwifimenu = "bash /etc/xdg/awesome/wifi.sh" .. " " .. screen.primary.dpi,
+    rofidpimenu = "bash /etc/xdg/tde/dpi.sh",
+    rofiwifimenu = "bash /etc/xdg/tde/wifi.sh" .. " " .. screen.primary.dpi,
     lock = "light-locker-command -l",
     quake = (os.getenv("TERMINAL") or "st") .. " -T QuakeTerminal",
-    duplicate_screens = "bash /etc/xdg/awesome/xrandr-duplicate.sh"
+    duplicate_screens = "bash /etc/xdg/tde/xrandr-duplicate.sh"
   },
   -- List of apps to start once on start-up
   run_on_start_up = {
     picom,
     "blueman-applet", -- Bluetooth tray icon
     "xfce4-power-manager", -- Power manager
-    'sh -c "/etc/xdg/awesome/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
+    'sh -c "/etc/xdg/tde/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
     "xrdb $HOME/.Xresources"
   },
   bins = {
     coverUpdate = require("lib-tde.extractcover").extractalbum,
-    full_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" full "' .. color .. '"',
-    full_blank_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" full_blank',
-    area_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" area "' .. color .. '"',
-    area_blank_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" area_blank',
-    window_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" window "' .. color .. '"',
-    window_blank_screenshot = 'sh "/etc/xdg/awesome/snapshot.sh" window_blank'
+    full_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" full "' .. color .. '"',
+    full_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" full_blank',
+    area_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" area "' .. color .. '"',
+    area_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" area_blank',
+    window_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" window "' .. color .. '"',
+    window_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" window_blank'
   }
 }

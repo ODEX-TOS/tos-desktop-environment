@@ -31,7 +31,7 @@ local split = require("lib-tde.function.common").split
 
 local beautiful = require("beautiful")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/sars-cov-2/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/sars-cov-2/icons/"
 
 local covid_header =
   wibox.widget {

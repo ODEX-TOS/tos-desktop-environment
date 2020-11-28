@@ -29,8 +29,8 @@ local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local beautiful = require("beautiful")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/notification-center/icons/"
-local PATH_TO_WIDGET = "/etc/xdg/awesome/widget/notification-center/subwidgets/dont-disturb/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
+local PATH_TO_WIDGET = "/etc/xdg/tde/widget/notification-center/subwidgets/dont-disturb/"
 local theme = require("theme.icons.dark-light")
 
 local dont_disturb = false

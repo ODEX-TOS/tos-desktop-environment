@@ -28,7 +28,6 @@
 -- Better with Compton tryone fork for blur fx
 --------------
 
-
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
@@ -39,7 +38,7 @@ local apps = require("configuration.apps")
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/search/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/search/icons/"
 
 local widget =
   wibox.widget {

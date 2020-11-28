@@ -35,7 +35,7 @@ local signals = require("lib-tde.signals")
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/wifi/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/wifi/icons/"
 local interface = "wlp2s01"
 
 local connected = false

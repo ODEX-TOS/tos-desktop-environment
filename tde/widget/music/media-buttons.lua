@@ -30,7 +30,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local clickable_container = require("widget.material.clickable-container")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/music/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/music/icons/"
 
 local theme = require("theme.icons.dark-light")
 

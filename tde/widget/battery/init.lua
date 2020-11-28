@@ -33,7 +33,7 @@ local gears = require("gears")
 local clickable_container = require("widget.material.clickable-container")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local widget_icon_dir = "/etc/xdg/awesome/widget/battery/icons/"
+local widget_icon_dir = "/etc/xdg/tde/widget/battery/icons/"
 
 local theme = require("theme.icons.dark-light")
 

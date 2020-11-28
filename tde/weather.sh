@@ -42,7 +42,7 @@ START_DAY="08:00"
 
 # function used to extract the type of icon to display
 # for more information about how and why this function behaves the way it does look at
-# /etc/xdg/awesome/widgets/weather/icons and weather-update.lua
+# /etc/xdg/tde/widgets/weather/icons and weather-update.lua
 # see codes at https://github.com/chubin/wttr.in/blob/74d005c0ccb8235319343a8a5237f99f10287695/lib/constants.py for more information
 function updateIcon {
     # grab the subtitle and convert it to lower case

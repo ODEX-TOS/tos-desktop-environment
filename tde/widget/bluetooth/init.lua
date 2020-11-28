@@ -41,7 +41,7 @@ local delayed_timer = require("lib-tde.function.delayed-timer")
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/bluetooth/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/bluetooth/icons/"
 local checker
 
 local widget =

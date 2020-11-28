@@ -23,9 +23,9 @@
 --SOFTWARE.
 ]]
 local leftpanel_icon_theme = "tos" -- Available Themes: 'lines', 'original', 'macos'
-local lit_dir = "/etc/xdg/awesome/theme/icons/themes/" .. leftpanel_icon_theme
+local lit_dir = "/etc/xdg/tde/theme/icons/themes/" .. leftpanel_icon_theme
 
-local dir = "/etc/xdg/awesome/theme/icons"
+local dir = "/etc/xdg/tde/theme/icons"
 local config = require("theme.icons.config")
 local theme = require("theme.icons.dark-light")
 
@@ -68,6 +68,6 @@ return {
   lan = theme(config["lan"] or dir .. "/lan.svg"),
   calendar = theme(config["calendar"] or dir .. "/calendar.svg"),
   brush = theme(config["brush"] or dir .. "/brush.svg"),
-  package = theme("/etc/xdg/awesome/widget/package-updater/icons/package.svg"),
+  package = theme("/etc/xdg/tde/widget/package-updater/icons/package.svg"),
   about = theme(dir .. "/info.svg")
 }

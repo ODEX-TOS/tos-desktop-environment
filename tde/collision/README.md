@@ -22,7 +22,7 @@ First, clone the repository
     git clone https://github.com/Elv13/collision
 ```
 
-Now, open ~/.config/awesome/rc.lua (or copy /etc/xdg/awesome/rc.lua to
+Now, open ~/.config/awesome/rc.lua (or copy /etc/xdg/tde/rc.lua to
 ~/.config/awesome/rc.lua fist if you never modified your Awesome config before)
 and add this line somewhere in your `rc.lua`:
 

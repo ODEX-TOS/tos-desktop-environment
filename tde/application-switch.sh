@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG="/etc/xdg/awesome/configuration/rofi/appmenu/drun.rasi"
+CONFIG="/etc/xdg/tde/configuration/rofi/appmenu/drun.rasi"
 DPI=${1:-"100"}
 
 ROFI="rofi -dpi $DPI -theme $CONFIG -show window 2>/dev/null"

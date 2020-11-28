@@ -40,7 +40,7 @@ local height = dpi(200)
 local width = dpi(380)
 local theme = require("theme.icons.dark-light")
 
-local icon = theme("/etc/xdg/awesome/widget/about/icons/info.svg")
+local icon = theme("/etc/xdg/tde/widget/about/icons/info.svg")
 
 local aboutPage
 local aboutBackdrop

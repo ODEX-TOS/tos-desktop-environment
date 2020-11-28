@@ -30,7 +30,7 @@ local beautiful = require("beautiful")
 
 local clickable_container = require("widget.material.clickable-container")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/social-media/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/social-media/icons/"
 local theme = require("theme.icons.dark-light")
 
 -- Generate widget with background

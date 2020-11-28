@@ -29,7 +29,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local menubar = require("menubar")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/xdg-folders/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/xdg-folders/icons/"
 
 local function icon(item)
   return menubar.utils.lookup_icon(item)

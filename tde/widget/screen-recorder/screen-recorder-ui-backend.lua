@@ -4,7 +4,7 @@ local theme = require("theme.icons.dark-light")
 
 local dpi = beautiful.xresources.apply_dpi
 
-local widget_icon_dir = "/etc/xdg/awesome/widget/screen-recorder/icons/"
+local widget_icon_dir = "/etc/xdg/tde/widget/screen-recorder/icons/"
 
 -- The screen-recorders scripting
 local screen_rec_backend = require("widget.screen-recorder.screen-recorder-scripts")

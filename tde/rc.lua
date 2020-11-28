@@ -62,9 +62,9 @@ require("layout")
 
 local lockscreentime = general["screen_on_time"] or "120"
 if general["screen_timeout"] == 1 or general["screen_timeout"] == nil then
-  awful.spawn("/etc/xdg/awesome/autorun.sh " .. lockscreentime .. " &>/dev/null")
+  awful.spawn("/etc/xdg/tde/autorun.sh " .. lockscreentime .. " &>/dev/null")
 else
-  awful.spawn("/etc/xdg/awesome/autorun.sh " .. " &>/dev/null")
+  awful.spawn("/etc/xdg/tde/autorun.sh " .. " &>/dev/null")
 end
 
 -- Init all modules

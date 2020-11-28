@@ -29,7 +29,7 @@ local wibox = require("wibox")
 
 local clickable_container = require("widget.material.clickable-container")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/music/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/music/icons/"
 
 local apps = require("configuration.apps")
 local theme = require("theme.icons.dark-light")

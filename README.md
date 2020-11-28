@@ -84,8 +84,8 @@ git clone https://github.com/ODEX-TOS/tos-desktop-environment.git
 3. Set the required files in the appropriate locations
 
 ```sh
-sudo mkdir -p /etc/xdg/awesome
-sudo cp -r tos-desktop-environment/tde/* /etc/xdg/awesome
+sudo mkdir -p /etc/xdg/tde
+sudo cp -r tos-desktop-environment/tde/* /etc/xdg/tde
 ```
 
 4. Use wm-debug for easier development

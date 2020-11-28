@@ -22,13 +22,12 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local gears = require("gears")
 
 local dpi = require("beautiful").xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/notification-center/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
 local theme = require("theme.icons.dark-light")
 
 -- Load panel rules, it will create panel for each screen

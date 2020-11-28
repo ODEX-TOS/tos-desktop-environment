@@ -29,7 +29,7 @@ local gears = require("gears")
 local clickable_container = require("widget.material.clickable-container")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local widget_icon_dir = "/etc/xdg/awesome/widget/xdg-folders/icons/"
+local widget_icon_dir = "/etc/xdg/tde/widget/xdg-folders/icons/"
 local menubar = require("menubar")
 
 local function icon(item)

@@ -269,7 +269,7 @@ local function make_nav()
   )
   local img = os.getenv("HOME") .. "/.cache/tos/user-icons/user.jpg"
   if not file_exists(img) then
-    img = "/etc/xdg/awesome/widget/user-profile/icons/user.svg"
+    img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
   end
 
   local avatar =

@@ -34,7 +34,7 @@ local theme = require("theme.icons.dark-light")
 
 local beautiful = require("beautiful")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/notification-center/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
 
 local notif_layout = wibox.layout.fixed.vertical(reverse)
 notif_layout.spacing = dpi(5)

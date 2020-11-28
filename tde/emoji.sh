@@ -1,5 +1,5 @@
-EMOJI="/etc/xdg/awesome/emoji"
-THEME="/etc/xdg/awesome/configuration/rofi/appmenu/drun.rasi"
+EMOJI="/etc/xdg/tde/emoji"
+THEME="/etc/xdg/tde/configuration/rofi/appmenu/drun.rasi"
 DPI="${1:-100}"
 
 result=$(cat "$EMOJI" | cut -d';' -f1 | rofi -dmenu -p "Copy an emoji " -dpi "$DPI" -theme "$THEME")

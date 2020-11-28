@@ -29,7 +29,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/action-center/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/action-center/icons/"
 local mode
 
 local widget =

@@ -109,7 +109,7 @@ theme.ram_bar = color(config["ram_bar"]) or "#017AFC"
 theme.disk_bar = color(config["disk_bar"]) or "#fdc400"
 
 local awesome_overrides = function(awesome_theme)
-  awesome_theme.dir = "/etc/xdg/awesome/theme"
+  awesome_theme.dir = "/etc/xdg/tde/theme"
   --theme.dir             = os.getenv("HOME") .. "/code/awesome-pro/themes/pro-dark"
 
   awesome_theme.icons = awesome_theme.dir .. "/icons/"

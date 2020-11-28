@@ -22,7 +22,7 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
 
-local widget_icon_dir = "/etc/xdg/awesome/widget/calculator/icons/"
+local widget_icon_dir = "/etc/xdg/tde/widget/calculator/icons/"
 local theme = require("theme.icons.dark-light")
 
 local mouse_entered_started_keygrab = false

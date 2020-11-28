@@ -30,7 +30,7 @@ local beautiful = require("beautiful")
 
 local theme = require("theme.icons.dark-light")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/weather/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/weather/icons/"
 
 -- Weather Updater
 require("widget.weather.weather-update")

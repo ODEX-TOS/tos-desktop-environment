@@ -32,7 +32,7 @@ local theme = require("theme.icons.dark-light")
 
 local beautiful = require("beautiful")
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/user-profile/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/user-profile/icons/"
 
 local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
 

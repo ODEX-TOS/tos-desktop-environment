@@ -27,7 +27,7 @@ local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local PATH_TO_ICONS = "/etc/xdg/awesome/widget/xdg-folders/icons/"
+local PATH_TO_ICONS = "/etc/xdg/tde/widget/xdg-folders/icons/"
 local menubar = require("menubar")
 
 local function icon(item)

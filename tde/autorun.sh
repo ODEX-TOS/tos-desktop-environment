@@ -64,7 +64,7 @@ if [[ "$(command -v lxsession)" ]]; then
 fi
 
 # watch for dbus events
-process="python /etc/xdg/awesome/tos-udev-dbus.py"
+process="python /etc/xdg/tde/tos-udev-dbus.py"
 if ! pgrep -f "$process"; then
     PYTHONDONTWRITEBYTECODE=1 $process & 
 fi
@@ -72,7 +72,7 @@ fi
 # autolock the system
 if [[ "$(command -v xidlehook)" && ! "$1" == "" ]]; then
     echo "Lock screen time set to: $1 seconds"
-    sh /etc/xdg/awesome/autolock.sh "$1" &
+    sh /etc/xdg/tde/autolock.sh "$1" &
 fi
 
 # run clipboard manager

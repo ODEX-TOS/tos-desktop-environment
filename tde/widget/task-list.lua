@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local capi = {button = _G.button}
@@ -78,7 +77,7 @@ local function list_update(w, buttons, label, data, objects)
       tb = wibox.widget.textbox()
       cb =
         clickable_container(
-        wibox.container.margin(wibox.widget.imagebox("/etc/xdg/awesome/theme/icons/tag-list/tag/close.png"), 4, 4, 4, 4)
+        wibox.container.margin(wibox.widget.imagebox("/etc/xdg/tde/theme/icons/tag-list/tag/close.png"), 4, 4, 4, 4)
       )
       cb.shape = gears.shape.circle
       cbm = wibox.container.margin(cb, dpi(4), dpi(8), dpi(2), dpi(2)) -- 4, 8 ,12 ,12 -- close button
