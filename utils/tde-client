@@ -82,7 +82,7 @@ then
 elif [ -t 0 ]
 then
     FATAL_ERRORS=0
-    while read $READ_ARGS -p "awesome# " -r line
+    while read $READ_ARGS -p "tde ➡ " -r line
     do
         if [ "$line" = "" ]; then
             continue
