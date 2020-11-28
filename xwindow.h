@@ -47,7 +47,7 @@ void xwindow_translate_for_gravity(xcb_gravity_t, int16_t, int16_t, int16_t, int
 #define xwindow_set_name_static(win, name) \
     xcb_icccm_set_wm_name(globalconf.connection, win, XCB_ATOM_STRING, 8, sizeof(name) - 1, name)
 #define xwindow_set_class_instance(win) \
-    xwindow_set_class_instance_static(win, "awesome", "awesome")
+    xwindow_set_class_instance_static(win, "TDE", "TDE")
 #define xwindow_set_class_instance_static(win, instance, class) \
     _xwindow_set_class_instance_static(win, instance "\0" class)
 #define _xwindow_set_class_instance_static(win, instance_class) \
