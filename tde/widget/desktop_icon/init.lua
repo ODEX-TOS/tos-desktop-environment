@@ -172,7 +172,7 @@ local function desktop_file(file, _, index, drag)
         index,
         function()
             print("Opened: " .. file)
-            awful.spawn("gtk-launch " .. name)
+            awful.spawn("gtk-launch " .. filehandle.basename(file))
         end,
         drag
     )
