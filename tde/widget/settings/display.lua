@@ -354,6 +354,9 @@ return function()
         if filesystem.exists(scaledImage) then
           layout:add(make_mon(scaledImage, k, v))
         else
+          -- We use imagemagick to generate a "thumbnail"
+          -- This is done to save memory consumption
+          -- However note that our cache (tempDisplayDir) is stored in ram
           imagemagic.scale(
             v,
             width,
@@ -405,15 +408,32 @@ return function()
             table.insert(screens, o)
           end,
           output_done = function()
-            --mon_size.w = (((settings_width - settings_nw) - (m * 4)) / #screens) - ((m / 2) * (#screens - 1))
-            --mon_size.h = mon_size.w * (screen.primary.geometry.height / screen.primary.geometry.width)
             monitors.forced_height = settings_height / 2
             if #screen < 4 then
               layout.forced_num_cols = #screen
             end
             for k, v in pairs(screens) do
-              --layout:add(wibox.widget.base.empty_widget())
-              layout:add(make_mon(v, k))
+              local base = filehandle.basename(v)
+              -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+              local width = dpi(600)
+              local height = (width / 16) * 9
+              local scaledImage = tempDisplayDir .. "/monitor-" .. base
+              if filesystem.exists(scaledImage) then
+                layout:add(make_mon(scaledImage, k, v))
+              else
+                -- We use imagemagick to generate a "thumbnail"
+                -- This is done to save memory consumption
+                -- However note that our cache (tempDisplayDir) is stored in ram
+                imagemagic.scale(
+                  v,
+                  width,
+                  height,
+                  scaledImage,
+                  function()
+                    layout:add(make_mon(scaledImage, k, v))
+                  end
+                )
+              end
             end
           end
         }
