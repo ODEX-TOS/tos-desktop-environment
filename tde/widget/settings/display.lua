@@ -11,6 +11,10 @@ local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
+local scrollbar = require("widget.scrollbar")
+
+-- this will hold the scrollbar, used to reset it
+local body = nil
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -28,7 +32,8 @@ local bSelectWallpaper = false
 
 -- wall is the scaled wallpaper
 -- fullwall is a fullscreen (or original wallpaper)
-local function make_mon(wall, id, fullwall)
+-- the disable_number argument tells use if we should show the number in the center of the monitor
+local function make_mon(wall, id, fullwall, disable_number)
   fullwall = fullwall or wall
   local monitor =
     wibox.widget {
@@ -42,8 +47,9 @@ local function make_mon(wall, id, fullwall)
   monitor:set_image(wall)
   monitor:connect_signal(
     "button::press",
-    function()
-      if bSelectWallpaper then
+    function(_, _, _, button)
+      -- we check if button == 1 for a left mouse button (this way scrolling still works)
+      if bSelectWallpaper and button == 1 then
         awful.spawn.easy_async(
           "tos theme set " .. fullwall,
           function()
@@ -69,6 +75,9 @@ local function make_mon(wall, id, fullwall)
       end
     end
   )
+  if disable_number then
+    return wibox.container.place(monitor)
+  end
   return wibox.container.place(
     wibox.widget {
       layout = wibox.layout.stack,
@@ -134,6 +143,7 @@ return function()
   layout.forced_num_cols = 4
   layout.homogeneous = true
   layout.expand = true
+  layout.min_rows_size = dpi(100)
 
   local changewall = wibox.container.background()
   changewall.top = m
@@ -235,7 +245,7 @@ return function()
         1,
         function()
           -- TODO: change wallpaper
-          bSelectWallpaper = true
+          bSelectWallpaper = not bSelectWallpaper
           root.elements.settings_views[4].view.refresh()
         end
       )
@@ -256,11 +266,11 @@ return function()
       }
     }
   }
-
+  body = scrollbar(layout)
   monitors:setup {
     layout = wibox.container.margin,
     margins = m,
-    layout
+    body
   }
 
   view:setup {
@@ -342,36 +352,70 @@ return function()
     }
   }
 
-  local function loadMonitors()
-    for k, v in ipairs(filesystem.list_dir("/usr/share/backgrounds/tos")) do
-      -- check if it is a file
-      if filesystem.exists(v) then
-        local base = filehandle.basename(v)
-        -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
-        local width = dpi(300)
-        local height = (width / 16) * 9
-        local scaledImage = tempDisplayDir .. "/" .. base
-        if filesystem.exists(scaledImage) then
-          layout:add(make_mon(scaledImage, k, v))
-        else
-          -- We use imagemagick to generate a "thumbnail"
-          -- This is done to save memory consumption
-          -- However note that our cache (tempDisplayDir) is stored in ram
-          imagemagic.scale(
-            v,
-            width,
-            height,
-            scaledImage,
-            function()
-              if filesystem.exists(scaledImage) then
-                layout:add(make_mon(scaledImage, k, v))
-              else
-                print("Something went wrong scaling " .. v)
-              end
-            end
-          )
-        end
+  -- The user option tells use if these are pictures supplied by the user
+  local function load_monitor(k, table, done, user)
+    local v = table[k]
+    -- check if it is a file
+    if filesystem.exists(v) then
+      local base = filehandle.basename(v)
+      -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+      local width = dpi(300)
+      local height = (width / 16) * 9
+      local scaledImage = tempDisplayDir .. "/" .. base
+      if user then
+        scaledImage = tempDisplayDir .. "/user-" .. base
       end
+      if filesystem.exists(scaledImage) and bSelectWallpaper then
+        layout:add(make_mon(scaledImage, k, v, true))
+        if done then
+          done(user, table, k)
+        end
+      else
+        -- We use imagemagick to generate a "thumbnail"
+        -- This is done to save memory consumption
+        -- However note that our cache (tempDisplayDir) is stored in ram
+        imagemagic.scale(
+          v,
+          width,
+          height,
+          scaledImage,
+          function()
+            if filesystem.exists(scaledImage) and bSelectWallpaper then
+              layout:add(make_mon(scaledImage, k, v, true))
+            else
+              print("Something went wrong scaling " .. v)
+            end
+            if done then
+              done(user, table, k)
+            end
+          end
+        )
+      end
+    else
+      -- in case the entry is a directory and not a file
+      if done then
+        done(user, table, k)
+      end
+    end
+  end
+
+  local recursive_monitor_load_func
+
+  local function loadMonitors()
+    local usr_files = filesystem.list_dir("/usr/share/backgrounds/tos")
+
+    recursive_monitor_load_func = function(bool, table, i)
+      if i < #table then
+        i = i + 1
+        load_monitor(i, table, recursive_monitor_load_func, bool)
+      end
+    end
+    load_monitor(1, usr_files, recursive_monitor_load_func, false)
+    local pictures = os.getenv("HOME") .. "/Pictures/tde"
+    if filesystem.dir_exists(pictures) then
+      local home_dir = filesystem.list_dir_full(pictures)
+      -- true to tell the function that these are user pictures
+      load_monitor(1, home_dir, recursive_monitor_load_func, true)
     end
   end
 
@@ -387,6 +431,7 @@ return function()
   view.refresh = function()
     screens = {}
     layout:reset()
+    body:reset()
     -- remove all images from memory (to save memory space)
     collectgarbage("collect")
 
@@ -397,9 +442,9 @@ return function()
       end
     )
     if bSelectWallpaper then
-      layout.forced_num_cols = 4
       -- do an asynchronous render of all wallpapers
       timer:start()
+      layout.forced_num_cols = 4
     else
       awful.spawn.with_line_callback(
         "tos theme active",

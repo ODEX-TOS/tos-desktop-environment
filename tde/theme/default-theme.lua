@@ -115,12 +115,6 @@ local awesome_overrides = function(awesome_theme)
 
   awesome_theme.icons = awesome_theme.dir .. "/icons/"
 
-  awful.spawn.easy_async_with_shell(
-    "feh --bg-scale $(tos theme list | tail -n1)",
-    function(_)
-    end
-  )
-
   local resultset = lines_from(os.getenv("HOME") .. "/.config/tos/theme")
   awesome_theme.wallpaper = resultset[#resultset] or "/usr/share/backgrounds/tos/default.jpg"
   awesome_theme.font = "Roboto medium 10"

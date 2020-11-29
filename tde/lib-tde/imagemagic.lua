@@ -46,7 +46,7 @@ local function scale(input, width, height, output, callback)
     if check() then
         return
     end
-    local cmd = "convert " .. input .. " -resize " .. width .. "x" .. height .. " " .. output
+    local cmd = "convert '" .. input .. "' -resize " .. width .. "x" .. height .. " '" .. output .. "'"
     awful.spawn.easy_async_with_shell(
         cmd,
         function()
@@ -70,7 +70,7 @@ local function grayscale(input, output, callback)
     if check() then
         return
     end
-    local cmd = "convert " .. input .. " -type Grayscale " .. output
+    local cmd = "convert '" .. input .. "' -type Grayscale '" .. output .. "'"
     awful.spawn.easy_async_with_shell(
         cmd,
         function()
@@ -95,7 +95,7 @@ local function transparent(input, output, color, callback)
     if check() then
         return
     end
-    local cmd = "convert " .. input .. " -fuzz 10% -transparent " .. color .. " " .. output
+    local cmd = "convert '" .. input .. "' -fuzz 10% -transparent " .. color .. " '" .. output .. "'"
     awful.spawn.easy_async_with_shell(
         cmd,
         function()
@@ -121,9 +121,10 @@ local function compress(input, output, rate, callback)
         return
     end
     local cmd =
-        "convert " ..
+        "convert '" ..
         input ..
-            "-sampling-factor 4:2:0 -strip -quality " .. tostring(rate) .. " -interlace JPEG -colorspace RGB " .. output
+            "' -sampling-factor 4:2:0 -strip -quality " ..
+                tostring(rate) .. " -interlace JPEG -colorspace RGB '" .. output .. "'"
     awful.spawn.easy_async_with_shell(
         cmd,
         function()
@@ -147,7 +148,7 @@ local function convert(input, output, callback)
     if check() then
         return
     end
-    local cmd = "convert " .. input .. " " .. output
+    local cmd = "convert '" .. input .. "' '" .. output .. "'"
     awful.spawn.easy_async_with_shell(
         cmd,
         function()
