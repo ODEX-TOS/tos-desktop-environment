@@ -56,6 +56,8 @@ end
 -- lib-tde.function.datetime.current_time_inbetween("00:00", "13:00")
 local function current_time_inbetween(time_start, time_end, mock_time)
     local time = os.date("*t")
+
+    -- mock time is used in unit tests to verify if this function works as intended
     if not (mock_time == nil) then
         time = mock_time
     end

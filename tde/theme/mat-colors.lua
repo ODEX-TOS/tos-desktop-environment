@@ -368,8 +368,8 @@ return {
     hue_400 = "#FFFFFF",
     hue_500 = "#FFFFFF",
     hue_600 = "#FFFFFF",
-    hue_700 = "#FFFFFF",
-    hue_800 = "#FFFFFF",
+    hue_700 = "#CCCCCC",
+    hue_800 = "#CCCCCC",
     hue_900 = "#FFFFFF"
   }
 }

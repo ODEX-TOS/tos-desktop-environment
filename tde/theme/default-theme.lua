@@ -146,8 +146,8 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.bg_urgent = color(config["background_urgent"]) or "#3F3F3F"
   awesome_theme.bg_systray = awesome_theme.background.hue_800
 
-  awesome_theme.bg_modal = color(config["background_modal"]) or "#ffffff20"
-  awesome_theme.bg_modal_title = color(config["background_modal_title"]) or "#ffffff30"
+  awesome_theme.bg_modal = color(config["background_modal"]) or darkLightSwitcher("#ffffff35", "#ffffffA0")
+  awesome_theme.bg_modal_title = color(config["background_modal_title"]) or darkLightSwitcher("#ffffff55", "#ffffffD0")
   awesome_theme.bg_settings_display_number = "#00000070"
   -- Borders
 
@@ -179,7 +179,7 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.menu_width = dpi(160)
 
   -- Tooltips
-  awesome_theme.tooltip_bg = (color(config["tooltip_bg"]) or "#232323") .. "99"
+  awesome_theme.tooltip_bg = (color(config["tooltip_bg"]) or awesome_theme.bg_normal)
   --awesome_theme.tooltip_border_color = '#232323'
   awesome_theme.tooltip_border_width = 0
   awesome_theme.tooltip_shape = function(cr, w, h)
@@ -234,9 +234,9 @@ local awesome_overrides = function(awesome_theme)
           ":0.95," ..
             awesome_theme.background.hue_800 .. ":0.95," .. awesome_theme.fg_normal .. ":1," .. awesome_theme.fg_normal
   awesome_theme.tasklist_bg_urgent = awesome_theme.primary.hue_800
-  awesome_theme.tasklist_fg_focus = "#DDDDDD"
-  awesome_theme.tasklist_fg_urgent = awesome_theme.fg_normal
-  awesome_theme.tasklist_fg_normal = "#AAAAAA"
+  awesome_theme.tasklist_fg_focus = awesome_theme.fg_focus
+  awesome_theme.tasklist_fg_urgent = awesome_theme.fg_urgent
+  awesome_theme.tasklist_fg_normal = awesome_theme.fg_normal
 
   awesome_theme.icon_theme = "Papirus-Dark"
 
