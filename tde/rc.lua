@@ -103,6 +103,7 @@ awful.screen.connect_for_each_screen(
           gears.wallpaper.set(beautiful.wallpaper)
         elseif beautiful.wallpaper:sub(1, #"/") == "/" then
           gears.wallpaper.maximized(beautiful.wallpaper, s)
+          print("Setting wallpaper: " .. beautiful.wallpaper)
         end
       else
         beautiful.wallpaper(s)

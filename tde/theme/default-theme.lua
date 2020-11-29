@@ -128,7 +128,7 @@ local awesome_overrides = function(awesome_theme)
   )
 
   --theme.wallpaper = '~/Pictures/simple.png'
-  local resultset = lines_from("~/.config/tos/theme")
+  local resultset = lines_from(os.getenv("HOME") .. "/.config/tos/theme")
   awesome_theme.wallpaper = resultset[#resultset] or "/usr/share/backgrounds/tos/default.jpg"
   --awesome_theme.wallpaper = '#e0e0e0'
   awesome_theme.font = "Roboto medium 10"
