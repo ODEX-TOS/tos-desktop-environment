@@ -31,7 +31,8 @@ local dpi = require("beautiful").xresources.apply_dpi
 local gtk = require("beautiful.gtk")
 local config = require("theme.config")
 local darklight = require("theme.icons.dark-light")
-local file_exists = require("lib-tde.file").exists
+local filehandle = require("lib-tde.file")
+local file_exists = filehandle.exists
 
 local theme = {}
 theme.icons = theme_dir .. "/icons/"
@@ -113,7 +114,7 @@ local awesome_overrides = function(awesome_theme)
   --theme.dir             = os.getenv("HOME") .. "/code/awesome-pro/themes/pro-dark"
 
   awesome_theme.icons = awesome_theme.dir .. "/icons/"
-  local command = "tos theme list | head -n1 > /tmp/theme.txt"
+  local command = "tos theme list | tail -n1 > /tmp/theme.txt"
 
   awful.spawn.easy_async_with_shell(
     command,
@@ -127,7 +128,8 @@ local awesome_overrides = function(awesome_theme)
   )
 
   --theme.wallpaper = '~/Pictures/simple.png'
-  awesome_theme.wallpaper = lines_from("~/.config/tos/theme")[2] or "/usr/share/backgrounds/tos/default.jpg"
+  local resultset = lines_from("~/.config/tos/theme")
+  awesome_theme.wallpaper = resultset[#resultset] or "/usr/share/backgrounds/tos/default.jpg"
   --awesome_theme.wallpaper = '#e0e0e0'
   awesome_theme.font = "Roboto medium 10"
   awesome_theme.title_font = "Roboto medium 14"
