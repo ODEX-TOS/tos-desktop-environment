@@ -114,23 +114,15 @@ local awesome_overrides = function(awesome_theme)
   --theme.dir             = os.getenv("HOME") .. "/code/awesome-pro/themes/pro-dark"
 
   awesome_theme.icons = awesome_theme.dir .. "/icons/"
-  local command = "tos theme list | tail -n1 > /tmp/theme.txt"
 
   awful.spawn.easy_async_with_shell(
-    command,
-    function()
-      awful.spawn.easy_async_with_shell(
-        "feh --bg-scale $(cat /tmp/theme.txt)",
-        function(_)
-        end
-      )
+    "feh --bg-scale $(tos theme list | tail -n1)",
+    function(_)
     end
   )
 
-  --theme.wallpaper = '~/Pictures/simple.png'
   local resultset = lines_from(os.getenv("HOME") .. "/.config/tos/theme")
   awesome_theme.wallpaper = resultset[#resultset] or "/usr/share/backgrounds/tos/default.jpg"
-  --awesome_theme.wallpaper = '#e0e0e0'
   awesome_theme.font = "Roboto medium 10"
   awesome_theme.title_font = "Roboto medium 14"
 
