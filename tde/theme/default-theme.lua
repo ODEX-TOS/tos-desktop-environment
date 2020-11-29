@@ -44,7 +44,7 @@ theme.background_transparency = config["background_transparent"] or "66"
 -- list/table if the file does not exist
 local function lines_from(file)
   if not file_exists(file) then
-    return "/usr/share/backgrounds/tos/default.png"
+    return "/usr/share/backgrounds/tos/default.jpg"
   end
   local lines = {}
   for line in io.lines(file) do
@@ -127,7 +127,7 @@ local awesome_overrides = function(awesome_theme)
   )
 
   --theme.wallpaper = '~/Pictures/simple.png'
-  awesome_theme.wallpaper = lines_from("~/.config/tos/theme")[2] or "/usr/share/backgrounds/tos/default.png"
+  awesome_theme.wallpaper = lines_from("~/.config/tos/theme")[2] or "/usr/share/backgrounds/tos/default.jpg"
   --awesome_theme.wallpaper = '#e0e0e0'
   awesome_theme.font = "Roboto medium 10"
   awesome_theme.title_font = "Roboto medium 14"
