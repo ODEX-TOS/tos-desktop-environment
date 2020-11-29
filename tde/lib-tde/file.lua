@@ -236,6 +236,22 @@ local function rm(filename)
   return os.remove(filename)
 end
 
+--- Function to create a temporary file in /tmp
+-- @usage -- This returns a string containing the file
+-- local file = lib-tde.file.mktemp()
+local function mktemp()
+  local _, file = require("posix.stdlib").mkstemp("/tmp/tde.XXXXXX")
+  return file
+end
+
+--- Function to create a temporary directory in /tmp
+-- @usage -- This returns a string containing the directory
+-- local dir = lib-tde.file.mktempdir()
+local function mktempdir()
+  local dir = require("posix.stdlib").mkdtemp("/tmp/tde.d.XXXXXX")
+  return dir
+end
+
 local function log(filename)
   -- tests the functions above
   local lines = lines_from(filename)
@@ -257,5 +273,7 @@ return {
   write = write,
   overwrite = overwrite,
   basename = basename,
-  rm = rm
+  rm = rm,
+  mktemp = mktemp,
+  mktempdir = mktempdir
 }

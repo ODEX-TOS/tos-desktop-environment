@@ -9,10 +9,14 @@ local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
+local filehandle = require("lib-tde.file")
+local imagemagic = require("lib-tde.imagemagic")
 
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_height = dpi(900)
+
+local tempDisplayDir = filehandle.mktempdir()
 
 local screens = {}
 local mon_size = {
@@ -22,7 +26,10 @@ local mon_size = {
 
 local bSelectWallpaper = false
 
-local function make_mon(wall, id)
+-- wall is the scaled wallpaper
+-- fullwall is a fullscreen (or original wallpaper)
+local function make_mon(wall, id, fullwall)
+  fullwall = fullwall or wall
   local monitor =
     wibox.widget {
     widget = wibox.widget.imagebox,
@@ -38,7 +45,7 @@ local function make_mon(wall, id)
     function()
       if bSelectWallpaper then
         awful.spawn.easy_async(
-          "tos theme set " .. wall,
+          "tos theme set " .. fullwall,
           function()
             bSelectWallpaper = false
             root.elements.settings_views[4].view.refresh()
@@ -52,7 +59,7 @@ local function make_mon(wall, id)
                   newContent = newContent .. line .. "\n"
                 end
               end
-              newContent = newContent .. wall
+              newContent = newContent .. fullwall
               filesystem.overwrite(themeFile, newContent)
             end
             -- collect the garbage to remove the image cache from memory
@@ -339,8 +346,28 @@ return function()
     for k, v in ipairs(filesystem.list_dir("/usr/share/backgrounds/tos")) do
       -- check if it is a file
       if filesystem.exists(v) then
-        --layout:add(wibox.widget.base.empty_widget())
-        layout:add(make_mon(v, k))
+        local base = filehandle.basename(v)
+        -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+        local width = dpi(300)
+        local height = (width / 16) * 9
+        local scaledImage = tempDisplayDir .. "/" .. base
+        if filesystem.exists(scaledImage) then
+          layout:add(make_mon(scaledImage, k, v))
+        else
+          imagemagic.scale(
+            v,
+            width,
+            height,
+            scaledImage,
+            function()
+              if filesystem.exists(scaledImage) then
+                layout:add(make_mon(scaledImage, k, v))
+              else
+                print("Something went wrong scaling " .. v)
+              end
+            end
+          )
+        end
       end
     end
   end
