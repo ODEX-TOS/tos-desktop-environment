@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# disable globbing for qalc
+set -o noglob
+
 DPI="$1"
 CONFIG="$2"
 
