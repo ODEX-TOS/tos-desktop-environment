@@ -54,7 +54,7 @@ return {
     file_manager = "thunar",
     rofi = "rofi -dpi " ..
       screen.primary.dpi ..
-        ' -show "Global Search" -mod "Global Search":' ..
+        ' -show "Global Search" -modi "Global Search":' ..
           filesystem.get_configuration_dir() ..
             "/configuration/rofi/sidebar/rofi-spotlight.sh -theme " ..
               filesystem.get_configuration_dir() .. "/configuration/rofi/sidebar/rofi.rasi",
@@ -64,9 +64,7 @@ return {
           filesystem.get_configuration_dir() ..
             "/configuration/rofi/search.py" ..
               " -theme " .. filesystem.get_configuration_dir() .. "/configuration/rofi/sidebar/rofi.rasi",
-    rofiappmenu = "rofi -dpi " ..
-      screen.primary.dpi ..
-        " -show drun -theme " .. filesystem.get_configuration_dir() .. "/configuration/rofi/appmenu/drun.rasi",
+    rofiappmenu = "bash /etc/xdg/tde/applauncher.sh " .. screen.primary.dpi .. " " .. filesystem.get_configuration_dir(),
     rofiemojimenu = "bash /etc/xdg/tde/emoji.sh " .. screen.primary.dpi,
     rofiwindowswitch = "bash /etc/xdg/tde/application-switch.sh" .. " " .. screen.primary.dpi,
     roficlipboard = "rofi -dpi " ..
