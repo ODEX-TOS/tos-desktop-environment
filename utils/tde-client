@@ -60,7 +60,10 @@ tde-client is a remote command line interface to TDE.
 It communicates with TDE via D-Bus, allowing remote execution of Lua code.
 
 Run without a command to enter REPL (read-eval-print-loop) mode.
-For examples see \`man tde-client\`."
+If you are in REPL mode these are the available commands:
+- help
+- quit
+"
 }
 
 if [ $# -ne 0 ]
@@ -91,7 +94,17 @@ then
         if [ "$line" == "exit" ] || [ "$line" == "exit()" ] || [ "$line" == "quit" ] || [ "$line" == "quit()" ]; then
             exit 0
         fi
-        a_dbus_send "$line"
+
+        if [ "$line" == "help" ] || [ "$line" == "help()" ]; then
+            print_help
+            continue
+        fi
+        # don't use the return keyword when '=' is used, when '==' is used, do use return
+        if echo "$line" | grep -q "[^=]=[^=]"; then
+            a_dbus_send "$line"
+            continue
+        fi
+        a_dbus_send "return $line"
     done
 else
     a_dbus_send "$(cat)"
