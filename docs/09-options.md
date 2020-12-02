@@ -1,13 +1,13 @@
 # Startup options
 
-This document explains how to control how AwesomeWM behaves before `rc.lua` is
+This document explains how to control how TDE behaves before `rc.lua` is
 executed.
 
 ## Command line
 
-AwesomeWM has the following command line options:
+TDE has the following command line options:
 
-    Usage: awesome [OPTION]
+    Usage: tde [OPTION]
       -h, --help             show help
       -v, --version          show version
       -c, --config FILE      configuration file to use
@@ -21,7 +21,7 @@ AwesomeWM has the following command line options:
 
 ## Modelines
 
-Usually, AwesomeWM is started using a session manager rather than directly using
+Usually, TDE is started using a session manager rather than directly using
 the command line. On top of that, to make `rc.lua` more portable, it is possible
 to set many of those options directly in your config file. They will be
 interpreted before the Lua virtual machine is started. The keys are:
@@ -34,36 +34,36 @@ interpreted before the Lua virtual machine is started. The keys are:
   <th align='center'>Type</th>
   <th align='center'>Description</th>
  </tr>
- <tr><td>search</td><td>Yes</td><td>Yes</td><td>string</td><td>Path where the AwesomeWM core libraries are located</td></tr>
+ <tr><td>search</td><td>Yes</td><td>Yes</td><td>string</td><td>Path where the TDE core libraries are located</td></tr>
  <tr><td>no-argb</td><td>No</td><td>No</td><td>N/A</td><td>Disable built-in (real) transparency.</td></tr>
  <tr><td>api-level</td><td>Yes</td><td>No</td><td>integer</td><td>The config API level.</td></tr>
  <tr><td>screen</td><td>Yes</td><td>No</td><td>string</td><td>Create the screen before executing `rc.lua` (`on` or `off`)</td></tr>
  <tr><td>replace</td><td>No</td><td>No</td><td>N/A</td><td>Replace the current window manager.</td></tr>
 </table>
 
-A `modeline` must be near the top of `rc.lua` and start with `-- awesome_mode:`.
+A `modeline` must be near the top of `rc.lua` and start with `-- tde_mode:`.
 The options are separated by `:`. If an option has a value, it is separated by
 `=`. The default modeline is:
 
-    -- awesome_mode: api-level=4:screen=on
+    -- tde_mode: api-level=4:screen=on
 
 To display more deprecation errors, you can increase the API level by 2:
 
-    -- awesome_mode: api-level=6:screen=on
+    -- tde_mode: api-level=6:screen=on
 
 ## #! (shebang) support.
 
 It is possible to make some `.lua` file executable and use the POSIX magic
-prefix (`#!`, often referred as the shebang operator). AwesomeWM will attempt
+prefix (`#!`, often referred as the shebang operator). TDE will attempt
 to parse the header. Note that for now UTF-8 paths are not supported. A tipical
 file header will look like:
 
-    #! /usr/bin/env awesome --replace
+    #! /usr/bin/env tde --replace
     -- If LuaRocks is installed, make sure that packages installed through it
     -- are found (e.g. lgi). If LuaRocks is not installed, do nothing.
     pcall(require, "luarocks.loader")
 
-    -- Standard awesome library
+    -- Standard tde library
     local gears = require("gears")
     [... more `rc.lua` content ...]
 
@@ -87,7 +87,7 @@ Then you can make the script executable with `chmod +x` and run it.
 
 The typical output will look like:
 
-    awesome v4.3 (Too long)
+    tde v4.3 (testing)
       • Compiled against Lua 5.1.5 (running with Lua 5.1)
       • API level: 4
       • D-Bus support: yes
@@ -115,7 +115,7 @@ The content is useful when reporting a bug.
 </table>
 
 This option allows to pass an arbitrary Lua file to be used as a config rather
-than `~/.config/awesome/rc.lua` or `/etc/xdg/awesome/rc.lua`. It makes zero
+than `~/.config/tde/rc.lua` or `/etc/xdg/tde/rc.lua`. It makes zero
 sense in the shebang since you invoke a script directly. It doesn't make sense
 in the modeline either since at that point the file is already being read.
 
@@ -158,7 +158,7 @@ This option allows to add more paths to the Lua search path. It can be used
 to set an alternate version of the core libraries such as `awful` to make
 upstream patches development easier. It can also be used to point to custom
 modules. It is usually recommended to place custom modules in
-`~/.config/awesome/` or `/usr/share/awesome/lib`. Again, this option is mostly
+`~/.config/tde/` or `/usr/share/tde/lib`. Again, this option is mostly
 useful for development.
 
 ### check (-k): Check the config **SYNTAX**.
@@ -218,15 +218,15 @@ does, please notify them. The bug is on their side.
 </table>
 
 If you invested a lot of effort into a configuration and a new major version
-is AwesomeWM is released, you might want to postpone having to update everything
+is TDE is released, you might want to postpone having to update everything
 until you are ready to begin using the new features. If the API level is set,
-AwesomeWM will try to honor the behavior and content of the previous APIs.
+TDE will try to honor the behavior and content of the previous APIs.
 
 You can also set this value forward to get notified faster of your usage of
 newly deprecated API and enjoy cutting edge experimental features.
 
-The default API level matches the first component of the AwesomeWM version.
-For example, AwesomeWM v4.3 API level is "4". This only goes back to AwesomeWM
+The default API level matches the first component of the TDE version.
+For example, TDE v4.3 API level is "4". This only goes back to TDE
 4.0. The older 3.x APIs have been removed.
 
 ### screen (-m): Set the screen creation behavior.
@@ -244,7 +244,7 @@ For example, AwesomeWM v4.3 API level is "4". This only goes back to AwesomeWM
  </tr>
 </table>
 
-This option changes *when* screen objects are created. In AwesomeWM 4.x, by
+This option changes _when_ screen objects are created. In TDE 4.x, by
 default, they are created before `rc.lua` is parsed. This is very convenient
 for setup where the number of screen never changes. By creating them before
 `rc.lua`, it is possible to make many assumptions such as `mouse.screen` and
@@ -260,7 +260,7 @@ the future, the default will be `off` to allow HiDPI support to be enabled by
 default.
 controllable by Lua code.
 
-### replace (-r): Replace the current window manager with AwesomeWM.
+### replace (-r): Replace the current window manager with TDE.
 
 <table class='widget_list' border=1>
  <tr style='font-weight: bold;'>
@@ -275,5 +275,5 @@ controllable by Lua code.
  </tr>
 </table>
 
-If this option is set, AwesomeWM will kill the current window manager (even
-if it is another `awesome` instance and replace it. This is disabled by default.
+If this option is set, TDE will kill the current window manager (even
+if it is another `tde` instance and replace it. This is disabled by default.
