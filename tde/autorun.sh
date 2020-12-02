@@ -63,12 +63,6 @@ if [[ "$(command -v lxsession)" ]]; then
     pgrep lxsession || lxsession -s TOS -e TDE &
 fi
 
-# watch for dbus events
-process="python /etc/xdg/tde/tos-udev-dbus.py"
-if ! pgrep -f "$process"; then
-    PYTHONDONTWRITEBYTECODE=1 $process & 
-fi
-
 # autolock the system
 if [[ "$(command -v xidlehook)" && ! "$1" == "" ]]; then
     echo "Lock screen time set to: $1 seconds"
