@@ -87,6 +87,10 @@ then
         if [ "$line" = "" ]; then
             continue
         fi
+        # gracefull shutdown
+        if [ "$line" == "exit" ] || [ "$line" == "exit()" ] || [ "$line" == "quit" ] || [ "$line" == "quit()" ]; then
+            exit 0
+        fi
         a_dbus_send "$line"
     done
 else
