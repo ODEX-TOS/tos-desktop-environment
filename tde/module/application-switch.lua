@@ -326,12 +326,12 @@ function _M.preview()
         local c = leftRightTab[i]
         _M.preview_widgets[i].draw = function(_, _, cro, width, height)
             if width ~= 0 and height ~= 0 then
-                local a = 0.8
-                local overlay = 0.6
+                local a = 0.6
+                local overlay = 0
                 local fontSize = smallFont
                 if c == _M.altTabTable[_M.altTabIndex].client then
-                    a = 0.9
-                    overlay = 0
+                    a = 0.8
+                    overlay = 0.22
                     fontSize = bigFont
                 end
 
@@ -376,7 +376,7 @@ function _M.preview()
                 tx = tx + iconboxWidth
                 ty = h + (textboxHeight + textHeight) / 2
 
-                cro:set_source_rgba(unpack(_M.settings.preview_box_title_color))
+                cro:set_source_rgba(gears.color.parse_color(beautiful.fg_normal))
                 cro:move_to(tx, ty)
                 cro:show_text(text)
                 cro:stroke()
@@ -404,7 +404,8 @@ function _M.preview()
                 -- Overlays
                 cro:scale(1 / sx, 1 / sy)
                 cro:translate(-tx, -ty)
-                cro:set_source_rgba(0, 0, 0, overlay)
+                local r, g, b = gears.color.parse_color(beautiful.primary.hue_500)
+                cro:set_source_rgba(r, g, b, overlay)
                 cro:rectangle(tx, ty, sx * cg.width, sy * cg.height)
                 cro:fill()
             end
