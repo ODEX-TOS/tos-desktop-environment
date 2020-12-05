@@ -233,4 +233,5 @@ translations["Automatically make the focus follow the mouse without clicking"] =
 translations["Tab between applications"] = "Tab tussen verschillende applicaties"
 translations["Tab between applications in reverse order"] =
     "Tab tussen verschillende applicaties in tegengestelde richting"
+translations["Tutorial"] = "Tutorial"
 return translations

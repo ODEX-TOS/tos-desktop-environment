@@ -8,7 +8,7 @@ local common = require("lib-tde.function.common")
 local desktopLocation = os.getenv("HOME") .. "/Desktop"
 local offset = -1
 if installed("installer") then
-    offset = 0
+    offset = 1
 end
 
 local function update_entry(name)
