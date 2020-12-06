@@ -110,8 +110,8 @@ delayed_timer(
     local valueRX = filehandle.string("/sys/class/net/" .. interface .. "/statistics/rx_bytes"):gsub("\n", "")
     local valueTX = filehandle.string("/sys/class/net/" .. interface .. "/statistics/tx_bytes"):gsub("\n", "")
 
-    valueRX = tonumber(valueRX) or 0
-    valueTX = tonumber(valueTX) or 0
+    valueRX = tonumber(valueRX) or (last_rx + 1)
+    valueTX = tonumber(valueTX) or (last_tx + 1)
 
     local download = math.ceil((valueRX - last_rx) / config.network_poll)
     local upload = math.ceil((valueTX - last_tx) / config.network_poll)

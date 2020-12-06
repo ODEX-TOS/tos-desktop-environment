@@ -24,6 +24,7 @@
 ]]
 local filesystem = require("gears.filesystem")
 local config = require("config")
+local hardware = require("lib-tde.hardware-check")
 
 local function addHash(input)
   if input == nil then
@@ -41,7 +42,8 @@ color = addHash(themefile["primary_hue_500"]) or color
 colorBG = addHash(themefile["primary_hue_700"]) or colorBG
 
 local picom = "picom -b --dbus --experimental-backends --config " .. config.getComptonFile()
-if general["weak_hardware"] == "1" then
+-- if the user has weak hardware then don't use picom with it's blur effects
+if general["weak_hardware"] == "1" or hardware.isWeakHardware() then
   picom = ""
 end
 

@@ -136,6 +136,62 @@ local function getDefaultIP()
     return ip
 end
 
+--- Returns general information about system ram
+-- @treturn number, number The ram usage and ram total in KiloBytes
+-- @staticfct getRamInfo
+-- @usage -- For example, 50(%), 10000000(kB)
+-- lib-tde.hardware-check.getRamInfo()
+local function getRamInfo()
+    local length = 24
+    local stdout = fileHandle.lines("/proc/meminfo", nil, length)
+    if #stdout < length then
+        return
+    end
+    local total = tonumber(string.gmatch(stdout[1], "%d+")())
+    local free = tonumber(string.gmatch(stdout[2], "%d+")())
+    local buffer = tonumber(string.gmatch(stdout[4], "%d+")())
+    local cache = tonumber(string.gmatch(stdout[5], "%d+")())
+    local sReclaimable = tonumber(string.gmatch(stdout[24], "%d+")())
+
+    -- the used ram in kB
+    local used = total - free - buffer - cache - sReclaimable
+
+    -- the usage in percent
+    local usage = (used / total) * 100
+    return usage, total
+end
+
+--- Returns general information about the cpu
+-- @treturn number, number, string, number The cpu core count, thread count, canonical name and frequency in MHz
+-- @staticfct getCpuInfo
+-- @usage -- For example, 8 (cores), 16 (threads), "AMD Ryzen 7 PRO 5800X", 3000(MHz)
+-- lib-tde.hardware-check.getCpuInfo()
+local function getCpuInfo()
+    local length = 13
+    local stdout = fileHandle.lines("/proc/cpuinfo", nil, length)
+    if #stdout < length then
+        return
+    end
+
+    local name = string.gmatch(stdout[5], ": (.*)$")()
+    local frequency = string.gmatch(stdout[8], "%d+")()
+    local threads = string.gmatch(stdout[11], "%d+")()
+    local cores = string.gmatch(stdout[13], "%d+")()
+    return tonumber(cores), tonumber(threads), name, tonumber(frequency)
+end
+
+--- Returns if the hardware is to weak, eg little amount of ram, cpu etc
+-- @return bool true if the hardware is below a certain treshold
+-- @staticfct isWeakHardware
+-- @usage -- If ram is below 4G
+-- lib-tde.hardware-check.isWeakHardware()
+local function isWeakHardware()
+    local _, ramtotal = getRamInfo()
+    local _, threads = getCpuInfo()
+    local minRamInKB = 4 * 1024 * 1024
+    return (threads < 3) or (ramtotal < minRamInKB)
+end
+
 return {
     hasBattery = battery,
     hasWifi = wifi,
@@ -144,5 +200,8 @@ return {
     hasSound = sound,
     has_package_installed = has_package_installed,
     getDefaultIP = getDefaultIP,
+    getRamInfo = getRamInfo,
+    getCpuInfo = getCpuInfo,
+    isWeakHardware = isWeakHardware,
     execute = osExecute
 }

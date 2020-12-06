@@ -38,5 +38,3 @@ if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so") then
                 "/.config/awesome/lib-tde/lib-so/?/?.so;" .. os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so/?.so"
 end
 package.cpath = package.cpath .. ";" .. "/etc/xdg/tde/lib-tde/lib-so/?/?.so;" .. "/etc/xdg/tde/lib-tde/lib-so/?.so"
-
-print("Package path: " .. package.path)

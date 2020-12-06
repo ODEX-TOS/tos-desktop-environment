@@ -7,6 +7,7 @@ local execute = require("lib-tde.hardware-check").execute
 local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
+local hardware = require("lib-tde.hardware-check")
 
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
@@ -96,8 +97,12 @@ return function()
     end
   )
 
+  local _, threads, _processor_name = hardware.getCpuInfo()
   local processor_name, processor_text = generate_setting_panel(i18n.translate("Processor"))
-  processor_text.text = string.gmatch(file.lines("/proc/cpuinfo", nil, 5)[5], ": (.*)")()
+  processor_text.text = _processor_name
+
+  local processor_cores, processor_cores_text = generate_setting_panel(i18n.translate("Processor Core Count"))
+  processor_cores_text.text = tostring(threads)
 
   local graphics_name, graphics_text = generate_setting_panel(i18n.translate("Graphics"))
   -- gathered from https://github.com/dylanaraps/neofetch/blob/master/neofetch#L2401
@@ -142,6 +147,7 @@ return function()
 
   container:add(memory_name)
   container:add(processor_name)
+  container:add(processor_cores)
   container:add(graphics_name)
   container:add(disk_name)
 

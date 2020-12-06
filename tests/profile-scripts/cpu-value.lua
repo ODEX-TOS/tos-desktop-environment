@@ -3,6 +3,7 @@
 
 require("lib-tde.luapath")
 local file = require("lib-tde.file")
+local hardware = require("lib-tde.hardware-check")
 local sleep = require("lib-tde.function.common").sleep
 
 local idle_prev = 0
@@ -32,3 +33,10 @@ end
 get_cpu_usage()
 sleep(1)
 get_cpu_usage()
+
+local cores, threads, name, frequency = hardware.getCpuInfo()
+
+print("CPU core count: " .. cores)
+print("CPU thread count: " .. threads)
+print("CPU name: " .. name)
+print("CPU Frequency: " .. frequency)

@@ -19,3 +19,17 @@ function test_hardware_check_ip_valid_return()
     assert(type(ip) == "string")
     assert(#split(ip, ".") == 4)
 end
+
+function test_hardware_check_api()
+    assert(type(hardware.hasBattery) == "function")
+    assert(type(hardware.hasWifi) == "function")
+    assert(type(hardware.hasBluetooth) == "function")
+    assert(type(hardware.hasFFMPEG) == "function")
+    assert(type(hardware.hasSound) == "function")
+    assert(type(hardware.has_package_installed) == "function")
+    assert(type(hardware.getDefaultIP) == "function")
+    assert(type(hardware.getRamInfo) == "function")
+    assert(type(hardware.getCpuInfo) == "function")
+    assert(type(hardware.isWeakHardware) == "function")
+    assert(type(hardware.execute) == "function")
+end
