@@ -143,7 +143,7 @@ end
 -- lib-tde.hardware-check.getRamInfo()
 local function getRamInfo()
     local length = 24
-    local stdout = fileHandle.lines("/proc/meminfo", nil, length)
+    local stdout = fileHandle.lines("/proc/meminfo")
     if #stdout < length then
         return
     end

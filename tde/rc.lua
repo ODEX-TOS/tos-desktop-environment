@@ -77,7 +77,6 @@ require("module.brightness-slider-osd")
 require("module.volume-slider-osd")
 require("module.plugin-module")
 require("module.volume_manager")
-require("module.collector")
 _G.switcher = require("module.application-switch")
 
 -- Only activate the break timer if users what it

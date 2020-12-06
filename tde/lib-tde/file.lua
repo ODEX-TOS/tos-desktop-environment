@@ -139,6 +139,7 @@ local function lines_from(file, match, head)
   local i = 0
   for line in io.lines(file) do
     i = i + 1
+    -- TODO: early returing in io.lines results in not closing the filedescriptor
     if head ~= nil and i > head then
       return lines
     end
