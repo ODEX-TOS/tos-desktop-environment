@@ -49,6 +49,7 @@ local config = {
     weather_poll = 1200, -- how often we check the weather status
     cpu_poll = 5, -- how often do we check the current cpu status
     cpu_startup_delay = 9,
+    garbage_collection_cycle = 2 * 60, -- collect garbage every x seconds
     colors_config = HOME .. "/.config/tos/colors.conf",
     icons_config = HOME .. "/.config/tos/icons.conf",
     getComptonFile = function()
