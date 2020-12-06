@@ -1,4 +1,5 @@
 local i18n = require("tde.lib-tde.i18n")
+i18n._disable_color()
 
 function test_i18n_functions_exist()
     assert(type(i18n.init) == "function")

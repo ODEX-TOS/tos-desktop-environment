@@ -147,10 +147,17 @@ local function set_system_language(lang)
     _init(system_language)
 end
 
+-- Undocumented function (don't show this to the user)
+-- This disables the colored output so that
+local function _disable_color()
+    err = "[ ERROR "
+    warn = "[ WARN "
+end
 return {
     init = init,
     translate = translate,
     custom_translations = custom_translations,
     system_language = getLanguage,
-    set_system_language = set_system_language
+    set_system_language = set_system_language,
+    _disable_color = _disable_color
 }
