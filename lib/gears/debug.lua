@@ -67,7 +67,7 @@ end
 -- @tparam string message The warning message to print.
 -- @staticfct gears.debug.print_warning
 function debug.print_warning(message)
-    awesome.emit_signal("debug::error_msg", message)
+    awesome.emit_signal("debug::warn_msg", message)
 end
 
 --- Print an error message
@@ -117,7 +117,7 @@ function debug.deprecate(see, args)
     if see then
         if args.raw then
             msg = see
-        elseif string.sub(see, 1, 3) == 'Use' then
+        elseif string.sub(see, 1, 3) == "Use" then
             msg = msg .. ". " .. see
         else
             msg = msg .. ", see " .. see
@@ -130,9 +130,7 @@ function debug.deprecate(see, args)
     end
 
     if args.deprecated_in and awesome.api_level > args.deprecated_in then
-        awesome.emit_signal(
-            "debug::error", msg, false
-        )
+        awesome.emit_signal("debug::error", msg, false)
     end
 end
 
@@ -152,9 +150,9 @@ function debug.deprecate_class(fallback, old_name, new_name, args)
         return fallback
     end
 
-    local message = old_name.." has been renamed to "..new_name
+    local message = old_name .. " has been renamed to " .. new_name
 
-    local function call(_,...)
+    local function call(_, ...)
         debug.deprecate(message, {raw = true})
 
         return fallback(...)
@@ -172,7 +170,7 @@ function debug.deprecate_class(fallback, old_name, new_name, args)
         fallback[k] = v
     end
 
-    return setmetatable({}, {__call = call, __index = index, __newindex  = newindex})
+    return setmetatable({}, {__call = call, __index = index, __newindex = newindex})
 end
 
 return debug
