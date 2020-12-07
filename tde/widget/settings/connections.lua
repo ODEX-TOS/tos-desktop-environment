@@ -218,7 +218,7 @@ local function make_connection(t, n)
   elseif t == wired then
     i = icons.lan
   else
-    i = ""
+    i = icons.lan
   end
   if n == "disconnected" and t == wireless then
     i = icons.wifi

@@ -142,7 +142,7 @@ local function list_update(w, buttons, label, data, objects)
       local textOnly = text:match(">(.-)<")
       if (textOnly:len() > 24) then
         text = text:gsub(">(.-)<", ">" .. textOnly:sub(1, 21) .. "...<")
-        tt:set_text(textOnly)
+        tt:set_text(gears.string.xml_escape(textOnly))
         tt:add_to_object(tb)
       else
         tt:remove_from_object(tb)

@@ -8,7 +8,9 @@
 
 local sentrypkg = require("lib-tde.sentry")
 local release = require("release")
-local loglevel = require("lib-tde.logger").error
+local logger = require("lib-tde.logger")
+local loglevel = logger.error
+local warn = logger.warn
 
 print("Resolved release to: " .. release)
 print("Resolved environment to: " .. (os.getenv("TDE_ENV") or "production"))
@@ -65,6 +67,13 @@ awesome.connect_signal(
     "debug::error_msg",
     function(msg)
         send(msg)
+    end
+)
+
+awesome.connect_signal(
+    "debug::warning_msg",
+    function(msg)
+        print(msg, warn)
     end
 )
 

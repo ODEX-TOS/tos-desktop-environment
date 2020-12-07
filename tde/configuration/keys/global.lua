@@ -625,8 +625,7 @@ for i = 1, 9 do
         if tag then
           tag:view_only()
         end
-      end,
-      descr_view
+      end
     ),
     -- Toggle tag display.
     awful.key(
@@ -639,8 +638,7 @@ for i = 1, 9 do
         if tag then
           awful.tag.viewtoggle(tag)
         end
-      end,
-      descr_toggle
+      end
     ),
     -- Move client to tag.
     awful.key(
@@ -655,8 +653,7 @@ for i = 1, 9 do
             _G.client.focus:move_to_tag(tag)
           end
         end
-      end,
-      descr_move
+      end
     ),
     -- Toggle tag on focused client.
     awful.key(
@@ -671,8 +668,7 @@ for i = 1, 9 do
             _G.client.focus:toggle_tag(tag)
           end
         end
-      end,
-      descr_toggle_focus
+      end
     )
   )
 end
