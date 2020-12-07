@@ -71,7 +71,7 @@ awesome.connect_signal(
 )
 
 awesome.connect_signal(
-    "debug::warning_msg",
+    "debug::warn_msg",
     function(msg)
         print(msg, warn)
     end
