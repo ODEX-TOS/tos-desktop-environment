@@ -64,7 +64,7 @@ signals.connect_brightness(
 signals.connect_exit(
     function()
         print("Shutting down, grabbing last state")
-        awful.spawn("which autorandr && autorandr --save tde")
+        awful.spawn("which autorandr && autorandr --save tde --force")
         save(table)
     end
 )
