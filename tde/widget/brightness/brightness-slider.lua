@@ -92,6 +92,4 @@ local brightness_setting =
   widget = mat_list_item
 }
 
-update()
-
 return brightness_setting

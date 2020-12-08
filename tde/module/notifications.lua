@@ -125,7 +125,10 @@ naughty.connect_signal(
 naughty.connect_signal(
 	"request::display",
 	function(n)
-		local screen = awful.screen.preferred() or awful.screen.focused()
+		if screen.count() < 1 then
+			return
+		end
+		local screen = awful.screen.preferred() or awful.screen.focused() or awful.screen.primary
 		if (screen == nil) then
 			return
 		end

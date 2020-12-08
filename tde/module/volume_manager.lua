@@ -4,6 +4,7 @@ local time = require("socket").gettime
 
 local startup = true
 local prev_time = 0
+local boot_time = time()
 local deltaTime = 0.1
 
 signals.connect_volume(
@@ -29,7 +30,7 @@ signals.connect_volume_update(
                 local volume = string.match(out, "(%d?%d?%d)%%")
                 signals.emit_volume(tonumber(volume))
                 signals.emit_volume_is_muted(muted ~= nil or muted == "off")
-                if not startup then
+                if not startup and time() > (boot_time + 5) then
                     if _G.toggleVolOSD ~= nil then
                         _G.toggleVolOSD(true)
                     end

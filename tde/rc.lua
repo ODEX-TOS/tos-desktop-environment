@@ -54,6 +54,10 @@ local beautiful = require("beautiful")
 
 -- Theme
 beautiful.init(require("theme"))
+
+-- We load in the notifications befor loading in the plugins, this is because if an error occured during plugin loading it will be displayed correctly
+require("module.notifications")
+
 if not (general["draw_mode"] == "none") then
   require("module.titlebar")()
 end
@@ -71,7 +75,6 @@ end
 
 -- Init all modules
 require("module.settings")
-require("module.notifications")
 require("module.auto-start")
 require("module.exit-screen")
 require("module.quake-terminal")
@@ -165,4 +168,6 @@ if not (general["disable_desktop"] == "1") then
   require("module.desktop")
 end
 
+-- restore the last state
+require("module.state")
 require("tutorial")

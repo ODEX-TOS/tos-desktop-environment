@@ -486,4 +486,16 @@ connections.connect_wifi_status = function(func)
     awesome.connect_signal("WIFI::status", func)
 end
 
+--- Trigger a callback function when we are about to shut down
+-- @tparam function func The callback function that will be called when we are shutting down
+-- @staticfct connect_exit
+-- @usage -- this function will be called when shutting down
+-- lib-tde.signals.connect_exit(
+--    function ()
+--      print("Goodbye")
+--    end)
+connections.connect_exit = function(func)
+    awesome.connect_signal("exit", func)
+end
+
 return connections

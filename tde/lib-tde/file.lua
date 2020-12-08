@@ -57,7 +57,7 @@ local function exists(file)
 end
 
 --- Check if a file exists
--- @tparam file string The path to the file, can be both absolute or relative.
+-- @tparam string file The path to the file, can be both absolute or relative.
 -- @treturn bool True if a file exists false otherwise
 -- @staticfct exists
 -- @usage -- This true
@@ -72,8 +72,8 @@ end
 -- TODO: unit test the file writing
 
 --- Write data to a new file
--- @tparam file string The path to the file, can be both absolute or relative.
--- @tparam data string The data to put into the file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam string data The data to put into the file
 -- @treturn bool if the write was succesfull
 -- @staticfct write
 -- @usage -- This true
@@ -89,8 +89,8 @@ local function write(file, data)
 end
 
 --- Override the entire file
--- @tparam file string The path to the file, can be both absolute or relative.
--- @tparam data string The data to put into the file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam string data The data to put into the file
 -- @treturn bool if the write was succesfull
 -- @staticfct overwrite
 -- @usage -- This true
@@ -106,7 +106,7 @@ local function overwrite(file, data)
 end
 
 --- Check if a directory exists
--- @tparam dir string The path to the directory, can be both absolute or relative.
+-- @tparam string dir The path to the directory, can be both absolute or relative.
 -- @treturn bool True if the directory exists false otherwise
 -- @staticfct dir_exists
 -- @usage -- This true
@@ -122,9 +122,9 @@ local function dir_exists(dir)
 end
 
 --- Get all lines from a file, returns an empty table if it doesn't exist
--- @tparam file string The path to the file, can be both absolute or relative.
--- @tparam[opt] match string A regular expression to filter out lines that should be ignored by default = ^.*$
--- @tparam[opt] head number Acts like the head unix tool, it returns the first <head> lines in a file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam[opt] string match A regular expression to filter out lines that should be ignored by default = ^.*$
+-- @tparam[opt] number head Acts like the head unix tool, it returns the first <head> lines in a file
 -- @treturn table The lines in a file
 -- @staticfct lines
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
@@ -153,9 +153,9 @@ local function lines_from(file, match, head)
 end
 
 --- Put the content of a file into a string
--- @tparam file string The path to the file, can be both absolute or relative.
--- @tparam[opt] match string A regular expression to filter out lines that should be ignored by default = ^.*$
--- @tparam[opt] head number Acts like the head unix tool, it returns the first <head> lines in a file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam[opt] string match A regular expression to filter out lines that should be ignored by default = ^.*$
+-- @tparam[opt] string head Acts like the head unix tool, it returns the first <head> lines in a file
 -- @treturn string The filtered out content of a file
 -- @staticfct string
 -- @usage -- This gives the first 100 lines of /etc/hosts and filters it by only showing lines that start with ipv4 addresses
@@ -169,7 +169,7 @@ local function getString(file, match, head)
 end
 
 --- Return a table of filename found in a directory
--- @tparam dir string The path to the directory, can be both absolute or relative.
+-- @tparam string dir The path to the directory, can be both absolute or relative.
 -- @treturn table an iterable table containg all files in the directory
 -- @staticfct list_dir
 -- @usage -- This returns a table
@@ -195,7 +195,7 @@ local function list_dir(str)
 end
 
 --- Return a table of filename found in a directory and all child directories (be carefull for big directories)
--- @tparam dir string The path to the directory, can be both absolute or relative.
+-- @tparam string dir The path to the directory, can be both absolute or relative.
 -- @treturn table an iterable table containg all files in the directory
 -- @staticfct list_dir
 -- @usage -- This returns a table
@@ -222,7 +222,7 @@ local function list_dir_full(str)
 end
 
 --- Function equivalent to basename in POSIX systems
---@param str the path string
+--@param string str the path as a string
 local function basename(str)
   if type(str) == "string" then
     local name = string.gsub(str, "(.*/)(.*)", "%2")
@@ -232,7 +232,7 @@ local function basename(str)
 end
 
 --- Function to remove a file for the filesystem
---@param filename string the path to the file
+--@param string filename the path to the file
 local function rm(filename)
   return os.remove(filename)
 end
