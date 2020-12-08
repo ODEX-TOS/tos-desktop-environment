@@ -207,9 +207,9 @@ local function make_connection(t, n)
   conx.shape = rounded()
 
   local i
-  local wireless = i18n.translate("wireless")
-  local bluetooth = i18n.translate("bluetooth")
-  local wired = i18n.translate("wired")
+  local wireless = "wireless"
+  local bluetooth = "bluetooth"
+  local wired = "wired"
 
   if t == wireless then
     i = icons.wifi
@@ -245,7 +245,8 @@ local function make_connection(t, n)
   local type =
     wibox.widget {
     widget = wibox.widget.textbox,
-    text = t,
+    -- Holds the string "wireless", "wired" or simular
+    text = i18n.translate(t),
     font = beautiful.title_font
   }
 
@@ -353,8 +354,8 @@ return function()
   }
 
   view.refresh = function()
-    if hardware.hasWifi() then
-      local interface = file.string("/tmp/interface.txt")
+    local interface = file.string("/tmp/interface.txt")
+    if hardware.hasWifi() and not (interface == "") then
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
       wireless.ip.text = hardware.getDefaultIP()

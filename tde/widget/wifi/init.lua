@@ -105,7 +105,7 @@ gears.timer {
   autostart = true,
   callback = function()
     local widgetIconName = "wifi-strength"
-    local interface_res = filehandle.lines("/proc/net/wireless", nil, 3)[3]
+    local interface_res = filehandle.lines("/proc/net/wireless")[3]
     if interface_res == nil then
       connected = false
       signals.emit_wifi_status(false)

@@ -67,8 +67,7 @@ end
 -- @usage -- This True if a network card exists
 -- lib-tde.hardware-check.wifi()
 local function wifi()
-    local out, _ = osExecute("nmcli radio wifi")
-    return out == "enabled" or out == "enabled\n"
+    return (#filehandle.lines("/proc/net/wireless")) > 2
 end
 
 --- Check to see the hardware has a network card with bluetooth support
