@@ -22,7 +22,8 @@ local abutton = awful.button
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local mode = general["draw_mode"]
+local mode = ""
+local draw_mode = general["draw_mode"]
 
 local beautiful = require("beautiful")
 local get_font_height = beautiful.get_font_height
@@ -983,9 +984,9 @@ function nice.initialize(args)
     _G.screen.connect_signal(
         "arrange",
         function(s)
-            if mode == "full" then
+            if draw_mode == "full" then
                 full(s)
-            elseif mode == "none" then
+            elseif draw_mode == "none" then
                 none(s)
             else
                 fast(s)
