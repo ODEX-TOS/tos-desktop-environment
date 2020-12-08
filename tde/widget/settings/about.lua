@@ -121,6 +121,10 @@ return function()
     end
   )
 
+  local display_freq_name, display_freq_text = generate_setting_panel(i18n.translate("Display refresh rate"))
+
+  display_freq_text.text = tostring(hardware.getDisplayFrequency()) .. " Hz"
+
   local os_name_name, os_name_text = generate_setting_panel(i18n.translate("OS Name"))
   os_name_text.text = "TOS Linux"
 
@@ -150,6 +154,7 @@ return function()
   container:add(processor_cores)
   container:add(graphics_name)
   container:add(disk_name)
+  container:add(display_freq_name)
 
   container:add(separator)
 
