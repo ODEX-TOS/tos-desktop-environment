@@ -10,8 +10,7 @@ local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 local function load()
     local table = {
         volume = 0,
-        brightness = 100,
-        xrandr = "xrandr --auto"
+        brightness = 100
     }
     if not filehandle.exists(file) then
         return table
@@ -38,7 +37,7 @@ local function setup_state(state)
     end
 
     -- execute xrandr script
-    awful.spawn(state.xrandr or "xrandr --auto")
+    awful.spawn("which autorandr && autorandr --load tde")
 end
 
 -- load the initial state
@@ -65,7 +64,7 @@ signals.connect_brightness(
 signals.connect_exit(
     function()
         print("Shutting down, grabbing last state")
-        -- TODO: convert screen data to xrandr command
+        awful.spawn("which autorandr && autorandr --save tde")
         save(table)
     end
 )
