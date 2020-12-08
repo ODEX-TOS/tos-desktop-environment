@@ -1,18 +1,21 @@
 local signals = require("lib-tde.signals")
 local sound = require("lib-tde.sound")
+local time = require("socket").gettime
 
-local pop_counter = 1
 local startup = true
+local prev_time = 0
+local deltaTime = 0.1
 
 signals.connect_volume(
     function(value)
-        if pop_counter == 0 then
+        -- we set prev_time initially to a higer value so we don't hear a pop sound when starting up the DE
+        if prev_time == 0 then
+            prev_time = time() + 1
+        end
+        if prev_time < (time() - deltaTime) then
             sound()
             awful.spawn("amixer -D pulse sset Master " .. tostring(value) .. "%")
-        end
-        pop_counter = pop_counter + 1
-        if pop_counter == 3 then
-            pop_counter = 0
+            prev_time = time()
         end
     end
 )
