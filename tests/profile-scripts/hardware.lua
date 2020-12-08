@@ -1,0 +1,11 @@
+local hardware = require("tde.lib-tde.hardware-check")
+
+print("Display frequency: " .. hardware.getDisplayFrequency() .. " Hz")
+print("IP address: " .. hardware.getDefaultIP())
+print("CPU usage: " .. hardware.getCpuInfo() .. " %")
+print("Ram usage: " .. hardware.getRamInfo() .. " %")
+print("Has battery: " .. tostring(hardware.hasBattery()))
+print("Has bluetooth: " .. tostring(hardware.hasBluetooth()))
+print("Has ffpmeg installed: " .. tostring(hardware.hasFFMPEG()))
+print("Has sound: " .. tostring(hardware.hasSound()))
+print("Has wifi: " .. tostring(hardware.hasWifi()))

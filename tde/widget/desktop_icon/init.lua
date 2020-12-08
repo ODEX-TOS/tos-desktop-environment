@@ -6,6 +6,7 @@ local gears = require("gears")
 local icons = require("theme.icons")
 local menubar = require("menubar")
 local filehandle = require("lib-tde.file")
+local hardware = require("lib-tde.hardware-check")
 local err = require("lib-tde.logger").error
 
 local width = dpi(100)
@@ -57,7 +58,7 @@ local function create_icon(icon, name, num, callback, drag)
 
     local timer =
         gears.timer {
-        timeout = 0.02,
+        timeout = 1 / hardware.getDisplayFrequency(),
         call_now = false,
         autostart = false,
         callback = function()

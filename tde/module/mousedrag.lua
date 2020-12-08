@@ -2,6 +2,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local gears = require("gears")
+local hardware = require("lib-tde.hardware-check")
 
 local startx = -1
 local starty = -1
@@ -62,7 +63,7 @@ end
 
 local timer =
     gears.timer {
-    timeout = 0.05,
+    timeout = 1 / hardware.getDisplayFrequency(),
     call_now = false,
     autostart = false,
     callback = function()

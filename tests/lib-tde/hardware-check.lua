@@ -31,5 +31,6 @@ function test_hardware_check_api()
     assert(type(hardware.getRamInfo) == "function")
     assert(type(hardware.getCpuInfo) == "function")
     assert(type(hardware.isWeakHardware) == "function")
+    assert(type(hardware.getDisplayFrequency) == "function")
     assert(type(hardware.execute) == "function")
 end

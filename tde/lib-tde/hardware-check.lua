@@ -192,6 +192,20 @@ local function isWeakHardware()
     return (threads < 3) or (ramtotal < minRamInKB)
 end
 
+--- Returns The frequency of the display panel in Herts, for example 60 Hz
+-- @return number The frequency of the display in Hertz
+-- @staticfct getDisplayFrequency
+-- @usage -- Returns The frequency of the display panel in Herts, for example 60 Hz
+-- lib-tde.hardware-check.getDisplayFrequency()
+local function getDisplayFrequency()
+    local out, rc = osExecute("xrandr -q --current | grep -o '[0-9\\.]*\\*' | awk '{printf $1}' | tr -d '*'")
+    -- In case nothing works return the default
+    if not (rc == 0) then
+        return 60
+    end
+    return tonumber(out) or 60
+end
+
 return {
     hasBattery = battery,
     hasWifi = wifi,
@@ -203,5 +217,6 @@ return {
     getRamInfo = getRamInfo,
     getCpuInfo = getCpuInfo,
     isWeakHardware = isWeakHardware,
+    getDisplayFrequency = getDisplayFrequency,
     execute = osExecute
 }
