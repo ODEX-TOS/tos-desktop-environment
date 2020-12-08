@@ -99,7 +99,7 @@ local function isInApp(filename, index)
     local find = "/usr/share/awesome"
     local result = not (filename:sub(1, #find) == find)
     index = index or ""
-    print(filename .. tostring(index) .. " IsInApp: " .. tostring(result))
+    print(filename .. ":" .. tostring(index) .. " IsInApp: " .. tostring(result))
     return result
 end
 
