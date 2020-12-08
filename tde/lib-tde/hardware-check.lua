@@ -67,7 +67,7 @@ end
 -- @usage -- This True if a network card exists
 -- lib-tde.hardware-check.wifi()
 local function wifi()
-    return (#filehandle.lines("/proc/net/wireless")) > 2
+    return #(fileHandle.lines("/proc/net/wireless")) > 2
 end
 
 --- Check to see the hardware has a network card with bluetooth support
@@ -202,7 +202,13 @@ local function getDisplayFrequency()
     if not (rc == 0) then
         return 60
     end
-    return tonumber(out) or 60
+    -- make sure the number is in a valid range
+    -- Current display don't exceed 1000 Hz so that should be a sane value
+    local number = tonumber(out) or 60
+    if number < 1 or number > 1000 then
+        return 60
+    end
+    return number
 end
 
 return {

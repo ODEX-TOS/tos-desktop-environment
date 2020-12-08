@@ -218,13 +218,13 @@ local function make_connection(t, n)
   elseif t == wired then
     i = icons.lan
   else
-    i = icons.lan
+    i = icons.lan_off
   end
   if n == "disconnected" and t == wireless then
-    i = icons.wifi
+    i = icons.wifi_off
   end
   if n == "disconnected" and t == wired then
-    i = icons.lan
+    i = icons.lan_off
   end
   local icon =
     wibox.widget {
@@ -376,8 +376,7 @@ return function()
         end
       )
     else
-      -- TODO: set disconnected wifi icon
-      wireless.icon:set_image(icons.wifi)
+      wireless.icon:set_image(icons.wifi_off)
       wireless.name.text = i18n.translate("Disconnected")
       wireless.ip.text = ""
     end
@@ -386,12 +385,12 @@ return function()
       'sh -c \'ip link | grep ": en" | grep " UP "\'',
       function(_, _, _, c)
         if (c == 0) then
-          wired.icon.text = icons.lan
+          print("Lan on")
+          wired.icon:set_image(icons.lan)
           wired.name.text = i18n.translate("connected")
           wired.ip.text = hardware.getDefaultIP()
         else
-          -- TODO: set disconnected lan icon
-          wired.icon.text = icons.lanx
+          wired.icon:set_image(icons.lan_off)
           wired.name.text = i18n.translate("Disconnected")
           wired.ip.text = ""
         end
