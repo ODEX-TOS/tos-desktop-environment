@@ -95,10 +95,11 @@ local function fileinfo(file, lineno)
 end
 
 -- it is in app if the filename is not /usr/share/awesome
-local function isInApp(filename)
+local function isInApp(filename, index)
     local find = "/usr/share/awesome"
     local result = not (filename:sub(1, #find) == find)
-    print(filename .. " IsInApp: " .. tostring(result))
+    index = index or ""
+    print(filename .. tostring(index) .. " IsInApp: " .. tostring(result))
     return result
 end
 
@@ -145,7 +146,7 @@ local function backtrace(level)
                 context_line = line,
                 pre_context = pre,
                 post_context = post,
-                in_app = isInApp(filename)
+                in_app = isInApp(filename, info.currentline)
             }
         )
 
