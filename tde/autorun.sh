@@ -42,9 +42,10 @@ if ! pgrep tos; then
     nohup tos theme daemon &>/dev/null &# launch a tos daemon
 fi
 
-if [[ "$(command -v light-locker)" ]]; then
-    light-locker &>/dev/null &
-fi
+# TODO: once light-locker works again remove these comments
+#if [[ "$(command -v light-locker)" ]]; then
+#    light-locker --no-lock-on-suspend &>/dev/null &
+#fi
 
 if [[ "$(command -v psi-notify)" ]]; then
     pgrep psi-notify &>/dev/null || psi-notify &>/dev/null &
