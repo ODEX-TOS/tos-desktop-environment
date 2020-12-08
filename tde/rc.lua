@@ -54,7 +54,9 @@ local beautiful = require("beautiful")
 
 -- Theme
 beautiful.init(require("theme"))
-require("module.titlebar")()
+if not (general["draw_mode"] == "none") then
+  require("module.titlebar")()
+end
 require("module.backdrop")
 
 -- Layout
