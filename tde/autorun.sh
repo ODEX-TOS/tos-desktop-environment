@@ -39,7 +39,7 @@ function run() {
 setxkbmap "$(cut -d= -f2 /etc/vconsole.conf | cut -d- -f1)"
 
 if ! pgrep tos; then
-    nohup tos theme daemon &>/dev/null &# launch a tos daemon
+    tos theme daemon &>/dev/null &# launch a tos daemon
 fi
 
 # TODO: once light-locker works again remove these comments
@@ -47,16 +47,20 @@ fi
 #    light-locker --no-lock-on-suspend &>/dev/null &
 #fi
 
+if [[ "$(command -v udiskie)" ]]; then
+    pgrep udiskie &>/dev/null || udiskie &>/dev/null &
+fi
+
 if [[ "$(command -v psi-notify)" ]]; then
     pgrep psi-notify &>/dev/null || psi-notify &>/dev/null &
 fi
 
 if grep -q "bluetooth=false" ~/.config/tos/theme; then
-        bluetoothctl power off
+        pgrep bluetoothctl &>/dev/null || bluetoothctl power off
 fi
 
 if [[ "$(command -v libinput-gestures)" ]]; then
-        libinput-gestures &
+        pgrep bluetoothctl &>/dev/null || libinput-gestures &
 fi
 
 # launch a polkit authentication manager
