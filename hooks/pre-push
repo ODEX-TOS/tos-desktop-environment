@@ -23,24 +23,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# network ssid's
-networks=$(nmcli d wifi list | awk '$1 !~ /IN-USE|*/{print $0}' | grep -Eo '^.* Infra' | sed 's/Infra//' | sed -r 's/([0-9A-F]{2}:){5}[0-9A-F]{2}\s+//' | awk '{print "\""$0"\""}' | sed -r -e 's/^\"\s+/\"/g' -e 's/\s*\"//g' | sort | uniq) # get all screens
-DPI=${1:-"100"}
+# $1 is the exit code
+# $2 is the message
+function log {
+    len="$(( ${#2} - 1 ))"
+    echo -en "$2 "
+    printf '.%.0s' $(seq $(( 70 - $len )))
 
-val=$(printf "%s" "$networks" | rofi -dmenu -dpi $DPI -theme /etc/xdg/tde/configuration/rofi/sidebar/rofi.rasi) # get the requested network
+    if [[ ! "$1" -eq "0" ]]; then
+        echo -e " \e[30m\e[41m FAILED  \e[49m\e[39m"
+    else
+        echo -e " \e[30m\e[42m SUCCESS \e[49m\e[39m"
+    fi
+}
 
-if [[ "$val" == "" ]]; then
-        exit 1 # user aborted
-fi
+function run_correct_branch {
+    _branch=$(git branch --show-current)
+    if [[ "$_branch" == "master" ]]; then
+        log "1" "Pushing to master branch is not allowed"
+        exit 1
+    else
+        log "0" "All seems safe"
+    fi
+}
 
-nmcli dev wifi connect "$val" || echo "Asking for password of $val"
-nmcli dev wifi list | grep '*' | head -n1 | grep -q " $val " && exit # exit if a connection has been made
-# otherwise we ask the password from the user
-password=$(printf "What is the password of %s?" "$val" | rofi -dmenu -dpi $DPI -password -theme /etc/xdg/tde/configuration/rofi/sidebar/rofi.rasi) # get the requested dpi
-
-if [[ "$password" == "" ]]; then
-        exit 1 # user aborted password entry field
-fi
-
-nmcli dev wifi connect "$val" password "$password"
-
+run_correct_branch
