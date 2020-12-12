@@ -49,17 +49,6 @@ header =
   widget = wibox.widget.textbox
 }
 
--- seperate the header and calendar
-local separator =
-  wibox.widget {
-  orientation = "horizontal",
-  forced_height = 1,
-  span_ratio = 1.0,
-  opacity = 0.90,
-  color = beautiful.bg_modal,
-  widget = wibox.widget.separator
-}
-
 -- the entire widget that will be included
 return wibox.widget {
   expand = "none",

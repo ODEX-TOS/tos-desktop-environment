@@ -22,30 +22,27 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 -- Require needed libraries
 
-local beautiful = require('beautiful')
-local gears = require('gears')
-local awful = require('awful')
-local wibox = require('wibox')
+local gears = require("gears")
+local awful = require("awful")
+local wibox = require("wibox")
 
-local dpi = require('beautiful').xresources.apply_dpi
+local dpi = require("beautiful").xresources.apply_dpi
 
 -- a widget container that is clickable
-local clickable_container = require('widget.material.clickable-container')
+local clickable_container = require("widget.material.clickable-container")
 
-local theme = require('theme.icons.dark-light')
+local theme = require("theme.icons.dark-light")
 -- wrap the path to the icon in a theme() call
 -- this will change the icon depending on the theme eg dark or light
-local icon = theme(os.getenv('HOME') .. '/.config/tde/icon_button/' .. "icons/info.svg")
-
+local icon = theme(os.getenv("HOME") .. "/.config/tde/icon_button/" .. "icons/info.svg")
 
 -- put the icon into a widget
 local widget =
   wibox.widget {
   {
-    id = 'icon',
+    id = "icon",
     image = icon,
     widget = wibox.widget.imagebox,
     resize = true
@@ -53,9 +50,9 @@ local widget =
   layout = wibox.layout.align.horizontal
 }
 
-
 -- convert the above widget into a button using clickable_container
-local widget_button = clickable_container(
+local widget_button =
+  clickable_container(
   --dpi(14) is used to take different screen sizes into consideration
   wibox.container.margin(widget, dpi(14), dpi(14), dpi(6), dpi(6))
 )
