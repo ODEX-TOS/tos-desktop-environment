@@ -1,3 +1,27 @@
+--[[
+--MIT License
+--
+--Copyright (c) 2019 manilarome
+--Copyright (c) 2020 Tom Meyers
+--
+--Permission is hereby granted, free of charge, to any person obtaining a copy
+--of this software and associated documentation files (the "Software"), to deal
+--in the Software without restriction, including without limitation the rights
+--to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+--copies of the Software, and to permit persons to whom the Software is
+--furnished to do so, subject to the following conditions:
+--
+--The above copyright notice and this permission notice shall be included in all
+--copies or substantial portions of the Software.
+--
+--THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+--IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+--FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+--AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+--LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+--OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+--SOFTWARE.
+]]
 -- vim: st=4 sts=4 sw=4 et:
 --- Network backend using the [lua-nginx-module](https://github.com/openresty/lua-nginx-module) cosocket API.
 -- This module can be used with the raw Lua module for nginx or the OpenResty
@@ -29,12 +53,14 @@ local _M = {}
 
 -- provide a more sensible implementation of the error log function
 function util.errlog(...)
-    ngx.log(ngx.ERR, 'TDE-sender failure: ', ...)
+    ngx.log(ngx.ERR, "TDE-sender failure: ", ...)
 end
 
 -- as we don't want to use an external HTTP library, just send the HTTP request
 -- directly using cosocket API
-local HTTP_REQUEST = string.gsub([[POST %s HTTP/1.0
+local HTTP_REQUEST =
+    string.gsub(
+    [[POST %s HTTP/1.0
 Host: %s
 Connection: close
 Content-Type: application/json
@@ -43,10 +69,12 @@ User-Agent: %s
 X-Sentry-Auth: %s
 
 %s
-]], '\r?\n', '\r\n')
+]],
+    "\r?\n",
+    "\r\n"
+)
 
-local CALLBACK_DEFAULT_ERRMSG =
-    "failed to configure socket (custom callback did not returned a value)"
+local CALLBACK_DEFAULT_ERRMSG = "failed to configure socket (custom callback did not returned a value)"
 
 local function send_msg(self, msg)
     local ok
@@ -67,7 +95,7 @@ local function send_msg(self, msg)
         return nil, err
     end
 
-    if self.protocol == 'https' then
+    if self.protocol == "https" then
         -- TODO: session resumption?
         ok, err = sock:sslhandshake(false, self.host, self.verify_ssl)
         if not ok then
@@ -83,7 +111,7 @@ local function send_msg(self, msg)
     end
 
     local resp, partial
-    resp, err, partial = sock:receive('*a')
+    resp, err, partial = sock:receive("*a")
     if err then
         -- If the connection was forcibly reset by the server after sending the
         -- response, it will look like an error. To cover for this, take the
@@ -114,47 +142,54 @@ local function send_task(premature, self)
         return
     end
 
-    local ok, err = xpcall(function()
-        local send_queue = self.send_queue
-        while #send_queue > 0 do
-            local msg = send_queue[1]
-            -- do not remove the message yet as an empty queue is the signal to
-            -- re-start the task
-            local ok, err = send_msg(self, msg)
-            if not ok then
-                ngx.log(ngx.ERR, 'TDE: failed to send message asyncronously: ',
-                    err, '. Drop the message.')
+    local ok, err =
+        xpcall(
+        function()
+            local send_queue = self.send_queue
+            while #send_queue > 0 do
+                local msg = send_queue[1]
+                -- do not remove the message yet as an empty queue is the signal to
+                -- re-start the task
+                local ok, err = send_msg(self, msg)
+                if not ok then
+                    ngx.log(ngx.ERR, "TDE: failed to send message asyncronously: ", err, ". Drop the message.")
+                end
+                table_remove(send_queue, 1)
             end
-            table_remove(send_queue, 1)
-        end
-    end, debug.traceback)
+        end,
+        debug.traceback
+    )
 
     if not ok then
-        ngx.log(ngx.ERR, 'TDE: failed to run the async sender task: ', err)
-        -- TODO: restart the task here? requires a extra counter as we don't want
-        -- to fail in loop indefinitely.
+        ngx.log(ngx.ERR, "TDE: failed to run the async sender task: ", err)
+    -- TODO: restart the task here? requires a extra counter as we don't want
+    -- to fail in loop indefinitely.
     end
     self.task_running = false
 end
-
 
 local mt = {}
 mt.__index = mt
 
 function mt:send(json_str)
     local auth = generate_auth_header(self)
-    local msg = string_format(HTTP_REQUEST, self.request_uri, self.host, #json_str,
-        "TDE-sender-ngx/" .. _VERSION, auth, json_str)
+    local msg =
+        string_format(
+        HTTP_REQUEST,
+        self.request_uri,
+        self.host,
+        #json_str,
+        "TDE-sender-ngx/" .. _VERSION,
+        auth,
+        json_str
+    )
     local phase = ngx_get_phase()
     -- rewrite_by_lua*, access_by_lua*, content_by_lua*, ngx.timer.*, ssl_certificate_by_lua*, ssl_session_fetch_by_lua*
-    if (not self.async) and (
-        phase == 'rewrite' or
-        phase == 'access' or
-        phase == 'content' or
-        phase == 'timer' or
-        phase == 'ssl_cert' or
-        phase == 'ssl_session_fetch'
-    ) then
+    if
+        (not self.async) and
+            (phase == "rewrite" or phase == "access" or phase == "content" or phase == "timer" or phase == "ssl_cert" or
+                phase == "ssl_session_fetch")
+     then
         -- socket is available
         return send_msg(self, msg)
     else
@@ -166,7 +201,7 @@ function mt:send(json_str)
             if not self.task_running then
                 local ok, err = ngx.timer.at(0, send_task, self)
                 if not ok then
-                    return nil, 'failed to schedule async sender task: ' .. err
+                    return nil, "failed to schedule async sender task: " .. err
                 end
 
                 -- assume the task is already running, as other messages might
@@ -174,7 +209,7 @@ function mt:send(json_str)
                 self.task_running = true
             end
         else
-            return nil, 'failed to send message asyncronously: queue is full'
+            return nil, "failed to send message asyncronously: queue is full"
         end
         return true
     end
@@ -227,14 +262,11 @@ end
 function _M.get_server_name()
     local phase = ngx.get_phase()
     -- the ngx.var.* API is not available in all contexts
-    if phase == "set" or
-        phase == "rewrite" or
-        phase == "access" or
-        phase == "content" or
-        phase == "header_filter" or
-        phase == "body_filter" or
-        phase == "log"
-    then
+    if
+        phase == "set" or phase == "rewrite" or phase == "access" or phase == "content" or phase == "header_filter" or
+            phase == "body_filter" or
+            phase == "log"
+     then
         return ngx.var.server_name
     end
     return "undefined"

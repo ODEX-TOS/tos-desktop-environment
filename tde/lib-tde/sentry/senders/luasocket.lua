@@ -1,3 +1,27 @@
+--[[
+--MIT License
+--
+--Copyright (c) 2019 manilarome
+--Copyright (c) 2020 Tom Meyers
+--
+--Permission is hereby granted, free of charge, to any person obtaining a copy
+--of this software and associated documentation files (the "Software"), to deal
+--in the Software without restriction, including without limitation the rights
+--to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+--copies of the Software, and to permit persons to whom the Software is
+--furnished to do so, subject to the following conditions:
+--
+--The above copyright notice and this permission notice shall be included in all
+--copies or substantial portions of the Software.
+--
+--THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+--IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+--FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+--AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+--LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+--OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+--SOFTWARE.
+]]
 -- vim: st=4 sts=4 sw=4 et:
 --- Network backend using [LuaSocket](http://w3.impa.br/~diego/software/luasocket/home.html).
 -- This module should be used when the LuaSocket library is available. Note
@@ -14,7 +38,7 @@ local ltn12 = require("ltn12")
 
 -- try to load luassl (not mandatory, so do not hard fail if the module is
 -- not there
-local _, https = pcall(require, 'ssl.https')
+local _, https = pcall(require, "ssl.https")
 
 local assert = assert
 local pairs = pairs
@@ -36,13 +60,13 @@ function mt:send(json_str)
         method = "POST",
         url = self.server,
         headers = {
-            ['Content-Type'] = 'applicaion/json',
-            ['User-Agent'] = "TDE-sender-socket/" .. _VERSION,
-            ['X-Sentry-Auth'] = generate_auth_header(self),
-            ["Content-Length"] = tostring(#json_str),
+            ["Content-Type"] = "applicaion/json",
+            ["User-Agent"] = "TDE-sender-socket/" .. _VERSION,
+            ["X-Sentry-Auth"] = generate_auth_header(self),
+            ["Content-Length"] = tostring(#json_str)
         },
         source = source_string(json_str),
-        sink = table_sink(resp_buffer),
+        sink = table_sink(resp_buffer)
     }
 
     -- set master opts (if any)
@@ -80,13 +104,13 @@ function _M.new(conf)
         return nil, err
     end
 
-    if obj.protocol == 'https' then
-        assert(https, 'LuaSec is required to use HTTPS transport')
+    if obj.protocol == "https" then
+        assert(https, "LuaSec is required to use HTTPS transport")
         obj.factory = https.request
         obj.opts = {
-            verify = conf.verify_ssl and 'peer' or 'none',
+            verify = conf.verify_ssl and "peer" or "none",
             cafile = conf.verify_ssl and conf.cafile or nil,
-            protocol = 'tlsv1_2',
+            protocol = "tlsv1_2"
         }
     else
         obj.factory = http.request

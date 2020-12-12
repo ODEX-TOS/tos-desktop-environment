@@ -37,9 +37,12 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+
   - [Unit Testing](#unit-test)
     - [Dockerized](#docker)
   - [Profiling](#profiling)
+  - [Commit Hooks](#commit-hooks)
+
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -179,6 +182,23 @@ bash profiler.sh -t 10 -o tde-functions.result
 # Run the profiler on a file
 bash profiler.sh -f tests/scripts/full
 
+```
+
+### Commit hooks
+
+Before creating commits you need to setup commit hooks.
+These commit hooks perform a series of checks to make sure you didn't forget something important
+
+This ranges from linting, license checks, correct usage of branching etc
+
+It is not mandatory to use this feature, however it will make it more likely to be allowed.
+
+Setting the commit hooks is as easy as executing the following commands from the project root:
+
+```bash
+ln -s "$PWD"/hooks/pre-commit .git/hooks/pre-commit
+ln -s "$PWD"/hooks/commit-msg .git/hooks/commit-msg
+ln -s "$PWD"/hooks/pre-push .git/hooks/pre-push
 
 ```
 

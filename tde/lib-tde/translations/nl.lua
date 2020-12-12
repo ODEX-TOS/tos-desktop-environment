@@ -1,8 +1,35 @@
+--[[
+--MIT License
+--
+--Copyright (c) 2019 manilarome
+--Copyright (c) 2020 Tom Meyers
+--
+--Permission is hereby granted, free of charge, to any person obtaining a copy
+--of this software and associated documentation files (the "Software"), to deal
+--in the Software without restriction, including without limitation the rights
+--to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+--copies of the Software, and to permit persons to whom the Software is
+--furnished to do so, subject to the following conditions:
+--
+--The above copyright notice and this permission notice shall be included in all
+--copies or substantial portions of the Software.
+--
+--THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+--IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+--FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+--AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+--LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+--OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+--SOFTWARE.
+]]
 local translations = {}
 translations["+10%"] = "+10%"
 translations["-10%"] = "-10%"
 translations["About"] = "Over"
-translations["A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc"] = "Een pauze timer word elk uur geactiveerd, de bedoeling hiervan is om u tijd te geven voor te stretchen en een pauze te pakken"
+translations[
+        "A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc"
+    ] =
+    "Een pauze timer word elk uur geactiveerd, de bedoeling hiervan is om u tijd te geven voor te stretchen en een pauze te pakken"
 translations["Action Center"] = "Actie Centrum"
 translations["arandr"] = "arandr"
 translations["Area"] = "Gedeeltelijke foto van het scherm"
@@ -46,14 +73,17 @@ translations["Documents"] = "Documenten"
 translations["Do Not Disturb"] = "Niet storen"
 translations["don't keep above other windows"] = "Hou het niet boven andere schermen"
 translations["Downloads"] = "Downloads"
-translations["Draw the tagbar either on all screens, the main screen or don't draw it at all"] = "Teken het labelbar op elk scherm, enkel het hoofdscherm of nergens"
+translations["Draw the tagbar either on all screens, the main screen or don't draw it at all"] =
+    "Teken het labelbar op elk scherm, enkel het hoofdscherm of nergens"
 translations["Draw the titlebar above every application"] = "Teken de titelbar boven elke applicatie"
-translations["Draw the topbar either on all screens, the main screen or don't draw it at all"] = "Teken het topbar op elk scherm, enkel het hoofdscherm of nergens"
+translations["Draw the topbar either on all screens, the main screen or don't draw it at all"] =
+    "Teken het topbar op elk scherm, enkel het hoofdscherm of nergens"
 translations["dropdown terminal"] = "dropdown terminal"
 translations["Edit config"] = "Bewerk configuratie"
 translations["enable floating mode"] = "schakel zwevende modus in"
 translations["enable sticky mode"] = "schakel plak modus in"
-translations["Enable the 'pop' sound when changing the audio"] = "Schakel het 'pop' geluidje in wanneer het volume veranderd"
+translations["Enable the 'pop' sound when changing the audio"] =
+    "Schakel het 'pop' geluidje in wanneer het volume veranderd"
 translations["enable tiling mode"] = "Schakel tegel modus in"
 translations["End Session"] = "Beëinding sessie"
 translations["End work session"] = "Beëinding werk sessie"
@@ -124,7 +154,8 @@ translations["Packages to update: "] = "Pakketjes om te updaten: "
 translations["Primary"] = "Primair"
 translations["Processor"] = "Processor"
 translations["Processor Core Count"] = "Aantal processorkernen"
-translations["Put the system in sleep mode after a period of inactivity"] = "Zet het systeem in slaap modus na een periode van  inactiviteit"
+translations["Put the system in sleep mode after a period of inactivity"] =
+    "Zet het systeem in slaap modus na een periode van  inactiviteit"
 translations["Quick settings"] = "Snelle settings"
 translations["quit awesome"] = "stop tde"
 translations["Quit"] = "Stop"
@@ -139,11 +170,14 @@ translations["Screen on time"] = "Scherm tijd"
 translations["Screen Settings"] = "Screen Settings"
 translations["Screenshot"] = "Screenshot"
 translations["Screen timeout"] = "Screen time-out"
-translations[" security vulnerabilities. Please try and update the system to prevent risks."] = " Beveiligingsproblemen gevonden. Probeer het systeem bij te werken om risico's te voorkomen."
-translations[" security vulnerability. Please try and update the system to prevent risks."] = " beveiligingsprobleem gevonden. Probeer het systeem bij te werken om risico's te voorkomen."
+translations[" security vulnerabilities. Please try and update the system to prevent risks."] =
+    " Beveiligingsproblemen gevonden. Probeer het systeem bij te werken om risico's te voorkomen."
+translations[" security vulnerability. Please try and update the system to prevent risks."] =
+    " beveiligingsprobleem gevonden. Probeer het systeem bij te werken om risico's te voorkomen."
 translations["select next"] = "selecteer het volgende"
 translations["select previous"] = " selecteer het vorige"
-translations["Send error messages to the developers, this is useful for debugging and reducing errors/bugs"] = "Verzend error berichten naar de ontwikelaars, dit helpt met het oplossen van foutjes en errors"
+translations["Send error messages to the developers, this is useful for debugging and reducing errors/bugs"] =
+    "Verzend error berichten naar de ontwikelaars, dit helpt met het oplossen van foutjes en errors"
 translations["Settings application"] = "Settings applicatie"
 translations["Show clipboard history"] = "Toon klembord verleden"
 translations["Show emoji selector"] = "Toon emoji's"
@@ -164,10 +198,12 @@ translations["Terminal"] = "Terminal"
 translations["test"] = "test"
 translations["Text Editor"] = "Textverwerker"
 translations["Thanks for using our product"] = "Bedankt om ons product te gebruiken"
-translations["The location where you want the tagbar to appear (default bottom)"] = "De plaat waar u het labelbar wilt laten verschijnen (standaard op de bodem)"
+translations["The location where you want the tagbar to appear (default bottom)"] =
+    "De plaat waar u het labelbar wilt laten verschijnen (standaard op de bodem)"
 translations["Theme"] = "Thema"
 translations["There is "] = "Er zijn"
-translations["There's nothing in here... Come back later."] = "Er is niets hier te vinden... Kom op een later moment terug"
+translations["There's nothing in here... Come back later."] =
+    "Er is niets hier te vinden... Kom op een later moment terug"
 translations["Titlebar drawing"] = "Titlebar schrijven"
 translations["toggle exit screen"] = "schakel sluit scherm"
 translations["toggle floating"] = "Schakel zwevend applicaties"
@@ -199,8 +235,12 @@ translations["Volume"] = "Volume"
 translations["We are up-to-date!"] = "We zijn up to date!"
 translations["Weather & Temperature"] = "Weer & Temperatuur"
 translations["Web browser"] = "Web browser"
-translations["When enabled we don't draw icons or anything on the desktop"] = "Indien ingeschakeld, tekenen we geen icoontjes (of iets anders) op uw bureaublad"
-translations["when making a screenshot of a window, you can either show the screenshot or make a pretty version with some shadows, and your theme color"] = "wanneer u een schermafbeelding van een venster maakt, kunt u de schermafbeelding laten zien of een mooie versie maken met een schaduw en uw themakleur"
+translations["When enabled we don't draw icons or anything on the desktop"] =
+    "Indien ingeschakeld, tekenen we geen icoontjes (of iets anders) op uw bureaublad"
+translations[
+        "when making a screenshot of a window, you can either show the screenshot or make a pretty version with some shadows, and your theme color"
+    ] =
+    "wanneer u een schermafbeelding van een venster maakt, kunt u de schermafbeelding laten zien of een mooie versie maken met een schaduw en uw themakleur"
 translations["Widgets"] = "Widgets"
 translations["Window Effects"] = "Scherm effecten"
 translations["Windowing system"] = "Windowing systeem"
@@ -211,11 +251,14 @@ translations["Wireless connection"] = "Draadloze verbinding"
 translations["Wireless Connection"] = "Draadloze Verbinding"
 translations["wireless"] = "draadloos"
 translations["Weak Hardware"] = "Zwakke hardware"
-translations["Disable a lot of the 'nice' features in order to reduce hardware consumption"] = "Schakel een hoop features uit om zodat zwakke hardware TDE ook kan draaien"
+translations["Disable a lot of the 'nice' features in order to reduce hardware consumption"] =
+    "Schakel een hoop features uit om zodat zwakke hardware TDE ook kan draaien"
 translations[" before sleeping"] = " voor we in sluimermodus gaan"
 translations["Autofocus"] = "Autofocus"
-translations["Automatically make the focus follow the mouse without clicking"] = "De focus volgt uw muis, zelfs wanneer je niet klikt."
+translations["Automatically make the focus follow the mouse without clicking"] =
+    "De focus volgt uw muis, zelfs wanneer je niet klikt."
 translations["Tab between applications"] = "Tab tussen verschillende applicaties"
-translations["Tab between applications in reverse order"] = "Tab tussen verschillende applicaties in tegengestelde richting"
+translations["Tab between applications in reverse order"] =
+    "Tab tussen verschillende applicaties in tegengestelde richting"
 translations["Tutorial"] = "Tutorial"
 return translations

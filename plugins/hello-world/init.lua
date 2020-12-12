@@ -20,8 +20,8 @@
 --AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 --LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
---SO]]
-
+--SOFTWARE.
+]]
 -- This plugin is not designed to be used as a widget
 -- It only contains businness logic. This should mainly be used for management of resources and background tasks
 -- Much like daemons
@@ -35,14 +35,13 @@ print("hello-world module booted")
 local i = 0
 
 gears.timer {
-    -- print hello world every second
-    timeout = 1,
-    -- start looping when loaded
-    autostart = true,
-    -- this function get ran every second
-    callback = function ()
-      i = i + 1
-      print("Hello, world has printed: " ..  i .. " times")
-    end
-  }
-  
+  -- print hello world every second
+  timeout = 1,
+  -- start looping when loaded
+  autostart = true,
+  -- this function get ran every second
+  callback = function()
+    i = i + 1
+    print("Hello, world has printed: " .. i .. " times")
+  end
+}
