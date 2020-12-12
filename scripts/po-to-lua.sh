@@ -32,8 +32,6 @@ if [[ "$2" == "" ]]; then
     exit 1 
 fi
 
-lang=$(basename "$1" ".lua")
-
 
 original=""
 
