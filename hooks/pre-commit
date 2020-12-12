@@ -29,7 +29,7 @@ WARNING="-1000"
 function log {
     len="$(( ${#2} - 1 ))"
     echo -en "$2 "
-    printf '.%.0s' $(seq $(( 70 - $len )))
+    printf '.%.0s' "$(seq $(( 70 - $len )))"
 
     if [[ "$1" == "$WARNING" ]]; then
         _warning="${3:-WARNING}"
@@ -83,8 +83,8 @@ function run_license_linter_lua {
 --SOFTWARE.
 ]]"
     _LICENSE_LUA_OUT=""
-    for file in $(find . -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*"); do
-        out="$(head -n24 $file)"
+    for file in "$(find . -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*")"; do
+        out="$(head -n24 "$file")"
         if [[ ! "$out" == "$_LICENSE" ]]; then
             _LICENSE_LUA_OUT="$_LICENSE_LUA_OUT\nMissing license header: $file"
         fi
@@ -125,8 +125,8 @@ function run_license_linter_bash {
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE."
     _LICENSE_BASH_OUT=""
-    for file in $(find . -type f -name "*.sh"); do
-        out="$(head -n24 $file)"
+    for file in "$(find . -type f -name "*.sh")"; do
+        out="$(head -n24 "$file")"
         if [[ ! "$out" == "$_LICENSE" ]]; then
             _LICENSE_BASH_OUT="$_LICENSE_BASH_OUT\nMissing license header: $file"
         fi

@@ -28,7 +28,7 @@
 function log {
     len="$(( ${#2} - 1 ))"
     echo -en "$2 "
-    printf '.%.0s' $(seq $(( 70 - $len )))
+    printf '.%.0s' "$(seq $(( 70 - $len )))"
 
     if [[ ! "$1" -eq "0" ]]; then
         echo -e " \e[30m\e[41m FAILED  \e[49m\e[39m"
