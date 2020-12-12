@@ -31,7 +31,7 @@ print = function(data, logtype)
     if logtype == nil then
         logtype = "\27[0;32m[ INFO "
     end
-    realPrint(logtype .. " ]\27[0m " .. data)
+    realPrint(logtype .. " ]\27[0m " .. tostring(data or ""))
 end
 
 EXPORT_ASSERT_TO_GLOBALS = true

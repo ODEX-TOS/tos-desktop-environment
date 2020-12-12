@@ -40,8 +40,9 @@ REALTIME=""
 
 function help() {
   name=$(basename "$0" .sh)
-  echo -e "$name : OPTIONS [htfFor]"
+  echo -e "$name : OPTIONS [chtfFor]"
   echo ""
+  echo -e "$name -c | --clean \t\t\tRun the profiler without profiling the function (only time the execution) this shows actual execution time without any overhead"
   echo -e "$name -h | --help \t\t\tShow this help message"
   echo -e "$name -t | --tde <time> \t\tMaximum time to run tde for"
   echo -e "$name -f | --file <filename>\t\tRun a custom lua file (as the benchmark)"
@@ -85,10 +86,19 @@ while true; do
       REALTIME="1"
       shift
       ;;
+    "-c"|"--clean")
+      CLEAN="1"
+      shift
+    ;;
     "")
       break
       ;;
   esac
 done
+
+if [[ "$CLEAN" == "1" && -f "$FILE" ]]; then
+  time "$LUA" "$FILE"
+  exit "$?"
+fi
 
 TOTAL_TIME="$TOTAL_TIME" OUTPUT="$OUTPUT" REALTIME="$REALTIME" FUNCTIONS_AMOUNT="$FUNCTIONS_AMOUNT" FILE="$FILE" "$LUA" profiler/init.lua

@@ -26,3 +26,8 @@ local filehandle = require("tde.lib-tde.file")
 
 print(filehandle.mktemp())
 print(filehandle.mktempdir())
+
+for _ = 1, 10000 do
+    filehandle.exists("/etc/pacman.conf")
+    filehandle.dir_exists("/etc")
+end
