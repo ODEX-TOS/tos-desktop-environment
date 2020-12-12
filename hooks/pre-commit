@@ -32,11 +32,14 @@ function log {
     printf '.%.0s' $(seq $(( 70 - $len )))
 
     if [[ "$1" == "$WARNING" ]]; then
-        echo -e " \e[30m\e[43m WARNING \e[49m\e[39m"
+        _warning="${3:-WARNING}"
+        echo -e " \e[30m\e[43m $_warning \e[49m\e[39m"
     elif [[ ! "$1" -eq "0" ]]; then
-        echo -e " \e[30m\e[41m FAILED  \e[49m\e[39m"
+        _failed="${3:-FAILED }"
+        echo -e " \e[30m\e[41m $_failed \e[49m\e[39m"
     else
-        echo -e " \e[30m\e[42m SUCCESS \e[49m\e[39m"
+        _success="${3:-SUCCESS}"
+        echo -e " \e[30m\e[42m $_success \e[49m\e[39m"
     fi
 }
 
@@ -148,7 +151,8 @@ function run_test_suite {
     fi
     # only show the output if an error occured
     [[ ! "$UNIT_EXIT_CODE" -eq "0" ]] && echo -e "$UNIT_TEST_OUT"
-    log "$UNIT_EXIT_CODE" "Unit Testing Suite"
+    result=$(echo -e "$UNIT_TEST_OUT" | grep -E "Ran [0-9]+ tests" | awk '{print "(" $7 "/" $2 ")"}')
+    log "$UNIT_EXIT_CODE" "Unit Testing Suite" "$result"
 }
 
 function run_correct_branch {

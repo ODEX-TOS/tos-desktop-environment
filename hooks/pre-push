@@ -43,7 +43,7 @@ function run_correct_branch {
         log "1" "Pushing to master branch is not allowed"
         exit 1
     else
-        log "0" "All seems safe"
+        log "0" "Pushing to the correct branch"
     fi
 }
 
