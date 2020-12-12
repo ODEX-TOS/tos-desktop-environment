@@ -5,7 +5,6 @@ local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
 local execute = require("lib-tde.hardware-check").execute
 local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
-local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
 local hardware = require("lib-tde.hardware-check")
 

@@ -34,7 +34,22 @@ exclude_files = {
     "lib-tde/lib-lua/socket/tp.lua",
     "lib-tde/lib-lua/socket/url.lua",
     "lib-tde/lib-lua/ssl.lua",
-    "lib-tde/lib-lua/ssl/https.lua"
+    "lib-tde/lib-lua/ssl/https.lua",
+    "tde/lib-tde/lib-lua/cjson/util.lua",
+    "tde/lib-tde/lib-lua/ltn12.lua",
+    "tde/lib-tde/lib-lua/mime.lua",
+    "tde/lib-tde/lib-lua/posix/_base.lua",
+    "tde/lib-tde/lib-lua/posix/compat.lua",
+    "tde/lib-tde/lib-lua/posix/deprecated.lua",
+    "tde/lib-tde/lib-lua/posix/init.lua",
+    "tde/lib-tde/lib-lua/socket.lua",
+    "tde/lib-tde/lib-lua/socket/ftp.lua",
+    "tde/lib-tde/lib-lua/socket/http.lua",
+    "tde/lib-tde/lib-lua/socket/smtp.lua",
+    "tde/lib-tde/lib-lua/socket/tp.lua",
+    "tde/lib-tde/lib-lua/socket/url.lua",
+    "tde/lib-tde/lib-lua/ssl.lua",
+    "tde/lib-tde/lib-lua/ssl/https.lua"
 }
 
 -- Global objects defined by the C code

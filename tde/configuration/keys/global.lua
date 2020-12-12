@@ -604,13 +604,6 @@ local globalKeys =
 -- This should map on the top row of your keyboard, usually 1 to 9.
 for i = 1, 9 do
   -- Hack to only show tags 1 and 9 in the shortcut window (mod+s)
-  local descr_view, descr_toggle, descr_move, descr_toggle_focus
-  if i == 1 or i == 9 then
-    descr_view = {description = i18n.translate("view tag #"), group = i18n.translate("tag")}
-    descr_toggle = {description = i18n.translate("toggle tag #"), group = i18n.translate("tag")}
-    descr_move = {description = i18n.translate("move focused client to tag #"), group = i18n.translate("tag")}
-    descr_toggle_focus = {description = i18n.translate("toggle focused client on tag #"), group = i18n.translate("tag")}
-  end
   globalKeys =
     awful.util.table.join(
     globalKeys,
