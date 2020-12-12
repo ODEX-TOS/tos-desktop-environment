@@ -79,9 +79,10 @@ function updateIcon {
     fi
 }
 
-if [ ! -z "$weather" ]; then
+if [ -n "$weather" ]; then
     weather_temp=$(echo "$weather" | cut -d: -f2 | sed 's/[+-]//g')
     # todo return icon
+    # shellcheck disable=SC2068
     updateIcon $@
     weather_description=$(echo "$weather" | cut -d: -f1)
 

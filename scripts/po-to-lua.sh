@@ -22,6 +22,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 if [[ ! -f "$1" ]]; then
     echo "Please specify a .po file to convert into a .lua translation file"
     exit 1 
@@ -35,6 +36,7 @@ fi
 
 original=""
 
+# shellcheck disable=SC2046
 while IFS= read -r line; do
     if [[ "$original" == "" ]]; then
         original="$line"
@@ -48,7 +50,7 @@ done <<< $(grep -Po 'msgid ".*"|msgstr ".*"' nl.po | sed -E 's/^msgstr |^msgid /
 
 echo "local translations = {}" > "$2"
 
-cat "$2.tmp" | sort >> "$2"
+sort "$2.tmp" >> "$2"
 
 echo "return translations" >> "$2"
 

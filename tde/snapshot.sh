@@ -82,7 +82,8 @@ function window() {
 	fi
 
 	# Copy to clipboard
-	xclip -selection clipboard -t image/png -i "${screenshot_dir}"/`ls -1 -t "${screenshot_dir}" | head -1` &
+	# shellcheck disable=SC2012
+	xclip -selection clipboard -t image/png -i "${screenshot_dir}"/"$(ls -1 -t "${screenshot_dir}" | head -1)" &
 
 	notify-send 'Snap!' "${notif_message}" -a 'Screenshot tool' -i "${file_loc}"
 }
@@ -100,7 +101,7 @@ function shot() {
 	notif_message="$2"
 
 	# Execute maim command if a third option is provided maim will be piped into it
-	if [[ ! -z "$3" ]]; then
+	if [[ -n "$3" ]]; then
 		${maim_command} | $3 "${file_loc}"
 	else
 		${maim_command} "${file_loc_tmp}"
@@ -117,14 +118,15 @@ function shot() {
 	fi
 
 	# Copy to clipboard
-	xclip -selection clipboard -t image/png -i "${screenshot_dir}"/`ls -1 -t "${screenshot_dir}" | head -1` &
+	# shellcheck disable=SC2012
+	xclip -selection clipboard -t image/png -i "${screenshot_dir}"/"$(ls -1 -t "${screenshot_dir}" | head -1)" &
 
 	notify-send 'Snap!' "${notif_message}" -a 'Screenshot tool' -i "${file_loc}"
 }
 
 
 # Check the args passed
-if [ -z "$1" ] || ([ "$1" != 'full' ] && [ "$1" != 'full_blank' ] && [ "$1" != 'area' ] && [ "$1" != 'area_blank' ] && [ "$1" != 'window' ] && [ "$1" != 'window_blank' ]);
+if [ -z "$1" ] || { [ "$1" != 'full' ] && [ "$1" != 'full_blank' ] && [ "$1" != 'area' ] && [ "$1" != 'area_blank' ] && [ "$1" != 'window' ] && [ "$1" != 'window_blank' ] ; };
 then
 	echo "
 	Requires an argument:

@@ -24,7 +24,7 @@
 # SOFTWARE.
 if [[ "$1" == "" ]]; then
     echo "Supply lua version eg luajit(5.1) or lua5.3(5.3)"
-    read -p "Version: (5.3) " version
+    read -r -p "Version: (5.3) " version
 fi
 if [[ -z "$version" ]]; then
     version="5.1"

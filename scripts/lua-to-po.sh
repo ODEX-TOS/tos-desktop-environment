@@ -22,6 +22,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# shellcheck disable=SC2129,SC2028
+
 if [[ ! -f "$1" ]]; then
     echo "Please specify a .lua file to convert into a .po file"
     exit 1 
@@ -44,12 +47,14 @@ echo '"Language-Team: \n"' >> "$2"
 echo '"MIME-Version: 1.0\n"' >> "$2"
 echo '"Content-Type: text/plain; charset=UTF-8\n"' >> "$2"
 echo '"Content-Transfer-Encoding: 8bit\n"' >> "$2"
-echo '"Language: '$lang'\n"' >> "$2"
+echo '"Language: '"$lang"'\n"' >> "$2"
 echo '"X-Generator: TDETranslator 1.0.0\n"' >> "$2"
 
 while IFS= read -r line; do
     SEP="|;;|"
+    # shellcheck disable=SC2001
     original=$(echo "$line" | sed "s/ ${SEP}.*$//g")
+    # shellcheck disable=SC2001
     translated=$(echo "$line" | sed "s/^.*${SEP} //g")
     echo >> "$2"
     echo "#: translation from lua $1" >> "$2"

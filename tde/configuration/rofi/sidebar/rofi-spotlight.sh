@@ -324,11 +324,11 @@ then
 	
 		if [[ "$@" == *\?\? ]]
 		then
-			coproc ( ${OPENER} "${QUERY%\/* \?\?}"  > /dev/null 2>&1 )
+			coproc ( "$OPENER" "${QUERY%\/* \?\?}"  > /dev/null 2>&1 )
 			exec 1>&-
 			exit;
 		else
-			coproc ( ${OPENER} "$@"  > /dev/null 2>&1 )
+			coproc ( "$OPENER"" "$@"  > /dev/null 2>&1 )
 			exec 1>&-
 			exit;
 		fi

@@ -56,6 +56,28 @@ function run_linter {
     log "$LINTING_EXIT_CODE" "Linting source code"
 }
 
+function run_linter_shell {
+    if [[ ! $(command -v "shellcheck") ]]; then
+        log "1" "shellcheck linter is not installed"
+        exit 1
+    fi
+
+    SHELL_LINTING_OUT=""
+    SHELL_LINTING_EXIT_CODE=""
+    for file in $(find . -type f -name "*.sh"); do
+        out="$(shellcheck "$file")"
+        code="$?"
+        if [[ ! code == "0" ]]; then
+            SHELL_LINTING_EXIT_CODE="$code"
+        fi
+        SHELL_LINTING_OUT="$SHELL_LINTING_OUT\n$out"
+    done
+    # only show the output if an error occured
+    [[ ! "$SHELL_LINTING_EXIT_CODE" -eq "0" ]] && echo -e "$SHELL_LINTING_OUT"
+    log "$SHELL_LINTING_EXIT_CODE" "Linting shell scripts"
+}
+
+
 # check for license comments in the beginning of each *.lua file
 function run_license_linter_lua {
     _LICENSE="--[[
@@ -166,10 +188,10 @@ function run_correct_branch {
 function print_errors {
     # check for errors during linting
     [[ ! "$LINTING_EXIT_CODE" -eq "0" ]] && { log "1" "Status" ; exit 1; }
+    [[ ! "$SHELL_LINTING_EXIT_CODE" -eq "0" ]] && { log "1" "Status" ; exit 1; }
+
 
     [[ ! "$LICENSE_LUA_EXIT_CODE" -eq "0" ]] && { log "1" "Status" ; exit 1; }
-    [[ ! "$LICENSE_BASH_EXIT_CODE" -eq "0" ]] && { log "1" "Status" ; exit 1; }
-
     [[ ! "$LICENSE_BASH_EXIT_CODE" -eq "0" ]] && { log "1" "Status" ; exit 1; }
 
 
@@ -181,6 +203,7 @@ function print_errors {
 
 
 run_linter
+run_linter_shell
 
 run_license_linter_lua
 run_license_linter_bash
