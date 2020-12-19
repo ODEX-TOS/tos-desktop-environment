@@ -942,7 +942,13 @@ function nice.initialize(args)
 
     local function fast(s)
         for _, c in pairs(s.clients) do
-            if #s.tiled_clients >= 2 or (c.floating or c.first_tag.layout.name == "floating") then
+            c.titlebars_enabled = c.titlebars_enabled or true
+            if (not c.titlebars_enabled) or c.requests_no_titlebar then
+                awful.titlebar.hide(c, "top")
+                c.shape = function(cr, w, h)
+                    gears.shape.rectangle(cr, w, h)
+                end
+            elseif #s.tiled_clients >= 2 or (c.floating or c.first_tag.layout.name == "floating") then
                 awful.titlebar.show(c, "top")
                 c.shape = function(cr, w, h)
                     gears.shape.rectangle(cr, w, h)
@@ -968,6 +974,11 @@ function nice.initialize(args)
     _G.client.connect_signal(
         "request::titlebars",
         function(c)
+            -- TODO: this check should never happen in the request::titlebars callback
+            if c.requests_no_titlebar then
+                awful.titlebar.hide(c, "top")
+                return
+            end
             -- Callback
             c._cb_add_window_decorations = function()
                 gtimer_weak_start_new(
@@ -1023,21 +1034,26 @@ _G.client.connect_signal(
     "property::floating",
     function(c)
         if c.floating then
-            awful.titlebar.show(c, "top")
             awful.placement.centered(c)
+        end
+        if c.titlebars_enabled and not c.requests_no_titlebar then
+            awful.titlebar.show(c, "top")
         else
             awful.titlebar.hide(c, "top")
         end
     end
 )
 
--- Show the titlebar if it's not maximized layout
+-- Show the titlebar if it's not maximized layout or floating layout
 _G.tag.connect_signal(
     "property::layout",
     function(tag)
         local clients = tag:clients()
         for _, c in pairs(clients) do
-            if c.first_tag.layout.name ~= "max" then
+            if
+                (c.first_tag.layout.name ~= "max" and c.first_tag.layout.name ~= "floating") and
+                    not c.requests_no_titlebar
+             then
                 awful.titlebar.show(c, "top")
             else
                 awful.titlebar.hide(c, "top")

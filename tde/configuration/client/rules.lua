@@ -64,7 +64,24 @@ local function getFloatingWindow()
     end
   end
 end
+
+local function getTitlebarWindow()
+  local name = "no_titlebar_"
+  -- Add default applications that are always floating
+  local iterator = {"Steam", "Onboard", "onboard"}
+  local i = 0
+  while true do
+    i = i + 1
+    if getItem(name .. i) ~= nil then
+      table.insert(iterator, getItem(name .. i))
+    else
+      return iterator
+    end
+  end
+end
+
 local floater = getFloatingWindow()
+local no_titlebar = getTitlebarWindow()
 -- Rules
 awful.rules.rules = {
   -- All clients will match this rule.
@@ -262,6 +279,24 @@ awful.rules.rules = {
       placement = awful.placement.centered,
       ontop = true,
       sticky = true
+    }
+  },
+  {
+    rule_any = {
+      class = no_titlebar,
+      properties = {
+        titlebars_enabled = false
+      }
+    }
+  },
+  {
+    rule_any = {
+      class = {"Onboard", "onboard"},
+      properties = {
+        titlebars_enabled = false,
+        focusable = false,
+        focus = awful.client.focus.filter
+      }
     }
   },
   -- Polkit
