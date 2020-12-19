@@ -44,7 +44,7 @@ delayed_timer(
   function()
     local statvfs = require "posix.sys.statvfs".statvfs
     local res = statvfs("/")
-    local usage = (res.f_bfree / res.f_blocks) * 100
+    local usage = ((res.f_blocks - res.f_bfree) / res.f_blocks) * 100
 
     -- by default f_blocks is in 512 byte chunks
     local block_size = res.f_frsize or 512
