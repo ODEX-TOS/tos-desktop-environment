@@ -171,3 +171,11 @@ end
 -- restore the last state
 require("module.state")
 require("tutorial")
+
+require("lib-tde.signals").connect_exit(
+  function()
+    -- stop current autorun.sh
+    -- This is done because otherwise multiple instances would be running at the same time
+    awful.spawn("pgrep -f /etc/xdg/tde/autorun.sh | xargs kill -9")
+  end
+)

@@ -38,10 +38,6 @@ function run() {
 
 setxkbmap "$(cut -d= -f2 /etc/vconsole.conf | cut -d- -f1)"
 
-if ! pgrep tos; then
-    tos theme daemon &>/dev/null &# launch a tos daemon
-fi
-
 # TODO: once light-locker works again remove these comments
 #if [[ "$(command -v light-locker)" ]]; then
 #    light-locker --no-lock-on-suspend &>/dev/null &

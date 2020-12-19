@@ -208,3 +208,8 @@ function test_connect_wifi_status_exists()
     assert(signals.connect_wifi_status)
     assert(type(signals.connect_wifi_status) == "function")
 end
+
+function test_connect_exit()
+    assert(signals.connect_exit)
+    assert(type(signals.connect_exit) == "function")
+end
