@@ -181,6 +181,7 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.layout_dwindle = darklight(awesome_theme.icons .. "layouts/dwindle.png")
   awesome_theme.layout_floating = darklight(awesome_theme.icons .. "layouts/floating.png")
   awesome_theme.layout_fairv = darklight(awesome_theme.icons .. "layouts/fair.png")
+  awesome_theme.layout_fairh = darklight(awesome_theme.icons .. "layouts/fairh.png")
   awesome_theme.layout_magnifier = darklight(awesome_theme.icons .. "layouts/magnifier.png")
 
   -- Taglist

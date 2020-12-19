@@ -56,6 +56,9 @@ local function getLayoutPerTag(number)
     if item == "5" or item == "max" then
       return awful.layout.suit.max
     end
+    if item == "6" or item == "fairh" then
+      return awful.layout.suit.fair.horizontal
+    end
   else
     return awful.layout.suit.spiral.dwindle
   end
@@ -139,7 +142,8 @@ tag.connect_signal(
         awful.layout.suit.floating,
         awful.layout.suit.fair,
         awful.layout.suit.magnifier,
-        awful.layout.suit.max
+        awful.layout.suit.max,
+        awful.layout.suit.fair.horizontal
       }
     )
   end
@@ -157,6 +161,8 @@ awful.screen.connect_for_each_screen(
           icon = tag.icon,
           icon_only = true,
           layout = tag.layout,
+          master_width_factor = 0.8,
+          master_count = 2,
           gap_single_client = false,
           gap = tag.gap,
           screen = s,
@@ -177,5 +183,6 @@ _G.tag.connect_signal(
     else
       t.gap = awful.tag.getproperty(t, "gap") or 4
     end
+    t.master_count = 2
   end
 )
