@@ -75,6 +75,12 @@ if [[ "$(command -v greenclip)" ]]; then
     pgrep greenclip || greenclip daemon
 fi
 
+# run kde connect
+if [[ -f "/usr/lib/kdeconnectd" ]]; then
+    pgrep kdeconnectd || /usr/lib/kdeconnectd &
+fi
+
+
 # autostart user scripts if that directory exists
 if [[ -d "$userlocation" ]]; then
         for script in "$userlocation"/*.sh; do
