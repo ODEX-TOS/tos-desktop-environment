@@ -56,6 +56,7 @@
 ---------------------------------------------------------------------------
 
 local fileHandle = require("lib-tde.file")
+local batteryHandle = require("lib-tde.function.battery")
 
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
 -- @tparam cmd string The command to execute
@@ -81,8 +82,7 @@ end
 -- @usage -- This True if it is a laptop
 -- lib-tde.hardware-check.battery()
 local function battery()
-    return fileHandle.dir_exists("/sys/class/power_supply/BAT0") or
-        fileHandle.dir_exists("/sys/class/power_supply/BAT1")
+    return batteryHandle.getBatteryPath() ~= nil
 end
 
 --- Check to see the hardware has a network card

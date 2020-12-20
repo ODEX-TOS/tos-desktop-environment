@@ -52,13 +52,12 @@ local filehandle = require("lib-tde.file")
 -- lib-tde.function.battery.getBatteryPath() -- return location of the battery state
 local function getBatteryPath()
     -- check if battery 0 or 1 exists
-    local bat0 = "/sys/class/power_supply/BAT0"
-    local bat1 = "/sys/class/power_supply/BAT1"
-    if filehandle.dir_exists(bat0) then
-        return bat0
-    end
-    if filehandle.dir_exists(bat1) then
-        return bat1
+    local battery_base_dir = "/sys/class/power_supply"
+    local data = filehandle.list_dir(battery_base_dir)
+    for _, item in ipairs(data) do
+        if string.find(filehandle.basename(item), "BAT") ~= nil then
+            return item
+        end
     end
     return nil
 end

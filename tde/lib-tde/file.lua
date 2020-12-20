@@ -221,7 +221,7 @@ end
 --- Return a table of filename found in a directory and all child directories (be carefull for big directories)
 -- @tparam string dir The path to the directory, can be both absolute or relative.
 -- @treturn table an iterable table containg all files in the directory
--- @staticfct list_dir
+-- @staticfct list_dir_full
 -- @usage -- This returns a table
 -- lib-tde.file.list_dir_full("/etc") -> {1:"/etc/passwd", 2:"/etc/ssh/sshd_config", 3:"/etc/pacman/pacman.conf", ...}
 local function list_dir_full(str)
@@ -247,6 +247,9 @@ end
 
 --- Function equivalent to basename in POSIX systems
 --@param string str the path as a string
+-- @staticfct basename
+-- @usage -- This returns file.txt
+-- lib-tde.file.basename("/sys/class/power_supply/BAT0/file.txt")
 local function basename(str)
   if type(str) == "string" then
     local name = string.gsub(str, "(.*/)(.*)", "%2")
