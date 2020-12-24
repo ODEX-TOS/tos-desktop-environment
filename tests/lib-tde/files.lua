@@ -221,5 +221,20 @@ function test_file_basename_validate_input()
     )
 end
 
+function test_dir_components()
+    local dir = "/etc/xdg/tde/lib-tde/"
+    local file = dir .. "/logger.lua"
+    assert(files.dirname(dir) == dir)
+    assert(files.dirname(file) == dir)
+end
+
+function test_dir_recursive_creation()
+    local dir = "/tmp/some/random/dir/that/doesn't/exist/"
+    files.dir_create(dir)
+    local result = files.dir_exists(dir)
+    io.popen("rm -rf " .. dir)
+    assert(result)
+end
+
 rm_file("test_file_1")
 rm_file("test_file_2")

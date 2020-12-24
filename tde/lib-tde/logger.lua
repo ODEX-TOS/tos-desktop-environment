@@ -78,14 +78,7 @@ local LOG_INFO = "\27[0;32m[ INFO "
 local dir = os.getenv("HOME") .. "/.cache/tde"
 local filename = dir .. "/stdout.log"
 
--- create the tde directory
-if not filehandle.dir_exists(dir) then
-	io.popen("mkdir -p " .. dir)
-end
--- make the file empty on startup to reduce disk size
-if filehandle.dir_exists(dir) then
-	filehandle.overwrite(filename, "")
-end
+filehandle.overwrite(filename, "")
 
 -- helper function to convert a table to a string
 -- WARN: For internal use only, this should never be exposed to the end user

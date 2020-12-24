@@ -39,9 +39,10 @@ local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
 local PATH_TO_USERICON = "/var/lib/AccountsService/icons/"
 
 local signals = require("lib-tde.signals")
+local filehandle = require("lib-tde.file")
 
 -- guarantee that the cache dir exists
-awful.spawn("mkdir -p " .. PATH_TO_CACHE_ICON)
+filehandle.dir_create(PATH_TO_CACHE_ICON)
 
 local profile_imagebox =
   wibox.widget {
