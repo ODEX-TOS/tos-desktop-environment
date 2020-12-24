@@ -207,7 +207,7 @@ naughty.connect_signal(
 												{
 													{
 														{
-															markup = (n.app_name or naughty.widget.title) or i18n.translate("System Notification"),
+															markup = (n.title or n.app_name) or i18n.translate("System Notification"),
 															font = "SF Pro Text Bold 10",
 															align = "center",
 															valign = "center",
@@ -216,7 +216,7 @@ naughty.connect_signal(
 														margins = beautiful.notification_margin,
 														widget = wibox.container.margin
 													},
-													bg = "#000000" .. "44",
+													bg = beautiful.background.hue_700,
 													widget = wibox.container.background
 												},
 												{
@@ -234,10 +234,6 @@ naughty.connect_signal(
 															expand = "none",
 															nil,
 															{
-																{
-																	align = "left",
-																	widget = naughty.widget.title
-																},
 																{
 																	align = "left",
 																	widget = naughty.widget.message
