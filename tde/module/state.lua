@@ -33,7 +33,7 @@ local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 
 local function load()
     local table = {
-        volume = 0,
+        volume = 50,
         brightness = 100
     }
     if not filehandle.exists(file) then
@@ -43,7 +43,8 @@ local function load()
 end
 
 local function save(table)
-    serialize.serialize_to_file(table)
+    print("Updating state into: " .. file)
+    serialize.serialize_to_file(file, table)
 end
 
 local function setup_state(state)

@@ -71,8 +71,8 @@ end
 -- @staticfct serialize_to_file
 -- @usage -- saves to file
 -- lib-tde.serialize.serialize_to_file("file.json", {1,2,3,4, {hello='world'}})
-local function serialize_to_file(file, str)
-    local serialized = serialize(str)
+local function serialize_to_file(file, tbl)
+    local serialized = serialize(tbl)
     filehandle.overwrite(file, serialized)
 end
 
