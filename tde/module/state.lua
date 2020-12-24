@@ -61,6 +61,8 @@ local function setup_state(state)
         awful.spawn("brightness -s " .. math.max(state.brightness, 5))
     end
 
+    signals.emit_brightness(math.max(state.brightness, 5))
+
     -- execute xrandr script
     awful.spawn("which autorandr && autorandr --load tde")
 end
