@@ -34,7 +34,7 @@ local function ninthTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate(
                 "Nice all you need to do now is start the installer, open a terminal (mod+Enter) and type in 'tos c'. Good luck on your journey"
             ),
@@ -48,7 +48,7 @@ local function eightTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate("For the help menu use mod+f1."),
             timeout = 0,
             position = "top_left"
@@ -60,7 +60,7 @@ local function seventhTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate("To go to a new workspace try mod+2, launch a program and switch back with mod+1"),
             timeout = 0,
             position = "top_left"
@@ -72,7 +72,7 @@ local function sixthTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate("Click on the gear logo (top left) to access general settings."),
             timeout = 0,
             position = "top_left"
@@ -84,7 +84,7 @@ local function fifthTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate("To launch applications use mod+d. Try to start a few and kill them."),
             timeout = 0,
             position = "top_right"
@@ -96,7 +96,7 @@ local function fourthTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate("To kill a program use mod+q"),
             timeout = 0,
             position = "top_right"
@@ -108,7 +108,7 @@ local function thirdTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate(
                 "Try to open a few terminals and see what happens. mod+Enter to open a terminal (windows key) Now click on the icon in the bottom right corner a few times"
             ),
@@ -122,7 +122,7 @@ local function secondTip()
     naughty.notify(
         {
             app_name = "TOS tutorial!",
-            title = "",
+            title = "TOS tutorial!",
             message = i18n.translate("This sets the staking layout of your windows. Notice the pattern."),
             timeout = 0,
             position = "bottom_left"
@@ -157,7 +157,7 @@ require("gears").timer.start_new(
         naughty.notify(
             {
                 app_name = "TOS tutorial!",
-                title = "",
+                title = "TOS tutorial!",
                 message = i18n.translate("All the icons on the bottom represent workspaces"),
                 timeout = 0,
                 position = "top_left"
