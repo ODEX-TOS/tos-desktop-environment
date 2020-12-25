@@ -60,7 +60,7 @@ end
 
 local notif_title = function(title)
   return wibox.widget {
-    text = title,
+    markup = gears.string.xml_escape(title),
     font = "SFNS Display Bold 12",
     align = "center",
     valign = "center",
@@ -70,7 +70,7 @@ end
 
 local notif_message = function(msg)
   return wibox.widget {
-    markup = msg,
+    markup = gears.string.xml_escape(msg),
     font = "SFNS Display Regular 12",
     align = "center",
     valign = "center",
