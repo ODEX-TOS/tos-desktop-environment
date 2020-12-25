@@ -29,8 +29,12 @@ return awful.util.table.join(
     {},
     1,
     function(c)
-      _G.client.focus = c
-      c:raise()
+      -- TODO: figure out a way to allow all on screen keyboards to work properly
+      -- only raise the focus if the app is not onboard
+      if c.name ~= "Onboard" and c.name ~= "onboard" then
+        _G.client.focus = c
+        c:raise()
+      end
     end
   ),
   awful.button({modkey}, 1, awful.mouse.client.move),

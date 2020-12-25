@@ -68,7 +68,7 @@ end
 local function getTitlebarWindow()
   local name = "no_titlebar_"
   -- Add default applications that are always floating
-  local iterator = {"Steam", "Onboard", "onboard"}
+  local iterator = {"Steam"}
   local i = 0
   while true do
     i = i + 1
