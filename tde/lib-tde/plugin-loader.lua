@@ -41,6 +41,7 @@ local function inValidPlugin(name, msg)
     -- notify the user that a wrong plugin was entered
     naughty.notification(
         {
+            title = i18n.translate("Plugin System"),
             text = 'Plugin <span weight="bold">' .. name .. "</span>" .. msg,
             timeout = 5,
             urgency = "critical"
