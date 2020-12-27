@@ -72,10 +72,17 @@ To get a local copy up and running follow these simple steps.
 
 ### Installation
 
-1. Install awesomewm
+1. Install dependencies
 
 ```sh
-sudo pacman -Syu awesomewm
+sudo tos -S tde xorg-server-xephyr
+```
+
+if you are using an arch based distro that is not tos add the following repo to `/etc/pacman.conf`
+
+```ini
+[tos]
+Server = https://repo.odex.be
 ```
 
 2. Clone the repo

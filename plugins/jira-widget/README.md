@@ -42,16 +42,21 @@ And test if it works by calling the API:
 curl -s -n 'https://<your_url>/rest/api/2/search?jql=assignee=currentuser()+AND+resolution=Unresolved'
 ```
 
-Clone/download repo and use widget in **rc.lua**:
+Clone/download repo to `~/.config/tde/`:
+
+modify the plugin `init.lua`
 
 ```lua
-local jira_widget = require("awesome-wm-widgets.jira-widget.jira")
-...
-s.mytasklist, -- Middle widget
-	{ -- Right widgets
-    	layout = wibox.layout.fixed.horizontal,
-		...
-		-- default
-		jira_widget({host = 'http://jira.atlassian.com'}),
-		...
+return worker(
+    {
+		-- change host to your jira instance
+        host = "https://support.idalko.com"
+    }
+)
+```
+
+Activate the plugin by adding the following to `~/.config/tos/plugins.conf`
+
+```ini
+topbar-right_1="jira_widget"
 ```
