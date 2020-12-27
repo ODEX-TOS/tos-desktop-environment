@@ -39,7 +39,7 @@
 
 screenshot_dir="$HOME/Pictures/Screenshots/"
 COLOR="${2:-none}"
-PADDING="20"
+PADDING="3%"
 
 echo "Selected color: $COLOR"
 
