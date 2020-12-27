@@ -30,22 +30,22 @@ local dir_exists = filehandle.dir_exists
 local file_exists = filehandle.exists
 
 local function test_material_theme(colorscheme)
-    assert(colorscheme.hue_50)
-    assert(colorscheme.hue_100)
-    assert(colorscheme.hue_200)
-    assert(colorscheme.hue_300)
-    assert(colorscheme.hue_400)
-    assert(colorscheme.hue_500)
-    assert(colorscheme.hue_600)
-    assert(colorscheme.hue_700)
-    assert(colorscheme.hue_800)
-    assert(colorscheme.hue_900)
+    assert(colorscheme.hue_50, "Make sure theme hue_50 exists")
+    assert(colorscheme.hue_100, "Make sure theme hue_100 exists")
+    assert(colorscheme.hue_200, "Make sure theme hue_200 exists")
+    assert(colorscheme.hue_300, "Make sure theme hue_300 exists")
+    assert(colorscheme.hue_400, "Make sure theme hue_400 exists")
+    assert(colorscheme.hue_500, "Make sure theme hue_500 exists")
+    assert(colorscheme.hue_600, "Make sure theme hue_600 exists")
+    assert(colorscheme.hue_700, "Make sure theme hue_700 exists")
+    assert(colorscheme.hue_800, "Make sure theme hue_800 exists")
+    assert(colorscheme.hue_900, "Make sure theme hue_900 exists")
 
     -- the below are optional
-    --assert(colorscheme.hue_A100)
-    --assert(colorscheme.hue_A200)
-    --assert(colorscheme.hue_A400)
-    --assert(colorscheme.hue_A700)
+    --assert(colorscheme.hue_A100, "Make sure theme hue_A100 exists" )
+    --assert(colorscheme.hue_A200, "Make sure theme hue_A200 exists" )
+    --assert(colorscheme.hue_A400, "Make sure theme hue_A400 exists" )
+    --assert(colorscheme.hue_A700, "Make sure theme hue_A700 exists" )
 end
 
 local function is_color(str)
@@ -61,26 +61,26 @@ local function is_color(str)
 end
 
 function test_theme_primary()
-    assert(theme.primary)
+    assert(theme.primary, "Make sure theme primary exists")
     test_material_theme(theme.primary)
 end
 
 function test_theme_accent()
-    assert(theme.accent)
+    assert(theme.accent, "Make sure theme accent exists")
     test_material_theme(theme.accent)
 end
 
 function test_theme_background()
-    assert(theme.background)
+    assert(theme.background, "Make sure theme background exists")
     test_material_theme(theme.background)
 end
 
 function test_theme_foreground_color()
-    assert(is_color(theme.text))
+    assert(is_color(theme.text), "Make sure theme text exists")
 end
 
 function test_theme_icon_dir()
-    assert(dir_exists(theme.icons))
+    assert(dir_exists(theme.icons), "Make sure theme icons exists")
 end
 
 function test_theme_dir()
@@ -90,7 +90,7 @@ function test_theme_dir()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(dir_exists(value.dir))
+    assert(dir_exists(value.dir), "Make sure theme dir exists")
 end
 
 function test_theme_font()
@@ -100,8 +100,8 @@ function test_theme_font()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(type(value.font) == "string")
-    assert(type(value.title_font) == "string")
+    assert(type(value.font) == "string", "Make sure theme font exists")
+    assert(type(value.title_font) == "string", "Make sure theme title_font exists")
 end
 
 function test_theme_fg()
@@ -111,10 +111,10 @@ function test_theme_fg()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(is_color(value.fg_normal))
-    assert(is_color(value.fg_focus))
-    assert(is_color(value.fg_urgent))
-    assert(is_color(value.bat_fg_critical))
+    assert(is_color(value.fg_normal), "Make sure theme fg_normal exists")
+    assert(is_color(value.fg_focus), "Make sure theme fg_focus exists")
+    assert(is_color(value.fg_urgent), "Make sure theme fg_urgent exists")
+    assert(is_color(value.bat_fg_critical), "Make sure theme bat_fg_critical exists")
 end
 
 function test_theme_bg()
@@ -124,12 +124,12 @@ function test_theme_bg()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(is_color(value.bg_normal))
-    assert(is_color(value.bg_focus))
-    assert(is_color(value.bg_urgent))
-    assert(is_color(value.bg_systray))
-    assert(is_color(value.bg_modal))
-    assert(is_color(value.bg_modal_title))
+    assert(is_color(value.bg_normal), "Make sure theme bg_normal exists")
+    assert(is_color(value.bg_focus), "Make sure theme bg_focus exists")
+    assert(is_color(value.bg_urgent), "Make sure theme bg_urgent exists")
+    assert(is_color(value.bg_systray), "Make sure theme bg_systray exists")
+    assert(is_color(value.bg_modal), "Make sure theme bg_modal exists")
+    assert(is_color(value.bg_modal_title), "Make sure theme bg_modal_title exists")
 end
 
 function test_theme_border()
@@ -139,10 +139,10 @@ function test_theme_border()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(type(value.border_width) == "number")
-    assert(is_color(value.border_normal))
-    assert(is_color(value.border_focus))
-    assert(is_color(value.border_marked))
+    assert(type(value.border_width) == "number", "Make sure theme border_widthexists")
+    assert(is_color(value.border_normal), "Make sure theme border_normal exists")
+    assert(is_color(value.border_focus), "Make sure theme border_focus exists")
+    assert(is_color(value.border_marked), "Make sure theme border_marked exists")
 end
 
 function test_theme_notification()
@@ -152,16 +152,19 @@ function test_theme_notification()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(is_color(value.transparent))
-    assert(is_color(value.notification_bg))
-    assert(is_color(value.notification_border_color))
+    assert(is_color(value.transparent), "Make sure theme transparent exists")
+    assert(is_color(value.notification_bg), "Make sure theme notification_bg exists")
+    assert(is_color(value.notification_border_color), "Make sure theme notification_border_color exists")
 
-    assert(type(value.notification_border_width) == "number")
-    assert(type(value.notification_spacing) == "number")
-    assert(type(value.notification_icon_size) == "number")
+    assert(type(value.notification_border_width) == "number", "Make sure theme notification_border_width exists")
+    assert(type(value.notification_spacing) == "number", "Make sure theme notification_spacing exists")
+    assert(type(value.notification_icon_size) == "number", "Make sure theme notification_icon_size exists")
 
-    assert(type(value.notification_position) == "string")
-    assert(type(value.notification_icon_resize_strategy) == "string")
+    assert(type(value.notification_position) == "string", "Make sure theme notification_position exists")
+    assert(
+        type(value.notification_icon_resize_strategy) == "string",
+        "Make sure theme notification_icon_resize_strategy exists"
+    )
 end
 
 function test_theme_group()
@@ -171,10 +174,10 @@ function test_theme_group()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(is_color(value.groups_title_bg))
-    assert(is_color(value.groups_bg))
+    assert(is_color(value.groups_title_bg), "Make sure theme groups_title_bg exists")
+    assert(is_color(value.groups_bg), "Make sure theme groups_bg exists")
 
-    assert(type(value.groups_radius) == "number")
+    assert(type(value.groups_radius) == "number", "Make sure theme groups_radius exists")
 end
 
 function test_theme_menu()
@@ -184,8 +187,8 @@ function test_theme_menu()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(type(value.menu_height) == "number")
-    assert(type(value.menu_width) == "number")
+    assert(type(value.menu_height) == "number", "Make sure theme menu_height exists")
+    assert(type(value.menu_width) == "number", "Make sure theme menu_width exists")
 end
 
 function test_theme_tooltip()
@@ -195,9 +198,9 @@ function test_theme_tooltip()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(is_color(value.tooltip_bg))
+    assert(is_color(value.tooltip_bg), "Make sure theme tooltip_bg exists")
 
-    assert(type(value.tooltip_border_width) == "number")
+    assert(type(value.tooltip_border_width) == "number", "Make sure theme tooltip_border_width exists")
 end
 
 function test_theme_layout()
@@ -207,10 +210,10 @@ function test_theme_layout()
         accent = theme.accent
     }
     awesomeOverride(value)
-    assert(file_exists(value.layout_max))
-    assert(file_exists(value.layout_tile))
-    assert(file_exists(value.layout_dwindle))
-    assert(file_exists(value.layout_floating))
-    assert(file_exists(value.layout_fairv))
-    assert(file_exists(value.layout_magnifier))
+    assert(file_exists(value.layout_max), "Make sure theme layout_max exists")
+    assert(file_exists(value.layout_tile), "Make sure theme layout_tile exists")
+    assert(file_exists(value.layout_dwindle), "Make sure theme layout_dwindle exists")
+    assert(file_exists(value.layout_floating), "Make sure theme layout_floating exists")
+    assert(file_exists(value.layout_fairv), "Make sure theme layout_fairv exists")
+    assert(file_exists(value.layout_magnifier), "Make sure theme layout_magnifier exists")
 end

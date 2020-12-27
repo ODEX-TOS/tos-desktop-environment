@@ -25,76 +25,76 @@
 local apps = require("tde.configuration.apps")
 
 function test_configuration_app_terminal()
-    assert(apps.default.terminal)
+    assert(apps.default.terminal, "Make sure apps.default.terminal exists")
 end
 
 function test_configuration_app_editor()
-    assert(apps.default.editor)
+    assert(apps.default.editor, "Make sure apps.default.editor exists")
 end
 
 function test_configuration_app_web_browser()
-    assert(apps.default.web_browser)
+    assert(apps.default.web_browser, "Make sure apps.default.web_browser exists")
 end
 
 function test_configuration_app_file_manager()
-    assert(apps.default.file_manager)
+    assert(apps.default.file_manager, "Make sure apps.default.file_manager exists")
 end
 
 function test_configuration_app_rofi()
-    assert(apps.default.rofi)
+    assert(apps.default.rofi, "Make sure apps.default.rofi exists")
 end
 
 function test_configuration_app_web()
-    assert(apps.default.web)
+    assert(apps.default.web, "Make sure apps.default.web exists")
 end
 
 function test_configuration_app_rofiappmenu()
-    assert(apps.default.rofiappmenu)
+    assert(apps.default.rofiappmenu, "Make sure apps.default.rofiappmenu exists")
 end
 
 function test_configuration_app_rofiemojimenu()
-    assert(apps.default.rofiemojimenu)
+    assert(apps.default.rofiemojimenu, "Make sure apps.default.rofiemojimenu exists")
 end
 
 function test_configuration_app_rofiwindowswitch()
-    assert(apps.default.rofiwindowswitch)
+    assert(apps.default.rofiwindowswitch, "Make sure apps.default.rofiwindowswitch exists")
 end
 
 function test_configuration_app_roficlipboard()
-    assert(apps.default.roficlipboard)
+    assert(apps.default.roficlipboard, "Make sure apps.default.roficlipboard exists")
 end
 
 function test_configuration_app_rofidpimenu()
-    assert(apps.default.rofidpimenu)
+    assert(apps.default.rofidpimenu, "Make sure apps.default.rofidpimenu exists")
 end
 
 function test_configuration_app_rofiwifimenu()
-    assert(apps.default.rofiwifimenu)
+    assert(apps.default.rofiwifimenu, "Make sure apps.default.rofiwifimenu exists")
 end
 
 function test_configuration_app_lock()
-    assert(apps.default.lock)
+    assert(apps.default.lock, "Make sure apps.default.lock exists")
 end
 
 function test_configuration_app_quake()
-    assert(apps.default.quake)
+    assert(apps.default.quake, "Make sure apps.default.quake exists")
 end
 
 function test_configuration_app_duplicate_screens()
-    assert(apps.default.duplicate_screens)
+    assert(apps.default.duplicate_screens, "Make sure apps.default.duplicate_screens exists")
 end
 
 function test_configuration_app_run_on_start_up()
-    assert(type(apps.run_on_start_up) == "table")
-    assert(#apps.run_on_start_up > 1)
-    assert(type(apps.run_on_start_up[1]) == "string")
+    assert(type(apps.run_on_start_up) == "table", "apps.run_on_start_up should be a table of strings")
+    assert(#apps.run_on_start_up > 1, "Starup apps during boot should be bigger than 1")
+    assert(type(apps.run_on_start_up[1]) == "string", "The type of startup apps should be strings (commands)")
 end
 
 function test_configuration_app_bins()
-    assert(type(apps.bins) == "table")
-    assert(apps.bins.coverUpdate)
-    assert(apps.bins.full_screenshot)
-    assert(apps.bins.area_screenshot)
-    assert(apps.bins.window_screenshot)
-    assert(apps.bins.window_blank_screenshot)
+    assert(type(apps.bins) == "table", "apps.bins should be a string")
+    assert(apps.bins.coverUpdate, "Make sure apps.bins.coverUpdate exists")
+    assert(apps.bins.full_screenshot, "Make sure apps.bins.full_screenshot exists")
+    assert(apps.bins.area_screenshot, "Make sure apps.bins.area_screenshot exists")
+    assert(apps.bins.window_screenshot, "Make sure apps.bins.window_screenshot exists")
+    assert(apps.bins.window_blank_screenshot, "Make sure apps.bins.window_blank_screenshot exists")
 end

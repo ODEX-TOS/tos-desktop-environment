@@ -26,42 +26,42 @@ local stack = require("tde.lib-tde.datastructure.stack")
 
 function test_data_structure_stack_basic_usage()
     local list = stack()
-    assert(list.next() == nil)
+    assert(list.next() == nil, "The stack should be empty")
     list.push("first")
     list.push("second")
-    assert(list.size() == 2)
-    assert(list.next() == "second")
-    assert(list.next() == "second")
-    assert(list.pop() == "second")
-    assert(list.next() == "first")
-    assert(list.next() == "first")
-    assert(list.pop() == "first")
-    assert(list.next() == nil)
-    assert(list.size() == 0)
+    assert(list.size() == 2, "The stack size is incorrect")
+    assert(list.next() == "second", "The stack next is incorrect")
+    assert(list.next() == "second", "The stack next is incorrect")
+    assert(list.pop() == "second", "The stack pop should be equal to the stack next")
+    assert(list.next() == "first", "The stack next is incorrect")
+    assert(list.next() == "first", "The stack next is incorrect")
+    assert(list.pop() == "first", "The stack pop should be equal to the stack next")
+    assert(list.next() == nil, "The stack should be empty")
+    assert(list.size() == 0, "The stack size is incorrect")
 end
 
 function test_data_structure_stack_types_number()
     local list = stack()
-    assert(list.next() == nil)
+    assert(list.next() == nil, "The stack should be empty")
     list.push(1)
     list.push(2)
-    assert(list.size() == 2)
-    assert(list.next() == 2)
-    assert(list.next() == 2)
-    assert(list.pop() == 2)
-    assert(list.next() == 1)
-    assert(list.next() == 1)
-    assert(list.pop() == 1)
-    assert(list.next() == nil)
-    assert(list.size() == 0)
+    assert(list.size() == 2, "The stack size is incorrect")
+    assert(list.next() == 2, "The stack next is incorrect")
+    assert(list.next() == 2, "The stack next is incorrect")
+    assert(list.pop() == 2, "The stack pop should be equal to the stack next")
+    assert(list.next() == 1, "The stack next is incorrect")
+    assert(list.next() == 1, "The stack next is incorrect")
+    assert(list.pop() == 1, "The stack pop should be equal to the stack next")
+    assert(list.next() == nil, "The stack should be empty")
+    assert(list.size() == 0, "The stack size is incorrect")
 end
 
 function test_data_structure_stack_functions_exist()
     local list = stack()
-    assert(type(list.next) == "function")
-    assert(type(list.size) == "function")
-    assert(type(list.push) == "function")
-    assert(type(list.pop) == "function")
+    assert(type(list.next) == "function", "The stack api should have a next function")
+    assert(type(list.size) == "function", "The stack api should have a size function")
+    assert(type(list.push) == "function", "The stack api should have a push function")
+    assert(type(list.pop) == "function", "The stack api should have a pop function")
 end
 
 function test_data_structure_stack_large_dataset()
@@ -69,11 +69,11 @@ function test_data_structure_stack_large_dataset()
     for i = 1, 1000 do
         list.push(i)
     end
-    assert(list.size() == 1000)
+    assert(list.size() == 1000, "The stack size is incorrect")
     for i = 1, 999 do
         list.pop()
     end
-    assert(list.size() == 1)
+    assert(list.size() == 1, "The stack size is incorrect")
 end
 
 function test_data_structure_stack_very_large_dataset()
@@ -81,9 +81,9 @@ function test_data_structure_stack_very_large_dataset()
     for i = 1, 10000 do
         list.push(i)
     end
-    assert(list.size() == 10000)
+    assert(list.size() == 10000, "The stack size is incorrect")
     for _ = 1, 9999 do
         list.pop()
     end
-    assert(list.size() == 1)
+    assert(list.size() == 1, "The stack size is incorrect")
 end

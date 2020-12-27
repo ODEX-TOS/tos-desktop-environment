@@ -29,7 +29,10 @@ function test_sorting_quicksort()
     local truth = {-1, 1, 2}
     local result = quicksort(list)
     for index, element in ipairs(result) do
-        assert(element == truth[index])
+        assert(
+            element == truth[index],
+            "The element: " .. tostring(element) .. " should be: " .. tostring(truth[index]) .. " during quicksort"
+        )
     end
 end
 
@@ -38,7 +41,10 @@ function test_sorting_quicksort_big()
     local truth = {-10, -10, -7, -5, -2, 0, 0, 1, 8, 10, 22, 55, 101}
     local result = quicksort(list)
     for index, element in ipairs(result) do
-        assert(element == truth[index])
+        assert(
+            element == truth[index],
+            "The element: " .. tostring(element) .. " should be: " .. tostring(truth[index]) .. " during quicksort"
+        )
     end
 end
 

@@ -32,9 +32,9 @@ function Test_IT_run_application_startup()
 end
 
 function Test_IT_application_valid_syntax()
-    assert(hardware.has_package_installed("awesome-tos"))
+    assert(hardware.has_package_installed("tde"))
     -- check if the config contains syntax errors
-    local _, ret = hardware.execute("awesome -k --config " .. os.getenv("PWD") .. "/tde/rc.lua")
+    local _, ret = hardware.execute("tde -k --config " .. os.getenv("PWD") .. "/tde/rc.lua")
     assert(ret == 0)
 end
 
