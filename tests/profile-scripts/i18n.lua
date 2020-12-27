@@ -28,7 +28,7 @@ require("lib-tde.luapath")
 local i18n = require("lib-tde.i18n")
 
 i18n.init("en")
-i18n.set_system_language("dutch")
+i18n.set_system_language("nl")
 
 -- do a lot of translations
 for _ = 1, 50000 do
