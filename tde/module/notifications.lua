@@ -32,6 +32,7 @@ local beautiful = require("beautiful")
 local icons = require("theme.icons")
 local dpi = beautiful.xresources.apply_dpi
 local clickable_container = require("widget.clickable-container")
+local queue = require("lib-tde.datastructure.queue")()
 
 -- Defaults
 naughty.config.defaults.ontop = true
@@ -135,15 +136,37 @@ naughty.connect_signal(
 	end
 )
 
+awesome.connect_signal(
+	"startup",
+	function()
+		gears.timer {
+			single_shot = true,
+			autostart = true,
+			timeout = 5,
+			callback = function()
+				print("TDE startup cycle finished, playback queued items")
+				while queue.next() ~= nil do
+					local item = queue.pop()
+					naughty.emit_signal("request::display", item)
+				end
+			end
+		}
+	end
+)
+
 -- Connect to naughty on display signal
 naughty.connect_signal(
 	"request::display",
 	function(n)
-		if screen.count() < 1 then
+		if screen.count() < 1 or awesome.startup then
+			print("Enqueueing: " .. n.title)
+			queue.push(n)
 			return
 		end
-		local screen = awful.screen.preferred() or awful.screen.focused() or awful.screen.primary
+		local screen = awful.screen.focused() or awful.screen.primary
 		if (screen == nil) then
+			print("Enqueueing: " .. n.title)
+			queue.push(n)
 			return
 		end
 		-- Actions Blueprint

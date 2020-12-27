@@ -64,7 +64,12 @@ local function setup_state(state)
     signals.emit_brightness(math.max(state.brightness, 5))
 
     -- execute xrandr script
-    awful.spawn("which autorandr && autorandr --load tde")
+    awesome.connect_signal(
+        "startup",
+        function()
+            awful.spawn("sh -c 'which autorandr && autorandr --load tde'")
+        end
+    )
 end
 
 -- load the initial state
@@ -91,7 +96,7 @@ signals.connect_brightness(
 signals.connect_exit(
     function()
         print("Shutting down, grabbing last state")
-        awful.spawn("which autorandr && autorandr --save tde --force")
+        awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
         save(save_state)
     end
 )

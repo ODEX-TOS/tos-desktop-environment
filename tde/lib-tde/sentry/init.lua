@@ -120,7 +120,7 @@ end
 
 -- it is in app if the filename is not /usr/share/awesome
 local function isInApp(filename, index)
-    local find = "/usr/share/awesome"
+    local find = "/usr/share/tde"
     local result = not (filename:sub(1, #find) == find)
     index = index or ""
     print(filename .. ":" .. tostring(index) .. " IsInApp: " .. tostring(result))
