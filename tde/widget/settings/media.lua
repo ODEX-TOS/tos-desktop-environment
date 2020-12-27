@@ -96,7 +96,7 @@ return function()
     function(value)
       local number = tonumber(value)
       if not (number == vol_slider.value) then
-        vol_slider:set_value(tonumber(value))
+        vol_slider:set_value(tonumber(value) or 0)
       end
     end
   )

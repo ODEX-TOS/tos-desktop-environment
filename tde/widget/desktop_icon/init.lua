@@ -229,7 +229,7 @@ local function delete(name)
             i = index
         end
     end
-    if i == -1 then
+    if i == -1 or i > #icon_widgets then
         print("Trying to remove: " .. name .. " from the desktop but it no longer exists", err)
     end
     icon_widgets[i].visible = false

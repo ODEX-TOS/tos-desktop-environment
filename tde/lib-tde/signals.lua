@@ -174,7 +174,7 @@ end
 -- @usage -- Notify that you changed the state of volume
 -- lib-tde.signals.emit_volume_update()
 connections.emit_volume_update = function(value)
-    awesome.emit_signal("volume::update::request", value)
+    awesome.emit_signal("volume::update::request", value or 0)
 end
 
 --- Trigger a callback function when a client requests a volume update
