@@ -147,7 +147,7 @@ local function list_update(w, buttons, label, data, objects)
       else
         tt:remove_from_object(tb)
       end
-      if not tb:set_markup_silently(gears.string.xml_escape(text)) then
+      if not tb:set_markup_silently(text) then
         tb:set_markup("<i>&lt;Invalid text&gt;</i>")
       end
     end

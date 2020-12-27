@@ -50,9 +50,10 @@ end
 naughty.config.padding = dpi(8)
 naughty.config.spacing = dpi(8)
 naughty.config.icon_dirs = {
+	"/usr/share/icons/Papirus-Dark",
+	"/usr/share/icons/Papirus/",
 	"/usr/share/icons/Tela",
 	"/usr/share/icons/Tela-blue-dark",
-	"/usr/share/icons/Papirus/",
 	"/usr/share/icons/la-capitaine-icon-theme/",
 	"/usr/share/icons/gnome/",
 	"/usr/share/icons/hicolor/",
@@ -120,6 +121,30 @@ naughty.connect_signal(
 	end
 )
 
+awesome.connect_signal(
+	"startup",
+	function()
+		gears.timer {
+			single_shot = true,
+			autostart = true,
+			timeout = 5,
+			callback = function()
+				print("TDE startup cycle finished, playback queued items")
+				while queue.next() ~= nil do
+					local n = queue.pop()
+					naughty.notification {
+						urgency = n.urgency or "normal",
+						title = n.title or "",
+						message = n.message or "",
+						app_name = n.app_name or "",
+						icon = n.icon or "dialog-warning"
+					}
+				end
+			end
+		}
+	end
+)
+
 -- XDG icon lookup
 naughty.connect_signal(
 	"request::icon",
@@ -133,24 +158,6 @@ naughty.connect_signal(
 		if path then
 			n.icon = path
 		end
-	end
-)
-
-awesome.connect_signal(
-	"startup",
-	function()
-		gears.timer {
-			single_shot = true,
-			autostart = true,
-			timeout = 5,
-			callback = function()
-				print("TDE startup cycle finished, playback queued items")
-				while queue.next() ~= nil do
-					local item = queue.pop()
-					naughty.emit_signal("request::display", item)
-				end
-			end
-		}
 	end
 )
 

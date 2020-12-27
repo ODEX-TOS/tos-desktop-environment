@@ -29,6 +29,7 @@
 -- This file describes which plugins should be loaded
 local dirExists = require("lib-tde.file").dir_exists
 local naughty = require("naughty")
+local icons = require("theme.icons")
 local ERROR = require("lib-tde.logger").error
 
 local function getItem(item)
@@ -42,9 +43,10 @@ local function inValidPlugin(name, msg)
     naughty.notification(
         {
             title = i18n.translate("Plugin System"),
-            text = 'Plugin <span weight="bold">' .. name .. "</span>" .. msg,
+            text = 'Plugin <span weight="bold">' .. name .. "</span>\n" .. msg,
             timeout = 5,
-            urgency = "critical"
+            urgency = "critical",
+            icon = icons.warning
         }
     )
 end

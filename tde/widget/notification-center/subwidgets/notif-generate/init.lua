@@ -70,7 +70,7 @@ end
 
 local notif_message = function(msg)
   return wibox.widget {
-    markup = gears.string.xml_escape(msg),
+    markup = msg,
     font = "SFNS Display Regular 12",
     align = "center",
     valign = "center",
