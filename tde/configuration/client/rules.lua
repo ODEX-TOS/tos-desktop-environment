@@ -295,7 +295,10 @@ awful.rules.rules = {
       properties = {
         titlebars_enabled = false,
         focusable = false,
-        focus = awful.client.focus.filter
+        focus = awful.client.focus.filter,
+        ontop = true,
+        above = true,
+        sticky = true
       }
     }
   },

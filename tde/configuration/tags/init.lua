@@ -60,7 +60,7 @@ local function getLayoutPerTag(number)
       return awful.layout.suit.fair.horizontal
     end
   else
-    return awful.layout.suit.spiral.dwindle
+    return awful.layout.suit.tile
   end
 end
 
@@ -138,6 +138,7 @@ tag.connect_signal(
   function()
     awful.layout.append_default_layouts(
       {
+        awful.layout.suit.tile,
         awful.layout.suit.spiral.dwindle,
         awful.layout.suit.floating,
         awful.layout.suit.fair,
@@ -161,8 +162,8 @@ awful.screen.connect_for_each_screen(
           icon = tag.icon,
           icon_only = true,
           layout = tag.layout,
-          master_width_factor = 0.8,
-          master_count = 2,
+          master_width_factor = 0.5,
+          master_count = 1,
           gap_single_client = false,
           gap = tag.gap,
           screen = s,
