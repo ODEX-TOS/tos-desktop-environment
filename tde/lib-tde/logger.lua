@@ -123,7 +123,7 @@ end
 print = function(arg, log_type, depth)
 	depth = depth or 3
 	-- validate the input
-	if arg == nil then
+	if arg == nil or _G.UNIT_TESTING_ACTIVE == true then
 		return
 	end
 	if type(arg) == "table" then

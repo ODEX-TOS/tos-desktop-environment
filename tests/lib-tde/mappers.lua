@@ -106,7 +106,7 @@ function test_mapper_reducer_basics()
         end,
         0
     )
-    assert(result == 10)
+    assert(result == 10, "The result should be 10 but got: " .. tostring(result))
 end
 
 function test_mapper_reducer_basics_with_initial_value()
@@ -119,7 +119,7 @@ function test_mapper_reducer_basics_with_initial_value()
         end,
         30
     )
-    assert(result == 40)
+    assert(result == 40, "The result should be 40 but got: " .. tostring(result))
 end
 
 function test_mapper_reducer_basics_with_index()
@@ -132,7 +132,7 @@ function test_mapper_reducer_basics_with_index()
         end,
         0
     )
-    assert(result == 20)
+    assert(result == 20, "The result should be 20 but got: " .. tostring(result))
 end
 
 function test_mapper_reducer_with_string()
@@ -145,7 +145,7 @@ function test_mapper_reducer_with_string()
         end,
         ""
     )
-    assert(result == "abc")
+    assert(result == "abc", "The result should be 'abc' but got: '" .. result .. "'")
 end
 
 function test_mapper_contains_basic()
@@ -157,7 +157,7 @@ function test_mapper_contains_basic()
             return element == 4
         end
     )
-    assert(result)
+    assert(result, "The result should be true but got false")
 end
 
 function test_mapper_contains_basic_not_exists()
@@ -169,7 +169,7 @@ function test_mapper_contains_basic_not_exists()
             return element == 9
         end
     )
-    assert(not result)
+    assert(not result, "The result should be false but got true")
 end
 
 function test_mapper_contains_basic_not_exists_index()
@@ -181,7 +181,7 @@ function test_mapper_contains_basic_not_exists_index()
             return index > 10
         end
     )
-    assert(not result)
+    assert(not result, "The result should be false but got true")
 end
 
 function test_mapper_contains_string()
@@ -193,7 +193,7 @@ function test_mapper_contains_string()
             return element == "a"
         end
     )
-    assert(not result)
+    assert(not result, "The result should be false but got true")
 end
 
 function test_mapper_contains_string()
@@ -205,12 +205,12 @@ function test_mapper_contains_string()
             return element == "a"
         end
     )
-    assert(result)
+    assert(result, "The result should be true but got false")
 end
 
 function test_mappers_api_is_correct()
-    assert(type(mappers.map) == "function")
-    assert(type(mappers.filter) == "function")
-    assert(type(mappers.reduce) == "function")
-    assert(type(mappers.contains) == "function")
+    assert(type(mappers.map) == "function", "The mappers api should be contain a map function")
+    assert(type(mappers.filter) == "function", "The mappers api should be contain a filter function")
+    assert(type(mappers.reduce) == "function", "The mappers api should be contain a reduce function")
+    assert(type(mappers.contains) == "function", "The mappers api should be contain a contains function")
 end

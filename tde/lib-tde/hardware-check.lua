@@ -118,10 +118,10 @@ end
 -- @usage -- This True for TOS based systems
 -- lib-tde.hardware-check.has_package_installed("linux-tos")
 local function has_package_installed(name)
-    if name == "" or name == nil then
+    if name == "" or not (type(name) == "string") then
         return false
     end
-    local _, returnValue = osExecute("pacman -Q " .. name)
+    local _, returnValue = osExecute("pacman -Q " .. name .. " &>/dev/null")
     return returnValue == 0
 end
 

@@ -25,50 +25,49 @@
 local tutorial = require("tutorial")
 
 function test_check_tutorial_functions_exists()
-    assert(tutorial.secondTip)
-    assert(tutorial.thirdTip)
-    assert(tutorial.fourthTip)
-    assert(tutorial.fifthTip)
-    assert(tutorial.sixthTip)
-    assert(tutorial.seventhTip)
-    assert(tutorial.eightTip)
-    assert(tutorial.ninthTip)
-    assert(tutorial.finish)
+    assert(tutorial.secondTip, "Check that secondTip exists in the tutorial")
+    assert(tutorial.thirdTip, "Check that thirdTip exists in the tutorial")
+    assert(tutorial.fourthTip, "Check that fourthTip exists in the tutorial")
+    assert(tutorial.fifthTip, "Check that fifthTip exists in the tutorial")
+    assert(tutorial.sixthTip, "Check that sixthTip exists in the tutorial")
+    assert(tutorial.seventhTip, "Check that seventhTip exists in the tutorial")
+    assert(tutorial.eightTip, "Check that eightTip exists in the tutorial")
+    assert(tutorial.ninthTip, "Check that ninthTip exists in the tutorial")
+    assert(tutorial.finish, "Check that finish exists in the tutorial")
 end
 
 function test_check_tutorial_functions_are_functions()
-    assert(type(tutorial.secondTip) == "function")
-    assert(type(tutorial.thirdTip) == "function")
-    assert(type(tutorial.fourthTip) == "function")
-    assert(type(tutorial.fifthTip) == "function")
-    assert(type(tutorial.sixthTip) == "function")
-    assert(type(tutorial.seventhTip) == "function")
-    assert(type(tutorial.eightTip) == "function")
-    assert(type(tutorial.ninthTip) == "function")
-    assert(type(tutorial.finish) == "function")
+    assert(type(tutorial.secondTip) == "function", "checks that secondTip is a function")
+    assert(type(tutorial.thirdTip) == "function", "checks that thirdTip is a function")
+    assert(type(tutorial.fourthTip) == "function", "checks that fourthTip is a function")
+    assert(type(tutorial.fifthTip) == "function", "checks that fifthTip is a function")
+    assert(type(tutorial.sixthTip) == "function", "checks that sixthTip is a function")
+    assert(type(tutorial.seventhTip) == "function", "checks that seventhTip is a function")
+    assert(type(tutorial.eightTip) == "function", "checks that eightTip is a function")
+    assert(type(tutorial.ninthTip) == "function", "checks that ninthTip is a function")
+    assert(type(tutorial.finish) == "function", "checks that finish is a function")
 end
 
 function test_check_tutorial_file_creation()
-    local file_exists = require("tde.lib-tde.file").exists
-    local dir_exists = require("tde.lib-tde.file").dir_exists
+    local filehandle = require("tde.lib-tde.file")
+    local file_exists = filehandle.exists
+    local dir_create = filehandle.dir_create
     local file = os.getenv("HOME") .. "/.cache/tutorial_tos"
 
     -- in a dockerized environment we run as root and that account doesn't have a cache directory yet
-    if not dir_exists(os.getenv("HOME") .. "/.cache") then
-        os.popen("mkdir" .. os.getenv("HOME") .. "/.cache")
-    end
+    dir_create(os.getenv("HOME") .. "/.cache")
 
     -- remove that file if it exists
     if file_exists(file) then
-        os.remove(file)
+        filehandle.rm(file)
     end
-    assert(not file_exists(file))
+    assert(not file_exists(file), file .. " should not exist")
     -- returns true if the tutorial is beeing shown
     local func = require("tde.tutorial")
-    assert(func["status"])
+    assert(func["status"], "tutorial did not run")
     -- should be called internally but no GUI stack exist so we call it from here
     func.finish()
-    assert(file_exists(file))
+    assert(file_exists(file), "After the tutorial " .. file .. " should exist")
     -- TODO: On a second try the tutorial should return false to indicate that it is finished
     --assert(not require("tde.tutorial"))
 end

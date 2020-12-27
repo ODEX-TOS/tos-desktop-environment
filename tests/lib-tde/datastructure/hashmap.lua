@@ -26,25 +26,25 @@ local hashmap = require("tde.lib-tde.datastructure.hashmap")
 
 function test_data_structure_hashmap_basic_usage()
     local map = hashmap()
-    assert(map.get("test") == nil)
+    assert(map.get("test") == nil, "The hashmap should't have a: 'test' key in it")
     map.add("test", "hello")
-    assert(map.get("test") == "hello")
+    assert(map.get("test") == "hello", "The hashmap should have a: 'test' key in it")
 end
 
 function test_data_structure_hashmap_api_exists()
     local map = hashmap()
-    assert(type(map.get) == "function")
-    assert(type(map.add) == "function")
-    assert(type(map.delete) == "function")
+    assert(type(map.get) == "function", "hashmap should have a get function")
+    assert(type(map.add) == "function", "hashmap should have a add function")
+    assert(type(map.delete) == "function", "hashmap should have a delete function")
 end
 
 function test_data_structure_hashmap_delete_works()
     local map = hashmap()
-    assert(map.get("test") == nil)
+    assert(map.get("test") == nil, "The hashmap should't have a: 'test' key in it")
     map.add("test", "hello")
-    assert(map.get("test") == "hello")
+    assert(map.get("test") == "hello", "The hashmap should have a: 'test' key in it")
     map.delete("test")
-    assert(map.get("test") == nil)
+    assert(map.get("test") == nil, "The hashmap should't have a: 'test' key in it")
 end
 
 function test_data_structure_hashmap_add_a_lot_of_keys()
@@ -53,24 +53,27 @@ function test_data_structure_hashmap_add_a_lot_of_keys()
         map.add(tostring(i), tostring(i) .. " value")
     end
     for i = 0, 50 do
-        assert(map.get(tostring(i)) == (tostring(i) .. " value"))
+        assert(
+            map.get(tostring(i)) == (tostring(i) .. " value"),
+            "The hashmap should have the key: '" .. (tostring(i) .. " value") .. "' in it"
+        )
     end
 end
 
 function test_data_structure_hashmap_works_with_number_as_key()
     local map = hashmap()
-    assert(map.get(1) == nil)
+    assert(map.get(1) == nil, "The hashmap should't have a: '1' key in it")
     map.add(1, "hello")
-    assert(map.get(1) == "hello")
+    assert(map.get(1) == "hello", "The hashmap should't have a: '1' key in it")
     map.delete(1)
-    assert(map.get(1) == nil)
+    assert(map.get(1) == nil, "The hashmap should't have a: '1' key in it")
 end
 
 function test_data_structure_hashmap_works_with_negative_number_as_key()
     local map = hashmap()
-    assert(map.get(-98) == nil)
+    assert(map.get(-98) == nil, "The hashmap should't have a: '-98' key in it")
     map.add(-98, "hello")
-    assert(map.get(-98) == "hello")
+    assert(map.get(-98) == "hello", "The hashmap should't have a: '-98' key in it")
     map.delete(-98)
-    assert(map.get(-98) == nil)
+    assert(map.get(-98) == nil, "The hashmap should't have a: '-98' key in it")
 end

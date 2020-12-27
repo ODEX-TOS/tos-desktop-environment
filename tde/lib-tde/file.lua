@@ -119,7 +119,13 @@ local function dirname(str)
       return str
     end
     local libgen = require("posix.libgen")
-    return libgen.dirname(str) .. "/"
+    local result = libgen.dirname(str)
+
+    if string.sub(result, #result, #result) == "/" then
+      return result
+    end
+
+    return result .. "/"
   end
   return nil
 end

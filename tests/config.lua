@@ -25,68 +25,74 @@
 local config = require("tde.config")
 
 function test_config_package_timeout()
-    assert(config.package_timeout)
-    assert(type(config.package_timeout) == "number")
-    assert(config.package_timeout > 1)
+    assert(config.package_timeout, "Check that the config api is correct")
+    assert(type(config.package_timeout) == "number", "The config type should be a number")
+    assert(config.package_timeout > 1, "Expected the value to be less than 1")
 end
 
 function test_config_battery_timeout()
-    assert(config.battery_timeout)
-    assert(type(config.battery_timeout) == "number")
-    assert(config.battery_timeout > 10)
+    assert(config.battery_timeout, "Check that the config api is correct")
+    assert(type(config.battery_timeout) == "number", "The config type should be a number")
+    assert(config.battery_timeout > 10, "Expected the value to be greater than 10")
 end
 
 function test_config_player_reaction_time()
-    assert(config.player_reaction_time)
-    assert(type(config.player_reaction_time) == "number")
-    assert(config.player_reaction_time < 0.1)
+    assert(config.player_reaction_time, "Check that the config api is correct")
+    assert(type(config.player_reaction_time) == "number", "The config type should be a number")
+    assert(config.player_reaction_time < 0.1, "Expected the value to be less than 0.1")
 end
 
 function test_config_player_update()
-    assert(config.player_update)
-    assert(type(config.player_update) == "number")
-    assert(config.player_update > 1)
+    assert(config.player_update, "Check that the config api is correct")
+    assert(type(config.player_update) == "number", "The config type should be a number")
+    assert(config.player_update > 1, "Expected the value to be greater than 1")
 end
 
 function test_config_network_poll()
-    assert(config.network_poll)
-    assert(type(config.network_poll) == "number")
-    assert(config.network_poll > 1)
+    assert(config.network_poll, "Check that the config api is correct")
+    assert(type(config.network_poll) == "number", "The config type should be a number")
+    assert(config.network_poll > 1, "Expected the value to be greater than 1")
 end
 
 function test_config_bluetooth_poll()
-    assert(config.bluetooth_poll)
-    assert(type(config.bluetooth_poll) == "number")
-    assert(config.bluetooth_poll > 1)
+    assert(config.bluetooth_poll, "Check that the config api is correct")
+    assert(type(config.bluetooth_poll) == "number", "The config type should be a number")
+    assert(config.bluetooth_poll > 1, "Expected the value to be greater than 1")
 end
 
 function test_config_temp_poll()
-    assert(config.temp_poll)
-    assert(type(config.temp_poll) == "number")
-    assert(config.temp_poll > 1)
+    assert(config.temp_poll, "Check that the config api is correct")
+    assert(type(config.temp_poll) == "number", "The config type should be a number")
+    assert(config.temp_poll > 1, "Expected the value to be greater than 1")
 end
 
 function test_config_ram_poll()
-    assert(config.ram_poll)
-    assert(type(config.ram_poll) == "number")
-    assert(config.ram_poll > 1)
+    assert(config.ram_poll, "Check that the config api is correct")
+    assert(type(config.ram_poll) == "number", "The config type should be a number")
+    assert(config.ram_poll > 1, "Expected the value to be greater than 1")
 end
 
 function test_config_weather_poll()
-    assert(config.weather_poll)
-    assert(type(config.weather_poll) == "number")
-    assert(config.weather_poll > 60)
+    assert(config.weather_poll, "Check that the config api is correct")
+    assert(type(config.weather_poll) == "number", "The config type should be a number")
+    assert(config.weather_poll > 60, "Expected the value to be greater than 60")
 end
 
 function test_config_cpu_poll()
-    assert(config.cpu_poll)
-    assert(type(config.cpu_poll) == "number")
-    assert(config.cpu_poll > 1)
+    assert(config.cpu_poll, "Check that the config api is correct")
+    assert(type(config.cpu_poll) == "number", "The config type should be a number")
+    assert(config.cpu_poll > 1, "Expected the value to be greater than 1")
 end
 
 function test_about_tde_and_tos()
-    assert(config.aboutText)
-    assert(config.aboutText:find("TOS"))
-    assert(config.aboutText:find("MIT License"))
-    assert(config.aboutText:find("Tom Meyers") or config.aboutText:find("Meyers Tom"))
+    assert(config.aboutText, "Make sure the about text exists")
+    assert(config.aboutText:find("TOS"), "TOS must be mentioned in the about text: " .. config.aboutText)
+    assert(
+        config.aboutText:find("MIT License"),
+        "The license must be mentioned in the about text: " .. config.aboutText
+    )
+    assert(
+        config.aboutText:find("Tom Meyers") or config.aboutText:find("Meyers Tom"),
+        "The main developer must be mentioned in the about text: " .. config.aboutText
+    )
 end

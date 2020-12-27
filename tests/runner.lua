@@ -28,13 +28,12 @@
 local realPrint = print
 
 print = function(data, logtype)
-    if logtype == nil then
-        logtype = "\27[0;32m[ INFO "
-    end
+    logtype = logtype or "\27[0;32m[ INFO "
     realPrint(logtype .. " ]\27[0m " .. tostring(data or ""))
 end
 
 EXPORT_ASSERT_TO_GLOBALS = true
+UNIT_TESTING_ACTIVE = true
 require("tests.luaunit")
 
 require("tests.globals")
@@ -52,7 +51,6 @@ require("tests.lib-tde")
 
 -- So we have to manually put it back in our test runner
 print = realPrint
-
 local lu = LuaUnit.new()
 if not (os.getenv("RUNNER") == nil) then
     lu:setOutputType(os.getenv("RUNNER"), os.getenv("FILE"))

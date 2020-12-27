@@ -24,34 +24,34 @@
 ]]
 function test_application_runner_exists()
     local runner = require("tde.lib-tde.function.application_runner")
-    assert(runner)
-    assert(type(runner) == "function")
+    assert(runner, "Make sure the application runner exists")
+    assert(type(runner) == "function", "Make sure the application runner is a function")
 end
 
 function test_application_runner_works()
     local runner = require("tde.lib-tde.function.application_runner")
     -- only runs once
-    assert(runner("echo hello"))
+    assert(runner("echo hello"), "First time running 'echo hello' and it skipped it")
     -- doesn't run anymore
-    assert(not runner("echo hello"))
-    assert(not runner("echo hello"))
+    assert(not runner("echo hello"), "Second time running 'echo hello' and it still ran it")
+    assert(not runner("echo hello"), "Third time running 'echo hello' and it still ran it")
 end
 
 function test_application_runner_works_2()
     local runner = require("tde.lib-tde.function.application_runner")
     -- only runs once
-    assert(runner("printf hello"))
+    assert(runner("printf hello"), "First time running 'printf hello' and it skipped it")
     -- doesn't run anymore
-    assert(not runner("printf hello"))
+    assert(not runner("printf hello"), "Second time running 'printf hello' and it ran it")
     -- but this is a different command
-    assert(runner("echo hello2"))
+    assert(runner("echo hello2"), "First time running 'echo hello2' and it skipped it")
 end
 
 function test_application_runner_invalid_input()
     local runner = require("tde.lib-tde.function.application_runner")
     -- only runs once
-    assert(not runner(""))
-    assert(not runner(""))
-    assert(not runner(123))
-    assert(not runner(nil))
+    assert(not runner(""), "Running an empty command is not allowed")
+    assert(not runner(""), "Running an empty command is not allowed")
+    assert(not runner(123), "Running an command should be a string not a number")
+    assert(not runner(nil), "Running an empty command should be a string not nil")
 end
