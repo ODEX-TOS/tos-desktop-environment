@@ -29,7 +29,7 @@ function log {
     len="$(( ${#2} - 1 ))"
     columns=$(tput cols)
     echo -en "$2 "
-    printf '.%.0s' $(seq $(( $columns - $len - 15 )))
+    printf '.%.0s' "$(seq $(( $columns - $len - 15 )))"
 
     if [[ ! "$1" -eq "0" ]]; then
         echo -e " \e[30m\e[41m FAILED  \e[49m\e[39m"
