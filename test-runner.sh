@@ -24,6 +24,10 @@
 # SOFTWARE.
 LUA="lua5.3"
 
+
+LINES=$(tput lines)
+COLUMNS=$(tput cols)
+
 # run the integration tests
 if [[ -n "$TDE_IT_TEST_RUN" ]]; then
   echo "Starting integration tests"
@@ -34,9 +38,9 @@ if [[ -n "$TDE_IT_TEST_RUN" ]]; then
   export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
   export LUA_PATH="$LUA_PATH;"
   if [[ -n "$1" ]]; then
-    RUNNER="junit" FILE="$1" "$LUA" tests/runner-it.lua
+    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner-it.lua
   else
-    "$LUA" tests/runner-it.lua
+    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner-it.lua
   fi
 else
   # run the unit tests
@@ -51,8 +55,8 @@ else
   export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"
 
   if [[ -n "$1" ]]; then
-    RUNNER="junit" FILE="$1" "$LUA" tests/runner.lua
+    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua
   else
-    "$LUA" tests/runner.lua
+   LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua
   fi
 fi

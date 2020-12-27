@@ -132,9 +132,12 @@ local is_equal  -- defined here to allow calling from mismatchFormattingPureList
 function functionState(name, bFailed)
     bFailed = bFailed or false
     local length = #name
-    local total_length = os.getenv("COLUMNS") or 70
+    local total_length = (os.getenv("COLUMNS") - 1) or 70
     local result_message_length = 9
     local filler = total_length - length - result_message_length - 1
+    if filler < 1 then
+        filler = 1
+    end
 
     local filler_str = " " .. string.rep(".", filler) .. " "
 

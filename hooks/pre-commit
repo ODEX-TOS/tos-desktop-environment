@@ -28,8 +28,9 @@ WARNING="-1000"
 # $2 is the message
 function log {
     len="$(( ${#2} - 1 ))"
+    columns=$(tput cols)
     echo -en "$2 "
-    printf '.%.0s' $(seq $(( 70 - $len )))
+    printf '.%.0s' $(seq $(( columns - len - 15 )))
 
     if [[ "$1" == "$WARNING" ]]; then
         _warning="${3:-WARNING}"
