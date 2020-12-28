@@ -133,7 +133,6 @@ return function()
       end
       print("Setting the default value of the mouse to: " .. speed)
       layout:add(make_mouse(device.id, device.name, speed))
-      layout:add(make_mouse(device.id, device.name, speed))
     end
   end
 
