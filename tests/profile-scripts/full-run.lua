@@ -38,4 +38,3 @@ require("tests.profile-scripts.quicksort")
 require("tests.profile-scripts.string")
 require("tests.profile-scripts.hardware")
 require("tests.profile-scripts.mouse")
-

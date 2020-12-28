@@ -273,4 +273,3 @@ function test_emit_mouse_natural_scrolling()
     assert(signals.emit_mouse_natural_scrolling, "Make sure the signal emit_mouse_natural_scrolling exists")
     assert(type(signals.emit_mouse_natural_scrolling) == "function", "Make sure emit_mouse_natural_scrolling is a signal and a function")
 end
-

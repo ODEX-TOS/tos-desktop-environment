@@ -174,4 +174,3 @@ signals.connect_mouse_natural_scrolling(
         end
     end
 )
-
