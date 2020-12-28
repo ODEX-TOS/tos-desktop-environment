@@ -72,6 +72,7 @@ return {
   brush = theme(config["brush"] or dir .. "/brush.svg"),
   package = theme("/etc/xdg/tde/widget/package-updater/icons/package.svg"),
   about = theme(dir .. "/info.svg"),
+  mouse = theme(dir .. "/mouse.svg"),
   --pngs
   unknown = theme(dir .. "/noicon.png")
 }

@@ -22,19 +22,14 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("tests.profile-scripts.bluetooth-status")
-require("tests.profile-scripts.cpu-value")
-require("tests.profile-scripts.hard-drive-value")
-require("tests.profile-scripts.network-value")
-require("tests.profile-scripts.ram-value")
-require("tests.profile-scripts.temp-value")
-require("tests.profile-scripts.wifi")
-require("tests.profile-scripts.i18n")
-require("tests.profile-scripts.queue")
-require("tests.profile-scripts.stack")
-require("tests.profile-scripts.binary-tree")
-require("tests.profile-scripts.hashmap")
-require("tests.profile-scripts.quicksort")
-require("tests.profile-scripts.string")
-require("tests.profile-scripts.hardware")
-require("tests.profile-scripts.mouse")
+local mouse = require("lib-tde.mouse")
+
+local devices = mouse.getInputDevices()
+
+for _, device in ipairs(devices) do
+    print("Found mouse: " .. device.name .. " -- ID: " .. device.id)
+end
+
+mouse.setMouseSpeed(devices[1].id, 1)
+mouse.setNaturalScrolling(devices[1].id, false)
+mouse.setAccellaration(devices[1].id, 0)
