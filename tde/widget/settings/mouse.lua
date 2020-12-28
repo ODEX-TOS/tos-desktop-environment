@@ -40,7 +40,7 @@ return function()
   view.left = m
   view.right = m
 
-  local title = wibox.widget.textbox(i18n.translate("Mouse"))
+  local title = wibox.widget.textbox(i18n.translate("Mouse Settings"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
@@ -89,33 +89,32 @@ return function()
       end
     )
 
-    return wibox.widget{
-        layout = wibox.container.background,
-        bg = beautiful.bg_modal,
-        shape = rounded(),
-        wibox.widget{
-          layout = wibox.layout.fixed.vertical,
+    return wibox.widget {
+      layout = wibox.container.background,
+      bg = beautiful.bg_modal,
+      shape = rounded(),
+      wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        {
+          layout = wibox.container.margin,
+          margins = m,
           {
-            layout = wibox.container.margin,
-            margins = m,
-            {
-              layout = wibox.layout.align.horizontal,
-              mouse_heading,
-              nil,
-              nil
-            }
-          },
-          {
-            layout = wibox.container.margin,
-            left = m,
-            right = m,
-            bottom = m,
-            forced_height = dpi(30) + (m * 2),
-            mouse_slider
+            layout = wibox.layout.align.horizontal,
+            mouse_heading,
+            nil,
+            nil
           }
+        },
+        {
+          layout = wibox.container.margin,
+          left = m,
+          right = m,
+          bottom = m,
+          forced_height = dpi(30) + (m * 2),
+          mouse_slider
         }
       }
-
+    }
   end
 
   local layout = wibox.layout.flex.vertical()

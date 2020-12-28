@@ -43,7 +43,7 @@ local signals = require("lib-tde.signals")
 --    local devices = getInputDevices()
 --    print("The first device is called: " .. devices[1].name .. " and has ID: " .. devices[1].id)
 local function getInputDevices()
-    local identifier = {"mouse", "trackpad", "trackpoint"}
+    local identifier = {"mouse", "trackpad", "trackpoint", "touchpad"}
 
     local names = execute("xinput --list --name-only")
     names = split(names, "\n")
@@ -58,10 +58,13 @@ local function getInputDevices()
         for _, match in ipairs(identifier) do
             -- if it is a mouse then add it to the list
             if string.find(names[index]:lower(), match) then
-                table.insert(result, {
-                    id = tonumber(id),
-                    name = names[index]
-                })
+                table.insert(
+                    result,
+                    {
+                        id = tonumber(id),
+                        name = names[index]
+                    }
+                )
             end
         end
     end
@@ -93,10 +96,12 @@ local function setAccellaration(id, speed)
     print("Setting mouse accellaration speed: " .. cmd)
     execute(cmd)
 
-    signals.emit_mouse_accellaration({
-        id = id,
-        speed = speed
-    })
+    signals.emit_mouse_accellaration(
+        {
+            id = id,
+            speed = speed
+        }
+    )
 end
 
 --- Set the accellaration of a specific input device through xinput
@@ -119,14 +124,17 @@ local function setMouseSpeed(id, speed)
         speed = 0.05
     end
 
-    local cmd = string.format("xinput set-prop %d 'Coordinate Transformation Matrix' %.1f 0 0 0 %.1f 0 0 0 1", id, speed, speed)
+    local cmd =
+        string.format("xinput set-prop %d 'Coordinate Transformation Matrix' %.1f 0 0 0 %.1f 0 0 0 1", id, speed, speed)
     print("Setting mouse speed: " .. cmd)
     execute(cmd)
 
-    signals.emit_mouse_speed({
-        id = id,
-        speed = speed
-    })
+    signals.emit_mouse_speed(
+        {
+            id = id,
+            speed = speed
+        }
+    )
 end
 
 --- Enable/Disable natural scrolling for the mouse
@@ -152,10 +160,12 @@ local function setNaturalScrolling(id, bIsNaturalScrolling)
     print("Setting mouse natural scrolling: " .. cmd)
     execute(cmd)
 
-    signals.emit_mouse_natural_scrolling({
-        id = id,
-        state = bIsNaturalScrolling
-    })
+    signals.emit_mouse_natural_scrolling(
+        {
+            id = id,
+            state = bIsNaturalScrolling
+        }
+    )
 end
 
 -- TODO: implement scrolling speed as well
@@ -164,5 +174,5 @@ return {
     getInputDevices = getInputDevices,
     setAccellaration = setAccellaration,
     setMouseSpeed = setMouseSpeed,
-    setNaturalScrolling = setNaturalScrolling,
+    setNaturalScrolling = setNaturalScrolling
 }
