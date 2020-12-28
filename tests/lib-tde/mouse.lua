@@ -22,20 +22,22 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("tests.profile-scripts.bluetooth-status")
-require("tests.profile-scripts.cpu-value")
-require("tests.profile-scripts.hard-drive-value")
-require("tests.profile-scripts.network-value")
-require("tests.profile-scripts.ram-value")
-require("tests.profile-scripts.temp-value")
-require("tests.profile-scripts.wifi")
-require("tests.profile-scripts.i18n")
-require("tests.profile-scripts.queue")
-require("tests.profile-scripts.stack")
-require("tests.profile-scripts.binary-tree")
-require("tests.profile-scripts.hashmap")
-require("tests.profile-scripts.quicksort")
-require("tests.profile-scripts.string")
-require("tests.profile-scripts.hardware")
-require("tests.profile-scripts.mouse")
+local mouse = require("tde.lib-tde.mouse")
 
+function test_mouse_api_exists()
+    assert(mouse.getInputDevices, "The getInputDevices function doesn't exist")
+    assert(mouse.setAccellaration, "The getInputDevices function doesn't exist")
+    assert(mouse.setMouseSpeed, "The getInputDevices function doesn't exist")
+    assert(mouse.setNaturalScrolling, "The getInputDevices function doesn't exist")
+end
+
+function test_mouse_input_device_return_correct()
+    local result = mouse.getInputDevices()
+    assert(type(result) == "table", "The list of input devices should be a table")
+
+    -- only run this when a mouse was found
+    if #result > 0 then
+        assert(type(result[1].name) == "string", "The input device list should have a name attribute")
+        assert(type(result[1].id) == "number", "The input device list should have a id attribute")
+    end
+end

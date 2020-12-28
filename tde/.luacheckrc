@@ -69,7 +69,8 @@ read_globals = {
     "math.atan2",
     "math.pow",
     "reverse",
-    "center"
+    "center",
+    "save_state"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about
