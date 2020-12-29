@@ -77,9 +77,6 @@ if [[ -f "/usr/lib/kdeconnectd" ]]; then
 fi
 
 if [[ "$(command -v touchegg)" ]]; then
-    if ! systemctl is-active touchegg; then
-        systemctl enable --now touchegg
-    fi
     [[ "$(pgrep touchegg | wc -l)" -lt 2 ]] && touchegg &
 fi
 
