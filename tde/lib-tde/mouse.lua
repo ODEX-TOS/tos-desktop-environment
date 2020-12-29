@@ -43,7 +43,14 @@ local signals = require("lib-tde.signals")
 --    local devices = getInputDevices()
 --    print("The first device is called: " .. devices[1].name .. " and has ID: " .. devices[1].id)
 local function getInputDevices()
-    local identifier = {"mouse", "trackpad", "trackpoint", "touchpad"}
+    local identifier = {
+        "mouse",
+        "trackpad",
+        "trackpoint",
+        "touchpad",
+        -- 'logitech m' is their mouse division
+        "logitech m[0-9a-z]+ "
+    }
 
     local names = execute("xinput --list --name-only")
     names = split(names, "\n")
