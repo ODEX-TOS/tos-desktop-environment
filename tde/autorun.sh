@@ -77,7 +77,10 @@ if [[ -f "/usr/lib/kdeconnectd" ]]; then
 fi
 
 if [[ "$(command -v touchegg)" ]]; then
-    [[ "$(pgrep touchegg | wc -l)" -gt 1 ]] && touchegg &
+    if ! systemctl is-active touchegg; then
+        systemctl enable --now touchegg
+    fi
+    [[ "$(pgrep touchegg | wc -l)" -lt 2 ]] && touchegg &
 fi
 
 # autostart user scripts if that directory exists
