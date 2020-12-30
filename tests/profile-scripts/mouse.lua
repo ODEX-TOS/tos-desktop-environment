@@ -23,6 +23,12 @@
 --SOFTWARE.
 ]]
 local mouse = require("lib-tde.mouse")
+awesome = {
+    connect_signal = function()
+    end,
+    emit_signal = function()
+    end
+}
 
 local devices = mouse.getInputDevices()
 

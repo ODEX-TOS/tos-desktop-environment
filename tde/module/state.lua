@@ -83,7 +83,6 @@ local function setup_state(state)
             end
         end
     end
-
 end
 
 -- load the initial state
@@ -166,7 +165,7 @@ signals.connect_mouse_accellaration(
 
 signals.connect_mouse_natural_scrolling(
     function(tbl)
-        print("Saving mouse id: " .. tbl.id .. " to natural scrolling state: " .. tbl.state)
+        print("Saving mouse id: " .. tbl.id .. " to natural scrolling state: " .. tostring(tbl.state))
         local id = get_mouse_state_id(tbl.id)
         if id ~= nil then
             save_state.mouse[id].natural_scroll = tbl.state
