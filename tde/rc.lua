@@ -172,6 +172,8 @@ end
 require("module.state")
 require("tutorial")
 
+require("module.dev-widget-update")
+
 require("lib-tde.signals").connect_exit(
   function()
     -- stop current autorun.sh
