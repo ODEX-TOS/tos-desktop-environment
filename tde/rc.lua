@@ -91,7 +91,7 @@ if general["break"] == "1" then
 end
 
 require("module.battery-notifier")
-require("collision")()
+_G.collision = require("collision")()
 
 -- Setup all configurations
 require("configuration.client")
