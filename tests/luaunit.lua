@@ -150,14 +150,14 @@ function functionState(name, bFailed, bSkipped)
     local skipped = " SKIPPED "
 
     if bSkipped == true then
-        return clear_background .. name .. filler_str .. skipped_background .. skipped .. clear_background
+        return clear_background .. name .. filler_str .. skipped_background .. skipped .. clear_background .. "\n"
     end
 
     if bFailed then
-        return clear_background .. name .. filler_str .. failed_background .. failed .. clear_background
+        return clear_background .. name .. filler_str .. failed_background .. failed .. clear_background .. "\n"
     end
 
-    return clear_background .. name .. filler_str .. success_background .. success .. clear_background
+    return clear_background .. name .. filler_str .. success_background .. success .. clear_background .. "\n"
 end
 
 local function pcall_or_abort(func, ...)
