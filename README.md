@@ -226,13 +226,10 @@ If that is the case then use the `-s` option this will make the widget consume 5
 
 #### closing the widget
 
-The closing of the widget is rather strange.
-You must click on the blurred background.
-This is a design choice for many reasons.
-
-Namely:
-
-1. widgets can use keygrabbers thus we don't consume any keys (including Escape) as the widget in development can use those
+We don't use the Escape key to close the widget
+This is because we would need to consume the Escape key.
+This would result it the underlying widget from not beeing able to capture this event.
+Thus we decided to stricly use the backdrop/close button to close the widget.
 
 ### Commit hooks
 

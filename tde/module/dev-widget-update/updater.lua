@@ -33,8 +33,11 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local filehandle = require("lib-tde.file")
+local icons = require("theme.icons")
+local gears = require("gears")
 
 local m = dpi(10)
+local dev_widget_update_close_height = dpi(60)
 local dev_widget_update_width = dpi(1100)
 local dev_widget_update_height = dpi(900)
 
@@ -100,26 +103,27 @@ screen.connect_signal(
             package.path = original_path
         end
 
-        backdrop:buttons(
-            awful.util.table.join(
-                awful.button(
-                    {},
-                    1,
-                    function()
-                        backdrop.visible = false
-                        hub.visible = false
-                        -- remove the widget in the container
-                        -- as it is a developer widget and can cause memory and cpu leaks
-                        view_container:reset()
-                        -- we also perform a garbage collection cycle as we don't know what happend with the widget
-                        collectgarbage("collect")
-                    end
-                )
-            )
-        )
+        local function close_hub()
+            backdrop.visible = false
+            hub.visible = false
+            -- remove the widget in the container
+            -- as it is a developer widget and can cause memory and cpu leaks
+            view_container:reset()
+            -- we also perform a garbage collection cycle as we don't know what happend with the widget
+            collectgarbage("collect")
+        end
+
+        backdrop:buttons(awful.util.table.join(awful.button({}, 1, close_hub)))
+
+        local close = wibox.widget.imagebox(icons.close)
+        close.forced_height = dev_widget_update_close_height
+        close:buttons(gears.table.join(awful.button({}, 1, close_hub)))
+
+        local close_button = wibox.container.place(close, "right")
 
         hub:setup {
-            layout = wibox.layout.flex.vertical,
+            layout = wibox.layout.fixed.vertical,
+            close_button,
             view_container
         }
     end

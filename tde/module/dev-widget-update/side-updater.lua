@@ -33,26 +33,16 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local filehandle = require("lib-tde.file")
+local icons = require("theme.icons")
+local gears = require("gears")
 
 local m = dpi(10)
+local dev_widget_update_close_height = dpi(60)
 
 -- Create dev_widget on every screen
 screen.connect_signal(
     "request::desktop_decoration",
     function(scr)
-        local backdrop =
-            wibox {
-            ontop = true,
-            screen = scr,
-            visible = false,
-            bg = "#00000000",
-            type = "dock",
-            x = scr.workarea.x + (scr.workarea.width / 2),
-            y = scr.workarea.y,
-            width = scr.geometry.width,
-            height = scr.workarea.height
-        }
-
         local divercence = m * 5
 
         local hub =
@@ -84,32 +74,29 @@ screen.connect_signal(
             end
             view_container:reset()
             view_container:add(require(require_str))
-            backdrop.visible = true
             hub.visible = true
 
             package.path = original_path
         end
 
-        backdrop:buttons(
-            awful.util.table.join(
-                awful.button(
-                    {},
-                    1,
-                    function()
-                        backdrop.visible = false
-                        hub.visible = false
-                        -- remove the widget in the container
-                        -- as it is a developer widget and can cause memory and cpu leaks
-                        view_container:reset()
-                        -- we also perform a garbage collection cycle as we don't know what happend with the widget
-                        collectgarbage("collect")
-                    end
-                )
-            )
-        )
+        local function close_hub()
+            hub.visible = false
+            -- remove the widget in the container
+            -- as it is a developer widget and can cause memory and cpu leaks
+            view_container:reset()
+            -- we also perform a garbage collection cycle as we don't know what happend with the widget
+            collectgarbage("collect")
+        end
+
+        local close = wibox.widget.imagebox(icons.close)
+        close.forced_height = dev_widget_update_close_height
+        close:buttons(gears.table.join(awful.button({}, 1, close_hub)))
+
+        local close_button = wibox.container.place(close, "right")
 
         hub:setup {
-            layout = wibox.layout.flex.vertical,
+            layout = wibox.layout.fixed.vertical,
+            close_button,
             view_container
         }
     end
