@@ -129,7 +129,7 @@ local is_equal  -- defined here to allow calling from mismatchFormattingPureList
 --
 ----------------------------------------------------------------
 
-function functionState(name, bFailed)
+function functionState(name, bFailed, bSkipped)
     bFailed = bFailed or false
     local length = #name
     local total_length = (tonumber(os.getenv("COLUMNS")) or 91) - 1
@@ -143,9 +143,15 @@ function functionState(name, bFailed)
 
     local failed_background = "\27[30m\27[41m"
     local success_background = "\27[30m\27[42m"
+    local skipped_background = "\27[30m\27[43m"
     local clear_background = "\27[49m\27[39m"
     local failed = " FAILED  "
     local success = " SUCCESS "
+    local skipped = " SKIPPED "
+
+    if bSkipped == true then
+        return name .. filler_str .. skipped_background .. skipped .. clear_background
+    end
 
     if bFailed then
         return name .. filler_str .. failed_background .. failed .. clear_background
@@ -2220,13 +2226,17 @@ end
 
 function TapOutput:updateStatus(node)
     if node:isSkipped() then
-        io.stdout:write("ok ", self.result.currentTestNumber, "\t# SKIP ", node.msg, "\n")
+        --io.stdout:write("ok ", self.result.currentTestNumber, "\t# SKIP ", node.msg, "\n")
+        io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
+        io.stdout:flush()
         return
     end
 
     io.stdout:write("not ok ", self.result.currentTestNumber, "\t", node.testName, "\n")
     if self.verbosity > M.VERBOSITY_LOW then
-        print(prefixString("#   ", node.msg))
+        --print(prefixString("#   ", node.msg))
+        io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
+        io.stdout:flush()
     end
     if (node:isFailure() or node:isError()) and self.verbosity > M.VERBOSITY_DEFAULT then
         print(prefixString("#   ", node.stackTrace))
@@ -2235,7 +2245,10 @@ end
 
 function TapOutput:endTest(node)
     if node:isSuccess() then
-        io.stdout:write("ok     ", self.result.currentTestNumber, "\t", node.testName, "\n")
+        --io.stdout:write("ok     ", self.result.currentTestNumber, "\t", node.testName, "\n")
+        
+        io.stdout:write(functionState("ok    " .. self.result.currentTestNumber .. "\t" .. node.testName .. "\n", true))
+        io.stdout:flush()
     end
 end
 
@@ -2283,7 +2296,9 @@ function JUnitOutput:startClass(className)
     end
 end
 function JUnitOutput:startTest(testName)
-    print("# Starting test: " .. testName)
+    --print("# Starting test: " .. testName)
+    io.stdout:write(functionState(testName, self.result.currentNode:isFailure(), self.result.currentNode:isSkipped()))
+    io.stdout:flush()
 end
 
 function JUnitOutput:updateStatus(node)
@@ -2476,7 +2491,7 @@ function TextOutput:endTest(node)
         if self.verbosity > M.VERBOSITY_DEFAULT then
             io.stdout:write("Ok\n")
         else
-            io.stdout:write(functionState(node.testName, false) .. "\n")
+            io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
             io.stdout:flush()
         end
     else
@@ -2491,7 +2506,7 @@ function TextOutput:endTest(node)
             print(node.msg)
         else
             -- write only the first character of status E, F or S
-            io.stdout:write(functionState(node.testName, true))
+            io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
             io.stdout:flush()
         end
     end
