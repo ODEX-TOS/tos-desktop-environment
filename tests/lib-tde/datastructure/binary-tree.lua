@@ -76,3 +76,13 @@ function test_binary_tree_massive()
         assert(tree.contains(i), "The element: '" .. tostring(i) .. "' should exist")
     end
 end
+
+function test_binary_tree_api_unit_tested()
+    local tree = binarytree()
+    local amount = 3
+    local result = tablelength(tree)
+    assert(
+        result == amount,
+        "You didn't test all binary tree api endpoints, please add them then update the amount to: " .. result
+    )
+end

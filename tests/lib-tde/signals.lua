@@ -256,20 +256,41 @@ end
 
 function test_connect_mouse_accel()
     assert(signals.connect_mouse_accellaration, "Make sure the signal connect_mouse_accellaration exists")
-    assert(type(signals.connect_mouse_accellaration) == "function", "Make sure connect_mouse_accellaration is a signal and a function")
+    assert(
+        type(signals.connect_mouse_accellaration) == "function",
+        "Make sure connect_mouse_accellaration is a signal and a function"
+    )
 end
 
 function test_emit_mouse_accel()
     assert(signals.emit_mouse_accellaration, "Make sure the signal emit_mouse_accellaration exists")
-    assert(type(signals.emit_mouse_accellaration) == "function", "Make sure emit_mouse_accellaration is a signal and a function")
+    assert(
+        type(signals.emit_mouse_accellaration) == "function",
+        "Make sure emit_mouse_accellaration is a signal and a function"
+    )
 end
 
 function test_connect_mouse_natural_scrolling()
     assert(signals.connect_mouse_natural_scrolling, "Make sure the signal connect_mouse_natural_scrolling exists")
-    assert(type(signals.connect_mouse_natural_scrolling) == "function", "Make sure connect_mouse_natural_scrolling is a signal and a function")
+    assert(
+        type(signals.connect_mouse_natural_scrolling) == "function",
+        "Make sure connect_mouse_natural_scrolling is a signal and a function"
+    )
 end
 
 function test_emit_mouse_natural_scrolling()
     assert(signals.emit_mouse_natural_scrolling, "Make sure the signal emit_mouse_natural_scrolling exists")
-    assert(type(signals.emit_mouse_natural_scrolling) == "function", "Make sure emit_mouse_natural_scrolling is a signal and a function")
+    assert(
+        type(signals.emit_mouse_natural_scrolling) == "function",
+        "Make sure emit_mouse_natural_scrolling is a signal and a function"
+    )
+end
+
+function test_signals_api_unit_tested()
+    local amount = 49
+    local result = tablelength(signals)
+    assert(
+        result == amount,
+        "You didn't test all signals api endpoints, please add them then update the amount to: " .. result
+    )
 end

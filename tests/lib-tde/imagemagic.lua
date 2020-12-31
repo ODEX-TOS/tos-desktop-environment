@@ -33,3 +33,12 @@ function test_imagemagic_api()
     assert(type(magic.compress) == "function", "Make sure the compress function exists in the magic api")
     assert(type(magic.convert) == "function", "Make sure the convert function exists in the magic api")
 end
+
+function test_imagemagic_api_unit_tested()
+    local amount = 5
+    local result = tablelength(magic)
+    assert(
+        result == amount,
+        "You didn't test all magic api endpoints, please add them then update the amount to: " .. result
+    )
+end

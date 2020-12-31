@@ -353,5 +353,14 @@ function test_dir_recursive_creation()
     assert(result, "The directroy didn't get created: " .. dir)
 end
 
+function test_filehandle_api_unit_tested()
+    local amount = 15
+    local result = tablelength(files)
+    assert(
+        result == amount,
+        "You didn't test all filehandle api endpoints, please add them then update the amount to: " .. result
+    )
+end
+
 rm_file("test_file_1")
 rm_file("test_file_2")

@@ -366,3 +366,12 @@ function test_break_timer_current_time_inbetween_edge_cases_10()
         "The time 3:02 should be inbetween 00:00 and 24:00"
     )
 end
+
+function test_break_timer_api_unit_tested()
+    local amount = 4
+    local result = tablelength(breakTimer)
+    assert(
+        result == amount,
+        "You didn't test all break-timer api endpoints, please add them then update the amount to: " .. result
+    )
+end

@@ -43,3 +43,12 @@ function test_lib_tde_battery_percentage()
     assert(battery.getBatteryPercentage, "Getting the battery percentage should exist")
     assert(type(battery.getBatteryPercentage) == "function", "Getting the battery percentage should be a function")
 end
+
+function test_battery_api_unit_tested()
+    local amount = 3
+    local result = tablelength(battery)
+    assert(
+        result == amount,
+        "You didn't test all battery api endpoints, please add them then update the amount to: " .. result
+    )
+end

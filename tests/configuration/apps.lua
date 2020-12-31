@@ -94,7 +94,32 @@ function test_configuration_app_bins()
     assert(type(apps.bins) == "table", "apps.bins should be a string")
     assert(apps.bins.coverUpdate, "Make sure apps.bins.coverUpdate exists")
     assert(apps.bins.full_screenshot, "Make sure apps.bins.full_screenshot exists")
+    assert(apps.bins.full_blank_screenshot, "Make sure apps.bins.full_blank_screenshot exists")
     assert(apps.bins.area_screenshot, "Make sure apps.bins.area_screenshot exists")
+    assert(apps.bins.area_blank_screenshot, "Make sure apps.bins.area_blank_screenshot exists")
     assert(apps.bins.window_screenshot, "Make sure apps.bins.window_screenshot exists")
     assert(apps.bins.window_blank_screenshot, "Make sure apps.bins.window_blank_screenshot exists")
+end
+
+function test_apps_api_unit_tested()
+    local amount_default = 15
+    local result_default = tablelength(apps.default)
+    assert(
+        result_default == amount_default,
+        "You didn't test all app api endpoints, please add them then update the amount to: " .. result_default
+    )
+
+    local amount_startup = 5
+    local result_startup = tablelength(apps.run_on_start_up)
+    assert(
+        result_startup == amount_startup,
+        "You didn't test all app api endpoints, please add them then update the amount to: " .. result_startup
+    )
+
+    local amount_bin = 7
+    local result_bin = tablelength(apps.bins)
+    assert(
+        result_bin == amount_bin,
+        "You didn't test all app api endpoints, please add them then update the amount to: " .. result_bin
+    )
 end

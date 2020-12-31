@@ -214,3 +214,12 @@ function test_mappers_api_is_correct()
     assert(type(mappers.reduce) == "function", "The mappers api should be contain a reduce function")
     assert(type(mappers.contains) == "function", "The mappers api should be contain a contains function")
 end
+
+function test_mappers_api_unit_tested()
+    local amount = 4
+    local result = tablelength(mappers)
+    assert(
+        result == amount,
+        "You didn't test all mappers api endpoints, please add them then update the amount to: " .. result
+    )
+end

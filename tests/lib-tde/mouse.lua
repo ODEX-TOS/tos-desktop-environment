@@ -41,3 +41,12 @@ function test_mouse_input_device_return_correct()
         assert(type(result[1].id) == "number", "The input device list should have a id attribute")
     end
 end
+
+function test_mouse_api_unit_tested()
+    local amount = 4
+    local result = tablelength(mouse)
+    assert(
+        result == amount,
+        "You didn't test all mouse api endpoints, please add them then update the amount to: " .. result
+    )
+end

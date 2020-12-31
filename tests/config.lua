@@ -84,6 +84,27 @@ function test_config_cpu_poll()
     assert(config.cpu_poll > 1, "Expected the value to be greater than 1")
 end
 
+function test_config_compton_file()
+    assert(config.getComptonFile, "Check that the config api is correct")
+    assert(type(config.getComptonFile) == "function", "The config type should be a function")
+end
+
+function test_config_colors_config()
+    assert(config.colors_config, "Check that the config api is correct")
+    assert(type(config.colors_config) == "string", "The config type should be a string")
+end
+
+function test_config_icons_config()
+    assert(config.icons_config, "Check that the config api is correct")
+    assert(type(config.icons_config) == "string", "The config type should be a string")
+end
+
+function test_config_garbage_cycle()
+    assert(config.garbage_collection_cycle, "Check that the config api is correct")
+    assert(type(config.garbage_collection_cycle) == "number", "The config type should be a number")
+    assert(config.garbage_collection_cycle > 60, "garbage collection is very taxing on resources, don't call it ofter")
+end
+
 function test_about_tde_and_tos()
     assert(config.aboutText, "Make sure the about text exists")
     assert(config.aboutText:find("TOS"), "TOS must be mentioned in the about text: " .. config.aboutText)
@@ -94,5 +115,14 @@ function test_about_tde_and_tos()
     assert(
         config.aboutText:find("Tom Meyers") or config.aboutText:find("Meyers Tom"),
         "The main developer must be mentioned in the about text: " .. config.aboutText
+    )
+end
+
+function test_config_api_unit_tested()
+    local amount = 21
+    local result = tablelength(config)
+    assert(
+        result == amount,
+        "You didn't test all config options, please add them then update the amount to: " .. result
     )
 end

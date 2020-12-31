@@ -68,4 +68,16 @@ general = {
     audio_change_sound = "1"
 }
 
+keys = {}
+
 awful = require("tests.mock.awful")
+
+-- some generic counter for tables to make sure the user didn't forget to add a unit test
+-- it is a simple way to force people to test
+function tablelength(T)
+    local count = 0
+    for _ in pairs(T) do
+        count = count + 1
+    end
+    return count
+end

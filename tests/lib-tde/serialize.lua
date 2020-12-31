@@ -50,3 +50,12 @@ function test_serialize_basic_usage_2()
         "Make sure serialize the table to result in: " .. result .. " but got: " .. serialize.serialize(deserialized)
     )
 end
+
+function test_serialize_api_unit_tested()
+    local amount = 4
+    local result = tablelength(serialize)
+    assert(
+        result == amount,
+        "You didn't test all serialize api endpoints, please add them then update the amount to: " .. result
+    )
+end

@@ -160,3 +160,44 @@ end
 function test_theme_icon_warning()
     assert(file_exists(icons.warning), "Check that the warning icon exists")
 end
+
+function test_theme_icon_lan()
+    assert(file_exists(icons.lan), "Check that the lan icon exists")
+end
+
+function test_theme_icon_lan_off()
+    assert(file_exists(icons.lan_off), "Check that the lan_off icon exists")
+end
+
+function test_theme_icon_calendar()
+    assert(file_exists(icons.calendar), "Check that the calendar icon exists")
+end
+
+function test_theme_icon_brush()
+    assert(file_exists(icons.brush), "Check that the brush icon exists")
+end
+
+function test_theme_icon_package()
+    assert(file_exists(icons.package), "Check that the package icon exists")
+end
+
+function test_theme_icon_about()
+    assert(file_exists(icons.about), "Check that the about icon exists")
+end
+
+function test_theme_icon_mouse()
+    assert(file_exists(icons.mouse), "Check that the mouse icon exists")
+end
+
+function test_theme_icon_unknown()
+    assert(file_exists(icons.unknown), "Check that the unknown icon exists")
+end
+
+function test_that_all_icons_are_tested()
+    local amount = 42
+    assert(
+        tablelength(icons) == amount,
+        "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..
+            tostring(tablelength(icons) - amount) .. " icons)"
+    )
+end

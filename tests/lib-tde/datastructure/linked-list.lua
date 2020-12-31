@@ -165,3 +165,13 @@ function test_data_structure_linkedList_insertBetween_Nodes_previous()
     assert(list.head.previous.value == 2, "The head previous attribute should exist")
     assert(list.head.previous.previous.value == 1, "The head previous attribute should have a previous attribute")
 end
+
+function test_linked_list_api_unit_tested()
+    local tree = linkedList()
+    local amount = 10
+    local result = tablelength(tree)
+    assert(
+        result == amount,
+        "You didn't test all linked list api endpoints, please add them then update the amount to: " .. result
+    )
+end

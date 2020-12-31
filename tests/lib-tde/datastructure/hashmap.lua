@@ -77,3 +77,13 @@ function test_data_structure_hashmap_works_with_negative_number_as_key()
     map.delete(-98)
     assert(map.get(-98) == nil, "The hashmap should't have a: '-98' key in it")
 end
+
+function test_hashmap_api_unit_tested()
+    local tree = hashmap()
+    local amount = 3
+    local result = tablelength(tree)
+    assert(
+        result == amount,
+        "You didn't test all hashmap api endpoints, please add them then update the amount to: " .. result
+    )
+end

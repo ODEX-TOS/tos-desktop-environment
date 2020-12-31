@@ -71,3 +71,12 @@ function test_check_tutorial_file_creation()
     -- TODO: On a second try the tutorial should return false to indicate that it is finished
     --assert(not require("tde.tutorial"))
 end
+
+function test_tutorial_api_unit_tested()
+    local amount = 10
+    local result = tablelength(tutorial)
+    assert(
+        result == amount,
+        "You didn't test all tutorial api endpoints, please add them then update the amount to: " .. result
+    )
+end

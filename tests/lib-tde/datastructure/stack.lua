@@ -87,3 +87,13 @@ function test_data_structure_stack_very_large_dataset()
     end
     assert(list.size() == 1, "The stack size is incorrect")
 end
+
+function test_stack_api_unit_tested()
+    local tree = stack()
+    local amount = 4
+    local result = tablelength(tree)
+    assert(
+        result == amount,
+        "You didn't test all stack api endpoints, please add them then update the amount to: " .. result
+    )
+end

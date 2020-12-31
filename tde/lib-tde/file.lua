@@ -296,12 +296,10 @@ local function list_dir_full(str)
   -- traverse the directory
   for _, value in ipairs(list_dir(str)) do
     if file_exists(value) then
-      print(value)
       table.insert(files, value)
     else
       local filearr = list_dir_full(value)
       for _, val in ipairs(filearr) do
-        print(val)
         table.insert(files, val)
       end
     end

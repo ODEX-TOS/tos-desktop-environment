@@ -64,3 +64,12 @@ function test_hardware_check_api()
     )
     assert(type(hardware.execute) == "function", "Make sure the hardware api has a execute function")
 end
+
+function test_hardware_api_unit_tested()
+    local amount = 12
+    local result = tablelength(hardware)
+    assert(
+        result == amount,
+        "You didn't test all hardware api endpoints, please add them then update the amount to: " .. result
+    )
+end

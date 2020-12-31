@@ -141,3 +141,12 @@ function test_function_bytes_to_grandness_corrrect_si_unites_offset()
     assert(common.bytes_to_grandness(8700, 3) == "8.7TB", "Result should be in the terrabyte range")
     assert(common.bytes_to_grandness(8700, 4) == "8.7PB", "Result should be in the petabyte range")
 end
+
+function test_imagemagic_api_unit_tested()
+    local amount = 4
+    local result = tablelength(common)
+    assert(
+        result == amount,
+        "You didn't test all common api endpoints, please add them then update the amount to: " .. result
+    )
+end

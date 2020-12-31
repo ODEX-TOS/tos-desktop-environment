@@ -82,3 +82,12 @@ function test_dutch_translations()
         "Expected the translation 'Wireless connection' to be 'Draadloze verbinding' but got: " .. connection
     )
 end
+
+function test_i18n_api_unit_tested()
+    local amount = 6
+    local result = tablelength(i18n)
+    assert(
+        result == amount,
+        "You didn't test all i18n api endpoints, please add them then update the amount to: " .. result
+    )
+end

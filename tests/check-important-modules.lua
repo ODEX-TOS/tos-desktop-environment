@@ -24,6 +24,21 @@
 ]]
 local exists = require("tde.lib-tde.file").exists
 
+local function merge_tables(table1, table2, finder)
+    local result = {}
+    for _, element in ipairs(table1) do
+        if string.find(element, finder) then
+            result[#result + 1] = element
+        end
+    end
+    for _, element in ipairs(table2) do
+        if string.find(element, finder) then
+            result[#result + 1] = element
+        end
+    end
+    return result
+end
+
 -- This file checks to make sure the most important files are intact
 -- It ignores a lot of fancy feature files such as a lot of widgets
 
@@ -131,6 +146,18 @@ function test_configuration_mod_key_tde_module_titlebar_init_lua()
     assert(exists("tde/module/titlebar/init.lua"), "Check that tde/module/titlebar/init.lua exists")
 end
 
+function test_configuration_mod_key_tde_module_titlebar_color_lua()
+    assert(exists("tde/module/titlebar/colors.lua"), "Check that tde/module/titlebar/colors.lua exists")
+end
+
+function test_configuration_mod_key_tde_module_titlebar_shape_lua()
+    assert(exists("tde/module/titlebar/shapes.lua"), "Check that tde/module/titlebar/shapes.lua exists")
+end
+
+function test_configuration_mod_key_tde_module_titlebar_table_lua()
+    assert(exists("tde/module/titlebar/table.lua"), "Check that tde/module/titlebar/table.lua exists")
+end
+
 function test_configuration_mod_key_tde_configuration_apps_lua()
     assert(exists("tde/configuration/apps.lua"), "Check that tde/configuration/apps.lua exists")
 end
@@ -139,8 +166,19 @@ function test_configuration_mod_key_tde_configuration_tags_init_lua()
     assert(exists("tde/configuration/tags/init.lua"), "Check that tde/configuration/tags/init.lua exists")
 end
 
+function test_configuration_mod_key_tde_configuration_tags_single_maximized_lua()
+    assert(
+        exists("tde/configuration/tags/layouts/single-maximized.lua"),
+        "Check that tde/configuration/tags/layouts/single-maximized.lua exists"
+    )
+end
+
 function test_configuration_mod_key_tde_configuration_keys_global_lua()
     assert(exists("tde/configuration/keys/global.lua"), "Check that tde/configuration/keys/global.lua exists")
+end
+
+function test_configuration_mod_key_tde_configuration_keys_mod_lua()
+    assert(exists("tde/configuration/keys/mod.lua"), "Check that tde/configuration/keys/mod.lua exists")
 end
 
 function test_configuration_mod_key_tde_configuration_client_rules_lua()
@@ -264,4 +302,277 @@ end
 
 function test_configuration_mod_key_tde_tutorial_lua()
     assert(exists("tde/tutorial.lua"), "Check that tde/tutorial.lua exists")
+end
+
+function test_configuration_client_buttons()
+    assert(exists("tde/configuration/client/buttons.lua"), "Check that tde/configuration/client/buttons.lua exists")
+end
+
+function test_configuration_client_init()
+    assert(exists("tde/configuration/client/init.lua"), "Check that tde/configuration/client/init.lua exists")
+end
+
+function test_collision_focus()
+    assert(exists("tde/collision/focus.lua"), "Check that tde/collision/focus.lua exists")
+end
+
+function test_collision_init()
+    assert(exists("tde/collision/init.lua"), "Check that tde/collision/init.lua exists")
+end
+
+function test_collision_layout()
+    assert(exists("tde/collision/layout.lua"), "Check that tde/collision/layout.lua exists")
+end
+
+function test_collision_max()
+    assert(exists("tde/collision/max.lua"), "Check that tde/collision/max.lua exists")
+end
+
+function test_collision_mouse()
+    assert(exists("tde/collision/mouse.lua"), "Check that tde/collision/mouse.lua exists")
+end
+
+function test_collision_resize()
+    assert(exists("tde/collision/resize.lua"), "Check that tde/collision/resize.lua exists")
+end
+
+function test_collision_screen()
+    assert(exists("tde/collision/screen.lua"), "Check that tde/collision/screen.lua exists")
+end
+
+function test_collision_util()
+    assert(exists("tde/collision/util.lua"), "Check that tde/collision/util.lua exists")
+end
+
+function test_module_application()
+    assert(exists("tde/module/application-switch.lua"), "Check that tde/module/application-switch.lua exists")
+end
+
+function test_module_backdrop()
+    assert(exists("tde/module/backdrop.lua"), "Check that tde/module/backdrop.lua exists")
+end
+
+function test_module_break_timer()
+    assert(exists("tde/module/break-timer.lua"), "Check that tde/module/break-timer.lua exists")
+end
+
+function test_module_desktop()
+    assert(exists("tde/module/desktop.lua"), "Check that tde/module/dekstop.lua exists")
+end
+
+function test_module_installer()
+    assert(exists("tde/module/installer.lua"), "Check that tde/module/installer.lua exists")
+end
+
+function test_module_mousedrag()
+    assert(exists("tde/module/mousedrag.lua"), "Check that tde/module/mousedrag.lua exists")
+end
+
+function test_module_quake_terminal()
+    assert(exists("tde/module/quake-terminal.lua"), "Check that tde/module/quake-terminal.lua exists")
+end
+
+function test_module_settings()
+    assert(exists("tde/module/settings.lua"), "Check that tde/module/settings.lua exists")
+end
+
+function test_module_state()
+    assert(exists("tde/module/state.lua"), "Check that tde/module/state.lua exists")
+end
+
+function test_module_volume_manager()
+    assert(exists("tde/module/volume_manager.lua"), "Check that tde/module/volume_manager.lua exists")
+end
+
+function test_module_volume_slider_osd()
+    assert(exists("tde/module/volume-slider-osd.lua"), "Check that tde/module/volume-slider-osd.lua exists")
+end
+
+function test_lib_tde_config_writer()
+    local file = "tde/lib-tde/config-writer.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_errors()
+    local file = "tde/lib-tde/errors.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_extractcover()
+    local file = "tde/lib-tde/extractcover.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_file()
+    local file = "tde/lib-tde/file.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_hardware_check()
+    local file = "tde/lib-tde/hardware-check.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_i18n()
+    local file = "tde/lib-tde/i18n.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_imagemagic()
+    local file = "tde/lib-tde/imagemagic.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_init()
+    local file = "tde/lib-tde/init.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_logger()
+    local file = "tde/lib-tde/logger.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_luapath()
+    local file = "tde/lib-tde/luapath.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_mappers()
+    local file = "tde/lib-tde/mappers.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_mouse()
+    local file = "tde/lib-tde/mouse.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_plugin_loader()
+    local file = "tde/lib-tde/plugin-loader.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_serialize()
+    local file = "tde/lib-tde/serialize.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_signals()
+    local file = "tde/lib-tde/signals.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_sound()
+    local file = "tde/lib-tde/sound.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_xrandr()
+    local file = "tde/lib-tde/xrandr.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_datastructure_binary_tree()
+    local file = "tde/lib-tde/datastructure/binary-tree.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_datastructure_hashmap()
+    local file = "tde/lib-tde/datastructure/hashmap.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_datastructure_linked_list()
+    local file = "tde/lib-tde/datastructure/linkedList.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_datastructure_queue()
+    local file = "tde/lib-tde/datastructure/queue.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_datastructure_stack()
+    local file = "tde/lib-tde/datastructure/stack.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_function_application()
+    local file = "tde/lib-tde/function/application_runner.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_function_battery()
+    local file = "tde/lib-tde/function/battery.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_function_common()
+    local file = "tde/lib-tde/function/common.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_function_datetime()
+    local file = "tde/lib-tde/function/datetime.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_function_delayed_timer()
+    local file = "tde/lib-tde/function/delayed-timer.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_function_init()
+    local file = "tde/lib-tde/function/init.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_widget_rounded()
+    local file = "tde/lib-tde/widget/rounded.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_translations_nl()
+    local file = "tde/lib-tde/translations/nl.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_lib_tde_translations_en()
+    local file = "tde/lib-tde/translations/en.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_that_all_important_files_are_tested()
+    local amount = 92
+
+    local filehandle = require("tde.lib-tde.file")
+    local modules = filehandle.list_dir_full("tde/module")
+    local configuration = filehandle.list_dir_full("tde/configuration")
+    local layout = filehandle.list_dir_full("tde/layout")
+    local collision = filehandle.list_dir_full("tde/collision")
+    local settings = filehandle.list_dir_full("tde/settings")
+    local theme = filehandle.list_dir_full("tde/theme")
+    local lib_tde = filehandle.list_dir("tde/lib-tde")
+    local lib_tde_datastruct = filehandle.list_dir("tde/lib-tde/datastructure")
+    local lib_tde_functions = filehandle.list_dir("tde/lib-tde/function")
+    local translations = filehandle.list_dir("tde/lib-tde/translations")
+    local lib_tde_widget = filehandle.list_dir("tde/lib-tde/widget")
+
+    local result = merge_tables(modules, configuration, "lua$")
+    result = merge_tables(result, layout, "lua$")
+    result = merge_tables(result, collision, "lua$")
+    result = merge_tables(result, settings, "lua$")
+    result = merge_tables(result, theme, "lua$")
+    result = merge_tables(result, lib_tde, "lua$")
+    result = merge_tables(result, lib_tde_datastruct, "lua$")
+    result = merge_tables(result, lib_tde_functions, "lua$")
+    result = merge_tables(result, translations, "lua$")
+    result = merge_tables(result, lib_tde_widget, "lua$")
+
+    assert(
+        #result == amount,
+        "Include test for the new files you added in module, configuration, layout, collision, settings or theme.\n If all these files have been added then update this function amount = " ..
+            #result
+    )
 end
