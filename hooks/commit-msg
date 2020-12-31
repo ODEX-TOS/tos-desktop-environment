@@ -34,7 +34,7 @@ function log() {
   len="$((${#2} - 1))"
   columns=$(tput cols)
   echo -en "$2 "
-  printf '.%.0s' $(seq $((columns - len - 15)))
+  printf '.%.0s' "$(seq $((columns - len - 15)))"
 
   if [[ "$1" == "$WARNING" ]]; then
     echo -e " \e[30m\e[43m WARNING \e[49m\e[39m"
@@ -47,7 +47,7 @@ function log() {
 
 function run_prepend_commit_msg() {
   GREP_REGEX=""
-  for t in ${VALID_START_REGEX[@]}; do
+  for t in "${VALID_START_REGEX[@]}"; do
     GREP_REGEX="$GREP_REGEX|^$t: "
   done
 
@@ -58,7 +58,7 @@ function run_prepend_commit_msg() {
     log "$COMMIT_MSG_EXIT_CODE" "Commit message prepended"
   else
     COMMIT_MSG_EXIT_CODE="1"
-    for t in ${VALID_START_REGEX[@]}; do
+    for t in "${VALID_START_REGEX[@]}"; do
       echo -e "\e[32m$t:\e[39m \e[33m$1\e[39m"
     done
     log "$COMMIT_MSG_EXIT_CODE" "Use the valid commit message format (one of the above)"
