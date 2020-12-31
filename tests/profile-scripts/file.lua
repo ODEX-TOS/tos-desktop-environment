@@ -1,4 +1,3 @@
-local file = require "tde.lib-tde.file"
 --[[
 --MIT License
 --
