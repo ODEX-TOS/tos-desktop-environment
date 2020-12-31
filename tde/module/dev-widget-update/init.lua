@@ -22,17 +22,17 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local filehandle = require("tde.lib-tde.file")
-
-print(filehandle.mktemp())
-print(filehandle.mktempdir())
-
-for _ = 1, 10000 do
-    filehandle.exists("/etc/pacman.conf")
-    filehandle.dir_exists("/etc")
+-- this function should get called when the user want to start the development of the widgets
+-- We don't want to load it every time tde start to save resources (since most people don't develop TDE)
+_G.dev_widget_started = false
+_G.dev_widget_init = function()
+    require("module.dev-widget-update.updater")
+    _G.dev_widget_started = true
 end
 
-local name = "/tmp/tde_widget_hot_reload_spAnC1g2k.lua"
+_G.dev_widget_side_view_started = false
 
-print(filehandle.basename(name))
-print(filehandle.dirname(name))
+_G.dev_widget_side_view_init = function()
+    require("module.dev-widget-update.side-updater")
+    _G.dev_widget_side_view_started = true
+end

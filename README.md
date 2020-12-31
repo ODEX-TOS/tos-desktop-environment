@@ -41,6 +41,7 @@
   - [Unit Testing](#unit-test)
     - [Dockerized](#docker)
   - [Profiling](#profiling)
+  - [Hot Reload Widgets](#hot-reload-widgets)
   - [Commit Hooks](#commit-hooks)
 
 - [Roadmap](#roadmap)
@@ -190,6 +191,45 @@ bash profiler.sh -t 10 -o tde-functions.result
 bash profiler.sh -f tests/scripts/full
 
 ```
+
+### Hot Reload Widgets
+
+You can also quickly develop widgets for `tde` this can be done through the `hot-reload-widget.sh` file
+Note that you need to have `inotify-tools` installed.
+If you are using the `TOS` operating system, this script will auto download it for you.
+
+Development using this script is as followed:
+
+1. create a `.lua` file in our example we will use `hello.lua`
+2. The bare minimum for this file should be the following:
+
+```lua
+local wibox = require("wibox")
+return wibox.widget.textbox("hello")
+```
+
+3. Run the script on this file
+
+```bash
+bash scripts/hot-reload-widget.sh hello.lua # replace hello.lua with your file
+```
+
+4. develop your widget/plugin
+
+> NOTE: The file you are developing on needs to return a `wibox.widget` object
+> Otherwise `TDE` doesn't know how to display it
+
+> Second NOTE: the script listens for filesystem event and reloads your widget each time it is changed
+
+Some people don't like that the hot-reloaded widget consumes the entire space.
+If that is the case then use the `-s` option this will make the widget consume 50% of the screen instead of everything. (This issue is not present with multi monitor setups)
+
+#### closing the widget
+
+We don't use the Escape key to close the widget
+This is because we would need to consume the Escape key.
+This would result it the underlying widget from not beeing able to capture this event.
+Thus we decided to stricly use the backdrop/close button to close the widget.
 
 ### Commit hooks
 
