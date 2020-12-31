@@ -35,6 +35,7 @@ local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 local function load()
     local table = {
         volume = 50,
+        volume_muted = false,
         brightness = 100
     }
     if not filehandle.exists(file) then
@@ -49,6 +50,12 @@ local function save(table)
 end
 
 local function setup_state(state)
+    -- set volume mute state
+    if state.volume_muted then
+        awful.spawn("amixer -D pulse sset Master off")
+    else
+        awful.spawn("amixer -D pulse sset Master on")
+    end
     -- set the volume
     print("Setting volume: " .. state.volume)
     awful.spawn("amixer -D pulse sset Master " .. tostring(state.volume or 0) .. "%")
@@ -120,6 +127,13 @@ end
 signals.connect_volume(
     function(value)
         save_state.volume = value
+        save(save_state)
+    end
+)
+
+signals.connect_volume_is_muted(
+    function(is_muted)
+        save_state.volume_muted = is_muted
         save(save_state)
     end
 )
