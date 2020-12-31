@@ -103,6 +103,7 @@ function check_state(){
 function hot_reload(){
     file="$(mktemp /tmp/tde_widget_hot_reload_XXXXXXXXX.lua)"
     cp "$LUA_FILE" "$file"
+    # shellcheck disable=SC2001
     name="$(echo "$file" | sed 's/.lua$//g')"
 
     if [[ "$FAST" == "1" ]]; then
@@ -121,16 +122,16 @@ function hot_reload(){
 function listen(){
     notify_user "Starting listening to filesystem events for $LUA_FILE"
 
-    current_time="$(( $(date +%s) - $UPDATE_SPEED ))"
+    current_time="$(( $(date +%s) - UPDATE_SPEED ))"
 
     hot_reload
 
     inotifywait -m -e modify "$LUA_FILE" | 
-    while read file op; do
+    while read -r file; do
         # only reload every $UPDATE_SPEED seconds
         # otherwise we get overloaded with updates
         # which is taxing on the system
-        if [[ "$(date +%s)" -gt "$(( $current_time + $UPDATE_SPEED ))" || "$FAST" == "1" ]]; then
+        if [[ "$(date +%s)" -gt "$(( current_time + UPDATE_SPEED ))" || "$FAST" == "1" ]]; then
             hot_reload
             current_time="$(date +%s)"
         fi

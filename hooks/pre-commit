@@ -65,10 +65,10 @@ function run_linter_shell() {
 
   SHELL_LINTING_OUT=""
   SHELL_LINTING_EXIT_CODE=""
-  for file in $(find . -type f -name "*.sh"); do
+  for file in $(find . -type f -name "*.sh" ! -name "rofi-spotlight.sh"); do
     out="$(shellcheck "$file")"
     code="$?"
-    if [[ ! code == "0" ]]; then
+    if [[ ! "$code" == "0" ]]; then
       SHELL_LINTING_EXIT_CODE="$code"
     fi
     SHELL_LINTING_OUT="$SHELL_LINTING_OUT\n$out"
