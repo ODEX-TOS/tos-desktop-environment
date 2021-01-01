@@ -87,3 +87,13 @@ function test_data_structure_queue_very_large_dataset()
     end
     assert(list.size() == 1, "The queue size should be 1")
 end
+
+function test_queue_api_unit_tested()
+    local tree = queue()
+    local amount = 4
+    local result = tablelength(tree)
+    assert(
+        result == amount,
+        "You didn't test all queue api endpoints, please add them then update the amount to: " .. result
+    )
+end
