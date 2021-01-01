@@ -52,7 +52,8 @@ signals.connect_volume_update(
             function(out)
                 local muted = string.find(out, "off")
                 local volume = string.match(out, "(%d?%d?%d)%%")
-                signals.emit_volume(tonumber(volume))
+                -- if the sound system is down then default to a volume of 0
+                signals.emit_volume(tonumber(volume) or 0)
                 signals.emit_volume_is_muted(muted ~= nil or muted == "off")
                 if not startup and time() > (boot_time + 5) then
                     if _G.toggleVolOSD ~= nil then

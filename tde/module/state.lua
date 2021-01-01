@@ -36,12 +36,19 @@ local function load()
     local table = {
         volume = 50,
         volume_muted = false,
-        brightness = 100
+        brightness = 100,
+        mouse = {}
     }
     if not filehandle.exists(file) then
         return table
     end
-    return serialize.deserialize_from_file(file)
+    local result = serialize.deserialize_from_file(file)
+    -- in case someone modified the state object and some properties are faulty or errored outputs
+    result.volume = result.volume or table.volume
+    result.volume_muted = result.volume_muted or table.volume_muted
+    result.brightness = result.brightness or table.brightness
+    result.mouse = result.mouse or table.mouse
+    return result
 end
 
 local function save(table)
