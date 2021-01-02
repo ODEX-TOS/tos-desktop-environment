@@ -84,9 +84,15 @@ local function setup_state(state)
         function()
             awful.spawn.easy_async(
                 -- we add a sleep here because otherwise we don't have time to update the internal datastrucutres
-                "sh -c 'which autorandr && autorandr --load tde && tos theme set $(tos theme active) && sleep 1'",
+                "sh -c 'which autorandr && autorandr --load tde && sleep 1'",
                 function()
                     signals.emit_refresh_screen()
+                end
+            )
+            signals.connect_refresh_screen(
+                function()
+                    -- update our wallpaper
+                    awful.spawn("tos theme set $(tos theme active)")
                 end
             )
         end
