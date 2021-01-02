@@ -199,7 +199,6 @@ local function getCpuInfo()
     local processors = {}
     for index, line in ipairs(stdout) do
         if string.find(line, "^processor[%s]+:") then
-            print("Found processor at index: " .. index)
             table.insert(processors, index)
         end
     end

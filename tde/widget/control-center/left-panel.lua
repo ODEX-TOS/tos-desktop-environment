@@ -32,6 +32,7 @@ local apps = require("configuration.apps")
 local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local mat_icon = require("widget.material.icon")
+local signals = require("lib-tde.signals")
 
 -- body gets populated with a scrollbar widget once generated
 local body = {}
@@ -66,6 +67,25 @@ local left_panel_func = function(screen)
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
+
+  -- this is called when we need to update the screen
+  signals.connect_refresh_screen(
+    function()
+      print("Refreshing action center")
+      local scrn = left_panel.screen
+
+      -- the action center itself
+      left_panel.x = 0
+      left_panel.width = left_panel_width
+      left_panel.height = scrn.geometry.height
+
+      -- the backdrop
+      backdrop.x = scrn.geometry.x
+      backdrop.y = scrn.geometry.y
+      backdrop.width = scrn.geometry.width
+      backdrop.height = scrn.geometry.height
+    end
+  )
 
   left_panel.opened = false
   local grabber

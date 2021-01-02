@@ -43,6 +43,7 @@ end
 
 local gears = require("gears")
 awful = require("awful")
+awful.screen.set_auto_dpi_enabled(true)
 
 plugins = require("parser")(os.getenv("HOME") .. "/.config/tos/plugins.conf")
 tags = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")

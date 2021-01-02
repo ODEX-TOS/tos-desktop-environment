@@ -561,4 +561,24 @@ connections.connect_mouse_natural_scrolling = function(func)
     awesome.connect_signal("TDE::mouse::natural_scrolling", func)
 end
 
+--- Notify wiboxes when the screen layout is updated (so they can update their position)
+-- @staticfct emit_refresh_screen
+-- @usage -- Notify other TDE components about the screen update
+-- lib-tde.signals.emit_refresh_screen()
+connections.emit_refresh_screen = function()
+    awesome.emit_signal("TDE::screen:refresh")
+end
+
+--- Trigger a callback function when a wibox should update their position on the screen
+-- @tparam function func The callback function that will be called when the screen geometry changed
+-- @staticfct connect_refresh_screen
+-- @usage --
+-- lib-tde.signals.connect_refresh_screen(
+--    function ()
+--      print("Some screen updated")
+--    end)
+connections.connect_refresh_screen = function(func)
+    awesome.connect_signal("TDE::screen:refresh", func)
+end
+
 return connections

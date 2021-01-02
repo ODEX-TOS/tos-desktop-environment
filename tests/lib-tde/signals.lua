@@ -286,8 +286,21 @@ function test_emit_mouse_natural_scrolling()
     )
 end
 
+function test_connect_refresh_screen()
+    assert(signals.connect_refresh_screen, "Make sure the signal connect_refresh_screen exists")
+    assert(
+        type(signals.connect_refresh_screen) == "function",
+        "Make sure connect_refresh_screen is a signal and a function"
+    )
+end
+
+function test_emit_refresh_screen()
+    assert(signals.emit_refresh_screen, "Make sure the signal emit_refresh_screen exists")
+    assert(type(signals.emit_refresh_screen) == "function", "Make sure emit_refresh_screen is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 49
+    local amount = 51
     local result = tablelength(signals)
     assert(
         result == amount,
