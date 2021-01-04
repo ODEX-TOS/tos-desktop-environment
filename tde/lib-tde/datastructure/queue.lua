@@ -92,6 +92,9 @@ local function genList()
     -- @usage -- Return 'tde' from the queue
     -- queue.pop()
     list.pop = function()
+        if _queue_size < 1 then
+            return
+        end
         _queue_size = _queue_size - 1
         local poppedValue = _queue.head.value
         _queue.next()

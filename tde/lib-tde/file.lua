@@ -95,38 +95,39 @@ end
 
 -- TODO: unit test the file writing
 
---- Write data to a new file
--- @tparam string file The path to the file, can be both absolute or relative.
--- @tparam string data The data to put into the file
--- @treturn bool if the write was succesfull
--- @staticfct write
--- @usage -- This true
--- lib-tde.file.write("hallo.txt", "this is content in the file")
-local function write(file, data)
-  if type(file) ~= "string" then
-    return false
+--- Function equivalent to basename in POSIX systems
+--@param string str the path as a string
+-- @staticfct basename
+-- @usage -- This returns file.txt
+-- lib-tde.file.basename("/sys/class/power_supply/BAT0/file.txt")
+local function basename(str)
+  if type(str) == "string" then
+    local libgen = require("posix.libgen")
+    return libgen.basename(str)
   end
-  local fd = io.open(file, "a")
-  fd:write(data .. "\n")
-  fd:close()
-  return true
+  return nil
 end
 
---- Override the entire file
--- @tparam string file The path to the file, can be both absolute or relative.
--- @tparam string data The data to put into the file
--- @treturn bool if the write was succesfull
--- @staticfct overwrite
--- @usage -- This true
--- lib-tde.file.overwrite("hallo.txt", "this is content in the file")
-local function overwrite(file, data)
-  if type(file) ~= "string" then
-    return false
+--- Function equivalent to dirname in POSIX systems
+--@param string str the path as a string
+-- @staticfct dirname
+-- @usage -- This returns /sys/class/power_supply/BAT0
+-- lib-tde.file.dirname("/sys/class/power_supply/BAT0/file.txt")
+local function dirname(str)
+  if type(str) == "string" then
+    if string.sub(str, #str, #str) == "/" then
+      return str
+    end
+    local libgen = require("posix.libgen")
+    local result = libgen.dirname(str)
+
+    if string.sub(result, #result, #result) == "/" then
+      return result
+    end
+
+    return result .. "/"
   end
-  local fd = io.open(file, "w")
-  fd:write(data .. "\n")
-  fd:close()
-  return true
+  return nil
 end
 
 --- Check if a directory exists
@@ -143,6 +144,69 @@ local function dir_exists(dir)
     return exists(dir)
   end
   return exists(dir)
+end
+
+--- Recursivly create a directory
+-- @tparam string path The path to create
+-- @staticfct dir_create
+-- @usage
+-- lib-tde.file.dir_create(os.getenv("HOME") .. "/.cache/tde/some_dir")
+local function dir_create(path)
+  local stat = require("posix.sys.stat")
+  local split = require("lib-tde.function.common").split
+  local dir = dirname(path)
+  if dir_exists(dir) then
+    return
+  end
+  local components = split(dir, "/")
+
+  local builder = ""
+  if string.sub(dir, 1, 1) == "/" then
+    builder = "/"
+  end
+
+  for _, component in ipairs(components) do
+    builder = builder .. component .. "/"
+    if not dir_exists(builder) then
+      stat.mkdir(builder)
+    end
+  end
+end
+
+--- Override the entire file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam string data The data to put into the file
+-- @treturn bool if the write was succesfull
+-- @staticfct overwrite
+-- @usage -- This true
+-- lib-tde.file.overwrite("hallo.txt", "this is content in the file")
+local function overwrite(file, data)
+  if type(file) ~= "string" then
+    return false
+  end
+  dir_create(file)
+  local fd = io.open(file, "w")
+  fd:write(data .. "\n")
+  fd:close()
+  return true
+end
+
+--- Write data to a new file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam string data The data to put into the file
+-- @treturn bool if the write was succesfull
+-- @staticfct write
+-- @usage -- This true
+-- lib-tde.file.write("hallo.txt", "this is content in the file")
+local function write(file, data)
+  if type(file) ~= "string" then
+    return false
+  end
+  dir_create(file)
+  local fd = io.open(file, "a")
+  fd:write(data .. "\n")
+  fd:close()
+  return true
 end
 
 --- Get all lines from a file, returns an empty table if it doesn't exist
@@ -232,30 +296,15 @@ local function list_dir_full(str)
   -- traverse the directory
   for _, value in ipairs(list_dir(str)) do
     if file_exists(value) then
-      print(value)
       table.insert(files, value)
     else
       local filearr = list_dir_full(value)
       for _, val in ipairs(filearr) do
-        print(val)
         table.insert(files, val)
       end
     end
   end
   return files
-end
-
---- Function equivalent to basename in POSIX systems
---@param string str the path as a string
--- @staticfct basename
--- @usage -- This returns file.txt
--- lib-tde.file.basename("/sys/class/power_supply/BAT0/file.txt")
-local function basename(str)
-  if type(str) == "string" then
-    local name = string.gsub(str, "(.*/)(.*)", "%2")
-    return name
-  end
-  return nil
 end
 
 --- Function to remove a file for the filesystem
@@ -301,6 +350,8 @@ return {
   write = write,
   overwrite = overwrite,
   basename = basename,
+  dirname = dirname,
+  dir_create = dir_create,
   rm = rm,
   mktemp = mktemp,
   mktempdir = mktempdir

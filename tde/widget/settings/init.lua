@@ -337,6 +337,10 @@ local function make_nav()
   )
   table.insert(
     root.elements.settings_views,
+    make_view(icons.mouse, i18n.translate("Mouse"), require("widget.settings.mouse")())
+  )
+  table.insert(
+    root.elements.settings_views,
     make_view(icons.brush, i18n.translate("Theme"), require("widget.settings.theme")())
   )
   table.insert(

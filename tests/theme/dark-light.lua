@@ -36,7 +36,7 @@ local function rm_file(location)
 end
 
 function test_dark_light()
-    assert(type(require("tde.theme.icons.dark-light")) == "function")
+    assert(type(require("tde.theme.icons.dark-light")) == "function", "Make sure the theme dark-light toggler works")
 end
 
 function test_dark_light_light()
@@ -51,7 +51,7 @@ function test_dark_light_light()
     local result = darkLight(light, "dark")
     rm_file(light)
     rm_file(dark)
-    assert(result == light)
+    assert(result == light, "Make sure that " .. result .. " equals: " .. light)
 
     rm_file(light)
     rm_file(dark)
@@ -70,7 +70,7 @@ function test_dark_light_default_is_light()
     rm_file(light)
     rm_file(dark)
 
-    assert(result == light)
+    assert(result == light, "Make sure that " .. result .. " equals: " .. light)
 end
 
 function test_dark_light_dark()
@@ -84,7 +84,7 @@ function test_dark_light_dark()
     local result = darkLight(light, "light")
     rm_file(light)
     rm_file(dark)
-    assert(result == dark)
+    assert(result == dark, "Make sure that " .. result .. " equals: " .. dark)
 
     rm_file(light)
     rm_file(dark)

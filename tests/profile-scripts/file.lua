@@ -31,3 +31,8 @@ for _ = 1, 10000 do
     filehandle.exists("/etc/pacman.conf")
     filehandle.dir_exists("/etc")
 end
+
+local name = "/tmp/tde_widget_hot_reload_spAnC1g2k.lua"
+
+print(filehandle.basename(name))
+print(filehandle.dirname(name))

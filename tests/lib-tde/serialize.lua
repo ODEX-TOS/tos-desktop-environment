@@ -25,22 +25,37 @@
 local serialize = require("lib-tde.serialize")
 
 function test_serialize_api()
-    assert(type(serialize.deserialize) == "function")
-    assert(type(serialize.serialize) == "function")
-    assert(type(serialize.serialize_to_file) == "function")
-    assert(type(serialize.deserialize_from_file) == "function")
+    assert(type(serialize.deserialize) == "function", "Make sure serialize.deserialize exists")
+    assert(type(serialize.serialize) == "function", "Make sure serialize.serialize exists")
+    assert(type(serialize.serialize_to_file) == "function", "Make sure serialize.serialize_to_file exists")
+    assert(type(serialize.deserialize_from_file) == "function", "Make sure serialize.deserialize_from_file exists")
 end
 
 function test_serialize_basic_usage()
     local table = {1, 2, 3}
     local result = serialize.serialize(table)
     local deserialized = serialize.deserialize(result)
-    assert(serialize.serialize(deserialized) == result)
+    assert(
+        serialize.serialize(deserialized) == result,
+        "Make sure serializing the table to result in: " .. result .. " but got: " .. serialize.serialize(deserialized)
+    )
 end
 
 function test_serialize_basic_usage_2()
     local table = {a = "a", b = "b", c = "c"}
     local result = serialize.serialize(table)
     local deserialized = serialize.deserialize(result)
-    assert(serialize.serialize(deserialized) == result)
+    assert(
+        serialize.serialize(deserialized) == result,
+        "Make sure serialize the table to result in: " .. result .. " but got: " .. serialize.serialize(deserialized)
+    )
+end
+
+function test_serialize_api_unit_tested()
+    local amount = 4
+    local result = tablelength(serialize)
+    assert(
+        result == amount,
+        "You didn't test all serialize api endpoints, please add them then update the amount to: " .. result
+    )
 end

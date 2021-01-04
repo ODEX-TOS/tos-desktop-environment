@@ -119,7 +119,7 @@ local return_button = function()
 			{
 				icon = widget_icon_dir .. "battery-alert.svg",
 				app_name = i18n.translate("System notification"),
-				title = i18n.translate("Battery is dying!"),
+				title = i18n.translate("System notification"),
 				message = i18n.translate("Hey, I think we have a problem here. Save your work before it's to late!"),
 				urgency = "critical"
 			}

@@ -36,12 +36,15 @@ end
 -- TODO: remove this once the picom crash bug is fixed
 if not (general["weak_hardware"] == "1") and (os.getenv("TDE_ENV") == "production" or os.getenv("TDE_ENV") == "staging") then
   delayed_timer(
-    2,
+    5,
     function()
       -- picom crashed, we have to restart it again
       if not awesome.composite_manager_running then
         awful.spawn(apps.run_on_start_up[1])
       end
+      -- check the status of touchegg
+      -- TODO: find a better solution for this
+      awful.spawn([[sh -c 'test "$(pgrep touchegg | wc -l)" -lt 2 && touchegg']])
     end,
     5
   )

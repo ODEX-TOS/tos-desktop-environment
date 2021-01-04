@@ -30,11 +30,11 @@ function test_binary_tree_basics_string()
     tree.insert("hi")
     tree.insert("bob")
 
-    assert(tree.contains("hello"))
-    assert(tree.contains("hi"))
-    assert(tree.contains("bob"))
+    assert(tree.contains("hello"), "The tree should contain 'hello'")
+    assert(tree.contains("hi"), "The tree should contain 'hi'")
+    assert(tree.contains("bob"), "The tree should contain 'bob'")
 
-    assert(not tree.contains("eve"))
+    assert(not tree.contains("eve"), "The tree shouldn't contain 'eve'")
 end
 
 function test_binary_tree_basics_number()
@@ -43,11 +43,11 @@ function test_binary_tree_basics_number()
     tree.insert(20)
     tree.insert(30)
 
-    assert(tree.contains(10))
-    assert(tree.contains(20))
-    assert(tree.contains(30))
+    assert(tree.contains(10), "The tree should contain '10'")
+    assert(tree.contains(20), "The tree should contain '20'")
+    assert(tree.contains(30), "The tree should contain '30'")
 
-    assert(not tree.contains(100))
+    assert(not tree.contains(100), "The tree shouldn't contain '100'")
 end
 
 function test_binary_tree_basics_removal()
@@ -57,12 +57,12 @@ function test_binary_tree_basics_removal()
     tree.insert(20)
     tree.insert(30)
 
-    assert(tree.contains(10))
-    assert(tree.contains(20))
-    assert(tree.contains(30))
+    assert(tree.contains(10), "The tree should contain '10'")
+    assert(tree.contains(20), "The tree should contain '20'")
+    assert(tree.contains(30), "The tree should contain '30'")
 
-    assert(tree.remove(10) == 10)
-    assert(not tree.contains(10))
+    assert(tree.remove(10) == 10, "The tree couldn't remove the element: '10'")
+    assert(not tree.contains(10), "The tree shouldn't contain the element: '10' after removal")
 end
 
 function test_binary_tree_massive()
@@ -73,6 +73,16 @@ function test_binary_tree_massive()
     end
 
     for i = 1, 1000 do
-        assert(tree.contains(i))
+        assert(tree.contains(i), "The element: '" .. tostring(i) .. "' should exist")
     end
+end
+
+function test_binary_tree_api_unit_tested()
+    local tree = binarytree()
+    local amount = 3
+    local result = tablelength(tree)
+    assert(
+        result == amount,
+        "You didn't test all binary tree api endpoints, please add them then update the amount to: " .. result
+    )
 end

@@ -26,9 +26,9 @@
 local logger = require("tde.lib-tde.logger")
 
 function test_logger_settings()
-    assert(logger)
-    assert(logger.warn)
-    assert(logger.error)
-    assert(logger.debug)
-    assert(logger.info)
+    assert(logger, "Make sure the logger api exists")
+    assert(logger.warn, "Make sure that the logger api has a warn message")
+    assert(logger.error, "Make sure the logger api has a error message")
+    assert(logger.debug, "Make sure the logger api has a debug message")
+    assert(logger.info, "Make sure the logger api has a info message")
 end

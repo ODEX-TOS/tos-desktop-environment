@@ -35,19 +35,24 @@ if installed("installer") then
     offset = 1
 end
 
-local function update_entry(name)
+local function name_to_config(name)
+    return string.lower(name:gsub(" ", "-"):gsub(".desktop", ""))
+end
+
+local function update_entry(file, name)
+    -- some desktop icons don't have a name but only a file
+    name = name or file
     local config = os.getenv("HOME") .. "/.cache/tde/desktop.conf"
     local data = ""
     local found = false
     local widget_pos = desktop_icon.location_from_name(name)
+    local stored_name = name_to_config(file)
 
     for _, value in ipairs(filehandle.lines(config)) do
-        if common.split(value, " ")[1] == name then
+        if common.split(value, " ")[1] == stored_name then
             if widget_pos.x ~= nil and widget_pos.y ~= nil then
                 found = true
-                data =
-                    data ..
-                    name:gsub(" ", "-") .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
+                data = data .. stored_name .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
             end
         else
             if value and not (value == "") then
@@ -57,7 +62,7 @@ local function update_entry(name)
     end
 
     if not found then
-        data = data .. name:gsub(" ", "-") .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
+        data = data .. stored_name .. " " .. tostring(widget_pos.x) .. " " .. tostring(widget_pos.y) .. "\n"
     end
 
     filehandle.overwrite(config, data)
@@ -66,8 +71,9 @@ end
 local function delete_entry(name)
     local config = os.getenv("HOME") .. "/.cache/tde/desktop.conf"
     local data = ""
+    local stored_name = name_to_config(name)
     for _, value in ipairs(filehandle.lines(config)) do
-        if not (common.split(value, " ")[1] == name) and value and not (value == "") then
+        if not (common.split(value, " ")[1] == stored_name) and value and not (value == "") then
             data = data .. value .. "\n"
         end
     end
@@ -78,9 +84,8 @@ local function find_pos_by_name(name)
     local config = os.getenv("HOME") .. "/.cache/tde/desktop.conf"
     for _, value in ipairs(filehandle.lines(config)) do
         local data = common.split(value, " ")
-        local lower_name = name:gsub(" ", "-"):gsub(".desktop", "")
-        data[1] = string.lower(data[1])
-        if data[1] == lower_name then
+        local stored_name = name_to_config(name)
+        if data[1] == stored_name then
             local x = tonumber(data[2])
             local y = tonumber(data[3])
             return {x = x, y = y}
@@ -107,7 +112,7 @@ if filehandle.dir_exists(desktopLocation) then
             x,
             y,
             function(name)
-                update_entry(name)
+                update_entry(filehandle.basename(file), name)
             end
         )
     end

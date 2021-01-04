@@ -174,7 +174,7 @@ end
 -- @usage -- Notify that you changed the state of volume
 -- lib-tde.signals.emit_volume_update()
 connections.emit_volume_update = function(value)
-    awesome.emit_signal("volume::update::request", value)
+    awesome.emit_signal("volume::update::request", value or 0)
 end
 
 --- Trigger a callback function when a client requests a volume update
@@ -496,6 +496,89 @@ end
 --    end)
 connections.connect_exit = function(func)
     awesome.connect_signal("exit", func)
+end
+
+--- Notify other TDE components about the change in mouse accellaration
+-- @tparam table the mouse id and speed value
+-- @staticfct emit_mouse_accellaration
+-- @usage -- Notify other TDE components about the change in mouse accellaration
+-- lib-tde.signals.emit_mouse_accellaration({id: 11, speed: 1.5})
+connections.emit_mouse_accellaration = function(value)
+    awesome.emit_signal("TDE::mouse::accellaration", value)
+end
+
+--- Trigger a callback function when the mouse accellaration changed
+-- @tparam function func The callback function that will be called when the mouse accellaration changed
+-- @staticfct connect_mouse_accellaration
+-- @usage -- notify other components when the mouse accellaration changed
+-- lib-tde.signals.connect_mouse_accellaration(
+--    function (value)
+--      print("Mouse accellaration settings: " .. value.id .. " with speed:" .. value.speed)
+--    end)
+connections.connect_mouse_accellaration = function(func)
+    awesome.connect_signal("TDE::mouse::accellaration", func)
+end
+
+--- Notify other TDE components about the change in mouse speed
+-- @tparam table the mouse id and speed value
+-- @staticfct emit_mouse_speed
+-- @usage -- Notify other TDE components about the change in mouse speed
+-- lib-tde.signals.emit_mouse_speed({id: 11, speed: 1.5})
+connections.emit_mouse_speed = function(value)
+    awesome.emit_signal("TDE::mouse::speed", value)
+end
+
+--- Trigger a callback function when the mouse speed changed
+-- @tparam function func The callback function that will be called when the mouse speed changed
+-- @staticfct connect_mouse_speed
+-- @usage -- notify other components when the mouse speed changed
+-- lib-tde.signals.connect_mouse_speed(
+--    function (value)
+--      print("Mouse speed settings: " .. value.id .. " with speed:" .. value.speed)
+--    end)
+connections.connect_mouse_speed = function(func)
+    awesome.connect_signal("TDE::mouse::speed", func)
+end
+
+--- Notify other TDE components about the change in mouse natural scrolling
+-- @tparam table the mouse id and natural scrolling state
+-- @staticfct emit_mouse_natural_scrolling
+-- @usage -- Notify other TDE components about the change in mouse natural scrolling state
+-- lib-tde.signals.emit_mouse_speed({id: 11, state: true})
+connections.emit_mouse_natural_scrolling = function(value)
+    awesome.emit_signal("TDE::mouse::natural_scrolling", value)
+end
+
+--- Trigger a callback function when the mouse natural scrolling state changed
+-- @tparam function func The callback function that will be called when the mouse natural scrolling state changed
+-- @staticfct connect_mouse_natural_scrolling
+-- @usage -- notify other components when the mouse natural scrolling state changed
+-- lib-tde.signals.connect_mouse_natural_scrolling(
+--    function (value)
+--      print("Mouse natural scrolling state settings: " .. value.id .. " with state:" .. value.state)
+--    end)
+connections.connect_mouse_natural_scrolling = function(func)
+    awesome.connect_signal("TDE::mouse::natural_scrolling", func)
+end
+
+--- Notify wiboxes when the screen layout is updated (so they can update their position)
+-- @staticfct emit_refresh_screen
+-- @usage -- Notify other TDE components about the screen update
+-- lib-tde.signals.emit_refresh_screen()
+connections.emit_refresh_screen = function()
+    awesome.emit_signal("TDE::screen:refresh")
+end
+
+--- Trigger a callback function when a wibox should update their position on the screen
+-- @tparam function func The callback function that will be called when the screen geometry changed
+-- @staticfct connect_refresh_screen
+-- @usage --
+-- lib-tde.signals.connect_refresh_screen(
+--    function ()
+--      print("Some screen updated")
+--    end)
+connections.connect_refresh_screen = function(func)
+    awesome.connect_signal("TDE::screen:refresh", func)
 end
 
 return connections

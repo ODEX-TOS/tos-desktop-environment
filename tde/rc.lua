@@ -43,6 +43,7 @@ end
 
 local gears = require("gears")
 awful = require("awful")
+awful.screen.set_auto_dpi_enabled(true)
 
 plugins = require("parser")(os.getenv("HOME") .. "/.config/tos/plugins.conf")
 tags = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")
@@ -91,7 +92,7 @@ if general["break"] == "1" then
 end
 
 require("module.battery-notifier")
-require("collision")()
+_G.collision = require("collision")()
 
 -- Setup all configurations
 require("configuration.client")
@@ -171,6 +172,8 @@ end
 -- restore the last state
 require("module.state")
 require("tutorial")
+
+require("module.dev-widget-update")
 
 require("lib-tde.signals").connect_exit(
   function()

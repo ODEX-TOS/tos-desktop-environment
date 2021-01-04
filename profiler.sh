@@ -37,6 +37,7 @@ FILE=""
 FUNCTIONS_AMOUNT="100000"
 OUTPUT=""
 REALTIME=""
+NO_FD=""
 
 function help() {
   name=$(basename "$0" .sh)
@@ -47,6 +48,7 @@ function help() {
   echo -e "$name -t | --tde <time> \t\tMaximum time to run tde for"
   echo -e "$name -f | --file <filename>\t\tRun a custom lua file (as the benchmark)"
   echo -e "$name -F | --functions <x> \t\tReturn the top x functions"
+  echo -e "$name -fd | --filedescriptor \tSuppress all filedescriptor output from execution"
   echo -e "$name -o | --output <filename> \tStore the data in filename"
   echo -e "$name -r | --realtime \t\tReturn the time a function took in real time instead of utilized cpu time"
 }
@@ -77,6 +79,10 @@ while true; do
       shift
       shift
       ;;
+    "-fd" | "--filedescriptor")
+      NO_FD="1"
+      shift
+    ;;
     "-o" | "--output")
       OUTPUT="$2"
       shift
@@ -101,4 +107,4 @@ if [[ "$CLEAN" == "1" && -f "$FILE" ]]; then
   exit "$?"
 fi
 
-TOTAL_TIME="$TOTAL_TIME" OUTPUT="$OUTPUT" REALTIME="$REALTIME" FUNCTIONS_AMOUNT="$FUNCTIONS_AMOUNT" FILE="$FILE" "$LUA" profiler/init.lua
+TOTAL_TIME="$TOTAL_TIME" NO_FD="$NO_FD" OUTPUT="$OUTPUT" REALTIME="$REALTIME" FUNCTIONS_AMOUNT="$FUNCTIONS_AMOUNT" FILE="$FILE" "$LUA" profiler/init.lua

@@ -77,15 +77,9 @@ local LOG_INFO = "\27[0;32m[ INFO "
 
 local dir = os.getenv("HOME") .. "/.cache/tde"
 local filename = dir .. "/stdout.log"
+local filename_error = dir .. "/error.log"
 
--- create the tde directory
-if not filehandle.dir_exists(dir) then
-	io.popen("mkdir -p " .. dir)
-end
--- make the file empty on startup to reduce disk size
-if filehandle.dir_exists(dir) then
-	filehandle.overwrite(filename, "")
-end
+filehandle.overwrite(filename, "")
 
 -- helper function to convert a table to a string
 -- WARN: For internal use only, this should never be exposed to the end user
@@ -130,7 +124,7 @@ end
 print = function(arg, log_type, depth)
 	depth = depth or 3
 	-- validate the input
-	if arg == nil then
+	if arg == nil or _G.UNIT_TESTING_ACTIVE == true then
 		return
 	end
 	if type(arg) == "table" then
@@ -140,10 +134,15 @@ print = function(arg, log_type, depth)
 		arg = tostring(arg)
 	end
 
+	local log = log_type or LOG_INFO
+
 	-- effective logging
 	local file = io.open(filename, "a")
+	local file_error
+	if log == LOG_ERROR then
+		file_error = io.open(filename_error, "a")
+	end
 
-	local log = log_type or LOG_INFO
 	local out = os.date("%H:%M:%S") .. "." .. math.floor(time() * 10000) % 10000
 	local statement = log .. out:gsub("\n", "") .. " ]\27[0m "
 	for line in arg:gmatch("[^\r\n]+") do
@@ -153,9 +152,15 @@ print = function(arg, log_type, depth)
 		if file ~= nil then
 			file:write(statement .. line .. "\n")
 		end
+		if file_error ~= nil and log == LOG_ERROR then
+			file_error:write(statement .. line .. "\n")
+		end
 	end
 	if file ~= nil then
 		file:close()
+	end
+	if file_error ~= nil then
+		file_error:close()
 	end
 end
 

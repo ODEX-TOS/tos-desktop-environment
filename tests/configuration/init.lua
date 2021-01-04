@@ -23,3 +23,4 @@
 --SOFTWARE.
 ]]
 require("tests.configuration.apps")
+require("tests.configuration.mod-key")

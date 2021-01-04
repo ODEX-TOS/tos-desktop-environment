@@ -27,9 +27,18 @@ local magic = require("tde.lib-tde.imagemagic")
 -- TODO: design tests to make sure our api calls to imagemagic work
 
 function test_imagemagic_api()
-    assert(type(magic.scale) == "function")
-    assert(type(magic.grayscale) == "function")
-    assert(type(magic.transparent) == "function")
-    assert(type(magic.compress) == "function")
-    assert(type(magic.convert) == "function")
+    assert(type(magic.scale) == "function", "Make sure the scale function exists in the magic api")
+    assert(type(magic.grayscale) == "function", "Make sure the grayscale function exists in the magic api")
+    assert(type(magic.transparent) == "function", "Make sure the transparent function exists in the magic api")
+    assert(type(magic.compress) == "function", "Make sure the compress function exists in the magic api")
+    assert(type(magic.convert) == "function", "Make sure the convert function exists in the magic api")
+end
+
+function test_imagemagic_api_unit_tested()
+    local amount = 5
+    local result = tablelength(magic)
+    assert(
+        result == amount,
+        "You didn't test all magic api endpoints, please add them then update the amount to: " .. result
+    )
 end

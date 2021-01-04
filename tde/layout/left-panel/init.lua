@@ -25,6 +25,7 @@
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
+local signals = require("lib-tde.signals")
 
 local bottom_panel = function(screen, offset)
   local action_bar_width = dpi(45) -- 48
@@ -44,6 +45,18 @@ local bottom_panel = function(screen, offset)
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
+
+  -- this is called when we need to update the screen
+  signals.connect_refresh_screen(
+    function()
+      print("Refreshing left-panel")
+      local scrn = panel.screen
+      panel.x = scrn.geometry.x
+      panel.y = scrn.geometry.y + offsetY
+      panel.width = action_bar_width
+      panel.height = scrn.geometry.height
+    end
+  )
 
   panel:struts(
     {

@@ -152,8 +152,10 @@ local function genList()
     -- @usage -- Move head to the value of next
     -- linkedList.next() -- list.head is now list.head.next
     list.next = function()
-        list.head.next.previous = list.head
-        list.head = list.head.next
+        if list.head.next then
+            list.head.next.previous = list.head
+            list.head = list.head.next
+        end
     end
 
     --- Move the current pointer to the previous value
@@ -161,8 +163,10 @@ local function genList()
     -- @usage -- Move head to the value of previous
     -- linkedList.previous() -- list.head is now list.head.previous
     list.previous = function()
-        list.head.previous.next = list.head
-        list.head = list.head.previous
+        if list.head.previous then
+            list.head.previous.next = list.head
+            list.head = list.head.previous
+        end
     end
 
     --- Insert a new item inbetween list.head and list.head.next

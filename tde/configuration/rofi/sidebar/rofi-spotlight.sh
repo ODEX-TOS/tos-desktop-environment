@@ -324,11 +324,15 @@ then
 	
 		if [[ "$@" == *\?\? ]]
 		then
+			# shellcheck disable=SC1065,SC1073
 			coproc ( "$OPENER" "${QUERY%\/* \?\?}"  > /dev/null 2>&1 )
+			# shellcheck disable=SC1064
 			exec 1>&-
 			exit;
 		else
-			coproc ( "$OPENER"" "$@"  > /dev/null 2>&1 )
+			# shellcheck disable=SC1065,SC1073
+			coproc ( "$OPENER" "$@"  > /dev/null 2>&1 )
+			# shellcheck disable=SC1064
 			exec 1>&-
 			exit;
 		fi

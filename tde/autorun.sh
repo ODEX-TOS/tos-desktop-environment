@@ -55,10 +55,6 @@ if grep -q "bluetooth=false" ~/.config/tos/theme; then
         pgrep bluetoothctl &>/dev/null || bluetoothctl power off
 fi
 
-if [[ "$(command -v libinput-gestures)" ]]; then
-        pgrep bluetoothctl &>/dev/null || libinput-gestures &
-fi
-
 # launch a polkit authentication manager
 if [[ "$(command -v lxsession)" ]]; then
     pgrep lxsession || lxsession -s TOS -e TDE &
@@ -80,6 +76,9 @@ if [[ -f "/usr/lib/kdeconnectd" ]]; then
     pgrep kdeconnectd || /usr/lib/kdeconnectd &
 fi
 
+if [[ "$(command -v touchegg)" ]]; then
+    [[ "$(pgrep touchegg | wc -l)" -lt 2 ]] && touchegg &
+fi
 
 # autostart user scripts if that directory exists
 if [[ -d "$userlocation" ]]; then

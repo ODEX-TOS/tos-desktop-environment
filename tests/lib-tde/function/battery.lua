@@ -25,21 +25,30 @@
 local battery = require("tde.lib-tde.function.battery")
 
 function test_lib_tde_battery()
-    assert(battery)
-    assert(type(battery) == "table")
+    assert(battery, "The battery api should exist")
+    assert(type(battery) == "table", "The battery api should be in a list")
 end
 
 function test_lib_tde_battery_exposior_path()
-    assert(battery.getBatteryPath)
-    assert(type(battery.getBatteryPath) == "function")
+    assert(battery.getBatteryPath, "Finding the active battery should exist")
+    assert(type(battery.getBatteryPath) == "function", "Finding the active battery should be a function")
 end
 
 function test_lib_tde_battery_is_charging()
-    assert(battery.isBatteryCharging)
-    assert(type(battery.isBatteryCharging) == "function")
+    assert(battery.isBatteryCharging, "Charging the battery should exist")
+    assert(type(battery.isBatteryCharging) == "function", "Charging the battery should be a function")
 end
 
 function test_lib_tde_battery_percentage()
-    assert(battery.getBatteryPercentage)
-    assert(type(battery.getBatteryPercentage) == "function")
+    assert(battery.getBatteryPercentage, "Getting the battery percentage should exist")
+    assert(type(battery.getBatteryPercentage) == "function", "Getting the battery percentage should be a function")
+end
+
+function test_battery_api_unit_tested()
+    local amount = 3
+    local result = tablelength(battery)
+    assert(
+        result == amount,
+        "You didn't test all battery api endpoints, please add them then update the amount to: " .. result
+    )
 end

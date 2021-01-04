@@ -22,33 +22,31 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+local mouse = require("tde.lib-tde.mouse")
 
--- Load these libraries (if you haven't already)
+function test_mouse_api_exists()
+    assert(mouse.getInputDevices, "The getInputDevices function doesn't exist")
+    assert(mouse.setAccellaration, "The getInputDevices function doesn't exist")
+    assert(mouse.setMouseSpeed, "The getInputDevices function doesn't exist")
+    assert(mouse.setNaturalScrolling, "The getInputDevices function doesn't exist")
+end
 
-local gears = require("gears")
-local wibox = require("wibox")
+function test_mouse_input_device_return_correct()
+    local result = mouse.getInputDevices()
+    assert(type(result) == "table", "The list of input devices should be a table")
 
--- Create the box
-local anti_aliased_wibox = wibox({visible = true, ontop = true, type = "normal", height = 100, width = 100})
+    -- only run this when a mouse was found
+    if #result > 0 then
+        assert(type(result[1].name) == "string", "The input device list should have a name attribute")
+        assert(type(result[1].id) == "number", "The input device list should have a id attribute")
+    end
+end
 
--- Place it at the center of the screen
-awful.placement.centered(anti_aliased_wibox)
-
--- Set transparent bg
-anti_aliased_wibox.bg = "#00000000"
-
--- Put its items in a shaped container
-anti_aliased_wibox:setup {
-    -- Container
-    {
-        -- Items go here
-        awful.spawn('st'),
-        -- ...
-        layout = wibox.layout.fixed.vertical
-    },
-    -- The real background color
-    bg = "#111111",
-    -- The real, anti-aliased shape
-    shape = gears.shape.rounded_rect,
-    widget = wibox.container.background()
-}
+function test_mouse_api_unit_tested()
+    local amount = 4
+    local result = tablelength(mouse)
+    assert(
+        result == amount,
+        "You didn't test all mouse api endpoints, please add them then update the amount to: " .. result
+    )
+end

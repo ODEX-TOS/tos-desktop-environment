@@ -36,7 +36,17 @@ local function profile_file()
         profile.setclock(require("socket").gettime)
     end
     profile.start()
+    rlprnt = print
+
+    if os.getenv("NO_FD") == "1" then
+        print = function(_, _)
+        end
+    end
+
     require(os.getenv("FILE"):gsub(".lua", ""):gsub("/", "."))
+
+    print = rlprnt
+
     profile.stop()
     local res = profile.report(tonumber(os.getenv("FUNCTIONS_AMOUNT")) or 1000)
     if not (os.getenv("OUTPUT") == "") then

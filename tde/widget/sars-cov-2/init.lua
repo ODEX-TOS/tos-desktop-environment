@@ -95,18 +95,16 @@ local covid_icon_widget =
 
 local weather_report =
   wibox.widget {
-  expand = "none",
+  --expand = "none",
   layout = wibox.layout.fixed.vertical,
-  {
-    wibox.widget {
-      wibox.container.margin(covid_header, dpi(10), dpi(10), dpi(10), dpi(10)),
-      bg = beautiful.bg_modal_title,
-      shape = function(cr, width, height)
-        gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 6)
-      end,
-      widget = wibox.container.background
-    },
-    layout = wibox.layout.fixed.vertical
+  bg = beautiful.bg_modal,
+  wibox.widget {
+    wibox.container.margin(covid_header, dpi(5), dpi(5), dpi(3), dpi(3)),
+    bg = beautiful.bg_modal_title,
+    shape = function(cr, width, height)
+      gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 6)
+    end,
+    widget = wibox.container.background
   },
   {
     {
@@ -128,6 +126,7 @@ local weather_report =
           covid_deaths
         },
         margins = dpi(4),
+        bg = beautiful.bg_modal,
         widget = wibox.container.margin
       }
     },

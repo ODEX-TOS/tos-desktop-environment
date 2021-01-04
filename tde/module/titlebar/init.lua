@@ -948,7 +948,7 @@ function nice.initialize(args)
                 c.shape = function(cr, w, h)
                     gears.shape.rectangle(cr, w, h)
                 end
-            elseif #s.tiled_clients >= 2 or (c.floating or c.first_tag.layout.name == "floating") then
+            elseif (c.floating or c.first_tag.layout.name == "floating") then
                 awful.titlebar.show(c, "top")
                 c.shape = function(cr, w, h)
                     gears.shape.rectangle(cr, w, h)

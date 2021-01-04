@@ -28,6 +28,7 @@ local beautiful = require("beautiful")
 
 local dpi = require("beautiful").xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
+local signals = require("lib-tde.signals")
 
 local scrollbar = require("widget.scrollbar")
 
@@ -94,6 +95,25 @@ local right_panel = function(screen)
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
+
+  -- this is called when we need to update the screen
+  signals.connect_refresh_screen(
+    function()
+      print("Refreshing action center")
+      local scrn = panel.screen
+
+      -- the action center itself
+      panel.x = scrn.geometry.width - panel_width
+      panel.width = panel_width
+      panel.height = scrn.geometry.height
+
+      -- the backdrop
+      backdrop.x = scrn.geometry.x
+      backdrop.y = scrn.geometry.y
+      backdrop.width = scrn.geometry.width
+      backdrop.height = scrn.geometry.height
+    end
+  )
 
   panel.opened = false
 

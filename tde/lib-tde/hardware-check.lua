@@ -118,10 +118,10 @@ end
 -- @usage -- This True for TOS based systems
 -- lib-tde.hardware-check.has_package_installed("linux-tos")
 local function has_package_installed(name)
-    if name == "" or name == nil then
+    if name == "" or not (type(name) == "string") then
         return false
     end
-    local _, returnValue = osExecute("pacman -Q " .. name)
+    local _, returnValue = osExecute("pacman -Q " .. name .. " &>/dev/null")
     return returnValue == 0
 end
 
@@ -190,29 +190,36 @@ end
 -- @usage -- For example, 8 (cores), 16 (threads), "AMD Ryzen 7 PRO 5800X", 3000(MHz)
 -- lib-tde.hardware-check.getCpuInfo()
 local function getCpuInfo()
-    local length = 13
-    local stdout = fileHandle.lines("/proc/cpuinfo", nil, length)
-    if #stdout < length then
-        return
-    end
+    local stdout = fileHandle.lines("/proc/cpuinfo")
 
     local name = string.gmatch(stdout[5], ": (.*)$")()
     local frequency = string.gmatch(stdout[8], "%d+")()
-    local threads = string.gmatch(stdout[11], "%d+")()
-    local cores = string.gmatch(stdout[13], "%d+")()
-    return tonumber(cores), tonumber(threads), name, tonumber(frequency)
+
+    -- find all cpu's (some systems have mutli cpu setups)
+    local processors = {}
+    for index, line in ipairs(stdout) do
+        if string.find(line, "^processor[%s]+:") then
+            table.insert(processors, index)
+        end
+    end
+
+    local threads = #processors
+    -- TODO: cores is calculated correctly for hardware with one cpu
+    -- However, when using multiple cpu's it only shows the core count of the first
+    local cores = tonumber(string.gmatch(stdout[13], "%d+")()) or threads
+    return cores, threads, name, tonumber(frequency)
 end
 
 --- Returns if the hardware is to weak, eg little amount of ram, cpu etc
 -- @return bool true if the hardware is below a certain treshold
 -- @staticfct isWeakHardware
--- @usage -- If ram is below 4G
+-- @usage -- If ram is below 1G or only one cpu core is present
 -- lib-tde.hardware-check.isWeakHardware()
 local function isWeakHardware()
     local _, ramtotal = getRamInfo()
     local _, threads = getCpuInfo()
-    local minRamInKB = 4 * 1024 * 1024
-    return (threads < 3) or (ramtotal < minRamInKB)
+    local minRamInKB = 1 * 1024 * 1024
+    return (threads < 2) or (ramtotal < minRamInKB)
 end
 
 --- Returns The frequency of the display panel in Herts, for example 60 Hz

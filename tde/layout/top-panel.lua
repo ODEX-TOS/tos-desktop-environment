@@ -29,6 +29,7 @@ local gears = require("gears")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local hardware = require("lib-tde.hardware-check")
+local signals = require("lib-tde.signals")
 
 local dpi = require("beautiful").xresources.apply_dpi
 
@@ -244,6 +245,18 @@ local TopPanel = function(s, offset, controlCenterOnly)
         top = dpi(26) -- 48
       }
     }
+  )
+
+  -- this is called when we need to update the screen
+  signals.connect_refresh_screen(
+    function()
+      print("Refreshing top-panel")
+      local scrn = panel.screen
+      panel.x = scrn.geometry.x + offsetx
+      panel.y = scrn.geometry.y
+      panel.width = scrn.geometry.width - offsetx
+      panel.height = dpi(26)
+    end
   )
 
   panel:struts(

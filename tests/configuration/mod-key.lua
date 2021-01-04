@@ -188,3 +188,17 @@ function test_configuration_mod_key_clipboard()
     assert(mod.clipboard)
     assert(type(mod.clipboard) == "string")
 end
+
+function test_configuration_mod_key_settings()
+    assert(mod.settings)
+    assert(type(mod.settings) == "string")
+end
+
+function test_configuration_mod_key_api_unit_tested()
+    local amount = 34
+    local result = tablelength(mod)
+    assert(
+        result == amount,
+        "You didn't test all modifier keys endpoints, please add them then update the amount to: " .. result
+    )
+end
