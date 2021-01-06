@@ -75,9 +75,8 @@ return {
           filesystem.get_configuration_dir() .. "/configuration/rofi/appmenu/drun.rasi",
     rofidpimenu = "bash /etc/xdg/tde/dpi.sh",
     rofiwifimenu = "bash /etc/xdg/tde/wifi.sh" .. " " .. screen.primary.dpi,
-    -- TODO: once light-locker works again remove this comment
-    --lock = "light-locker-command -l",
-    lock = "dm-tool lock",
+    lock = "light-locker-command -l",
+    --lock = "dm-tool lock",
     quake = (os.getenv("TERMINAL") or "st") .. " -T QuakeTerminal",
     duplicate_screens = "bash /etc/xdg/tde/xrandr-duplicate.sh"
   },

@@ -38,10 +38,9 @@ function run() {
 
 setxkbmap "$(cut -d= -f2 /etc/vconsole.conf | cut -d- -f1)"
 
-# TODO: once light-locker works again remove these comments
-#if [[ "$(command -v light-locker)" ]]; then
-#    light-locker --no-lock-on-suspend &>/dev/null &
-#fi
+if [[ "$(command -v light-locker)" ]]; then
+    light-locker --no-lock-on-suspend &>/dev/null &
+fi
 
 if [[ "$(command -v udiskie)" ]]; then
     pgrep udiskie &>/dev/null || udiskie &>/dev/null &
