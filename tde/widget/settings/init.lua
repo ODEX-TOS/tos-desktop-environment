@@ -35,6 +35,11 @@ local plugins = require("lib-tde.plugin-loader")("settings")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
 local scrollbar = require("widget.scrollbar")
+local animate = require("lib-tde.animations").createAnimObject
+local config = require("config")
+
+local keyconfig = require("configuration.keys.mod")
+local modKey = keyconfig.modKey
 
 root.elements = {}
 root.widget = {}
@@ -60,6 +65,15 @@ if grabber == nil then
       awful.key {
         modifiers = {},
         key = "Escape",
+        on_press = function()
+          if root.elements.settings then
+            root.elements.settings.close()
+          end
+        end
+      },
+      awful.key {
+        modifiers = {modKey},
+        key = keyconfig.settings,
         on_press = function()
           if root.elements.settings then
             root.elements.settings.close()
@@ -177,7 +191,7 @@ local function enable_view_by_index(i, s, loc)
       return
     end
     -- center the hub in height
-    root.elements.settings.y = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
+    local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
     if loc == "right" then
       root.elements.settings.x = (s.workarea.width - settings_width - m) + s.workarea.x
     else
@@ -188,6 +202,9 @@ local function enable_view_by_index(i, s, loc)
       body:reset()
     end
     root.elements.settings.visible = true
+
+    root.elements.settings.y = s.geometry.y - settings_height
+    animate(config.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
   end
 end
 
@@ -441,6 +458,7 @@ local function make_nav()
 end
 
 return function()
+  local scrn = screen.primary
   local hub =
     wibox(
     {
@@ -450,7 +468,7 @@ return function()
       bg = beautiful.background.hue_800,
       width = settings_width,
       height = settings_height,
-      screen = awful.screen.primary
+      screen = screen.primary
     }
   )
 
@@ -486,7 +504,16 @@ return function()
 
   hub.close = function()
     root.elements.settings_grabber:stop()
-    hub.visible = false
+
+    animate(
+      config.anim_speed,
+      hub,
+      {y = scrn.geometry.y - settings_height},
+      "outCubic",
+      function()
+        hub.visible = false
+      end
+    )
   end
   hub.enable_view_by_index = enable_view_by_index
   hub.close_views = close_views
