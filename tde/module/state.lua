@@ -92,7 +92,7 @@ local function setup_state(state)
             signals.connect_refresh_screen(
                 function()
                     -- update our wallpaper
-                    awful.spawn.easy_async_with_shell("tos theme set $(tos theme active)")
+                    awful.spawn("sh -c 'tos theme set $(tos theme active)'")
                 end
             )
         end

@@ -28,26 +28,17 @@ local mat_slider = require("widget.material.progress_bar")
 local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
-local config = require("config")
-local hardware = require("lib-tde.hardware-check")
 local signals = require("lib-tde.signals")
-local delayed_timer = require("lib-tde.function.delayed-timer")
 local slider =
   wibox.widget {
   read_only = true,
   widget = mat_slider
 }
 
-delayed_timer(
-  config.ram_poll,
-  function()
-    local usage, total = hardware.getRamInfo()
+signals.connect_ram_usage(
+  function(usage)
     slider:set_value(usage)
-    signals.emit_ram_usage(usage)
-    signals.emit_ram_total(total)
-    print("Ram usage: " .. usage .. "%")
-  end,
-  config.ram_startup_delay
+  end
 )
 
 local ram_meter =

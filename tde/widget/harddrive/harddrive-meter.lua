@@ -28,10 +28,7 @@ local mat_slider = require("widget.material.progress_bar")
 local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
-local config = require("config")
 local signals = require("lib-tde.signals")
-local common = require("lib-tde.function.common")
-local delayed_timer = require("lib-tde.function.delayed-timer")
 
 local slider =
   wibox.widget {
@@ -39,26 +36,10 @@ local slider =
   widget = mat_slider
 }
 
-delayed_timer(
-  config.harddisk_poll,
-  function()
-    local statvfs = require "posix.sys.statvfs".statvfs
-    local res = statvfs("/")
-    local usage = ((res.f_blocks - res.f_bfree) / res.f_blocks) * 100
-
-    -- by default f_blocks is in 512 byte chunks
-    local block_size = res.f_frsize or 512
-    local size_in_bytes = res.f_blocks * block_size
-
-    print("Hard drive size: " .. size_in_bytes .. "b")
-    print("Hard drive usage: " .. usage .. "%")
-
+signals.connect_disk_usage(
+  function(usage)
     slider:set_value(usage)
-
-    signals.emit_disk_usage(usage)
-    signals.emit_disk_space(common.bytes_to_grandness(size_in_bytes))
-  end,
-  config.harddisk_startup_delay
+  end
 )
 
 local harddrive_meter =

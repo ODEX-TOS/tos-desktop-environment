@@ -36,8 +36,6 @@ local PATH_TO_ICONS = "/etc/xdg/tde/widget/user-profile/icons/"
 
 local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
 
-local PATH_TO_USERICON = "/var/lib/AccountsService/icons/"
-
 local signals = require("lib-tde.signals")
 local filehandle = require("lib-tde.file")
 
@@ -85,105 +83,46 @@ local uptime_time =
   widget = wibox.widget.textbox
 }
 
--- Check username
-awful.spawn.easy_async_with_shell(
-  "whoami",
-  function(out)
-    -- Update profile name
-    -- Capitalize first letter of username
-    local name = out:gsub("%W", "")
-    name = name:sub(1, 1):upper() .. name:sub(2)
-    signals.emit_username(name)
-    profile_name.markup = '<span font="SFNS Display Bold 24">' .. name .. "</span>" --out:sub(1,1):upper()..out:sub(2)
+local function init()
+  -- get the username
+  signals.connect_username(
+    function(name)
+      profile_name.markup = '<span font="SFNS Display Bold 24">' .. name .. "</span>"
+    end
+  )
 
-    -- Bash script to check if user profile picture exists in /var/lib/AccountsService/icons/
-    local cmd_check_user_profile =
-      "if test -f " .. PATH_TO_USERICON .. out .. "; then print 'image_detected'; else print 'not_detected'; fi"
-    awful.spawn.easy_async_with_shell(
-      cmd_check_user_profile,
-      function(stdout)
-        -- there_is_face
-        if stdout:match("image_detected") then
-          -- Check if we already have a user's profile image copied to icon folder
-          local cmd_icon_check = "if test -f " .. PATH_TO_CACHE_ICON .. "user.jpg" .. "; then print 'exists'; fi"
-          awful.spawn.easy_async_with_shell(
-            cmd_icon_check,
-            function(stdout2)
-              if stdout2:match("exists") then
-                -- If the file already copied, don't copy, just update the imagebox
-                profile_imagebox.icon:set_image(PATH_TO_CACHE_ICON .. "user.jpg")
-              else
-                -- Image detected, now copy your profile picture to the widget directory icon folder
-                local copy_cmd = "cp " .. PATH_TO_USERICON .. out .. " " .. PATH_TO_CACHE_ICON .. "user.jpg"
-                awful.spawn(copy_cmd)
-
-                -- Add a timer to a delay
-                -- The cp command is not fast enough so we will need this to update image
-                gears.timer {
-                  timeout = 0,
-                  autostart = true,
-                  single_shot = true,
-                  callback = function()
-                    -- Then set copied image as profilepic in the widget
-                    profile_imagebox.icon:set_image(PATH_TO_CACHE_ICON .. "user.jpg")
-                  end
-                }
-              end
-            end,
-            false
-          )
-        else
-          -- r_u_ugly?
-          -- if yes then use this image instead
-          profile_imagebox.icon:set_image(theme(PATH_TO_ICONS .. "user.svg"))
-        end
-      end,
-      false
-    )
-  end,
-  false
-)
-
--- Check distro name
-awful.spawn.easy_async_with_shell(
-  "cat /etc/os-release | awk 'NR==1'| awk -F " .. "'" .. '"' .. "'" .. " '{print $2}'",
-  function(out)
-    -- Remove newline represented by `\n`
-    local distroname = out:gsub("%\n", "")
-    distro_name.markup = '<span font="SFNS Display Regular 12">' .. distroname .. "</span>"
-    signals.emit_distro(distroname)
+  -- find the user profile picture
+  local face_img_path = os.getenv("HOME") .. "/.face"
+  if filehandle.exists(face_img_path) then
+    profile_imagebox.icon:set_image(face_img_path)
+  else
+    profile_imagebox.icon:set_image(theme(PATH_TO_ICONS .. "user.svg"))
   end
-)
 
--- Run once on startup or login
-awful.spawn.easy_async_with_shell(
-  "uptime -p",
-  function(out)
-    local uptime = out:gsub("%\n", "")
-    uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
-    signals.emit_uptime(uptime)
-  end
-)
--- Check uptime every 600 seconds/10min
-awful.widget.watch(
-  "uptime -p",
-  600,
-  function(_, stdout)
-    local uptime = stdout:gsub("%\n", "")
-    uptime_time.markup = '<span font="SFNS Display Regular 10">' .. uptime .. "</span>"
-    signals.emit_uptime(uptime)
-  end
-)
+  signals.connect_distro(
+    function(distroname)
+      distro_name.markup = '<span font="SFNS Display Regular 12">' .. distroname .. "</span>"
+    end
+  )
 
--- Run once on startup or login
-awful.spawn.easy_async_with_shell(
-  "uname -r | cut -d '-' -f 1,2",
-  function(out)
-    local kernel = out:gsub("%\n", "")
-    kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
-    signals.emit_kernel(kernel)
-  end
-)
+  signals.connect_uptime(
+    function(time)
+      uptime_time.markup = '<span font="SFNS Display Regular 10">' .. time .. "</span>"
+    end
+  )
+
+  -- Run once on startup or login
+  awful.spawn.easy_async_with_shell(
+    "uname -r | cut -d '-' -f 1,2",
+    function(out)
+      local kernel = out:gsub("%\n", "")
+      kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
+      signals.emit_kernel(kernel)
+    end
+  )
+end
+
+init()
 
 local user_profile =
   wibox.widget {
