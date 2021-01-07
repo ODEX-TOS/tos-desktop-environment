@@ -291,7 +291,7 @@ local function make_nav()
       user.text = name
     end
   )
-  local img = os.getenv("HOME") .. "/.cache/tos/user-icons/user.jpg"
+  local img = os.getenv("HOME") .. "/.face"
   if not file_exists(img) then
     img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
   end
