@@ -217,7 +217,7 @@ local globalKeys =
       print("Showing action center")
       _G.screen.primary.left_panel:toggle(true)
     end,
-    {description = i18n.translate("Open Control panel"), group = i18n.translate("awesome")}
+    {description = i18n.translate("Open Control panel"), group = i18n.translate("Launcher")}
   ),
   awful.key({modkey}, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
   awful.key(

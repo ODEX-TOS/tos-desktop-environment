@@ -22,32 +22,33 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("lib-tde.luapath")
-require("lib-tde.logger")
+-- menu takes a bit of time to load in.
+-- because of this we put it in the back so the rest of the system can already behave
+-- Look into awesome-freedesktop for more information
+require("module.menu")
 
-print("Booting up...")
-
-require("global_var")
-
-require("awful.autofocus")
-
--- We load in the notifications befor loading in the plugins, this is because if an error occured during plugin loading it will be displayed correctly
-require("module.notifications")
-
-if not (general["draw_mode"] == "none") then
-  require("module.titlebar")()
+if not (general["disable_desktop"] == "1") then
+    require("module.installer")
+    require("module.desktop")
 end
-require("module.backdrop")
 
--- Layout
-require("layout")
+-- restore the last state
+require("module.state")
+require("tutorial")
 
-require("module")
+require("module.dev-widget-update")
 
--- Setup all configurations
-require("configuration.client")
-require("configuration.tags")
-_G.root.keys(require("configuration.keys.global"))
+require("lib-tde.signals").connect_exit(
+    function()
+        -- stop current autorun.sh
+        -- This is done because otherwise multiple instances would be running at the same time
+        awful.spawn("pgrep -f /etc/xdg/tde/autorun.sh | xargs kill -9")
+    end
+)
 
-require("module.bootup_configuration")
-require("module.lazy_load_boot")
+local lockscreentime = general["screen_on_time"] or "120"
+if general["screen_timeout"] == 1 or general["screen_timeout"] == nil then
+    awful.spawn("/etc/xdg/tde/autorun.sh " .. lockscreentime .. " &>/dev/null")
+else
+    awful.spawn("/etc/xdg/tde/autorun.sh " .. " &>/dev/null")
+end

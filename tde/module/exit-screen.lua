@@ -33,6 +33,8 @@ local apps = require("configuration.apps")
 local clickable_container = require("widget.clickable-container")
 local signals = require("lib-tde.signals")
 
+local animate = require("lib-tde.animations").createAnimObject
+
 -- Appearance
 local icon_size = beautiful.exit_screen_icon_size or dpi(90)
 local exit_screen_hide
@@ -244,19 +246,39 @@ screen.connect_signal(
 			end
 
 			-- Then open it in the focused one
-			awful.screen.focused().exit_screen.visible = true
+			local exit_scrn = awful.screen.focused().exit_screen
+			exit_scrn.visible = true
+
+			exit_scrn.y = screen_geometry.y - screen_geometry.height
+			exit_scrn.opacity = 0
+
+			animate(
+				_G.anim_speed,
+				exit_scrn,
+				{
+					y = screen_geometry.y,
+					opacity = 1
+				},
+				"outCubic"
+			)
 		end
 
 		-- Signals
 		signals.connect_module_exit_screen_show(
 			function()
-				exit_screen_grabber:start()
+				print("Showing exit screen")
+
+				-- turn of the left panel so we can consume the keygrabber
+				_G.screen.primary.left_panel:HideDashboard()
+
+				_G.exit_screen_show()
 			end
 		)
 
 		signals.connect_module_exit_screen_hide(
 			function()
-				exit_screen_grabber:stop()
+				print("Hiding exit screen")
+				exit_screen_hide()
 			end
 		)
 

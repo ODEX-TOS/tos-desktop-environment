@@ -33,6 +33,10 @@ local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local mat_icon = require("widget.material.icon")
 local signals = require("lib-tde.signals")
+local animate = require("lib-tde.animations").createAnimObject
+
+local keyconfig = require("configuration.keys.mod")
+local modKey = keyconfig.modKey
 
 -- body gets populated with a scrollbar widget once generated
 local body = {}
@@ -63,7 +67,8 @@ local left_panel_func = function(screen)
     screen = screen,
     width = left_panel_width,
     height = screen.geometry.height,
-    x = 0,
+    x = screen.geometry.x,
+    y = screen.geometry.y,
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
@@ -97,20 +102,36 @@ local left_panel_func = function(screen)
       grabber:start()
     end
     left_panel:emit_signal("opened")
+
+    -- start the animations
+    left_panel.x = screen.geometry.x - left_panel_width
+    left_panel.opacity = 0
+    animate(_G.anim_speed, left_panel, {opacity = 1, x = screen.geometry.x}, "outCubic")
   end
 
   local closeleft_panel = function()
-    left_panel.visible = false
+    -- start the animations
+    left_panel.x = screen.geometry.x
+    left_panel.opacity = 1
     backdrop.visible = false
+    animate(
+      _G.anim_speed,
+      left_panel,
+      {opacity = 0, x = screen.geometry.x - left_panel_width},
+      "outCubic",
+      function()
+        left_panel.visible = false
 
-    -- Change to notif mode on close
-    if grabber then
-      grabber:stop()
-    end
-    left_panel:emit_signal("closed")
+        -- Change to notif mode on close
+        if grabber then
+          grabber:stop()
+        end
+        left_panel:emit_signal("closed")
 
-    -- reset the scrollbar
-    body:reset()
+        -- reset the scrollbar
+        body:reset()
+      end
+    )
   end
 
   grabber =
@@ -119,6 +140,14 @@ local left_panel_func = function(screen)
       awful.key {
         modifiers = {},
         key = "Escape",
+        on_press = function()
+          left_panel.opened = false
+          closeleft_panel()
+        end
+      },
+      awful.key {
+        modifiers = {modKey},
+        key = keyconfig.configPanel,
         on_press = function()
           left_panel.opened = false
           closeleft_panel()

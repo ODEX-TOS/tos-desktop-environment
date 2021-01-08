@@ -36,8 +36,10 @@ local theme = require("theme.icons.dark-light")
 local dpi = require("beautiful").xresources.apply_dpi
 local filehandle = require("lib-tde.file")
 local config = require("config")
+local animate = require("lib-tde.animations").createAnimObject
 
 local bShowingWidget = false
+local padding = dpi(30)
 
 local musicPlayer
 
@@ -45,7 +47,7 @@ screen.connect_signal(
   "request::desktop_decoration",
   function(s)
     -- Create the box
-    local padding = dpi(30)
+
     musicPlayer =
       wibox {
       bg = "#00000000",
@@ -55,7 +57,7 @@ screen.connect_signal(
       height = dpi(380),
       width = dpi(260),
       x = s.geometry.width - dpi(260) - dpi(10),
-      y = padding
+      y = s.geometry.y + padding
     }
   end
 )
@@ -82,9 +84,21 @@ local function togglePlayer()
   if musicPlayer.visible then
     grabber:start()
     bShowingWidget = true
+    musicPlayer.y = musicPlayer.screen.geometry.y - musicPlayer.height
+    animate(_G.anim_speed, musicPlayer, {y = musicPlayer.screen.geometry.y + padding}, "outCubic")
   else
     grabber:stop()
     bShowingWidget = false
+    musicPlayer.visible = true
+    animate(
+      _G.anim_speed,
+      musicPlayer,
+      {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+      "outCubic",
+      function()
+        musicPlayer.visible = false
+      end
+    )
   end
 end
 
@@ -174,9 +188,17 @@ musicPlayer:setup {
 musicPlayer:connect_signal(
   "mouse::leave",
   function()
-    musicPlayer.visible = false
     grabber:stop()
     bShowingWidget = false
+    animate(
+      _G.anim_speed,
+      musicPlayer,
+      {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+      "outCubic",
+      function()
+        musicPlayer.visible = false
+      end
+    )
   end
 )
 
