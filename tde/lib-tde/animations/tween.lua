@@ -22,6 +22,19 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Tween functions used by the animation library
+-- @see https://github.com/kikito/tween.lua
+--
+--
+-- The possible tween values plotted:
+--
+-- ![Tween values plotted](../images/animations_tween.png)
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-tde.animations
+---------------------------------------------------------------------------
 local tween = {
     _VERSION = "tween 2.1.1",
     _DESCRIPTION = "tweening for lua",

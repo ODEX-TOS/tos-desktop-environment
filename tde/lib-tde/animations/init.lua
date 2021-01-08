@@ -22,6 +22,36 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Animate any lua object over a period of time
+--
+-- This api is generally designed for wiboxes, but it can be used for any lua table
+--
+-- In this example we will animate the wibox over 2 seconds, changing its width and height
+--    local example = wibox {
+--        ontop = true,
+--        screen = screen,
+--        width = 100,
+--        height = 100,
+--        x = 0,
+--        y = 0,
+--    }
+--    -- usually you start animation when clicking on a button
+--    -- In this example we use out cubic (see the tweening diagram below)
+--    animate(2, example, { width=200, height=200 }, "outCubic")
+--
+-- Usefull when you want to override user settings.
+-- Such as in the settings app.
+--
+-- The possible tween values plotted:
+--
+-- ![Tween values plotted](../images/animations_tween.png)
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-tde.animations
+---------------------------------------------------------------------------
+
 local gears = require("gears")
 local hardware = require("lib-tde.hardware-check")
 local tween = require("lib-tde.animations.tween")
@@ -29,6 +59,20 @@ local tween = require("lib-tde.animations.tween")
 -- we refresh at display frequency or 24 the lowest one frequency (thus the highest delay)
 local freq = math.max(1 / 24, 1 / hardware.getDisplayFrequency())
 
+--- Create an animation out of a lua table
+-- @tparam number duration Howlong should the animation take
+-- @tparam wibox subject The subject to animate
+-- @tparam table target A table of properties of the subject to tween (these will be animated)
+-- @tparam string easing The easing function to use
+-- @tparam[opt] function end_callback This function will be called when the animation finished
+-- @tparam[opt] number delay Howlong to wait until we start the animation
+-- @tparam[opt] wibox widget Alternative widget we use to hook animation properties on
+-- @tparam[opt] function tween_callback A callback that happens on every animation trigger (every frame)
+-- @staticfct createAnimObject
+-- @usage -- This will create and start the animation that tweens the y property to 100 over 3 seconds using the outCubic calculation
+-- lib-tde.animations.createAnimObject(3, object, {y = 100}, "outCubic", function()
+--    print("Done animating")
+--  end)
 local function createAnimObject(duration, subject, target, easing, end_callback, delay, widget, tween_callback)
     assert(type(duration) == "number", "The duration should be specified in seconds")
     assert(duration >= 0, "your duration can't be lower than 0 seconds")
