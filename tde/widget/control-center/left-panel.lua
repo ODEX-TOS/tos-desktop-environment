@@ -34,7 +34,6 @@ local mat_list_item = require("widget.material.list-item")
 local mat_icon = require("widget.material.icon")
 local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
-local config = require("config")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -107,10 +106,7 @@ local left_panel_func = function(screen)
     -- start the animations
     left_panel.x = screen.geometry.x - left_panel_width
     left_panel.opacity = 0
-    animate(config.anim_speed, left_panel, {opacity = 1, x = screen.geometry.x}, "outCubic")
-
-    backdrop.opacity = 0
-    animate(config.anim_speed, backdrop, {opacity = 1}, "outCubic")
+    animate(_G.anim_speed, left_panel, {opacity = 1, x = screen.geometry.x}, "outCubic")
   end
 
   local closeleft_panel = function()
@@ -118,7 +114,7 @@ local left_panel_func = function(screen)
     left_panel.x = screen.geometry.x
     left_panel.opacity = 1
     animate(
-      config.anim_speed,
+      _G.anim_speed,
       left_panel,
       {opacity = 0, x = screen.geometry.x - left_panel_width},
       "outCubic",
@@ -136,9 +132,6 @@ local left_panel_func = function(screen)
         body:reset()
       end
     )
-
-    backdrop.opacity = 1
-    animate(config.anim_speed, backdrop, {opacity = 0}, "outCubic")
   end
 
   grabber =

@@ -30,7 +30,6 @@ local dpi = require("beautiful").xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
 local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
-local config = require("config")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -206,10 +205,7 @@ local right_panel = function(screen)
     -- start the animations
     panel.x = screen.geometry.width
     panel.opacity = 0
-    animate(config.anim_speed, panel, {opacity = 1, x = screen.geometry.width - panel_width}, "outCubic")
-
-    backdrop.opacity = 0
-    animate(config.anim_speed, backdrop, {opacity = 1}, "outCubic")
+    animate(_G.anim_speed, panel, {opacity = 1, x = screen.geometry.width - panel_width}, "outCubic")
   end
 
   local closePanel = function()
@@ -217,7 +213,7 @@ local right_panel = function(screen)
     panel.x = screen.geometry.width - panel_width
     panel.opacity = 1
     animate(
-      config.anim_speed,
+      _G.anim_speed,
       panel,
       {opacity = 0, x = screen.geometry.width},
       "outCubic",
@@ -232,9 +228,6 @@ local right_panel = function(screen)
         body:reset()
       end
     )
-
-    backdrop.opacity = 1
-    animate(config.anim_speed, backdrop, {opacity = 0}, "outCubic")
   end
 
   grabber =

@@ -388,6 +388,26 @@ function test_module_volume_slider_osd()
     assert(exists("tde/module/volume-slider-osd.lua"), "Check that tde/module/volume-slider-osd.lua exists")
 end
 
+function test_module_init()
+    local file = "tde/module/init.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_module_lazy_load()
+    local file = "tde/module/lazy_load_boot.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_module_bootup_configuration()
+    local file = "tde/module/bootup_configuration.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_global_var()
+    local file = "tde/global_var.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function test_lib_tde_config_writer()
     local file = "tde/lib-tde/config-writer.lua"
     assert(exists(file), "Check that " .. file .. " exists")
@@ -544,7 +564,7 @@ function test_lib_tde_translations_en()
 end
 
 function test_that_all_important_files_are_tested()
-    local amount = 92
+    local amount = 95
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

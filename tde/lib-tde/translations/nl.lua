@@ -31,6 +31,7 @@ translations[
     ] =
     "Een pauze timer word elk uur geactiveerd, de bedoeling hiervan is om u tijd te geven voor te stretchen en een pauze te pakken"
 translations["Action Center"] = "Actie Centrum"
+translations["Animation Speed"] = "Animatie snelheid"
 translations["arandr"] = "arandr"
 translations["Area"] = "Gedeeltelijke foto van het scherm"
 translations["area/selected screenshot"] = "gedeeltelijke foto van het scherm"

@@ -26,11 +26,21 @@ local gears = require("gears")
 local hardware = require("lib-tde.hardware-check")
 local tween = require("lib-tde.animations.tween")
 
-local freq = 1 / hardware.getDisplayFrequency()
+-- we refresh at display frequency or 24 the lowest one frequency (thus the highest delay)
+local freq = math.max(1 / 24, 1 / hardware.getDisplayFrequency())
 
 local function createAnimObject(duration, subject, target, easing, end_callback, delay, widget, tween_callback)
     assert(type(duration) == "number", "The duration should be specified in seconds")
     assert(duration >= 0, "your duration can't be lower than 0 seconds")
+
+    -- if the duration is 0 then we should 'teleport' to the end state
+    if duration == 0 then
+        -- iterate over all key value pairs and assign them to the subject
+        for key, value in pairs(target) do
+            subject[key] = value
+        end
+        return
+    end
 
     widget = widget and widget or subject
     -- check if animation is running
@@ -40,11 +50,11 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
     -- create timer at display freq
     widget.timer = gears.timer({timeout = freq})
     -- create self-destructing animation-stop callback function
-    cback = function(callback_widget)
+    widget.cback = function(callback_widget)
         if callback_widget.timer and callback_widget.timer.started then
             callback_widget.timer:stop()
         end
-        callback_widget:disconnect_signal("interrupt", cback)
+        callback_widget:disconnect_signal("interrupt", callback_widget.cback)
     end
     -- create tween
     local twob = tween.new(duration, subject, target, easing)
@@ -60,7 +70,7 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
             end
             if complete then
                 widget.timer:stop()
-                cback(widget)
+                widget.cback(widget)
                 widget.anim = false
                 if end_callback then
                     end_callback()
@@ -69,7 +79,7 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
         end
     )
     -- start animation
-    widget:connect_signal("interrupt", cback)
+    widget:connect_signal("interrupt", widget.cback)
     widget.anim = true
     if delay ~= nil then
         gears.timer {

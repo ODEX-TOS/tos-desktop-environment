@@ -34,7 +34,6 @@ local clickable_container = require("widget.clickable-container")
 local signals = require("lib-tde.signals")
 
 local animate = require("lib-tde.animations").createAnimObject
-local config = require("config")
 
 -- Appearance
 local icon_size = beautiful.exit_screen_icon_size or dpi(90)
@@ -254,7 +253,7 @@ screen.connect_signal(
 			exit_scrn.opacity = 0
 
 			animate(
-				config.anim_speed,
+				_G.anim_speed,
 				exit_scrn,
 				{
 					y = screen_geometry.y,

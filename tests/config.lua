@@ -118,15 +118,8 @@ function test_about_tde_and_tos()
     )
 end
 
-function test_config_animation_speed()
-    assert(config.anim_speed, "Make sure that the animation speed config option exists")
-    assert(type(config.anim_speed) == "number", "The animation speed option should be a number")
-    assert(config.anim_speed > 0, "We can't have animations that are shorter that 0 seconds")
-    assert(config.anim_speed < 5, "Please don't make animations longer that 5 seconds (that takes forever)")
-end
-
 function test_config_api_unit_tested()
-    local amount = 22
+    local amount = 21
     local result = tablelength(config)
     assert(
         result == amount,

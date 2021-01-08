@@ -36,7 +36,6 @@ local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
 local scrollbar = require("widget.scrollbar")
 local animate = require("lib-tde.animations").createAnimObject
-local config = require("config")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -204,7 +203,7 @@ local function enable_view_by_index(i, s, loc)
     root.elements.settings.visible = true
 
     root.elements.settings.y = s.geometry.y - settings_height
-    animate(config.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+    animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
   end
 end
 
@@ -506,7 +505,7 @@ return function()
     root.elements.settings_grabber:stop()
 
     animate(
-      config.anim_speed,
+      _G.anim_speed,
       hub,
       {y = scrn.geometry.y - settings_height},
       "outCubic",

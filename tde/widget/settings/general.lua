@@ -184,6 +184,44 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
   )
 end
 
+local function create_option_slider(title, min, max, inc, option, start_value)
+  local step_size = 1 / inc
+
+  local option_slider = wibox.widget.slider()
+  option_slider.bar_shape = function(c, w, h)
+    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
+  end
+  option_slider.bar_height = dpi(30)
+  option_slider.bar_color = beautiful.bg_modal
+  option_slider.bar_active_color = beautiful.accent.hue_500
+  option_slider.handle_shape = gears.shape.circle
+  option_slider.handle_width = dpi(35)
+  option_slider.handle_color = beautiful.accent.hue_500
+  option_slider.handle_border_width = 1
+  option_slider.handle_border_color = "#00000012"
+  option_slider.minimum = min * step_size
+  option_slider.maximum = max * step_size
+
+  -- set the initial value
+  option_slider:set_value(start_value * step_size)
+
+  option_slider:connect_signal(
+    "property::value",
+    function()
+      local value = option_slider.value / step_size
+      _G.update_anim_speed(value)
+      configWriter.update_entry(configFile, option, tostring(value))
+    end
+  )
+
+  return wibox.widget {
+    layout = wibox.layout.align.horizontal,
+    wibox.container.margin(wibox.widget.textbox(title), 0, m),
+    option_slider,
+    forced_height = dpi(40)
+  }
+end
+
 return function()
   local view = wibox.container.margin()
   view.left = m
@@ -351,6 +389,15 @@ return function()
         {"shadow", "none"},
         general["window_screen_mode"] or "shadow",
         "window_screen_mode"
+      ),
+      separator,
+      create_option_slider(
+        i18n.translate("Animation Speed"),
+        0,
+        1.5,
+        0.05,
+        "animation_speed",
+        tonumber(general["window_screen_mode"]) or _G.anim_speed
       ),
       separator,
       wibox.container.margin(save, m, m, m, m)

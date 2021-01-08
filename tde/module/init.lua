@@ -22,32 +22,22 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("lib-tde.luapath")
-require("lib-tde.logger")
+-- Init all modules
+require("module.settings")
+require("module.auto-start")
+require("module.exit-screen")
+require("module.quake-terminal")
+require("module.brightness-slider-osd")
+require("module.volume-slider-osd")
+require("module.plugin-module")
+require("module.volume_manager")
+_G.switcher = require("module.application-switch")
 
-print("Booting up...")
-
-require("global_var")
-
-require("awful.autofocus")
-
--- We load in the notifications befor loading in the plugins, this is because if an error occured during plugin loading it will be displayed correctly
-require("module.notifications")
-
-if not (general["draw_mode"] == "none") then
-  require("module.titlebar")()
+-- Only activate the break timer if users what it
+-- The default implementation of TOS doesn't use it
+if general["break"] == "1" then
+    require("module.break-timer")
 end
-require("module.backdrop")
 
--- Layout
-require("layout")
-
-require("module")
-
--- Setup all configurations
-require("configuration.client")
-require("configuration.tags")
-_G.root.keys(require("configuration.keys.global"))
-
-require("module.bootup_configuration")
-require("module.lazy_load_boot")
+require("module.battery-notifier")
+_G.collision = require("collision")()

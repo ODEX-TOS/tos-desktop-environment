@@ -52,8 +52,6 @@ local config = {
     garbage_collection_cycle = 2 * 60, -- collect garbage every x seconds
     colors_config = HOME .. "/.config/tos/colors.conf",
     icons_config = HOME .. "/.config/tos/icons.conf",
-    -- animation speed in seconds
-    anim_speed = tonumber(general["animation_speed"] or "0.3"),
     getComptonFile = function()
         local userfile = HOME .. "/.config/picom.conf"
         if (file_exists(userfile)) then
