@@ -35,6 +35,7 @@ local clickable_container = require("widget.material.clickable-container")
 local icons = require("theme.icons")
 
 local config = require("config")
+local animate = require("lib-tde.animations").createAnimObject
 
 local height = dpi(200)
 local width = dpi(380)
@@ -85,7 +86,15 @@ local grabber =
       key = "Escape",
       on_press = function()
         aboutBackdrop.visible = false
-        aboutPage.visible = false
+        animate(
+          _G.anim_speed,
+          aboutPage,
+          {y = aboutPage.screen.geometry.y - aboutPage.height},
+          "outCubic",
+          function()
+            aboutPage.visible = false
+          end
+        )
       end
     }
   },
@@ -99,8 +108,25 @@ local function toggleAbout()
   aboutPage.visible = not aboutPage.visible
   if aboutPage.visible then
     grabber:start()
+    aboutPage.y = aboutPage.screen.geometry.y - aboutPage.height
+    animate(
+      _G.anim_speed,
+      aboutPage,
+      {y = aboutPage.screen.geometry.y + aboutPage.screen.geometry.height / 2 - (aboutPage.height / 2)},
+      "outCubic"
+    )
   else
     grabber:stop()
+    aboutPage.visible = true
+    animate(
+      _G.anim_speed,
+      aboutPage,
+      {y = aboutPage.screen.geometry.y - aboutPage.height},
+      "outCubic",
+      function()
+        aboutPage.visible = false
+      end
+    )
   end
 end
 

@@ -212,6 +212,8 @@ local right_panel = function(screen)
     -- start the animations
     panel.x = screen.geometry.width - panel_width
     panel.opacity = 1
+    backdrop.visible = false
+
     animate(
       _G.anim_speed,
       panel,
@@ -219,7 +221,6 @@ local right_panel = function(screen)
       "outCubic",
       function()
         panel.visible = false
-        backdrop.visible = false
         if grabber then
           grabber:stop()
         end

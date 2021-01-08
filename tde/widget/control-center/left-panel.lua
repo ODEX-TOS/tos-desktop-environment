@@ -113,6 +113,7 @@ local left_panel_func = function(screen)
     -- start the animations
     left_panel.x = screen.geometry.x
     left_panel.opacity = 1
+    backdrop.visible = false
     animate(
       _G.anim_speed,
       left_panel,
@@ -120,7 +121,6 @@ local left_panel_func = function(screen)
       "outCubic",
       function()
         left_panel.visible = false
-        backdrop.visible = false
 
         -- Change to notif mode on close
         if grabber then
