@@ -69,8 +69,17 @@ local grabber =
       modifiers = {},
       key = "Escape",
       on_press = function()
-        musicPlayer.visible = false
+        musicPlayer.visible = true
         bShowingWidget = false
+        animate(
+          _G.anim_speed,
+          musicPlayer,
+          {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+          "outCubic",
+          function()
+            musicPlayer.visible = false
+          end
+        )
       end
     }
   },
