@@ -73,6 +73,7 @@ return {
   package = theme("/etc/xdg/tde/widget/package-updater/icons/package.svg"),
   about = theme(dir .. "/info.svg"),
   mouse = theme(dir .. "/mouse.svg"),
+  user = theme(dir .. "/user.svg"),
   --pngs
   unknown = theme(dir .. "/noicon.png")
 }

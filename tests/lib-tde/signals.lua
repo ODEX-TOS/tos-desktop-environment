@@ -299,8 +299,24 @@ function test_emit_refresh_screen()
     assert(type(signals.emit_refresh_screen) == "function", "Make sure emit_refresh_screen is a signal and a function")
 end
 
+function test_connect_profile_picture()
+    assert(signals.connect_profile_picture_changed, "Make sure the signal connect_profile_picture_changed exists")
+    assert(
+        type(signals.connect_profile_picture_changed) == "function",
+        "Make sure connect_profile_picture_changed is a signal and a function"
+    )
+end
+
+function test_emit_profile_picture()
+    assert(signals.emit_profile_picture_changed, "Make sure the signal emit_profile_picture_changed exists")
+    assert(
+        type(signals.emit_profile_picture_changed) == "function",
+        "Make sure emit_profile_picture_changed is a signal and a function"
+    )
+end
+
 function test_signals_api_unit_tested()
-    local amount = 51
+    local amount = 53
     local result = tablelength(signals)
     assert(
         result == amount,

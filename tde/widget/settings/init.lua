@@ -27,7 +27,6 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
-local file_exists = require("lib-tde.file").exists
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local naughty = require("naughty")
@@ -307,10 +306,14 @@ local function make_nav()
       user.text = name
     end
   )
-  local img = os.getenv("HOME") .. "/.face"
-  if not file_exists(img) then
-    img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
-  end
+  local img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
+
+  local profile_picture_image =
+    wibox.widget {
+    widget = wibox.widget.imagebox,
+    image = img,
+    resize = true
+  }
 
   local avatar =
     wibox.widget {
@@ -319,12 +322,14 @@ local function make_nav()
     shape_clip = gears.shape.circle,
     forced_width = settings_index,
     forced_height = settings_index,
-    {
-      widget = wibox.widget.imagebox,
-      image = img,
-      resize = true
-    }
+    profile_picture_image
   }
+
+  signals.connect_profile_picture_changed(
+    function(picture)
+      profile_picture_image:set_image(picture)
+    end
+  )
 
   local rule = wibox.container.background()
   rule.forced_height = 1
@@ -334,6 +339,10 @@ local function make_nav()
   table.insert(
     root.elements.settings_views,
     make_view(icons.settings, i18n.translate("General"), require("widget.settings.general")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.user, i18n.translate("User"), require("widget.settings.user")())
   )
   table.insert(
     root.elements.settings_views,

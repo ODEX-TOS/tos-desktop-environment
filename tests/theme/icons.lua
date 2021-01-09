@@ -193,8 +193,12 @@ function test_theme_icon_unknown()
     assert(file_exists(icons.unknown), "Check that the unknown icon exists")
 end
 
+function test_theme_icon_user()
+    assert(file_exists(icons.user), "Check that the user icon exists")
+end
+
 function test_that_all_icons_are_tested()
-    local amount = 42
+    local amount = 43
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

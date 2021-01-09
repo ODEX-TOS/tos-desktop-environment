@@ -70,7 +70,7 @@ local function scale(input, width, height, output, callback)
     if check() then
         return
     end
-    local cmd = "convert '" .. input .. "' -resize " .. width .. "x" .. height .. " '" .. output .. "'"
+    local cmd = "convert '" .. input .. "' -resize " .. width .. "x" .. height .. "\\! '" .. output .. "'"
     awful.spawn.easy_async_with_shell(
         cmd,
         function()
