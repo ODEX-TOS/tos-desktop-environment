@@ -83,7 +83,7 @@ if grabber == nil then
         key = "Up",
         on_press = function()
           if INDEX > 1 then
-            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen, true)
           end
         end
       },
@@ -92,7 +92,7 @@ if grabber == nil then
         key = "Down",
         on_press = function()
           if INDEX < #root.elements.settings_views then
-            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen, true)
           end
         end
       },
@@ -101,9 +101,9 @@ if grabber == nil then
         key = "Tab",
         on_press = function()
           if INDEX < #root.elements.settings_views then
-            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen, true)
           else
-            root.elements.settings.enable_view_by_index(1, mouse.screen)
+            root.elements.settings.enable_view_by_index(1, mouse.screen, true)
           end
         end
       },
@@ -112,9 +112,9 @@ if grabber == nil then
         key = "Tab",
         on_press = function()
           if INDEX > 1 then
-            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen, true)
           else
-            root.elements.settings.enable_view_by_index(#root.elements.settings_views, mouse.screen)
+            root.elements.settings.enable_view_by_index(#root.elements.settings_views, mouse.screen, true)
           end
         end
       }
@@ -170,7 +170,7 @@ local function setActiveView(i, link)
 end
 
 -- If you set the index to -1 then we go to the last remembered index
-local function enable_view_by_index(i, s, loc)
+local function enable_view_by_index(i, s, bNoAnimation)
   if not (i == -1) then
     INDEX = i
   end
@@ -190,19 +190,18 @@ local function enable_view_by_index(i, s, loc)
     end
     -- center the hub in height
     local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
-    if loc == "right" then
-      root.elements.settings.x = (s.workarea.width - settings_width - m) + s.workarea.x
-    else
-      root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
-    end
+    root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
+
     -- reset the scrollbar when we open the settings app
     if not root.elements.settings.visible then
       body:reset()
     end
     root.elements.settings.visible = true
 
-    root.elements.settings.y = s.geometry.y - settings_height
-    animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+    if not (bNoAnimation == true) then
+      root.elements.settings.y = s.geometry.y - settings_height
+      animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+    end
   end
 end
 
