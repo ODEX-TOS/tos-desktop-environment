@@ -22,6 +22,20 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Create a new progress_bar (like a slider, but you can't use it as an input)
+--
+-- Usefull to display percentage data
+--
+--    -- make a progress bar and set it to 20%
+--    local bar = lib-widget.progress_bar()
+--    bar:set_value(20)
+--
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdewidget lib-widget.progress_bar
+---------------------------------------------------------------------------
 -- Default widget requirements
 local base = require("wibox.widget.base")
 local gtable = require("gears.table")
@@ -37,6 +51,11 @@ local gears = require("gears")
 
 local mat_slider = {mt = {}}
 
+--- Set the value of the progress_bar
+-- @tparam number value the value in percentag (0-100)
+-- @staticfct set_value
+-- @usage -- Set the value of the progress_bar in percentage
+-- progress_bar:set_value()
 function mat_slider:set_value(value)
   if self._private.value ~= value then
     self._private.value = value
@@ -46,6 +65,10 @@ function mat_slider:set_value(value)
   end
 end
 
+--- get the current value of the progress_bar
+-- @staticfct get_value
+-- @usage -- Get the value of the progress_bar in percentage
+-- progress_bar:get_value()
 function mat_slider:get_value()
   return self._private.value
 end

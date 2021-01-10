@@ -25,9 +25,7 @@
 ---------------------------------------------------------------------------
 -- Create a new button widget
 --
--- Usefull when you want to seperate widgets from eachother
 --
---    -- seperator that is 20 pixels high
 --    local button = lib-widget.button(dpi(20))
 --
 --
@@ -72,6 +70,10 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
         body = wibox.widget.textbox(i18n.translate(body))
     end
 
+    --- Emulate a hover event
+    -- @staticfct emulate_hover
+    -- @usage -- Act as if the mouse hovered over the button
+    -- button.emulate_hover()
     button.emulate_hover = function()
         bIsHovered = true
         button.bg = color.hue_800
@@ -80,6 +82,10 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
         end
     end
 
+    --- Emulate a hover unfocus event
+    -- @staticfct emulate_focus_loss
+    -- @usage -- Act as if the mouse hovered over the button and then left
+    -- button.emulate_focus_loss()
     button.emulate_focus_loss = function()
         bIsHovered = false
         button.bg = color.hue_600
@@ -114,6 +120,10 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
     end
     button:buttons(gears.table.join(awful.button({}, 1, callback)))
 
+    --- Manually update the color pallet used by the button, usually used when you want the button to not follow the theming
+    -- @staticfct update_pallet
+    -- @usage -- Update the color pallet of the button
+    -- button.update_pallet(require("theme.mat-colors").yellow)
     button.update_pallet = function(new_pallet)
         color = new_pallet
         if bIsHovered then

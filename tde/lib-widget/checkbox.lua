@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Create a new checkbox widget
 --
--- Usefull when you want to seperate widgets from eachother
+-- A togglable checkbox
 --
 --    -- checkbox that is 20 pixels high
 --    local checkbox = lib-widget.checkbox(dpi(20))
@@ -101,6 +101,10 @@ return function(checked, callback, size)
         end
     )
 
+    --- Update the checked state of the checkbox
+    -- @staticfct update
+    -- @usage -- Set the checkbox to 'true'
+    -- checkbox.update(true)
     checkbox.update = function(new_checked)
         checkbox.checked = new_checked
     end

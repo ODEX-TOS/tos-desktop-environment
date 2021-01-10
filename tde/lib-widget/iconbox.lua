@@ -25,7 +25,6 @@
 ---------------------------------------------------------------------------
 -- Create a new iconbox widget
 --
--- Usefull when you want to seperate widgets from eachother
 --
 --    -- iconbox that is 20 pixels high
 --    local iconbox = lib-widget.iconbox(dpi(20))
