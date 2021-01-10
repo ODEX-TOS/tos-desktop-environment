@@ -34,6 +34,9 @@
 --
 --   slider:set_value(8)
 --
+-- example widget
+-- ![slider](../images/slider.png)
+--
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.slider

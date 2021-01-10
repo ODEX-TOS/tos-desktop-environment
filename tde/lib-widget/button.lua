@@ -28,6 +28,8 @@
 --
 --    local button = lib-widget.button(dpi(20))
 --
+-- example widget
+-- ![Button](../images/button.png)
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers

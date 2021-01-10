@@ -34,6 +34,9 @@
 --
 --   picture.update("file2.png")
 --
+-- example widget
+-- ![profilebox](../images/profilebox.png)
+--
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.profilebox

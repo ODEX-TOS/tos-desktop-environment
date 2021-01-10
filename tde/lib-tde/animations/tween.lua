@@ -24,7 +24,7 @@
 ]]
 ---------------------------------------------------------------------------
 -- Tween functions used by the animation library
--- @see https://github.com/kikito/tween.lua
+-- see [tween.lua](https://github.com/kikito/tween.lua)
 --
 --
 -- The possible tween values plotted:
