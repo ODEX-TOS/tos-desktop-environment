@@ -114,6 +114,15 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
     end
     button:buttons(gears.table.join(awful.button({}, 1, callback)))
 
+    button.update_pallet = function(new_pallet)
+        color = new_pallet
+        if bIsHovered then
+            button.emulate_hover()
+        else
+            button.emulate_focus_loss()
+        end
+    end
+
     if no_update == nil or no_update == false then
         signals.connect_primary_theme_changed(
             function(theme)

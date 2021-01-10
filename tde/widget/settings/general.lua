@@ -101,7 +101,8 @@ local function create_multi_option_array(name, tooltip, options, default, config
 
     if option == default then
       option_widget.active = true
-    -- TODO: mark the widget as active
+    else
+      option_widget.bg = beautiful.bg_modal
     end
 
     button_widgets[name][option] = option_widget

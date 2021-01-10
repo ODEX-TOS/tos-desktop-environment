@@ -71,6 +71,8 @@ local function refresh()
     backgroundButton.bg = activeBackground.hue_800
   end
   save.bg = activePrimary.hue_600
+  primaryButton.update_pallet(activePrimary)
+  backgroundButton.update_pallet(activeBackground)
 end
 
 local function create_primary_button()
