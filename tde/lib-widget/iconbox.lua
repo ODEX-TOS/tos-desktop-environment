@@ -22,63 +22,32 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Create a new iconbox widget
+--
+-- Usefull when you want to seperate widgets from eachother
+--
+--    -- iconbox that is 20 pixels high
+--    local iconbox = lib-widget.iconbox(dpi(20))
+--
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-widget.iconbox
+---------------------------------------------------------------------------
+
 local wibox = require("wibox")
-local mat_list_item = require("widget.material.list-item")
-local slider = require("lib-widget.slider")
-local mat_icon_button = require("widget.material.icon-button")
-local icons = require("theme.icons")
-local signals = require("lib-tde.signals")
 
-local vol_slider =
-  slider(
-  0,
-  100,
-  1,
-  0,
-  function(value)
-    signals.emit_volume(value)
-  end
-)
-
-local icon =
-  wibox.widget {
-  image = icons.volume,
-  widget = wibox.widget.imagebox
-}
-
-signals.connect_volume(
-  function(value)
-    local number = tonumber(value)
-    if not (number == vol_slider.value) then
-      vol_slider.update(number)
-    end
-  end
-)
-
-local button = mat_icon_button(icon)
-
-local function toggleIcon()
-  awful.spawn("amixer -D pulse set Master +1 toggle")
-  signals.emit_volume_update()
+--- Create a new iconbox widget
+-- @tparam number size The height of the iconbox
+-- @treturn widget The iconbox widget
+-- @staticfct iconbox
+-- @usage -- This will create a iconbox that is 20 pixels high
+-- -- iconbox that is 20 pixels high
+-- local iconbox = lib-widget.iconbox(dpi(20))
+return function(height)
+    return wibox.widget {
+        widget = wibox.widget.separator,
+        forced_height = height
+    }
 end
-
-signals.connect_volume_is_muted(
-  function(muted)
-    if (muted) then
-      icon.image = icons.muted
-    else
-      icon.image = icons.volume
-    end
-  end
-)
-
-button:connect_signal("button::press", toggleIcon)
-
-local volume_setting =
-  wibox.widget {
-  button,
-  vol_slider,
-  widget = mat_list_item
-}
-
-return volume_setting

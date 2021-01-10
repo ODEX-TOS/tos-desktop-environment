@@ -30,26 +30,21 @@ local dpi = require("beautiful").xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
 local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
+local seperator_widget = require("lib-widget.separator")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
 
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
 
 -- load the notification plugins
 local plugins = require("lib-tde.plugin-loader")("notification")
 
--- body gets populated with a scrollbar widget once generated
+-- body gets populated with a scrollbox widget once generated
 local body = {}
 
 local function notification_plugin()
-  local separator =
-    wibox.widget {
-    orientation = "vertical",
-    forced_height = 16,
-    opacity = 0.00,
-    widget = wibox.widget.separator
-  }
+  local separator = seperator_widget(16, "vertical", 0)
 
   local table_widget =
     wibox.widget {
@@ -127,13 +122,7 @@ local right_panel = function(screen)
     }
   )
 
-  local separator =
-    wibox.widget {
-    orientation = "horizontal",
-    opacity = 0.0,
-    forced_height = 15,
-    widget = wibox.widget.separator
-  }
+  local separator = seperator_widget(15, "horizontal", 0)
 
   local clear_all_text =
     wibox.widget {
@@ -225,7 +214,7 @@ local right_panel = function(screen)
           grabber:stop()
         end
         panel:emit_signal("closed")
-        -- reset the scrollbar
+        -- reset the scrollbox
         body:reset()
       end
     )
@@ -311,7 +300,7 @@ local right_panel = function(screen)
   }
 
   body =
-    scrollbar(
+    scrollbox(
     wibox.widget {
       separator,
       {

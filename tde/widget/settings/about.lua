@@ -31,6 +31,7 @@ local execute = require("lib-tde.hardware-check").execute
 local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
 local signals = require("lib-tde.signals")
 local hardware = require("lib-tde.hardware-check")
+local seperator_widget = require("lib-widget.separator")
 
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
@@ -97,11 +98,7 @@ return function()
 
   local logo = wibox.widget.imagebox(icons.logo)
 
-  local separator =
-    wibox.widget {
-    widget = wibox.widget.separator,
-    forced_height = settings_index / 1.5
-  }
+  local separator = seperator_widget(settings_index / 1.5)
 
   local container = wibox.layout.fixed.vertical()
   local device_name, device_text = generate_setting_panel(i18n.translate("Device name"))

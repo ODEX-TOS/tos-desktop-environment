@@ -29,21 +29,19 @@
 
 local wibox = require("wibox")
 local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("widget.material.slider")
+local slider = require("lib-widget.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local signal = require("lib-tde.signals")
 
 local slider_osd =
-  wibox.widget {
-  read_only = false,
-  widget = mat_slider
-}
-
-slider_osd:connect_signal(
-  "property::value",
-  function()
-    signal.emit_volume(slider_osd.value)
+  slider(
+  0,
+  100,
+  1,
+  0,
+  function(value)
+    signal.emit_volume(value)
   end
 )
 
@@ -51,7 +49,7 @@ signal.connect_volume(
   function(value)
     local number = tonumber(value)
     if not (number == slider_osd.value) then
-      slider_osd:set_value(number)
+      slider_osd.update(number)
     end
   end
 )

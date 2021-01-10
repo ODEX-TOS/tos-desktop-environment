@@ -26,7 +26,7 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local icons = require("theme.icons")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
 
 local apps = require("configuration.apps")
 local dpi = require("beautiful").xresources.apply_dpi
@@ -34,11 +34,12 @@ local mat_list_item = require("widget.material.list-item")
 local mat_icon = require("widget.material.icon")
 local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
+local seperator_widget = require("lib-widget.separator")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
 
--- body gets populated with a scrollbar widget once generated
+-- body gets populated with a scrollbox widget once generated
 local body = {}
 
 local plugins = require("lib-tde.plugin-loader")("settings")
@@ -128,7 +129,7 @@ local left_panel_func = function(screen)
         end
         left_panel:emit_signal("closed")
 
-        -- reset the scrollbar
+        -- reset the scrollbox
         body:reset()
       end
     )
@@ -398,30 +399,11 @@ local left_panel_func = function(screen)
       )
     )
   )
+  local separator = seperator_widget(10, "vertical", 0)
 
-  local separator =
-    wibox.widget {
-    orientation = "vertical",
-    forced_height = 10,
-    opacity = 0.00,
-    widget = wibox.widget.separator
-  }
+  local topSeparator = seperator_widget(20, "horizontal", 0)
 
-  local topSeparator =
-    wibox.widget {
-    orientation = "horizontal",
-    forced_height = 20,
-    opacity = 0,
-    widget = wibox.widget.separator
-  }
-
-  local bottomSeparator =
-    wibox.widget {
-    orientation = "horizontal",
-    forced_height = 5,
-    opacity = 0,
-    widget = wibox.widget.separator
-  }
+  local bottomSeparator = seperator_widget(5, "horizontal", 0)
 
   local function settings_plugin()
     local table_widget =
@@ -519,7 +501,7 @@ local left_panel_func = function(screen)
   end
 
   body =
-    scrollbar(
+    scrollbox(
     wibox.widget {
       layout = wibox.layout.align.vertical,
       separator,

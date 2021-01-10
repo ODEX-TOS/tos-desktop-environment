@@ -31,6 +31,8 @@ local configWriter = require("lib-tde.config-writer")
 local configFile = os.getenv("HOME") .. "/.config/tos/general.conf"
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
+local slider = require("lib-widget.slider")
+local seperator_widget = require("lib-widget.separator")
 
 local m = dpi(5)
 local settings_index = dpi(40)
@@ -185,30 +187,13 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
 end
 
 local function create_option_slider(title, min, max, inc, option, start_value)
-  local step_size = 1 / inc
-
-  local option_slider = wibox.widget.slider()
-  option_slider.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  option_slider.bar_height = dpi(30)
-  option_slider.bar_color = beautiful.bg_modal
-  option_slider.bar_active_color = beautiful.accent.hue_500
-  option_slider.handle_shape = gears.shape.circle
-  option_slider.handle_width = dpi(35)
-  option_slider.handle_color = beautiful.accent.hue_500
-  option_slider.handle_border_width = 1
-  option_slider.handle_border_color = "#00000012"
-  option_slider.minimum = min * step_size
-  option_slider.maximum = max * step_size
-
-  -- set the initial value
-  option_slider:set_value(start_value * step_size)
-
-  option_slider:connect_signal(
-    "property::value",
-    function()
-      local value = option_slider.value / step_size
+  local option_slider =
+    slider(
+    min,
+    max,
+    inc,
+    start_value,
+    function(value)
       _G.update_anim_speed(value)
       configWriter.update_entry(configFile, option, tostring(value))
     end
@@ -281,11 +266,7 @@ return function()
     )
   )
 
-  local separator =
-    wibox.widget {
-    widget = wibox.widget.separator,
-    forced_height = settings_index / 1.5
-  }
+  local separator = seperator_widget(settings_index / 1.5)
 
   view:setup {
     layout = wibox.container.background,

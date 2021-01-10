@@ -29,6 +29,7 @@ local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
+local slider = require("lib-widget.slider")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -71,24 +72,14 @@ return function()
   mic_footer.font = beautiful.font
   mic_footer.align = "right"
 
-  local vol_slider = wibox.widget.slider()
-  vol_slider.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  vol_slider.bar_height = dpi(30)
-  vol_slider.bar_color = beautiful.bg_modal
-  vol_slider.bar_active_color = beautiful.accent.hue_500
-  vol_slider.handle_shape = gears.shape.circle
-  vol_slider.handle_width = dpi(35)
-  vol_slider.handle_color = beautiful.accent.hue_500
-  vol_slider.handle_border_width = 1
-  vol_slider.handle_border_color = "#00000012"
-  vol_slider.minimum = 0
-  vol_slider.maximum = 100
-  vol_slider:connect_signal(
-    "property::value",
-    function()
-      signals.emit_volume(vol_slider.value)
+  local vol_slider =
+    slider(
+    0,
+    100,
+    1,
+    0,
+    function(value)
+      signals.emit_volume(value)
     end
   )
 
@@ -96,7 +87,7 @@ return function()
     function(value)
       local number = tonumber(value)
       if not (number == vol_slider.value) then
-        vol_slider:set_value(tonumber(value) or 0)
+        vol_slider.update(tonumber(value) or 0)
       end
     end
   )

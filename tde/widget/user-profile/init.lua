@@ -28,7 +28,7 @@
 local wibox = require("wibox")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
-local theme = require("theme.icons.dark-light")
+local profilebox = require("lib-widget.profilebox")
 
 local beautiful = require("beautiful")
 
@@ -43,17 +43,12 @@ local filehandle = require("lib-tde.file")
 filehandle.dir_create(PATH_TO_CACHE_ICON)
 
 local profile_imagebox =
-  wibox.widget {
-  {
-    id = "icon",
-    forced_height = dpi(90),
-    image = theme(PATH_TO_ICONS .. "user" .. ".svg"),
-    clip_shape = gears.shape.circle,
-    widget = wibox.widget.imagebox,
-    resize = true
-  },
-  layout = wibox.layout.align.horizontal
-}
+  profilebox(
+  PATH_TO_ICONS .. "user" .. ".svg",
+  dpi(90),
+  function(_)
+  end
+)
 
 local profile_name =
   wibox.widget {
@@ -93,7 +88,7 @@ local function init()
 
   signals.connect_profile_picture_changed(
     function(picture)
-      profile_imagebox.icon:set_image(picture)
+      profile_imagebox.update(picture)
     end
   )
 

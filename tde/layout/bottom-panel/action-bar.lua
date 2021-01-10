@@ -84,16 +84,7 @@ return function(screen, action_bar_width)
       -- Create a taglist widget
       TagList("bottom")(screen),
       folders
-      --[[wibox.widget {
-              orientation = 'horizontal',
-              forced_height = 10,
-              opacity = 0.50,
-              widget = wibox.widget.separator
-            }, ]]
-      --
     },
-    --s.mytasklist, -- Middle widget
-    --nil,
     {
       -- Right widgets
       layout = wibox.layout.fixed.horizontal,

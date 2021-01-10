@@ -25,14 +25,9 @@
 local wibox = require("wibox")
 local mat_list_item = require("widget.material.list-item")
 local beautiful = require("beautiful")
+local seperator_widget = require("lib-widget.separator")
 
-local separator =
-  wibox.widget {
-  orientation = "vertical",
-  forced_height = 16,
-  opacity = 0.00,
-  widget = wibox.widget.separator
-}
+local separator = seperator_widget(16, "vertical", 0)
 
 local actionTitle =
   wibox.widget {

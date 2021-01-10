@@ -33,8 +33,9 @@ local naughty = require("naughty")
 local plugins = require("lib-tde.plugin-loader")("settings")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
 local animate = require("lib-tde.animations").createAnimObject
+local profilebox = require("lib-widget.profilebox")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -49,7 +50,7 @@ local settings_width = dpi(1100)
 local settings_height = dpi(900)
 local settings_nw = dpi(260)
 
--- This gets populated by the scrollbar
+-- This gets populated by the scrollbox
 local body = {}
 
 -- save the index state of last time
@@ -192,7 +193,7 @@ local function enable_view_by_index(i, s, bNoAnimation)
     local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
     root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
 
-    -- reset the scrollbar when we open the settings app
+    -- reset the scrollbox when we open the settings app
     if not root.elements.settings.visible then
       body:reset()
     end
@@ -307,26 +308,17 @@ local function make_nav()
   )
   local img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
 
-  local profile_picture_image =
-    wibox.widget {
-    widget = wibox.widget.imagebox,
-    image = img,
-    resize = true
-  }
-
   local avatar =
-    wibox.widget {
-    layout = wibox.container.background,
-    shape = gears.shape.circle,
-    shape_clip = gears.shape.circle,
-    forced_width = settings_index,
-    forced_height = settings_index,
-    profile_picture_image
-  }
+    profilebox(
+    img,
+    settings_index,
+    function(_)
+    end
+  )
 
   signals.connect_profile_picture_changed(
     function(picture)
-      profile_picture_image:set_image(picture)
+      avatar.update(picture)
     end
   )
 
@@ -445,7 +437,7 @@ local function make_nav()
     )
   )
 
-  body = scrollbar(nav_container)
+  body = scrollbox(nav_container)
 
   nav:setup {
     layout = wibox.container.place,

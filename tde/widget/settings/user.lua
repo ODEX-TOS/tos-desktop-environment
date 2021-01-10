@@ -33,11 +33,12 @@ local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
+local profilebox = require("lib-widget.profilebox")
 
 -- TODO: add option to modify the hostname and group management :)
 
--- this will hold the scrollbar, used to reset it
+-- this will hold the scrollbox, used to reset it
 local body = nil
 
 local m = dpi(10)
@@ -55,18 +56,10 @@ end
 local function make_mon(wall, _, fullwall, size)
   fullwall = fullwall or wall
   local picture =
-    wibox.widget {
-    widget = wibox.widget.imagebox,
-    shape = rounded(size),
-    clip_shape = rounded(size),
-    resize = false,
-    forced_width = size,
-    forced_height = size
-  }
-  picture:set_image(wall)
-  picture:connect_signal(
-    "button::press",
-    function(_, _, _, button)
+    profilebox(
+    wall,
+    size,
+    function(button)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
       if bSelectedProfilePicture and button == 1 then
         awful.spawn.easy_async(
@@ -84,6 +77,7 @@ local function make_mon(wall, _, fullwall, size)
       end
     end
   )
+
   return wibox.container.place(picture)
 end
 
@@ -171,7 +165,7 @@ return function()
       }
     }
   }
-  body = scrollbar(layout)
+  body = scrollbox(layout)
   pictures:setup {
     layout = wibox.container.margin,
     margins = m,

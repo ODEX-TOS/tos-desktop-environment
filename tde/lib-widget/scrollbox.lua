@@ -22,10 +22,30 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Create a new scrollbox widget
+--
+-- Usefull when you want the internal widget to scroll
+--
+--    -- make a widget scrollable
+--    local scrollbox = lib-widget.scrollbox(lib-widget.imagebox("file.png"))
+--
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdemod lib-widget.scrollbox
+---------------------------------------------------------------------------
+
 local wibox = require("wibox")
 
--- @param show            : the widget to make scrollable
-return function(show)
+--- Create a new scrollable widget
+-- @tparam widget scrollable The widget that we make scrollable
+-- @treturn widget The scrollbox widget
+-- @staticfct seperator
+-- @usage -- This will create a scrollbox out of the internal widget
+-- -- make a widget scrollable
+-- local scrollbox = lib-widget.scrollbox(lib-widget.imagebox("file.png"))
+return function(scrollable)
     local offset = 0
     local max_scroll = 90000 -- if no max scrolling is present we set it to the max
 
@@ -38,9 +58,13 @@ return function(show)
         end
     end
 
-    widget = wibox.container.margin(show)
+    widget = wibox.container.margin(scrollable)
 
-    -- The reset function will put the scrollbar to the top
+    --- Reset the scrollbox to its inital state
+    -- @staticfct reset
+    -- @usage -- This will reset the scroll state
+    -- -- reset the scrollbox as it was initially
+    -- scrollbox.reset()
     widget.reset = function()
         -- reset the internal state
         offset = 0

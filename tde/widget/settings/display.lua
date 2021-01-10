@@ -35,9 +35,10 @@ local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
+local slider = require("lib-widget.slider")
 
--- this will hold the scrollbar, used to reset it
+-- this will hold the scrollbox, used to reset it
 local body = nil
 
 local m = dpi(10)
@@ -177,39 +178,49 @@ return function()
   changewall.shape = rounded()
   changewall.bg = beautiful.accent.hue_600
 
-  local brightness = wibox.widget.slider()
-  brightness.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  brightness.bar_height = dpi(30)
-  brightness.bar_color = beautiful.bg_modal
-  brightness.bar_active_color = beautiful.accent.hue_500
-  brightness.handle_shape = gears.shape.circle
-  brightness.handle_width = dpi(35)
-  brightness.handle_color = beautiful.accent.hue_500
-  brightness.handle_border_width = 1
-  brightness.handle_border_color = "#00000012"
-  brightness.minimum = 0
-  brightness.maximum = 100
-  brightness:connect_signal(
-    "property::value",
-    function()
+  local brightness =
+    slider(
+    0,
+    100,
+    1,
+    0,
+    function(value)
       if _G.oled then
-        awful.spawn("brightness -s " .. tostring(brightness.value) .. " -F")
+        awful.spawn("brightness -s " .. tostring(value) .. " -F")
       else
         awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
-        awful.spawn("brightness -s " .. tostring(brightness.value))
+        awful.spawn("brightness -s " .. tostring(value))
       end
     end
   )
 
   signals.connect_brightness(
     function(value)
-      brightness:set_value(tonumber(value))
+      brightness.update(tonumber(value))
     end
   )
 
-  local screen_time = wibox.widget.slider()
+  local screen_time =
+    slider(
+    10,
+    600,
+    1,
+    tonumber(general["screen_on_time"]) or 120,
+    function(value)
+      print("Updated screen time: " .. tostring(value) .. "sec")
+      screen_time_tooltip.text = datetime.numberInSecToMS(value) .. i18n.translate(" before sleeping")
+      general["screen_on_time"] = tostring(value)
+      configWriter.update_entry(os.getenv("HOME") .. "/.config/tos/general.conf", "screen_on_time", tostring(value))
+      if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
+        awful.spawn("pkill -f autolock.sh")
+        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(value))
+      end
+    end,
+    function()
+      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
+    end
+  )
+
   screen_time.bar_shape = function(c, w, h)
     gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
   end
@@ -224,32 +235,6 @@ return function()
   screen_time.minimum = 10
   screen_time.maximum = 600
   screen_time.value = tonumber(general["screen_on_time"]) or 120
-
-  local screen_time_tooltip =
-    awful.tooltip {
-    objects = {screen_time},
-    timer_function = function()
-      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
-    end
-  }
-
-  screen_time:connect_signal(
-    "property::value",
-    function()
-      print("Updated screen time: " .. tostring(screen_time.value) .. "sec")
-      screen_time_tooltip.text = datetime.numberInSecToMS(screen_time.value) .. i18n.translate(" before sleeping")
-      general["screen_on_time"] = tostring(screen_time.value)
-      configWriter.update_entry(
-        os.getenv("HOME") .. "/.config/tos/general.conf",
-        "screen_on_time",
-        tostring(screen_time.value)
-      )
-      if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
-        awful.spawn("pkill -f autolock.sh")
-        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(screen_time.value))
-      end
-    end
-  )
 
   changewall:connect_signal(
     "mouse::enter",
@@ -292,7 +277,7 @@ return function()
       }
     }
   }
-  body = scrollbar(layout)
+  body = scrollbox(layout)
   monitors:setup {
     layout = wibox.container.margin,
     margins = m,

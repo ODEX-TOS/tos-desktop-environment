@@ -281,10 +281,6 @@ function test_configuration_mod_key_tde_widget_about_init_lua()
     assert(exists("tde/widget/about/init.lua"), "Check that tde/widget/about/init.lua exists")
 end
 
-function test_configuration_mod_key_tde_widget_scrollbar_lua()
-    assert(exists("tde/widget/scrollbar.lua"), "Check that tde/widget/scrollbar.lua exists")
-end
-
 function test_configuration_mod_key_tde_widget_user_profile_init_lua()
     assert(exists("tde/widget/user-profile/init.lua"), "Check that tde/widget/user-profile/init.lua exists")
 end

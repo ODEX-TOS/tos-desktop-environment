@@ -24,32 +24,31 @@
 ]]
 local wibox = require("wibox")
 local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("widget.material.slider")
+local slider = require("lib-widget.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local spawn = require("awful.spawn")
 local signals = require("lib-tde.signals")
 
 local slider_osd =
-  wibox.widget {
-  read_only = false,
-  widget = mat_slider
-}
-_G.brightness2 = slider_osd
-slider_osd:connect_signal(
-  "property::value",
-  function()
+  slider(
+  0,
+  100,
+  1,
+  0,
+  function(value)
     if (_G.menuopened) then
-      signals.emit_brightness(tonumber(slider_osd.value))
+      signals.emit_brightness(tonumber(value))
     end
     if (_G.oled) then
-      spawn("brightness -s " .. math.max(slider_osd.value, 5) .. " -F") -- toggle pixel values
+      spawn("brightness -s " .. math.max(value, 5) .. " -F") -- toggle pixel values
     else
       spawn("brightness -s 100 -F") -- reset pixel values
-      spawn("brightness -s " .. math.max(slider_osd.value, 5))
+      spawn("brightness -s " .. math.max(value, 5))
     end
   end
 )
+_G.brightness2 = slider_osd
 
 slider_osd:connect_signal(
   "button::press",
@@ -69,7 +68,7 @@ local function UpdateBrOSD()
       "brightness -g -F",
       function(stdout)
         local brightness = string.match(stdout, "(%d+)")
-        slider_osd:set_value(tonumber(brightness))
+        slider_osd.update(tonumber(brightness))
       end
     )
   else
@@ -77,7 +76,7 @@ local function UpdateBrOSD()
       "brightness -g",
       function(stdout)
         local brightness = string.match(stdout, "(%d+)")
-        slider_osd:set_value(tonumber(brightness))
+        slider_osd.update(tonumber(brightness))
       end
     )
   end

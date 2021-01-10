@@ -29,6 +29,7 @@ local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
 local mouse = require("lib-tde.mouse")
+local slider = require("lib-widget.slider")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -64,51 +65,25 @@ return function()
     local mouse_heading = wibox.widget.textbox(name)
     mouse_heading.font = beautiful.font
 
-    local mouse_slider = wibox.widget.slider()
-    mouse_slider.bar_shape = function(c, w, h)
-      gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-    end
-    mouse_slider.bar_height = dpi(30)
-    mouse_slider.bar_color = beautiful.bg_modal
-    mouse_slider.bar_active_color = beautiful.accent.hue_500
-    mouse_slider.handle_shape = gears.shape.circle
-    mouse_slider.handle_width = dpi(35)
-    mouse_slider.handle_color = beautiful.accent.hue_500
-    mouse_slider.handle_border_width = 1
-    mouse_slider.handle_border_color = "#00000012"
-    mouse_slider.minimum = 5
-    mouse_slider.maximum = 1000
-
-    mouse_slider:set_value((default_value * 100) or 1)
-
-    mouse_slider:connect_signal(
-      "property::value",
-      function()
-        mouse.setMouseSpeed(id, mouse_slider.value / 100)
+    local mouse_slider =
+      slider(
+      0.05,
+      10,
+      0.05,
+      default_value,
+      function(value)
+        mouse.setMouseSpeed(id, value)
       end
     )
 
-    local mouse_accel_slider = wibox.widget.slider()
-    mouse_accel_slider.bar_shape = function(c, w, h)
-      gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-    end
-    mouse_accel_slider.bar_height = dpi(30)
-    mouse_accel_slider.bar_color = beautiful.bg_modal
-    mouse_accel_slider.bar_active_color = beautiful.accent.hue_500
-    mouse_accel_slider.handle_shape = gears.shape.circle
-    mouse_accel_slider.handle_width = dpi(35)
-    mouse_accel_slider.handle_color = beautiful.accent.hue_500
-    mouse_accel_slider.handle_border_width = 1
-    mouse_accel_slider.handle_border_color = "#00000012"
-    mouse_accel_slider.minimum = 1
-    mouse_accel_slider.maximum = 100
-
-    mouse_accel_slider:set_value((default_accel_value * 100) or 1)
-
-    mouse_accel_slider:connect_signal(
-      "property::value",
-      function()
-        mouse.setAccellaration(id, mouse_accel_slider.value / 100)
+    local mouse_accel_slider =
+      slider(
+      0.01,
+      1,
+      0.01,
+      default_accel_value,
+      function(value)
+        mouse.setAccellaration(id, value)
       end
     )
 
