@@ -27,7 +27,6 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
-local file_exists = require("lib-tde.file").exists
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local naughty = require("naughty")
@@ -84,7 +83,7 @@ if grabber == nil then
         key = "Up",
         on_press = function()
           if INDEX > 1 then
-            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen, true)
           end
         end
       },
@@ -93,7 +92,7 @@ if grabber == nil then
         key = "Down",
         on_press = function()
           if INDEX < #root.elements.settings_views then
-            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen, true)
           end
         end
       },
@@ -102,9 +101,9 @@ if grabber == nil then
         key = "Tab",
         on_press = function()
           if INDEX < #root.elements.settings_views then
-            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX + 1, mouse.screen, true)
           else
-            root.elements.settings.enable_view_by_index(1, mouse.screen)
+            root.elements.settings.enable_view_by_index(1, mouse.screen, true)
           end
         end
       },
@@ -113,9 +112,9 @@ if grabber == nil then
         key = "Tab",
         on_press = function()
           if INDEX > 1 then
-            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen)
+            root.elements.settings.enable_view_by_index(INDEX - 1, mouse.screen, true)
           else
-            root.elements.settings.enable_view_by_index(#root.elements.settings_views, mouse.screen)
+            root.elements.settings.enable_view_by_index(#root.elements.settings_views, mouse.screen, true)
           end
         end
       }
@@ -171,7 +170,7 @@ local function setActiveView(i, link)
 end
 
 -- If you set the index to -1 then we go to the last remembered index
-local function enable_view_by_index(i, s, loc)
+local function enable_view_by_index(i, s, bNoAnimation)
   if not (i == -1) then
     INDEX = i
   end
@@ -191,19 +190,18 @@ local function enable_view_by_index(i, s, loc)
     end
     -- center the hub in height
     local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
-    if loc == "right" then
-      root.elements.settings.x = (s.workarea.width - settings_width - m) + s.workarea.x
-    else
-      root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
-    end
+    root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
+
     -- reset the scrollbar when we open the settings app
     if not root.elements.settings.visible then
       body:reset()
     end
     root.elements.settings.visible = true
 
-    root.elements.settings.y = s.geometry.y - settings_height
-    animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+    if not (bNoAnimation == true) then
+      root.elements.settings.y = s.geometry.y - settings_height
+      animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+    end
   end
 end
 
@@ -307,10 +305,14 @@ local function make_nav()
       user.text = name
     end
   )
-  local img = os.getenv("HOME") .. "/.face"
-  if not file_exists(img) then
-    img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
-  end
+  local img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
+
+  local profile_picture_image =
+    wibox.widget {
+    widget = wibox.widget.imagebox,
+    image = img,
+    resize = true
+  }
 
   local avatar =
     wibox.widget {
@@ -319,12 +321,14 @@ local function make_nav()
     shape_clip = gears.shape.circle,
     forced_width = settings_index,
     forced_height = settings_index,
-    {
-      widget = wibox.widget.imagebox,
-      image = img,
-      resize = true
-    }
+    profile_picture_image
   }
+
+  signals.connect_profile_picture_changed(
+    function(picture)
+      profile_picture_image:set_image(picture)
+    end
+  )
 
   local rule = wibox.container.background()
   rule.forced_height = 1
@@ -334,6 +338,10 @@ local function make_nav()
   table.insert(
     root.elements.settings_views,
     make_view(icons.settings, i18n.translate("General"), require("widget.settings.general")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.user, i18n.translate("User"), require("widget.settings.user")())
   )
   table.insert(
     root.elements.settings_views,

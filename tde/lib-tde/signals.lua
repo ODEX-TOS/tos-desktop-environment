@@ -581,4 +581,25 @@ connections.connect_refresh_screen = function(func)
     awesome.connect_signal("TDE::screen:refresh", func)
 end
 
+--- Notify when the user profile picture changed
+-- @tparam string picture The profile picture file path
+-- @staticfct emit_profile_picture_changed
+-- @usage -- Notify other TDE components when the user profile picture changed
+-- lib-tde.signals.emit_profile_picture_changed()
+connections.emit_profile_picture_changed = function(picture)
+    awesome.emit_signal("TDE::profile:picture::changed", picture)
+end
+
+--- Trigger a callback function when the user profile picture changed
+-- @tparam function func The callback function that will be calledwhen the user profile picture changed
+-- @staticfct profile_picture_changed
+-- @usage --
+-- lib-tde.signals.profile_picture_changed(
+--    function (picture)
+--      print("Changed profile picture to: " .. picture)
+--    end)
+connections.connect_profile_picture_changed = function(func)
+    awesome.connect_signal("TDE::profile:picture::changed", func)
+end
+
 return connections

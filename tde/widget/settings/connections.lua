@@ -47,6 +47,9 @@ local active_text = ""
 
 local static_connections = {}
 
+local refresh = function()
+end
+
 local password_to_star = function(pass)
   local str = ""
   for _ = 1, #pass do
@@ -123,14 +126,14 @@ local function make_network_widget(ssid, active)
             awful.spawn.easy_async(
               "tos network connect " .. ssid,
               function(_)
-                root.elements.settings_views[3].view.refresh()
+                refresh()
               end
             )
           else
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
               function(_)
-                root.elements.settings_views[3].view.refresh()
+                refresh()
               end
             )
           end
@@ -377,7 +380,7 @@ return function()
     }
   }
 
-  view.refresh = function()
+  refresh = function()
     local interface = file.string("/tmp/interface.txt")
     if hardware.hasWifi() and not (interface == "") then
       wireless.icon:set_image(icons.wifi)
@@ -422,5 +425,6 @@ return function()
     )
   end
 
+  view.refresh = refresh
   return view
 end

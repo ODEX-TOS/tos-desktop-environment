@@ -51,6 +51,8 @@ local mon_size = {
   w = nil,
   h = nil
 }
+local refresh = function()
+end
 
 local bSelectWallpaper = false
 
@@ -78,7 +80,7 @@ local function make_mon(wall, id, fullwall, disable_number)
           "tos theme set " .. fullwall,
           function()
             bSelectWallpaper = false
-            root.elements.settings_views[4].view.refresh()
+            refresh()
             local themeFile = os.getenv("HOME") .. "/.config/tos/theme"
             -- our theme file exists
             if filesystem.exists(themeFile) then
@@ -270,7 +272,7 @@ return function()
         function()
           -- TODO: change wallpaper
           bSelectWallpaper = not bSelectWallpaper
-          root.elements.settings_views[4].view.refresh()
+          refresh()
         end
       )
     )
@@ -452,7 +454,7 @@ return function()
     callback = loadMonitors
   }
 
-  view.refresh = function()
+  refresh = function()
     screens = {}
     layout:reset()
     body:reset()
@@ -510,5 +512,6 @@ return function()
     end
   end
 
+  view.refresh = refresh
   return view
 end

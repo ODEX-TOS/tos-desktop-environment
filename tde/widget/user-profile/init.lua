@@ -91,13 +91,11 @@ local function init()
     end
   )
 
-  -- find the user profile picture
-  local face_img_path = os.getenv("HOME") .. "/.face"
-  if filehandle.exists(face_img_path) then
-    profile_imagebox.icon:set_image(face_img_path)
-  else
-    profile_imagebox.icon:set_image(theme(PATH_TO_ICONS .. "user.svg"))
-  end
+  signals.connect_profile_picture_changed(
+    function(picture)
+      profile_imagebox.icon:set_image(picture)
+    end
+  )
 
   signals.connect_distro(
     function(distroname)
