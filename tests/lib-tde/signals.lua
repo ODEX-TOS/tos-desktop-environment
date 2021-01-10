@@ -315,8 +315,21 @@ function test_emit_profile_picture()
     )
 end
 
+function test_connect_do_not_disturb()
+    assert(signals.connect_do_not_disturb, "Make sure the signal connect_do_not_disturb exists")
+    assert(
+        type(signals.connect_do_not_disturb) == "function",
+        "Make sure connect_do_not_disturb is a signal and a function"
+    )
+end
+
+function test_emit_do_not_disturb()
+    assert(signals.emit_do_not_disturb, "Make sure the signal emit_do_not_disturb exists")
+    assert(type(signals.emit_do_not_disturb) == "function", "Make sure emit_do_not_disturb is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 53
+    local amount = 55
     local result = tablelength(signals)
     assert(
         result == amount,

@@ -37,6 +37,7 @@ local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
 local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
+local card = require("lib-widget.card")
 
 -- this will hold the scrollbox, used to reset it
 local body = nil
@@ -161,9 +162,7 @@ return function()
     )
   )
 
-  local monitors = wibox.container.background()
-  monitors.bg = beautiful.bg_modal_title
-  monitors.shape = rounded()
+  local monitors = card()
 
   local layout = wibox.layout.grid()
   layout.spacing = m
@@ -172,10 +171,9 @@ return function()
   layout.expand = true
   layout.min_rows_size = dpi(100)
 
-  local changewall = wibox.container.background()
+  local changewall = card()
   changewall.top = m
   changewall.bottom = m
-  changewall.shape = rounded()
   changewall.bg = beautiful.accent.hue_600
 
   local brightness =
@@ -221,21 +219,6 @@ return function()
     end
   )
 
-  screen_time.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  screen_time.bar_height = dpi(30)
-  screen_time.bar_color = beautiful.bg_modal
-  screen_time.bar_active_color = beautiful.accent.hue_500
-  screen_time.handle_shape = gears.shape.circle
-  screen_time.handle_width = dpi(35)
-  screen_time.handle_color = beautiful.accent.hue_500
-  screen_time.handle_border_width = 1
-  screen_time.handle_border_color = "#00000012"
-  screen_time.minimum = 10
-  screen_time.maximum = 600
-  screen_time.value = tonumber(general["screen_on_time"]) or 120
-
   changewall:connect_signal(
     "mouse::enter",
     function()
@@ -263,26 +246,80 @@ return function()
     )
   )
 
-  changewall:setup {
-    layout = wibox.container.background,
-    shape = rounded(),
-    {
-      layout = wibox.container.place,
-      valign = "center",
-      forced_height = settings_index,
+  changewall.update_body(
+    wibox.widget {
+      layout = wibox.container.background,
+      shape = rounded(),
       {
-        widget = wibox.widget.textbox,
-        text = "Change wallpaper",
-        font = beautiful.title_font
+        layout = wibox.container.place,
+        valign = "center",
+        forced_height = settings_index,
+        {
+          widget = wibox.widget.textbox,
+          text = "Change wallpaper",
+          font = beautiful.title_font
+        }
       }
     }
-  }
+  )
+
   body = scrollbox(layout)
-  monitors:setup {
-    layout = wibox.container.margin,
-    margins = m,
-    body
-  }
+  monitors.update_body(
+    wibox.widget {
+      layout = wibox.container.margin,
+      margins = m,
+      body
+    }
+  )
+
+  local brightness_card = card()
+  local screen_time_card = card()
+
+  brightness_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Brightness"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        brightness
+      }
+    }
+  )
+  screen_time_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Screen on time"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        screen_time
+      }
+    }
+  )
+
+  brightness_card.forced_height = (m * 6) + dpi(30)
+  screen_time_card.forced_height = (m * 6) + dpi(30)
 
   view:setup {
     layout = wibox.container.background,
@@ -302,59 +339,11 @@ return function()
       },
       {
         layout = wibox.layout.fixed.vertical,
-        {
-          layout = wibox.container.background,
-          bg = beautiful.bg_modal,
-          shape = rounded(),
-          forced_height = (m * 6) + dpi(30),
-          {
-            layout = wibox.layout.fixed.vertical,
-            {
-              layout = wibox.container.margin,
-              margins = m,
-              {
-                font = beautiful.font,
-                text = i18n.translate("Brightness"),
-                widget = wibox.widget.textbox
-              }
-            },
-            {
-              layout = wibox.container.margin,
-              left = m,
-              right = m,
-              bottom = m,
-              brightness
-            }
-          }
-        },
+        brightness_card,
         {
           layout = wibox.container.margin,
           top = m,
-          {
-            layout = wibox.container.background,
-            bg = beautiful.bg_modal,
-            shape = rounded(),
-            forced_height = (m * 6) + dpi(30),
-            {
-              layout = wibox.layout.fixed.vertical,
-              {
-                layout = wibox.container.margin,
-                margins = m,
-                {
-                  font = beautiful.font,
-                  text = i18n.translate("Screen on time"),
-                  widget = wibox.widget.textbox
-                }
-              },
-              {
-                layout = wibox.container.margin,
-                left = m,
-                right = m,
-                bottom = m,
-                screen_time
-              }
-            }
-          }
+          screen_time_card
         },
         {layout = wibox.container.margin, top = m, monitors},
         {layout = wibox.container.margin, top = m, changewall}

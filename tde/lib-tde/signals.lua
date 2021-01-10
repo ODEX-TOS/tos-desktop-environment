@@ -591,7 +591,7 @@ connections.emit_profile_picture_changed = function(picture)
 end
 
 --- Trigger a callback function when the user profile picture changed
--- @tparam function func The callback function that will be calledwhen the user profile picture changed
+-- @tparam function func The callback function that will be called when the user profile picture changed
 -- @staticfct profile_picture_changed
 -- @usage --
 -- lib-tde.signals.profile_picture_changed(
@@ -600,6 +600,27 @@ end
 --    end)
 connections.connect_profile_picture_changed = function(func)
     awesome.connect_signal("TDE::profile:picture::changed", func)
+end
+
+--- Notify when the notification disturb state changes
+-- @tparam bool bDoNotDisturb If Do Not Disturbe mode is turned on
+-- @staticfct emit_do_not_disturb
+-- @usage -- Notify other TDE components what the current do not disturb mode is
+-- lib-tde.signals.emit_do_not_disturb()
+connections.emit_do_not_disturb = function(bDoNotDisturb)
+    awesome.emit_signal("TDE::do_not_disturb::changed", bDoNotDisturb)
+end
+
+--- Trigger a callback function when the do not disturb mode changed
+-- @tparam function func The callback function that will be called when the do not disturb mode changed
+-- @staticfct connect_do_not_disturb
+-- @usage --
+-- lib-tde.signals.connect_do_not_disturb(
+--    function (bDoNotDisturb)
+--      print("Do not disturbe mode: " .. tostring(bDoNotDisturb))
+--    end)
+connections.connect_do_not_disturb = function(func)
+    awesome.connect_signal("TDE::do_not_disturb::changed", func)
 end
 
 return connections

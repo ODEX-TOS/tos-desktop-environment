@@ -35,6 +35,7 @@ local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
 local scrollbox = require("lib-widget.scrollbox")
 local profilebox = require("lib-widget.profilebox")
+local card = require("lib-widget.card")
 
 -- TODO: add option to modify the hostname and group management :)
 
@@ -107,9 +108,7 @@ return function()
     )
   )
 
-  local pictures = wibox.container.background()
-  pictures.bg = beautiful.bg_modal_title
-  pictures.shape = rounded()
+  local pictures = card()
 
   local layout = wibox.layout.grid()
   layout.spacing = m
@@ -166,11 +165,7 @@ return function()
     }
   }
   body = scrollbox(layout)
-  pictures:setup {
-    layout = wibox.container.margin,
-    margins = m,
-    body
-  }
+  pictures.update_body(body)
 
   view:setup {
     layout = wibox.container.background,

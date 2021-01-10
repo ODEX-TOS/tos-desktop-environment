@@ -70,7 +70,8 @@ read_globals = {
     "math.pow",
     "reverse",
     "center",
-    "save_state"
+    "save_state",
+    "dont_disturb"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about

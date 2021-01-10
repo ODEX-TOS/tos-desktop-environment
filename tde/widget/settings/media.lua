@@ -26,10 +26,10 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local slider = require("lib-widget.slider")
+local card = require("lib-widget.card")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -114,6 +114,44 @@ return function()
     )
   end
 
+  local volume_card = card()
+  volume_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          layout = wibox.layout.align.horizontal,
+          vol_heading,
+          nil,
+          nil
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        forced_height = dpi(30) + (m * 2),
+        vol_slider
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        vol_footer
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        mic_footer
+      }
+    }
+  )
+
   view:setup {
     layout = wibox.container.background,
     {
@@ -131,45 +169,7 @@ return function()
         ),
         close
       },
-      {
-        layout = wibox.container.background,
-        bg = beautiful.bg_modal,
-        shape = rounded(),
-        {
-          layout = wibox.layout.fixed.vertical,
-          {
-            layout = wibox.container.margin,
-            margins = m,
-            {
-              layout = wibox.layout.align.horizontal,
-              vol_heading,
-              nil,
-              nil
-            }
-          },
-          {
-            layout = wibox.container.margin,
-            left = m,
-            right = m,
-            bottom = m,
-            forced_height = dpi(30) + (m * 2),
-            vol_slider
-          },
-          {
-            layout = wibox.container.margin,
-            left = m,
-            right = m,
-            vol_footer
-          },
-          {
-            layout = wibox.container.margin,
-            left = m,
-            right = m,
-            bottom = m,
-            mic_footer
-          }
-        }
-      }
+      volume_card
     }
   }
 

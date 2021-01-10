@@ -41,13 +41,15 @@ local beautiful = require("beautiful")
 local gears = require("gears")
 local dpi = beautiful.xresources.apply_dpi
 
--- TODO: convert the settings app to a card based system
+local header_font = "SFNS Display Regular 14"
+local bg = beautiful.bg_modal
+local bg_title = beautiful.bg_modal_title
 
 local titled_card = function(title, height)
     local header =
         wibox.widget {
         text = i18n.translate(title),
-        font = "SFNS Display Regular 14",
+        font = header_font,
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox
@@ -56,7 +58,7 @@ local titled_card = function(title, height)
     local body_widget =
         wibox.widget {
         wibox.widget.base.empty_widget(),
-        bg = beautiful.bg_modal,
+        bg = bg,
         shape = function(cr, rect_width, rect_height)
             gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, 6)
         end,
@@ -68,10 +70,10 @@ local titled_card = function(title, height)
         wibox.widget {
         layout = wibox.layout.fixed.vertical,
         {
-            bg = beautiful.bg_modal_title,
+            bg = bg_title,
             wibox.widget {
                 wibox.container.margin(header, dpi(10), dpi(10), dpi(10), dpi(10)),
-                bg = beautiful.bg_modal_title,
+                bg = bg_title,
                 shape = function(cr, rect_width, rect_height)
                     gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, 6)
                 end,
@@ -81,7 +83,7 @@ local titled_card = function(title, height)
         },
         body_widget,
         nil,
-        bg = beautiful.bg_modal
+        bg = bg
     }
 
     --- Update the title of the card
@@ -119,7 +121,7 @@ local bare_card = function()
     local body_widget =
         wibox.widget {
         wibox.widget.base.empty_widget(),
-        bg = beautiful.bg_modal,
+        bg = bg,
         shape = function(cr, rect_width, rect_height)
             gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, 6)
         end,

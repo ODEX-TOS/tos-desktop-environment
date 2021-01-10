@@ -31,6 +31,7 @@ local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local mat_colors = require("theme.mat-colors")
 local configWriter = require("lib-tde.config-writer")
+local card = require("lib-widget.card")
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -297,6 +298,53 @@ return function()
       )
     )
   )
+  local theme_card = card()
+
+  local theme_settings_body =
+    wibox.widget {
+    layout = wibox.layout.flex.horizontal,
+    wibox.container.margin(
+      {
+        layout = wibox.layout.flex.vertical,
+        make_color_entry("red", 20),
+        make_color_entry("pink", 40),
+        make_color_entry("purple", 60),
+        make_color_entry("hue_purple", 80),
+        make_color_entry("indigo", 60),
+        make_color_entry("blue", 40),
+        make_color_entry("hue_blue", 20),
+        make_color_entry("cyan", 40),
+        make_color_entry("teal", 60),
+        make_color_entry("green", 80),
+        make_color_entry("hue_green", 60)
+      },
+      m,
+      m,
+      m,
+      m
+    ),
+    wibox.container.margin(
+      {
+        layout = wibox.layout.flex.vertical,
+        make_color_entry("lime", 40),
+        make_color_entry("yellow", 20),
+        make_color_entry("amber", 40),
+        make_color_entry("orange", 60),
+        make_color_entry("deep_orange", 80),
+        make_color_entry("brown", 60),
+        make_color_entry("grey", 40),
+        make_color_entry("blue_grey", 20),
+        make_color_entry("black", 40),
+        make_color_entry("light", 60, true)
+      },
+      m,
+      m,
+      m,
+      m
+    )
+  }
+
+  theme_card.update_body(theme_settings_body)
 
   primaryButton = create_primary_button()
   backgroundButton = create_background_button()
@@ -316,54 +364,13 @@ return function()
         ),
         close
       },
-      {
+      wibox.widget {
         layout = wibox.layout.flex.horizontal,
         wibox.container.margin(primaryButton, 0, settings_index, 0, 0),
         nil,
         backgroundButton
       },
-      {
-        layout = wibox.layout.flex.horizontal,
-        wibox.container.margin(
-          {
-            layout = wibox.layout.flex.vertical,
-            make_color_entry("red", 20),
-            make_color_entry("pink", 40),
-            make_color_entry("purple", 60),
-            make_color_entry("hue_purple", 80),
-            make_color_entry("indigo", 60),
-            make_color_entry("blue", 40),
-            make_color_entry("hue_blue", 20),
-            make_color_entry("cyan", 40),
-            make_color_entry("teal", 60),
-            make_color_entry("green", 80),
-            make_color_entry("hue_green", 60)
-          },
-          m,
-          m,
-          m,
-          m
-        ),
-        wibox.container.margin(
-          {
-            layout = wibox.layout.flex.vertical,
-            make_color_entry("lime", 40),
-            make_color_entry("yellow", 20),
-            make_color_entry("amber", 40),
-            make_color_entry("orange", 60),
-            make_color_entry("deep_orange", 80),
-            make_color_entry("brown", 60),
-            make_color_entry("grey", 40),
-            make_color_entry("blue_grey", 20),
-            make_color_entry("black", 40),
-            make_color_entry("light", 60, true)
-          },
-          m,
-          m,
-          m,
-          m
-        )
-      },
+      wibox.container.margin(theme_card, 0, 0, dpi(10), dpi(10)),
       save
     }
   }

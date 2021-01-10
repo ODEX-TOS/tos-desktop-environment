@@ -26,10 +26,10 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
 local mouse = require("lib-tde.mouse")
 local slider = require("lib-widget.slider")
+local card = require("lib-widget.card")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -62,6 +62,8 @@ return function()
   )
 
   local function make_mouse(id, name, default_value, default_accel_value, natural_scrolling)
+    local mouse_card = card()
+
     local mouse_heading = wibox.widget.textbox(name)
     mouse_heading.font = beautiful.font
 
@@ -126,10 +128,7 @@ return function()
       end
     )
 
-    return wibox.widget {
-      layout = wibox.container.background,
-      bg = beautiful.bg_modal,
-      shape = rounded(),
+    mouse_card.update_body(
       wibox.widget {
         layout = wibox.layout.fixed.vertical,
         {
@@ -183,7 +182,8 @@ return function()
           }
         }
       }
-    }
+    )
+    return mouse_card
   end
 
   local layout = wibox.layout.flex.vertical()
