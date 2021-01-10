@@ -41,18 +41,9 @@ local beautiful = require("beautiful")
 local gears = require("gears")
 local dpi = beautiful.xresources.apply_dpi
 
--- TODO: allow cards without a title (such as in the settings applications)
--- TODO: convert the left_panel to a card based system
+-- TODO: convert the settings app to a card based system
 
---- Create a new card widget
--- @tparam string title Sets the title of the card
--- @tparam[opt] number size The height of the card
--- @treturn widget The card widget
--- @staticfct card
--- @usage -- This will create a card with the title hello
--- -- card with the title hello
--- local card = lib-widget.card("hello")
-return function(title, height)
+local titled_card = function(title, height)
     local header =
         wibox.widget {
         text = i18n.translate(title),
@@ -122,4 +113,51 @@ return function(title, height)
         widget.update_body(update_body)
     end
     return widget
+end
+
+local bare_card = function()
+    local body_widget =
+        wibox.widget {
+        wibox.widget.base.empty_widget(),
+        bg = beautiful.bg_modal,
+        shape = function(cr, rect_width, rect_height)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, 6)
+        end,
+        widget = wibox.container.background
+    }
+
+    --- Update the body of the card
+    -- @tparam widget body The widget to put in the body of the card
+    -- @staticfct update_body
+    -- @usage -- This will change the body to world
+    -- card.update_body(lib-widget.textbox("world"))
+    body_widget.update_body = function(update_body)
+        body_widget.widget = update_body
+    end
+
+    --- Update the title and body
+    -- @tparam string title The title of the card
+    -- @tparam widget body The widget to put in the body of the card
+    -- @staticfct update
+    -- @usage -- This will change the title to "hello" and the body to "world"
+    -- card.update("hello", lib-widget.textbox("world"))
+    body_widget.update = function(_, update_body)
+        body_widget.update_body(update_body)
+    end
+    return body_widget
+end
+
+--- Create a new card widget
+-- @tparam[opt] string title Sets the title of the card
+-- @tparam[opt] number size The height of the card
+-- @treturn widget The card widget
+-- @staticfct card
+-- @usage -- This will create a card with the title hello
+-- -- card with the title hello
+-- local card = lib-widget.card("hello")
+return function(title, height)
+    if title ~= nil then
+        return titled_card(title, height)
+    end
+    return bare_card()
 end

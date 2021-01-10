@@ -26,11 +26,9 @@
 -- Will use default user.svg if there's no user image in /var/lib/...
 
 local wibox = require("wibox")
-local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local profilebox = require("lib-widget.profilebox")
-
-local beautiful = require("beautiful")
+local card = require("lib-widget.card")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/user-profile/icons/"
 
@@ -38,6 +36,8 @@ local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
 
 local signals = require("lib-tde.signals")
 local filehandle = require("lib-tde.file")
+
+local user_card = card()
 
 -- guarantee that the cache dir exists
 filehandle.dir_create(PATH_TO_CACHE_ICON)
@@ -117,48 +117,39 @@ end
 
 init()
 
-local user_profile =
+local body =
   wibox.widget {
-  --expand = 'none',
   {
+    layout = wibox.layout.align.horizontal,
     {
-      layout = wibox.layout.align.horizontal,
+      profile_imagebox,
+      margins = dpi(3),
+      widget = wibox.container.margin
+    },
+    {
+      -- expand = 'none',
+      layout = wibox.layout.fixed.vertical,
       {
-        profile_imagebox,
-        margins = dpi(3),
-        widget = wibox.container.margin
+        wibox.container.margin(profile_name, dpi(5)),
+        layout = wibox.layout.fixed.horizontal
       },
       {
-        -- expand = 'none',
-        layout = wibox.layout.fixed.vertical,
-        {
-          wibox.container.margin(profile_name, dpi(5)),
-          layout = wibox.layout.fixed.horizontal
-        },
-        {
-          wibox.container.margin(distro_name, dpi(5)),
-          layout = wibox.layout.fixed.vertical
-        },
-        {
-          wibox.container.margin(kernel_name, dpi(5)),
-          layout = wibox.layout.fixed.vertical
-        },
-        {
-          wibox.container.margin(uptime_time, dpi(5)),
-          layout = wibox.layout.fixed.vertical
-        }
+        wibox.container.margin(distro_name, dpi(5)),
+        layout = wibox.layout.fixed.vertical
+      },
+      {
+        wibox.container.margin(kernel_name, dpi(5)),
+        layout = wibox.layout.fixed.vertical
+      },
+      {
+        wibox.container.margin(uptime_time, dpi(5)),
+        layout = wibox.layout.fixed.vertical
       }
-    },
-    margins = dpi(5),
-    widget = wibox.container.margin
+    }
   },
-  bg = beautiful.bg_modal,
-  shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 6)
-  end,
-  widget = wibox.container.background
+  margins = dpi(5),
+  widget = wibox.container.margin
 }
+user_card.update_body(body)
 
--- return profile_imagebox
-
-return user_profile
+return user_card
