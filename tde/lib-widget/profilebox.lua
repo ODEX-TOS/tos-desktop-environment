@@ -29,12 +29,11 @@
 --
 --    -- Set the picture in the profilebox with a size of 100
 --    local picture = lib-widget.profilebox("file.png", dpi(100), function(button)
---         print("Clicked with button: " .. button)
+--     print("Clicked with button: " .. button)
 --    end)
 --
---   picture.update("file2.png")
+--    picture.update("file2.png")
 --
--- example widget
 -- ![profilebox](../images/profilebox.png)
 --
 -- @author Tom Meyers

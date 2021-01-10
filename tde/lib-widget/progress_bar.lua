@@ -31,7 +31,6 @@
 --    local bar = lib-widget.progress_bar()
 --    bar:set_value(20)
 --
--- example widget
 -- ![progress_bar](../images/progress_bar.png)
 --
 -- @author Tom Meyers

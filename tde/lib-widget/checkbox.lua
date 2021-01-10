@@ -30,7 +30,6 @@
 --    -- checkbox that is 20 pixels high
 --    local checkbox = lib-widget.checkbox(dpi(20))
 --
--- example widget
 -- ![checkbox](../images/checkbox.png)
 --
 -- @author Tom Meyers

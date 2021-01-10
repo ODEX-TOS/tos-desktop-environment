@@ -30,7 +30,6 @@
 --    local card = lib-widget.card("title")
 --    card.update_body(lib-widget.textbox("body"))
 --
--- example widget
 -- ![Card](../images/card.png)
 --
 -- @author Tom Meyers
