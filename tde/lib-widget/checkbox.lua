@@ -35,6 +35,8 @@
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-widget.checkbox
 ---------------------------------------------------------------------------
+-- TODO: implement this files
+-- TODO: refactor codebase to use this (settings app + left panel)
 
 local wibox = require("wibox")
 

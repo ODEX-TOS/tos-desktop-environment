@@ -35,6 +35,8 @@
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-widget.iconbox
 ---------------------------------------------------------------------------
+-- TODO: implement this files
+-- TODO: refactor codebase to use this
 
 local wibox = require("wibox")
 

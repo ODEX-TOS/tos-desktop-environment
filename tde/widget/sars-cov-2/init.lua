@@ -28,19 +28,13 @@ local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local theme = require("theme.icons.dark-light")
 local split = require("lib-tde.function.common").split
+local card = require("lib-widget.card")
 
 local beautiful = require("beautiful")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/sars-cov-2/icons/"
 
-local covid_header =
-  wibox.widget {
-  text = i18n.translate("Covid-19 cases in your country"),
-  font = "SFNS Display Regular 14",
-  align = "center",
-  valign = "center",
-  widget = wibox.widget.textbox
-}
+local covid_card = card("Covid-19 cases in your country")
 
 local covid_deceases =
   wibox.widget {
@@ -76,7 +70,7 @@ watch(
   [[curl -s https://ipapi.co/country_name]],
   3600,
   function(_, stdout)
-    covid_header.text = i18n.translate("Covid-19 cases in ") .. stdout
+    covid_card.update_title(i18n.translate("Covid-19 cases in ") .. stdout)
   end
 )
 
@@ -93,49 +87,30 @@ local covid_icon_widget =
   layout = wibox.layout.fixed.horizontal
 }
 
-local weather_report =
+local body =
   wibox.widget {
-  --expand = "none",
-  layout = wibox.layout.fixed.vertical,
-  bg = beautiful.bg_modal,
-  wibox.widget {
-    wibox.container.margin(covid_header, dpi(5), dpi(5), dpi(3), dpi(3)),
-    bg = beautiful.bg_modal_title,
-    shape = function(cr, width, height)
-      gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 6)
-    end,
-    widget = wibox.container.background
+  expand = "none",
+  layout = wibox.layout.fixed.horizontal,
+  {
+    wibox.widget {
+      covid_icon_widget,
+      margins = dpi(4),
+      widget = wibox.container.margin
+    },
+    margins = dpi(5),
+    widget = wibox.container.margin
   },
   {
     {
-      expand = "none",
-      layout = wibox.layout.fixed.horizontal,
-      {
-        wibox.widget {
-          covid_icon_widget,
-          margins = dpi(4),
-          widget = wibox.container.margin
-        },
-        margins = dpi(5),
-        widget = wibox.container.margin
-      },
-      {
-        {
-          layout = wibox.layout.fixed.vertical,
-          covid_deceases,
-          covid_deaths
-        },
-        margins = dpi(4),
-        bg = beautiful.bg_modal,
-        widget = wibox.container.margin
-      }
+      layout = wibox.layout.fixed.vertical,
+      covid_deceases,
+      covid_deaths
     },
-    bg = beautiful.bg_modal,
-    shape = function(cr, width, height)
-      gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true, 6)
-    end,
-    widget = wibox.container.background
+    margins = dpi(4),
+    widget = wibox.container.margin
   }
 }
 
-return weather_report
+covid_card.update_body(body)
+
+return covid_card

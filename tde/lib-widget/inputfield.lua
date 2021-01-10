@@ -35,6 +35,8 @@
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-widget.inputfield
 ---------------------------------------------------------------------------
+-- TODO: implement this files
+-- TODO: refactor codebase to use this (network tab)
 
 local wibox = require("wibox")
 

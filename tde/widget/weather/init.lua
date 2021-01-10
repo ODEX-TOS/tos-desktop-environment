@@ -27,6 +27,7 @@ local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 
 local beautiful = require("beautiful")
+local card = require("lib-widget.card")
 
 local theme = require("theme.icons.dark-light")
 
@@ -50,14 +51,7 @@ local weather_icon_widget =
 
 _G.weather_icon_widget = weather_icon_widget
 
-local weather_header =
-  wibox.widget {
-  text = i18n.translate("Weather & Temperature"),
-  font = "SFNS Display Regular 14",
-  align = "center",
-  valign = "center",
-  widget = wibox.widget.textbox
-}
+local weather_card = card("Weather & Temperature")
 
 local weather_description =
   wibox.widget {
@@ -81,50 +75,30 @@ local weather_temperature =
 
 _G.weather_temperature = weather_temperature
 
-local weather_report =
+local body =
   wibox.widget {
   expand = "none",
-  layout = wibox.layout.fixed.vertical,
+  layout = wibox.layout.fixed.horizontal,
   {
     wibox.widget {
-      wibox.container.margin(weather_header, dpi(10), dpi(10), dpi(10), dpi(10)),
-      bg = beautiful.bg_modal_title,
-      shape = function(cr, width, height)
-        gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 6)
-      end,
-      widget = wibox.container.background
+      weather_icon_widget,
+      margins = dpi(4),
+      widget = wibox.container.margin
     },
-    layout = wibox.layout.fixed.vertical
+    margins = dpi(5),
+    widget = wibox.container.margin
   },
   {
     {
-      expand = "none",
-      layout = wibox.layout.fixed.horizontal,
-      {
-        wibox.widget {
-          weather_icon_widget,
-          margins = dpi(4),
-          widget = wibox.container.margin
-        },
-        margins = dpi(5),
-        widget = wibox.container.margin
-      },
-      {
-        {
-          layout = wibox.layout.fixed.vertical,
-          weather_description,
-          weather_temperature
-        },
-        margins = dpi(4),
-        widget = wibox.container.margin
-      }
+      layout = wibox.layout.fixed.vertical,
+      weather_description,
+      weather_temperature
     },
-    bg = beautiful.bg_modal,
-    shape = function(cr, width, height)
-      gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true, 6)
-    end,
-    widget = wibox.container.background
+    margins = dpi(4),
+    widget = wibox.container.margin
   }
 }
 
-return weather_report
+weather_card.update_body(body)
+
+return weather_card

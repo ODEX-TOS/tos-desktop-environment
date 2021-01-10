@@ -35,7 +35,8 @@
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-widget.textbox
 ---------------------------------------------------------------------------
-
+-- TODO: implement this files
+-- TODO: refactor codebase to use this
 local wibox = require("wibox")
 
 --- Create a new textbox widget
