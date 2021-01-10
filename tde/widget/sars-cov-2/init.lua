@@ -24,13 +24,10 @@
 ]]
 local watch = require("awful.widget.watch")
 local wibox = require("wibox")
-local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local theme = require("theme.icons.dark-light")
 local split = require("lib-tde.function.common").split
 local card = require("lib-widget.card")
-
-local beautiful = require("beautiful")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/sars-cov-2/icons/"
 

@@ -35,6 +35,7 @@ local mat_icon = require("widget.material.icon")
 local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
 local seperator_widget = require("lib-widget.separator")
+local card = require("lib-widget.card")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -292,7 +293,7 @@ local left_panel_func = function(screen)
       widget = wibox.widget.textbox,
       align = center
     },
-    forced_height = dpi(12),
+    forced_height = dpi(60),
     clickable = true,
     widget = mat_list_item
   }
@@ -322,7 +323,7 @@ local left_panel_func = function(screen)
       widget = wibox.widget.textbox,
       align = center
     },
-    forced_height = dpi(12),
+    forced_height = dpi(60),
     clickable = true,
     widget = mat_list_item
   }
@@ -353,7 +354,7 @@ local left_panel_func = function(screen)
       widget = wibox.widget.textbox,
       align = center
     },
-    forced_height = dpi(12),
+    forced_height = dpi(60),
     clickable = true,
     widget = mat_list_item
   }
@@ -406,6 +407,14 @@ local left_panel_func = function(screen)
   local bottomSeparator = seperator_widget(5, "horizontal", 0)
 
   local function settings_plugin()
+    local network_card = card("Network Settings")
+    local screen_card = card("Screen Settings")
+    local settings_card = card("Settings application")
+
+    network_card.update_body(wifi_button)
+    screen_card.update_body(dpi_button)
+    settings_card.update_body(settings_app_button)
+
     local table_widget =
       wibox.widget {
       topSeparator,
@@ -425,69 +434,12 @@ local left_panel_func = function(screen)
       require("widget.control-center.dashboard.hardware-monitor")(screen),
       require("widget.control-center.dashboard.action-center"),
       separator,
-      {
-        wibox.widget {
-          text = i18n.translate("Network Settings"),
-          font = "Iosevka Regular 10",
-          align = "left",
-          widget = wibox.widget.textbox
-        },
-        widget = mat_list_item
-      },
-      {
-        wibox.widget {
-          wifi_button,
-          bg = beautiful.bg_modal, --beautiful.background.hue_800,
-          shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 28)
-          end,
-          widget = wibox.container.background
-        },
-        widget = mat_list_item
-      },
+      wibox.container.margin(network_card, dpi(20), dpi(20), dpi(20), dpi(20)),
       separator,
-      {
-        wibox.widget {
-          text = i18n.translate("Screen Settings"),
-          font = "Iosevka Regular 10",
-          align = "left",
-          widget = wibox.widget.textbox
-        },
-        widget = mat_list_item
-      },
-      layout = wibox.layout.fixed.vertical,
-      {
-        wibox.widget {
-          dpi_button,
-          bg = beautiful.bg_modal, --beautiful.background.hue_800,
-          shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 28)
-          end,
-          widget = wibox.container.background
-        },
-        widget = mat_list_item
-      },
+      wibox.container.margin(screen_card, dpi(20), dpi(20), dpi(20), dpi(20)),
       separator,
-      {
-        wibox.widget {
-          text = i18n.translate("Settings application"),
-          font = "Iosevka Regular 10",
-          align = "left",
-          widget = wibox.widget.textbox
-        },
-        widget = mat_list_item
-      },
-      {
-        wibox.widget {
-          settings_app_button,
-          bg = beautiful.bg_modal, --beautiful.background.hue_800,
-          shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 28)
-          end,
-          widget = wibox.container.background
-        },
-        widget = mat_list_item
-      }
+      wibox.container.margin(settings_card, dpi(20), dpi(20), dpi(20), dpi(20)),
+      layout = wibox.layout.fixed.vertical
     }
     for _, value in ipairs(plugins) do
       table_widget:add(

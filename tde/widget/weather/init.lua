@@ -23,10 +23,8 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local beautiful = require("beautiful")
 local card = require("lib-widget.card")
 
 local theme = require("theme.icons.dark-light")

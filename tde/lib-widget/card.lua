@@ -66,8 +66,8 @@ return function(title, height)
         wibox.widget {
         wibox.widget.base.empty_widget(),
         bg = beautiful.bg_modal,
-        shape = function(cr, width, height)
-            gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true, 6)
+        shape = function(cr, rect_width, rect_height)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, 6)
         end,
         widget = wibox.container.background,
         forced_height = height
@@ -81,8 +81,8 @@ return function(title, height)
             wibox.widget {
                 wibox.container.margin(header, dpi(10), dpi(10), dpi(10), dpi(10)),
                 bg = beautiful.bg_modal_title,
-                shape = function(cr, width, height)
-                    gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 6)
+                shape = function(cr, rect_width, rect_height)
+                    gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, 6)
                 end,
                 widget = wibox.container.background
             },
@@ -98,8 +98,8 @@ return function(title, height)
     -- @staticfct update_title
     -- @usage -- This will change the title to hello
     -- card.update_title("hello")
-    widget.update_title = function(title)
-        header.text = i18n.translate(title)
+    widget.update_title = function(updated_title)
+        header.text = i18n.translate(updated_title)
     end
 
     --- Update the body of the card
@@ -107,8 +107,8 @@ return function(title, height)
     -- @staticfct update_body
     -- @usage -- This will change the body to world
     -- card.update_body(lib-widget.textbox("world"))
-    widget.update_body = function(body)
-        body_widget.widget = body
+    widget.update_body = function(update_body)
+        body_widget.widget = update_body
     end
 
     --- Update the title and body
@@ -117,9 +117,9 @@ return function(title, height)
     -- @staticfct update
     -- @usage -- This will change the title to "hello" and the body to "world"
     -- card.update("hello", lib-widget.textbox("world"))
-    widget.update = function(title, body)
-        widget.update_title(title)
-        widget.update_body(body)
+    widget.update = function(updated_title, update_body)
+        widget.update_title(updated_title)
+        widget.update_body(update_body)
     end
     return widget
 end

@@ -25,6 +25,7 @@
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
 
 local gap = 1
 
@@ -37,7 +38,10 @@ local bluebutton = require("widget.action-center.bluetooth-button")
 local comptonbutton = require("widget.action-center.compositor-button")
 local comptonBackendbutton = require("widget.action-center.compositor-backend-button")
 
-return wibox.widget {
+-- TODO: use the lib-widget based checkboxes
+
+local widget =
+  wibox.widget {
   spacing = gap,
   -- Wireless Connection
   wibox.widget {
@@ -101,3 +105,5 @@ return wibox.widget {
     widget = mat_list_item
   }
 }
+
+return wibox.container.margin(widget, 0, 0, dpi(20), dpi(20))
