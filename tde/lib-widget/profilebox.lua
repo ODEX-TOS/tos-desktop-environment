@@ -36,7 +36,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-widget.profilebox
+-- @tdewidget lib-widget.profilebox
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

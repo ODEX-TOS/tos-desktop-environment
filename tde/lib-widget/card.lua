@@ -33,7 +33,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-widget.card
+-- @tdewidget lib-widget.card
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

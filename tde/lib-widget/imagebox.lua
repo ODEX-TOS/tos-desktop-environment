@@ -33,7 +33,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-widget.imagebox
+-- @tdewidget lib-widget.imagebox
 ---------------------------------------------------------------------------
 -- TODO: implement this files
 -- TODO: refactor codebase to use this

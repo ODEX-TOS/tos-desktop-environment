@@ -33,7 +33,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-widget.scrollbox
+-- @tdewidget lib-widget.scrollbox
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

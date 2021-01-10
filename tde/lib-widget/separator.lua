@@ -33,7 +33,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-widget.separator
+-- @tdewidget lib-widget.separator
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

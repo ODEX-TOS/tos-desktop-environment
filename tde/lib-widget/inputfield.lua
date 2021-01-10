@@ -33,7 +33,7 @@
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdemod lib-widget.inputfield
+-- @tdewidget lib-widget.inputfield
 ---------------------------------------------------------------------------
 -- TODO: implement this files
 -- TODO: refactor codebase to use this (network tab)
