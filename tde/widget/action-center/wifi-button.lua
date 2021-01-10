@@ -23,38 +23,17 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
-local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
+local checkbox = require("lib-widget.checkbox")
+local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
 
-local PATH_TO_ICONS = "/etc/xdg/tde/widget/action-center/icons/"
 local mode
 
-local widget =
-  wibox.widget {
-  {
-    id = "icon",
-    widget = wibox.widget.imagebox,
-    resize = true
-  },
-  layout = wibox.layout.align.horizontal
-}
-
-local function update_icon()
-  local widgetIconName
-  if (mode == true) then
-    widgetIconName = "toggled-on"
-    widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
-  else
-    widgetIconName = "toggled-off"
-    widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
-  end
-end
-
-local function toggle_wifi()
-  if (mode == true) then
+local function update_wifi()
+  if (mode == false) then
     awful.spawn("nmcli r wifi off")
     awful.spawn("notify-send 'Airplane Mode Enabled'")
     signals.emit_wifi_status(false)
@@ -65,18 +44,13 @@ local function toggle_wifi()
   end
 end
 
-local wifi_button = clickable_container(wibox.container.margin(widget, dpi(7), dpi(7), dpi(7), dpi(7))) -- 4 is top and bottom margin
-wifi_button:buttons(
-  gears.table.join(
-    awful.button(
-      {},
-      1,
-      nil,
-      function()
-        toggle_wifi()
-      end
-    )
-  )
+local wifi_button =
+  checkbox(
+  mode,
+  function(checked)
+    mode = checked
+    update_wifi()
+  end
 )
 
 -- Alternative to naughty.notify - tooltip. You can compare both and choose the preferred one
@@ -98,17 +72,8 @@ awful.tooltip(
 
 signals.connect_wifi_status(
   function(active)
-    local widgetIconName
-    if active then
-      mode = true
-      widgetIconName = "toggled-on"
-      update_icon()
-    else
-      mode = false
-      widgetIconName = "toggled-off"
-      update_icon()
-    end
-    widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
+    mode = active
+    wifi_button.update(active)
   end
 )
 
@@ -123,7 +88,7 @@ local settingsName =
 local content =
   wibox.widget {
   settingsName,
-  wifi_button,
+  wibox.container.margin(wifi_button, 0, 0, dpi(5), dpi(5)),
   bg = "#ffffff20",
   shape = gears.shape.rounded_rect,
   widget = wibox.container.background(settingsName),

@@ -37,6 +37,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 local filehandle = require("lib-tde.file")
 local config = require("config")
 local animate = require("lib-tde.animations").createAnimObject
+local signals = require("lib-tde.signals")
 
 local bShowingWidget = false
 local padding = dpi(30)
@@ -50,7 +51,7 @@ screen.connect_signal(
 
     musicPlayer =
       wibox {
-      bg = "#00000000",
+      bg = beautiful.background.hue_800,
       visible = false,
       ontop = true,
       type = "normal",
@@ -59,6 +60,12 @@ screen.connect_signal(
       x = s.geometry.width - dpi(260) - dpi(10),
       y = s.geometry.y + padding
     }
+
+    signals.connect_background_theme_changed(
+      function(new_theme)
+        musicPlayer.bg = new_theme.hue_800 .. beautiful.background_transparency
+      end
+    )
   end
 )
 

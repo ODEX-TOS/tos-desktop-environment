@@ -23,12 +23,11 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local clickable_container = require("widget.action-center.clickable-container")
-local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
 local card = require("lib-widget.card")
+local checkbox = require("lib-widget.checkbox")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
 local theme = require("theme.icons.dark-light")
@@ -36,6 +35,7 @@ local theme = require("theme.icons.dark-light")
 _G.dont_disturb = false
 
 local disturb_card = card()
+local box
 
 local dont_disturb_text =
   wibox.widget {
@@ -45,16 +45,22 @@ local dont_disturb_text =
   widget = wibox.widget.textbox
 }
 
-local widget =
-  wibox.widget {
-  {
-    id = "icon",
-    widget = wibox.widget.imagebox,
-    image = theme(PATH_TO_ICONS .. "toggled-off" .. ".svg"),
-    resize = true
-  },
-  layout = wibox.layout.align.horizontal
-}
+local function update_disturb(state)
+  -- luacheck: ignore dont_disturb
+  dont_disturb = state
+  if box then
+    box.update(state)
+  end
+  signals.emit_do_not_disturb(dont_disturb)
+end
+
+box =
+  checkbox(
+  false,
+  function(checked)
+    update_disturb(checked)
+  end
+)
 
 local dont_disturb_icon =
   wibox.widget {
@@ -66,42 +72,13 @@ local dont_disturb_icon =
   layout = wibox.layout.align.horizontal
 }
 
-local function toggle_disturb()
-  if (dont_disturb == true) then
-    -- Switch Off
-    -- luacheck: ignore dont_disturb
-    dont_disturb = false
-    widget.icon:set_image(theme(PATH_TO_ICONS .. "toggled-off" .. ".svg"))
-  else
-    -- Switch On
-    -- luacheck: ignore dont_disturb
-    dont_disturb = true
-    widget.icon:set_image(theme(PATH_TO_ICONS .. "toggled-on" .. ".svg"))
-  end
-  signals.emit_do_not_disturb(dont_disturb)
-end
-
-local disturb_button = clickable_container(widget)
-disturb_button:buttons(
-  gears.table.join(
-    awful.button(
-      {},
-      1,
-      nil,
-      function()
-        toggle_disturb()
-      end
-    )
-  )
-)
-
 signals.connect_do_not_disturb(
   function(bDoNotDisturb)
     if dont_disturb == bDoNotDisturb then
       return
     end
 
-    toggle_disturb()
+    update_disturb(bDoNotDisturb)
   end
 )
 
@@ -114,7 +91,7 @@ local content =
   },
   nil,
   {
-    disturb_button,
+    box,
     layout = wibox.layout.fixed.horizontal
   },
   layout = wibox.layout.align.horizontal

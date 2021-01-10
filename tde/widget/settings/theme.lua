@@ -26,12 +26,13 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local mat_colors = require("theme.mat-colors")
 local configWriter = require("lib-tde.config-writer")
 local card = require("lib-widget.card")
+local signals = require("lib-tde.signals")
+local button = require("lib-widget.button")
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -73,134 +74,88 @@ local function refresh()
 end
 
 local function create_primary_button()
-  local button = wibox.container.background()
-  button.bg = activePrimary.hue_500
-  button.shape = rounded()
-  button:connect_signal(
-    "mouse::enter",
+  local btn =
+    button(
+    "Primary",
     function()
-      button.bg = activePrimary.hue_600
-    end
+      print("Changing Primary mode")
+      colorModeIsPrimary = true
+      primaryButton.bg = activePrimary.hue_800
+      backgroundButton.bg = activeBackground.hue_700
+      signals.emit_primary_theme_changed(activePrimary)
+    end,
+    activePrimary,
+    nil,
+    nil,
+    nil,
+    true
   )
-  button:connect_signal(
-    "mouse::leave",
-    function()
-      button.bg = activePrimary.hue_500
-    end
-  )
-  button:setup {
-    layout = wibox.container.place,
-    halign = "center",
-    wibox.container.margin(wibox.widget.textbox(i18n.translate("Primary")), m, m, m / 2, m / 2)
-  }
-  button:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          print("Changing Primary mode")
-          colorModeIsPrimary = true
-          primaryButton.bg = activePrimary.hue_800
-          backgroundButton.bg = activeBackground.hue_700
-        end
-      )
-    )
-  )
-  return button
+
+  return btn
 end
 
 local function create_background_button()
-  local button = wibox.container.background()
-  button.bg = activeBackground.hue_800
-  button.shape = rounded()
-  button:connect_signal(
-    "mouse::enter",
+  local btn =
+    button(
+    "Background",
     function()
-      button.bg = activeBackground.hue_700
-    end
+      print("Changing background mode")
+      colorModeIsPrimary = false
+      primaryButton.bg = activePrimary.hue_600
+      backgroundButton.bg = activeBackground.hue_800
+      signals.emit_background_theme_changed(activeBackground)
+    end,
+    activeBackground,
+    nil,
+    nil,
+    nil,
+    true
   )
-  button:connect_signal(
-    "mouse::leave",
-    function()
-      button.bg = activeBackground.hue_800
-    end
-  )
-  button:setup {
-    layout = wibox.container.place,
-    halign = "center",
-    wibox.container.margin(wibox.widget.textbox(i18n.translate("Background")), m, m, m / 2, m / 2)
-  }
-  button:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          print("Changing background mode")
-          colorModeIsPrimary = false
-          primaryButton.bg = activePrimary.hue_600
-          backgroundButton.bg = activeBackground.hue_800
-        end
-      )
-    )
-  )
-  return button
+
+  return btn
 end
 
 -- the font_black option is always optional and tells use if the font color must be black (because the background color is otherwise unreadable)
 local function make_color_entry(name, slide, font_black)
   local pallete = mat_colors[name] or mat_colors["purple"]
-  local button = wibox.container.background()
-  button.bg = pallete.hue_600
-  button.shape = rounded()
-  button:connect_signal(
-    "mouse::enter",
-    function()
-      button.bg = pallete.hue_800
-    end
-  )
-  button:connect_signal(
-    "mouse::leave",
-    function()
-      button.bg = pallete.hue_600
-    end
-  )
+
   local color = beautiful.fg_white
   if font_black then
     color = beautiful.fg_black
   end
+
   local text =
     wibox.widget {
     markup = '<span foreground="' .. color .. '">' .. gears.string.xml_escape(name) .. "</span>",
     widget = wibox.widget.textbox
   }
-  button:setup {
-    layout = wibox.container.place,
-    halign = "center",
-    wibox.container.margin(text, m, m, m / 2, m / 2)
-  }
 
-  button:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          print("Updating theme to: " .. name)
-          if colorModeIsPrimary then
-            activePrimary = pallete
-            activePrimaryName = name
-          else
-            activeBackground = pallete
-            activeBackgroundName = name
-          end
-          refresh()
-        end
-      )
-    )
+  local btn =
+    button(
+    text,
+    function()
+      print("Updating theme to: " .. name)
+      if colorModeIsPrimary then
+        activePrimary = pallete
+        activePrimaryName = name
+        signals.emit_primary_theme_changed(activePrimary)
+      else
+        activeBackground = pallete
+        activeBackgroundName = name
+        signals.emit_background_theme_changed(activeBackground)
+      end
+      refresh()
+    end,
+    pallete,
+    nil,
+    nil,
+    nil,
+    true
   )
-  table.insert(widgets, button)
+
+  btn.forced_width = dpi(110)
+
+  table.insert(widgets, btn)
 
   local slider =
     wibox.widget {
@@ -222,7 +177,7 @@ local function make_color_entry(name, slide, font_black)
       {
         layout = wibox.container.margin,
         right = m,
-        button
+        btn
       },
       slider,
       forced_width = (settings_width - settings_nw) / 2,
@@ -261,43 +216,20 @@ return function()
     )
   )
 
-  save = wibox.container.background()
-  save.bg = activePrimary.hue_500
-  save.shape = rounded()
-  save:connect_signal(
-    "mouse::enter",
+  save =
+    button(
+    "Save",
     function()
-      save.bg = activePrimary.hue_600
+      print("Saving colors")
+      local location = os.getenv("HOME") .. "/.config/tos/colors.conf"
+      configWriter.update_entry(location, "primary", activePrimaryName)
+      configWriter.update_entry(location, "accent", activePrimaryName)
+      configWriter.update_entry(location, "background", activeBackgroundName)
+      -- restart TDE
+      awesome.restart()
     end
   )
-  save:connect_signal(
-    "mouse::leave",
-    function()
-      save.bg = activePrimary.hue_500
-    end
-  )
-  save:setup {
-    layout = wibox.container.place,
-    halign = "center",
-    wibox.container.margin(wibox.widget.textbox(i18n.translate("Save")), m, m, m / 2, m / 2)
-  }
-  save:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          print("Saving colors")
-          local location = os.getenv("HOME") .. "/.config/tos/colors.conf"
-          configWriter.update_entry(location, "primary", activePrimaryName)
-          configWriter.update_entry(location, "accent", activePrimaryName)
-          configWriter.update_entry(location, "background", activeBackgroundName)
-          -- restart TDE
-          awesome.restart()
-        end
-      )
-    )
-  )
+
   local theme_card = card()
 
   local theme_settings_body =

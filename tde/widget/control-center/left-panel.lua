@@ -36,6 +36,7 @@ local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
 local seperator_widget = require("lib-widget.separator")
 local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -74,6 +75,12 @@ local left_panel_func = function(screen)
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
+
+  signals.connect_background_theme_changed(
+    function(theme)
+      left_panel.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
 
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
@@ -371,35 +378,16 @@ local left_panel_func = function(screen)
     )
   )
 
+  local exit_button_widget = wibox.widget.imagebox(icons.power)
   local exit_button =
-    wibox.widget {
-    wibox.widget {
-      icon = icons.logout,
-      size = dpi(24),
-      widget = mat_icon
-    },
-    wibox.widget {
-      text = i18n.translate("End work session"),
-      font = "Iosevka Regular 12",
-      widget = wibox.widget.textbox
-    },
-    clickable = true,
-    divider = false,
-    widget = mat_list_item
-  }
-
-  exit_button:buttons(
-    awful.util.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          left_panel:toggle()
-          _G.exit_screen_show()
-        end
-      )
-    )
+    button(
+    exit_button_widget,
+    function()
+      left_panel:toggle()
+      _G.exit_screen_show()
+    end
   )
+
   local separator = seperator_widget(10, "vertical", 0)
 
   local topSeparator = seperator_widget(20, "horizontal", 0)

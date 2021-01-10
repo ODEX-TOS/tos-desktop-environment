@@ -26,7 +26,6 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local filesystem = require("lib-tde.file")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
@@ -36,6 +35,7 @@ local imagemagic = require("lib-tde.imagemagic")
 local scrollbox = require("lib-widget.scrollbox")
 local profilebox = require("lib-widget.profilebox")
 local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
 -- TODO: add option to modify the hostname and group management :)
 
@@ -60,9 +60,9 @@ local function make_mon(wall, _, fullwall, size)
     profilebox(
     wall,
     size,
-    function(button)
+    function(btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectedProfilePicture and button == 1 then
+      if bSelectedProfilePicture and btn == 1 then
         awful.spawn.easy_async(
           "tos -p " .. fullwall,
           function()
@@ -117,53 +117,18 @@ return function()
   layout.expand = true
   layout.min_rows_size = dpi(100)
 
-  local changeProfilePicture = wibox.container.background()
+  local changeProfilePicture =
+    button(
+    "Change Profile Picture",
+    function()
+      -- TODO: change profilePicture
+      bSelectedProfilePicture = not bSelectedProfilePicture
+      refresh()
+    end
+  )
   changeProfilePicture.top = m
   changeProfilePicture.bottom = m
-  changeProfilePicture.shape = rounded()
-  changeProfilePicture.bg = beautiful.accent.hue_600
 
-  changeProfilePicture:connect_signal(
-    "mouse::enter",
-    function()
-      changeProfilePicture.bg = beautiful.accent.hue_700
-    end
-  )
-  changeProfilePicture:connect_signal(
-    "mouse::leave",
-    function()
-      changeProfilePicture.bg = beautiful.accent.hue_600
-    end
-  )
-
-  changeProfilePicture:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          -- TODO: change profilePicture
-          bSelectedProfilePicture = not bSelectedProfilePicture
-          refresh()
-        end
-      )
-    )
-  )
-
-  changeProfilePicture:setup {
-    layout = wibox.container.background,
-    shape = rounded(),
-    {
-      layout = wibox.container.place,
-      valign = "center",
-      forced_height = settings_index,
-      {
-        widget = wibox.widget.textbox,
-        text = "Change Profile Picture",
-        font = beautiful.title_font
-      }
-    }
-  }
   body = scrollbox(layout)
   pictures.update_body(body)
 

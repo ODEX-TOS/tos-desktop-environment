@@ -30,6 +30,7 @@ local icons = require("theme.icons")
 local mouse = require("lib-tde.mouse")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
+local checkbox = require("lib-widget.checkbox")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -90,42 +91,12 @@ return function()
     )
 
     local natural_scrolling_checkbox =
-      wibox.widget {
-      checked = natural_scrolling or false,
-      color = beautiful.accent.hue_700,
-      paddings = dpi(2),
-      check_border_color = beautiful.accent.hue_600,
-      check_color = beautiful.accent.hue_600,
-      check_border_width = dpi(2),
-      shape = gears.shape.circle,
-      forced_height = settings_index,
-      widget = wibox.widget.checkbox
-    }
-
-    natural_scrolling_checkbox:connect_signal(
-      "button::press",
-      function()
-        print("Pressed")
-        natural_scrolling_checkbox.checked = not natural_scrolling_checkbox.checked
-        -- the checked property can also contain a nil value
-        mouse.setNaturalScrolling(id, natural_scrolling_checkbox.checked == true)
-      end
-    )
-    natural_scrolling_checkbox:connect_signal(
-      "mouse::enter",
-      function()
-        if natural_scrolling_checkbox.checked then
-          natural_scrolling_checkbox.check_color = beautiful.accent.hue_700
-        end
-      end
-    )
-    natural_scrolling_checkbox:connect_signal(
-      "mouse::leave",
-      function()
-        if natural_scrolling_checkbox.checked then
-          natural_scrolling_checkbox.check_color = beautiful.accent.hue_600
-        end
-      end
+      checkbox(
+      natural_scrolling or false,
+      function(checked)
+        mouse.setNaturalScrolling(id, checked == true)
+      end,
+      settings_index
     )
 
     mouse_card.update_body(

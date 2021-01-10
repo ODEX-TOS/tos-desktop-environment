@@ -42,7 +42,11 @@
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local gears = require("gears")
+local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
+
+local theme = beautiful.primary
+local background_theme = beautiful.background
 
 --- Create a slider widget
 -- @tparam number min The lowest possible value for the slider
@@ -66,11 +70,11 @@ return function(min, max, increment, default_value, callback, tooltip_callback)
         gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
     end
     widget.bar_height = dpi(30)
-    widget.bar_color = beautiful.bg_modal
-    widget.bar_active_color = beautiful.accent.hue_500
+    widget.bar_color = background_theme.hue_700 .. beautiful.background_transparency
+    widget.bar_active_color = theme.hue_500
     widget.handle_shape = gears.shape.circle
     widget.handle_width = dpi(35)
-    widget.handle_color = beautiful.accent.hue_500
+    widget.handle_color = theme.hue_500
     widget.handle_border_width = 1
     widget.handle_border_color = "#00000012"
     widget.minimum = min * step_size
@@ -102,6 +106,21 @@ return function(min, max, increment, default_value, callback, tooltip_callback)
             timer_function = tooltip_callback
         }
     end
+
+    signals.connect_primary_theme_changed(
+        function(new_theme)
+            theme = new_theme
+            widget.bar_active_color = new_theme.hue_500
+            widget.handle_color = new_theme.hue_500
+        end
+    )
+
+    signals.connect_background_theme_changed(
+        function(new_theme)
+            background_theme = new_theme
+            widget.bar_color = new_theme.hue_700 .. beautiful.background_transparency
+        end
+    )
 
     return widget
 end

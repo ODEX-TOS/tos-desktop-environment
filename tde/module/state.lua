@@ -38,7 +38,8 @@ local function load()
         volume_muted = false,
         brightness = 100,
         mouse = {},
-        do_not_disturb = false
+        do_not_disturb = false,
+        oled_mode = false
     }
     if not filehandle.exists(file) then
         return table
@@ -50,6 +51,7 @@ local function load()
     result.brightness = result.brightness or table.brightness
     result.mouse = result.mouse or table.mouse
     result.do_not_disturb = result.do_not_disturb or table.do_not_disturb
+    result.oled_mode = result.oled_mode or table.oled_mode
     return result
 end
 
@@ -80,6 +82,7 @@ local function setup_state(state)
 
     signals.emit_brightness(math.max(state.brightness, 5))
     signals.emit_do_not_disturb(state.do_not_disturb or false)
+    signals.emit_oled_mode(state.oled_mode or false)
     -- execute xrandr script
     awesome.connect_signal(
         "startup",
@@ -202,6 +205,14 @@ signals.connect_do_not_disturb(
     function(bDoNotDisturb)
         print("Changed do not disturb: " .. tostring(bDoNotDisturb))
         save_state.do_not_disturb = bDoNotDisturb
+        save(save_state)
+    end
+)
+
+signals.connect_oled_mode(
+    function(bIsOledMode)
+        print("Changed oled mode to: " .. tostring(bIsOledMode))
+        save_state.oled_mode = bIsOledMode
         save(save_state)
     end
 )

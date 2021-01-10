@@ -245,13 +245,6 @@ function test_configuration_mod_key_tde_widget_material_icon_button_lua()
     assert(exists("tde/widget/material/icon-button.lua"), "Check that tde/widget/material/icon-button.lua exists")
 end
 
-function test_configuration_mod_key_tde_widget_action_center_clickable_container_lua()
-    assert(
-        exists("tde/widget/action-center/clickable-container.lua"),
-        "Check that tde/widget/action-center/clickable-container.lua exists"
-    )
-end
-
 function test_configuration_mod_key_tde_widget_action_center_init_lua()
     assert(exists("tde/widget/action-center/init.lua"), "Check that tde/widget/action-center/init.lua exists")
 end

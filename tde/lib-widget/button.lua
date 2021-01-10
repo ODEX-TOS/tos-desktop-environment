@@ -40,17 +40,92 @@
 -- TODO: refactor codebase to use this
 
 local wibox = require("wibox")
+local rounded = require("lib-tde.widget.rounded")
+local beautiful = require("beautiful")
+local gears = require("gears")
+local signals = require("lib-tde.signals")
+local dpi = beautiful.xresources.apply_dpi
 
 --- Create a new button widget
--- @tparam number size The height of the button
+-- @tparam widget body The widget to put in the center (usually an icon or text)
+-- @tparam function callback The callback function to call when the button is pressed
+-- @tparam[opt] table pallet A colorpallet from the theme.mat-colors file
+-- @tparam[opt] bool bNo_center Don't center the content
+-- @tparam[opt] function enter_callback This is called when the button receives focus
+-- @tparam[opt] function leave_callback This is called when the button losses focus
+-- @tparam[opt] bool no_update Don't update the color of the button (used in the theme settings)
 -- @treturn widget The button widget
 -- @staticfct button
--- @usage -- This will create a button that is 20 pixels high
--- -- button that is 20 pixels high
--- local button = lib-widget.button(dpi(20))
-return function(height)
-    return wibox.widget {
-        widget = wibox.widget.separator,
-        forced_height = height
-    }
+-- @usage -- This will create a button that is red
+-- local button = lib-widget.button(function()
+--    print("Clicked")
+-- end, require("theme.mat-colors").red)
+return function(body, callback, pallet, bNo_center, enter_callback, leave_callback, no_update)
+    local button = wibox.container.background()
+    local color = pallet or beautiful.primary
+    local bIsHovered = false
+    button.bg = color.hue_600
+    button.shape = rounded()
+    button.forced_height = dpi(40)
+
+    if type(body) == "string" then
+        body = wibox.widget.textbox(i18n.translate(body))
+    end
+
+    button.emulate_hover = function()
+        bIsHovered = true
+        button.bg = color.hue_800
+        if enter_callback then
+            enter_callback(button)
+        end
+    end
+
+    button.emulate_focus_loss = function()
+        bIsHovered = false
+        button.bg = color.hue_600
+        if leave_callback then
+            leave_callback(button)
+        end
+    end
+
+    button:connect_signal(
+        "mouse::enter",
+        function()
+            button.emulate_hover()
+        end
+    )
+    button:connect_signal(
+        "mouse::leave",
+        function()
+            button.emulate_focus_loss()
+        end
+    )
+    if bNo_center then
+        button:setup {
+            layout = wibox.container.margin,
+            body
+        }
+    else
+        button:setup {
+            layout = wibox.container.place,
+            halign = "center",
+            body
+        }
+    end
+    button:buttons(gears.table.join(awful.button({}, 1, callback)))
+
+    if no_update == nil or no_update == false then
+        signals.connect_primary_theme_changed(
+            function(theme)
+                color = theme
+                if bIsHovered then
+                    button.emulate_hover()
+                else
+                    button.emulate_focus_loss()
+                end
+            end
+        )
+    end
+
+    return button
 end

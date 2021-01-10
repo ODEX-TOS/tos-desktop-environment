@@ -38,6 +38,7 @@ local imagemagic = require("lib-tde.imagemagic")
 local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
 -- this will hold the scrollbox, used to reset it
 local body = nil
@@ -75,9 +76,9 @@ local function make_mon(wall, id, fullwall, disable_number)
   monitor:set_image(wall)
   monitor:connect_signal(
     "button::press",
-    function(_, _, _, button)
+    function(_, _, _, btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectWallpaper and button == 1 then
+      if bSelectWallpaper and btn == 1 then
         awful.spawn.easy_async(
           "tos theme set " .. fullwall,
           function()
@@ -171,11 +172,6 @@ return function()
   layout.expand = true
   layout.min_rows_size = dpi(100)
 
-  local changewall = card()
-  changewall.top = m
-  changewall.bottom = m
-  changewall.bg = beautiful.accent.hue_600
-
   local brightness =
     slider(
     0,
@@ -219,49 +215,17 @@ return function()
     end
   )
 
-  changewall:connect_signal(
-    "mouse::enter",
+  local changewall =
+    button(
+    "Change wallpaper",
     function()
-      changewall.bg = beautiful.accent.hue_700
+      -- TODO: change wallpaper
+      bSelectWallpaper = not bSelectWallpaper
+      refresh()
     end
   )
-  changewall:connect_signal(
-    "mouse::leave",
-    function()
-      changewall.bg = beautiful.accent.hue_600
-    end
-  )
-
-  changewall:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          -- TODO: change wallpaper
-          bSelectWallpaper = not bSelectWallpaper
-          refresh()
-        end
-      )
-    )
-  )
-
-  changewall.update_body(
-    wibox.widget {
-      layout = wibox.container.background,
-      shape = rounded(),
-      {
-        layout = wibox.container.place,
-        valign = "center",
-        forced_height = settings_index,
-        {
-          widget = wibox.widget.textbox,
-          text = "Change wallpaper",
-          font = beautiful.title_font
-        }
-      }
-    }
-  )
+  changewall.top = m
+  changewall.bottom = m
 
   body = scrollbox(layout)
   monitors.update_body(

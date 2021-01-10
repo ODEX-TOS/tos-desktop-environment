@@ -26,14 +26,16 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local configWriter = require("lib-tde.config-writer")
 local configFile = os.getenv("HOME") .. "/.config/tos/general.conf"
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local slider = require("lib-widget.slider")
 local seperator_widget = require("lib-widget.separator")
+local signals = require("lib-tde.signals")
 local card = require("lib-widget.card")
+local button = require("lib-widget.button")
+local checkbox = require("lib-widget.checkbox")
 
 local m = dpi(5)
 local settings_index = dpi(40)
@@ -41,6 +43,13 @@ local settings_width = dpi(1100)
 local settings_nw = dpi(260)
 
 local button_widgets = {}
+local primary_theme = beautiful.primary
+
+signals.connect_primary_theme_changed(
+  function(new_theme)
+    primary_theme = new_theme
+  end
+)
 
 local function create_multi_option_array(name, tooltip, options, default, configOption)
   local name_widget =
@@ -60,56 +69,40 @@ local function create_multi_option_array(name, tooltip, options, default, config
   layout:add(name_widget)
   button_widgets[name] = {}
   for _, option in ipairs(options) do
-    local option_widget = wibox.container.background()
-    option_widget.bg = beautiful.bg_modal
-    option_widget.shape = rounded()
-    option_widget.forced_height = settings_index
-
-    option_widget:setup {
-      layout = wibox.container.place,
-      halign = "center",
-      wibox.widget.textbox(option)
-    }
-
-    if option == default then
-      option_widget.bg = beautiful.accent.hue_700
-      option_widget.active = true
+    -- leave focus button callback
+    local leave = function()
+      if button_widgets[name][option].active then
+        button_widgets[name][option].bg = primary_theme.hue_600
+      else
+        button_widgets[name][option].bg = beautiful.bg_modal
+      end
     end
 
-    option_widget:connect_signal(
-      "mouse::enter",
-      function()
-        if button_widgets[name][option].active then
-          button_widgets[name][option].bg = beautiful.accent.hue_600
-        else
-          button_widgets[name][option].bg = beautiful.bg_modal_title
-        end
-      end
-    )
-    option_widget:connect_signal(
-      "mouse::leave",
-      function()
-        if button_widgets[name][option].active then
-          button_widgets[name][option].bg = beautiful.accent.hue_700
-        else
-          button_widgets[name][option].bg = beautiful.bg_modal
-        end
-      end
-    )
-
-    option_widget:connect_signal(
-      "button::press",
+    -- the button object
+    local option_widget
+    option_widget =
+      button(
+      option,
       function()
         print("Pressed button")
         for _, widget in pairs(button_widgets[name]) do
           widget.bg = beautiful.bg_modal
           widget.active = false
         end
-        option_widget.bg = beautiful.accent.hue_600
+        option_widget.bg = primary_theme.hue_800
         option_widget.active = true
         configWriter.update_entry(configFile, configOption, option)
-      end
+      end,
+      nil,
+      nil,
+      nil,
+      leave
     )
+
+    if option == default then
+      option_widget.active = true
+    -- TODO: mark the widget as active
+    end
 
     button_widgets[name][option] = option_widget
     layout:add(wibox.container.margin(option_widget, m, m, m, m))
@@ -124,18 +117,18 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
     font = beautiful.title_font,
     widget = wibox.widget.textbox
   }
-  local checkbox =
-    wibox.widget {
-    checked = checked,
-    color = beautiful.accent.hue_700,
-    paddings = dpi(2),
-    check_border_color = beautiful.accent.hue_600,
-    check_color = beautiful.accent.hue_600,
-    check_border_width = dpi(2),
-    shape = gears.shape.circle,
-    forced_height = settings_index,
-    widget = wibox.widget.checkbox
-  }
+  local box =
+    checkbox(
+    checked,
+    function(box_checked)
+      local value = off or "0"
+      if box_checked then
+        value = on or "1"
+      end
+      configWriter.update_entry(configFile, configOption, value)
+    end,
+    settings_index
+  )
 
   awful.tooltip {
     objects = {name_widget},
@@ -144,41 +137,12 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
     end
   }
 
-  checkbox:connect_signal(
-    "button::press",
-    function()
-      print("Pressed")
-      checkbox.checked = not checkbox.checked
-      local value = off or "0"
-      if checkbox.checked then
-        value = on or "1"
-      end
-      configWriter.update_entry(configFile, configOption, value)
-    end
-  )
-  checkbox:connect_signal(
-    "mouse::enter",
-    function()
-      if checkbox.checked then
-        checkbox.check_color = beautiful.accent.hue_700
-      end
-    end
-  )
-  checkbox:connect_signal(
-    "mouse::leave",
-    function()
-      if checkbox.checked then
-        checkbox.check_color = beautiful.accent.hue_600
-      end
-    end
-  )
-
   return wibox.container.margin(
     wibox.widget {
       layout = wibox.layout.align.horizontal,
       wibox.container.margin(name_widget, m),
       nil,
-      wibox.container.margin(checkbox, 0, m)
+      wibox.container.margin(box, 0, m)
     },
     m,
     m,
@@ -233,38 +197,14 @@ return function()
     )
   )
 
-  local save = wibox.container.background()
-  save.bg = beautiful.accent.hue_500
-  save.shape = rounded()
-  save:connect_signal(
-    "mouse::enter",
+  local save =
+    button(
+    "Update",
     function()
-      save.bg = beautiful.accent.hue_600
+      print("Saving general settings")
+      -- reload TDE
+      awesome.restart()
     end
-  )
-  save:connect_signal(
-    "mouse::leave",
-    function()
-      save.bg = beautiful.accent.hue_500
-    end
-  )
-  save:setup {
-    layout = wibox.container.place,
-    halign = "center",
-    wibox.container.margin(wibox.widget.textbox(i18n.translate("Update")), m * 2, m * 2, m * 2, m * 2)
-  }
-  save:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          print("Saving general settings")
-          -- reload TDE
-          awesome.restart()
-        end
-      )
-    )
   )
 
   local separator = seperator_widget(settings_index / 1.5)

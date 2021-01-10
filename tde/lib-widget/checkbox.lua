@@ -39,6 +39,12 @@
 -- TODO: refactor codebase to use this (settings app + left panel)
 
 local wibox = require("wibox")
+local beautiful = require("beautiful")
+local gears = require("gears")
+local signals = require("lib-tde.signals")
+local dpi = beautiful.xresources.apply_dpi
+
+local theme = beautiful.primary
 
 --- Create a new checkbox widget
 -- @tparam number size The height of the checkbox
@@ -47,9 +53,57 @@ local wibox = require("wibox")
 -- @usage -- This will create a checkbox that is 20 pixels high
 -- -- checkbox that is 20 pixels high
 -- local checkbox = lib-widget.checkbox(dpi(20))
-return function(height)
-    return wibox.widget {
-        widget = wibox.widget.separator,
-        forced_height = height
+return function(checked, callback, size)
+    local checkbox =
+        wibox.widget {
+        checked = checked,
+        color = theme.hue_700,
+        paddings = dpi(2),
+        check_border_color = theme.hue_600,
+        check_color = theme.hue_600,
+        check_border_width = dpi(2),
+        shape = gears.shape.circle,
+        forced_height = size or dpi(20),
+        widget = wibox.widget.checkbox
     }
+
+    signals.connect_primary_theme_changed(
+        function(new_theme)
+            theme = new_theme
+            checkbox.check_border_color = theme.hue_600
+            checkbox.check_color = theme.hue_600
+            checkbox.color = theme.hue_700
+        end
+    )
+
+    checkbox:connect_signal(
+        "button::press",
+        function()
+            print("Pressed")
+            checkbox.checked = not checkbox.checked
+            callback(checkbox.checked or false)
+        end
+    )
+    checkbox:connect_signal(
+        "mouse::enter",
+        function()
+            if checkbox.checked then
+                checkbox.check_color = theme.hue_700
+            end
+        end
+    )
+    checkbox:connect_signal(
+        "mouse::leave",
+        function()
+            if checkbox.checked then
+                checkbox.check_color = theme.hue_600
+            end
+        end
+    )
+
+    checkbox.update = function(new_checked)
+        checkbox.checked = new_checked
+    end
+
+    return checkbox
 end

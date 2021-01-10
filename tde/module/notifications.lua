@@ -31,6 +31,7 @@ local menubar = require("menubar")
 local beautiful = require("beautiful")
 local icons = require("theme.icons")
 local dpi = beautiful.xresources.apply_dpi
+local signals = require("lib-tde.signals")
 local clickable_container = require("widget.clickable-container")
 local queue = require("lib-tde.datastructure.queue")()
 
@@ -60,6 +61,14 @@ naughty.config.icon_dirs = {
 	"/usr/share/pixmaps/"
 }
 naughty.config.icon_formats = {"svg", "png", "jpg", "gif"}
+
+local theme = beautiful.primary
+
+signals.connect_primary_theme_changed(
+	function(new_theme)
+		theme = new_theme
+	end
+)
 
 -- Presets / rules
 
@@ -235,7 +244,7 @@ naughty.connect_signal(
 													margins = beautiful.notification_margin,
 													widget = wibox.container.margin
 												},
-												bg = beautiful.primary.hue_900 .. beautiful.background_transparency,
+												bg = theme.hue_900 .. beautiful.background_transparency,
 												widget = wibox.container.background
 											},
 											{

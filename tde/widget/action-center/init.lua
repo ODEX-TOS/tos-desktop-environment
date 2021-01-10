@@ -38,8 +38,6 @@ local bluebutton = require("widget.action-center.bluetooth-button")
 local comptonbutton = require("widget.action-center.compositor-button")
 local comptonBackendbutton = require("widget.action-center.compositor-backend-button")
 
--- TODO: use the lib-widget based checkboxes
-
 local widget =
   wibox.widget {
   spacing = gap,

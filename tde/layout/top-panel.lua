@@ -247,6 +247,12 @@ local TopPanel = function(s, offset, controlCenterOnly)
     }
   )
 
+  signals.connect_background_theme_changed(
+    function(theme)
+      panel.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
