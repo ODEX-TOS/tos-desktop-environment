@@ -26,7 +26,7 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local icons = require("theme.icons")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
 
 local apps = require("configuration.apps")
 local dpi = require("beautiful").xresources.apply_dpi
@@ -34,11 +34,14 @@ local mat_list_item = require("widget.material.list-item")
 local mat_icon = require("widget.material.icon")
 local signals = require("lib-tde.signals")
 local animate = require("lib-tde.animations").createAnimObject
+local seperator_widget = require("lib-widget.separator")
+local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
 
--- body gets populated with a scrollbar widget once generated
+-- body gets populated with a scrollbox widget once generated
 local body = {}
 
 local plugins = require("lib-tde.plugin-loader")("settings")
@@ -72,6 +75,12 @@ local left_panel_func = function(screen)
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
+
+  signals.connect_background_theme_changed(
+    function(theme)
+      left_panel.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
 
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
@@ -128,7 +137,7 @@ local left_panel_func = function(screen)
         end
         left_panel:emit_signal("closed")
 
-        -- reset the scrollbar
+        -- reset the scrollbox
         body:reset()
       end
     )
@@ -291,7 +300,7 @@ local left_panel_func = function(screen)
       widget = wibox.widget.textbox,
       align = center
     },
-    forced_height = dpi(12),
+    forced_height = dpi(60),
     clickable = true,
     widget = mat_list_item
   }
@@ -321,7 +330,7 @@ local left_panel_func = function(screen)
       widget = wibox.widget.textbox,
       align = center
     },
-    forced_height = dpi(12),
+    forced_height = dpi(60),
     clickable = true,
     widget = mat_list_item
   }
@@ -352,7 +361,7 @@ local left_panel_func = function(screen)
       widget = wibox.widget.textbox,
       align = center
     },
-    forced_height = dpi(12),
+    forced_height = dpi(60),
     clickable = true,
     widget = mat_list_item
   }
@@ -369,61 +378,31 @@ local left_panel_func = function(screen)
     )
   )
 
+  local exit_button_widget = wibox.widget.imagebox(icons.power)
   local exit_button =
-    wibox.widget {
-    wibox.widget {
-      icon = icons.logout,
-      size = dpi(24),
-      widget = mat_icon
-    },
-    wibox.widget {
-      text = i18n.translate("End work session"),
-      font = "Iosevka Regular 12",
-      widget = wibox.widget.textbox
-    },
-    clickable = true,
-    divider = false,
-    widget = mat_list_item
-  }
-
-  exit_button:buttons(
-    awful.util.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          left_panel:toggle()
-          _G.exit_screen_show()
-        end
-      )
-    )
+    button(
+    exit_button_widget,
+    function()
+      left_panel:toggle()
+      _G.exit_screen_show()
+    end
   )
 
-  local separator =
-    wibox.widget {
-    orientation = "vertical",
-    forced_height = 10,
-    opacity = 0.00,
-    widget = wibox.widget.separator
-  }
+  local separator = seperator_widget(10, "vertical", 0)
 
-  local topSeparator =
-    wibox.widget {
-    orientation = "horizontal",
-    forced_height = 20,
-    opacity = 0,
-    widget = wibox.widget.separator
-  }
+  local topSeparator = seperator_widget(20, "horizontal", 0)
 
-  local bottomSeparator =
-    wibox.widget {
-    orientation = "horizontal",
-    forced_height = 5,
-    opacity = 0,
-    widget = wibox.widget.separator
-  }
+  local bottomSeparator = seperator_widget(5, "horizontal", 0)
 
   local function settings_plugin()
+    local network_card = card("Network Settings")
+    local screen_card = card("Screen Settings")
+    local settings_card = card("Settings application")
+
+    network_card.update_body(wifi_button)
+    screen_card.update_body(dpi_button)
+    settings_card.update_body(settings_app_button)
+
     local table_widget =
       wibox.widget {
       topSeparator,
@@ -443,69 +422,12 @@ local left_panel_func = function(screen)
       require("widget.control-center.dashboard.hardware-monitor")(screen),
       require("widget.control-center.dashboard.action-center"),
       separator,
-      {
-        wibox.widget {
-          text = i18n.translate("Network Settings"),
-          font = "Iosevka Regular 10",
-          align = "left",
-          widget = wibox.widget.textbox
-        },
-        widget = mat_list_item
-      },
-      {
-        wibox.widget {
-          wifi_button,
-          bg = beautiful.bg_modal, --beautiful.background.hue_800,
-          shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 28)
-          end,
-          widget = wibox.container.background
-        },
-        widget = mat_list_item
-      },
+      wibox.container.margin(network_card, dpi(20), dpi(20), dpi(20), dpi(20)),
       separator,
-      {
-        wibox.widget {
-          text = i18n.translate("Screen Settings"),
-          font = "Iosevka Regular 10",
-          align = "left",
-          widget = wibox.widget.textbox
-        },
-        widget = mat_list_item
-      },
-      layout = wibox.layout.fixed.vertical,
-      {
-        wibox.widget {
-          dpi_button,
-          bg = beautiful.bg_modal, --beautiful.background.hue_800,
-          shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 28)
-          end,
-          widget = wibox.container.background
-        },
-        widget = mat_list_item
-      },
+      wibox.container.margin(screen_card, dpi(20), dpi(20), dpi(20), dpi(20)),
       separator,
-      {
-        wibox.widget {
-          text = i18n.translate("Settings application"),
-          font = "Iosevka Regular 10",
-          align = "left",
-          widget = wibox.widget.textbox
-        },
-        widget = mat_list_item
-      },
-      {
-        wibox.widget {
-          settings_app_button,
-          bg = beautiful.bg_modal, --beautiful.background.hue_800,
-          shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 28)
-          end,
-          widget = wibox.container.background
-        },
-        widget = mat_list_item
-      }
+      wibox.container.margin(settings_card, dpi(20), dpi(20), dpi(20), dpi(20)),
+      layout = wibox.layout.fixed.vertical
     }
     for _, value in ipairs(plugins) do
       table_widget:add(
@@ -519,7 +441,7 @@ local left_panel_func = function(screen)
   end
 
   body =
-    scrollbar(
+    scrollbox(
     wibox.widget {
       layout = wibox.layout.align.vertical,
       separator,

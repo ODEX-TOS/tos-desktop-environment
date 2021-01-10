@@ -23,59 +23,21 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local gears = require("gears")
-local mat_list_item = require("widget.material.list-item")
 local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
+local card = require("lib-widget.card")
 
-local quickTitle =
-  wibox.widget {
-  text = i18n.translate("Quick settings"),
-  font = "Iosevka Regular 10",
-  align = "left",
-  widget = wibox.widget.textbox
-}
+local quick_settings_card = card("Quick settings")
 
-local barColor = beautiful.bg_modal
 local volSlider = require("widget.volume.volume-slider")
 local brightnessSlider = require("widget.brightness.brightness-slider")
-return wibox.widget {
-  spacing = 1,
+local body =
   wibox.widget {
-    wibox.widget {
-      quickTitle,
-      bg = beautiful.bg_modal_title,
-      layout = wibox.layout.flex.vertical
-    },
-    widget = mat_list_item
-  },
-  nil,
-  {
-    layout = wibox.layout.fixed.vertical,
-    wibox.widget {
-      wibox.widget {
-        volSlider,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    }
-  },
-  layout = wibox.layout.fixed.vertical,
-  wibox.widget {
-    wibox.widget {
-      brightnessSlider,
-      bg = barColor,
-      shape = function(cr, width, height)
-        gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true, 12)
-      end,
-      widget = wibox.container.background
-    },
-    widget = mat_list_item
-  }
-
-  -- require('widget.volume.volume-slider'),
-  -- require('widget.brightness.brightness-slider'),
+  volSlider,
+  brightnessSlider,
+  layout = wibox.layout.fixed.vertical
 }
+
+quick_settings_card.update_body(body)
+
+return wibox.container.margin(quick_settings_card, dpi(20), dpi(20), dpi(20), dpi(20))

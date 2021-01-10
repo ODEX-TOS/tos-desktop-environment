@@ -26,7 +26,6 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local hardware = require("lib-tde.hardware-check")
 local file = require("lib-tde.file")
 local icons = require("theme.icons")
@@ -34,6 +33,7 @@ local split = require("lib-tde.function.common").split
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local clickable_container = require("widget.material.clickable-container")
+local card = require("lib-widget.card")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -109,9 +109,7 @@ local function make_network_widget(ssid, active)
   -- make sure ssid is not nil
   ssid = ssid or ""
 
-  local box = wibox.container.background()
-  box.bg = beautiful.bg_modal
-  box.shape = rounded()
+  local box = card()
 
   local button = mat_icon_button(mat_icon(icons.plus, dpi(25)))
   button:buttons(
@@ -214,7 +212,7 @@ local function make_network_widget(ssid, active)
     layout = wibox.layout.align.horizontal
   }
 
-  box.widget = widget
+  box.update_body(widget)
 
   local container = wibox.container.margin()
   container.bottom = m
@@ -229,9 +227,7 @@ local function make_connection(t, n)
   container.bottom = m
   container.forced_width = settings_width - settings_nw - (m * 2)
 
-  local conx = wibox.container.background()
-  conx.bg = beautiful.bg_modal
-  conx.shape = rounded()
+  local conx = card()
 
   local i
   local wireless = "wireless"
@@ -284,17 +280,19 @@ local function make_connection(t, n)
     font = beautiful.title_font
   }
 
-  conx:setup {
-    layout = wibox.layout.align.horizontal,
-    {
-      layout = wibox.container.margin,
-      margins = m,
-      wibox.container.margin(icon, dpi(10), dpi(10), dpi(10), dpi(10))
-    },
-    address,
-    wibox.container.margin(name, 0, m),
-    {layout = wibox.container.margin, right = m, type}
-  }
+  conx.update_body(
+    wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        wibox.container.margin(icon, dpi(10), dpi(10), dpi(10), dpi(10))
+      },
+      address,
+      wibox.container.margin(name, 0, m),
+      {layout = wibox.container.margin, right = m, type}
+    }
+  )
 
   container.widget = conx
 

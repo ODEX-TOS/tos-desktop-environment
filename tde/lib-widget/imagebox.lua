@@ -22,55 +22,34 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Create a new imagebox widget
+--
+-- Usefull when you want to seperate widgets from eachother
+--
+--    -- imagebox that is 20 pixels high
+--    local imagebox = lib-widget.imagebox(dpi(20))
+--
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdewidget lib-widget.imagebox
+---------------------------------------------------------------------------
+-- TODO: implement this files
+-- TODO: refactor codebase to use this
+
 local wibox = require("wibox")
-local gears = require("gears")
 
-local function build(widget)
-  local container =
-    wibox.widget {
-    widget,
-    widget = wibox.container.background,
-    shape = gears.shape.rectangle
-  }
-  local old_cursor, old_wibox
-  container:connect_signal(
-    "mouse::enter",
-    function()
-      -- Hm, no idea how to get the wibox from this signal's arguments...
-      local w = _G.mouse.current_wibox
-      if w then
-        old_cursor, old_wibox = w.cursor, w
-        w.cursor = "hand1"
-      end
-    end
-  )
-
-  container:connect_signal(
-    "mouse::leave",
-    function()
-      container.bg = "#ffffff00"
-      if old_wibox then
-        old_wibox.cursor = old_cursor
-        old_wibox = nil
-      end
-    end
-  )
-
-  container:connect_signal(
-    "button::press",
-    function()
-      container.bg = "#ffffff00"
-    end
-  )
-
-  container:connect_signal(
-    "button::release",
-    function()
-      container.bg = "#ffffff00"
-    end
-  )
-
-  return container
+--- Create a new imagebox widget
+-- @tparam number size The height of the imagebox
+-- @treturn widget The imagebox widget
+-- @staticfct imagebox
+-- @usage -- This will create a imagebox that is 20 pixels high
+-- -- imagebox that is 20 pixels high
+-- local imagebox = lib-widget.imagebox(dpi(20))
+return function(height)
+    return wibox.widget {
+        widget = wibox.widget.separator,
+        forced_height = height
+    }
 end
-
-return build

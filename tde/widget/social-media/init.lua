@@ -25,6 +25,7 @@
 local wibox = require("wibox")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
+local card = require("lib-widget.card")
 
 local beautiful = require("beautiful")
 
@@ -49,14 +50,7 @@ local genWidget = function(widgets)
   }
 end
 
-local social_header =
-  wibox.widget {
-  text = i18n.translate("Social Media"),
-  font = "SFNS Display Regular 14",
-  align = "center",
-  valign = "center",
-  widget = wibox.widget.textbox
-}
+local social_card = card("Social Media", dpi(60))
 
 local reddit_widget =
   wibox.widget {
@@ -186,46 +180,25 @@ local social_layout =
   genWidget(instagram_button)
 }
 
-local social =
+local body =
   wibox.widget {
-  expand = "none",
-  layout = wibox.layout.fixed.vertical,
   {
+    expand = "none",
+    layout = wibox.layout.align.horizontal,
     {
-      wibox.container.margin(social_header, dpi(10), dpi(10), dpi(10), dpi(10)),
-      bg = beautiful.bg_modal_title,
-      shape = function(cr, width, height)
-        gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 6)
-      end,
-      widget = wibox.container.background
+      layout = wibox.layout.fixed.horizontal,
+      nil
     },
-    layout = wibox.layout.fixed.vertical
+    social_layout,
+    {
+      layout = wibox.layout.fixed.horizontal,
+      nil
+    }
   },
-  {
-    {
-      {
-        expand = "none",
-        layout = wibox.layout.align.horizontal,
-        {
-          layout = wibox.layout.fixed.horizontal,
-          nil
-        },
-        social_layout,
-        {
-          layout = wibox.layout.fixed.horizontal,
-          nil
-        }
-      },
-      margins = dpi(5),
-      widget = wibox.container.margin
-    },
-    forced_height = dpi(60),
-    bg = beautiful.bg_modal,
-    shape = function(cr, width, height)
-      gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true, 6)
-    end,
-    widget = wibox.container.background
-  }
+  margins = dpi(5),
+  widget = wibox.container.margin
 }
 
-return social
+social_card.update_body(body)
+
+return social_card

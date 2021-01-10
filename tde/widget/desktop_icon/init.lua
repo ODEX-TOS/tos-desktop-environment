@@ -32,6 +32,7 @@ local menubar = require("menubar")
 local filehandle = require("lib-tde.file")
 local hardware = require("lib-tde.hardware-check")
 local err = require("lib-tde.logger").error
+local signals = require("lib-tde.signals")
 
 local width = dpi(100)
 local height = width
@@ -47,6 +48,7 @@ local function create_icon(icon, name, num, callback, drag)
     _count = _count + 1
     local x = 0
     local y = 0
+    local active_theme = beautiful.accent
 
     if type(num) == "number" then
         x = dpi(10) + (math.floor((num / amount)) * (width + dpi(10)))
@@ -155,14 +157,21 @@ local function create_icon(icon, name, num, callback, drag)
     widget:connect_signal(
         "mouse::enter",
         function()
-            box.bg = beautiful.accent.hue_600 .. "99"
+            box.bg = active_theme.hue_600 .. "99"
         end
     )
 
     widget:connect_signal(
         "mouse::leave",
         function()
-            box.bg = beautiful.background.hue_800 .. "00"
+            box.bg = active_theme.hue_800 .. "00"
+        end
+    )
+
+    signals.connect_primary_theme_changed(
+        function(theme)
+            active_theme = theme
+            box.bg = active_theme.hue_800 .. "00"
         end
     )
 

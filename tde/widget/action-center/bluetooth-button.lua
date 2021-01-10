@@ -23,36 +23,13 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
-
-local PATH_TO_ICONS = "/etc/xdg/tde/widget/action-center/icons/"
+local checkbox = require("lib-widget.checkbox")
 
 local action_status = false
-
--- Imagebox
-local button_widget =
-  wibox.widget {
-  {
-    id = "icon",
-    image = PATH_TO_ICONS .. "toggled-off" .. ".svg",
-    widget = wibox.widget.imagebox,
-    resize = true
-  },
-  layout = wibox.layout.align.horizontal
-}
-
--- Update imagebox
-local update_imagebox = function()
-  if action_status then
-    button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-on" .. ".svg")
-  else
-    button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-off" .. ".svg")
-  end
-end
 
 -- Power on Commands
 local power_on_cmd =
@@ -70,9 +47,8 @@ rfkill block bluetooth
 notify-send 'Bluetooth device disabled'
 ]]
 
-local toggle_action = function()
+local update_action = function()
   if action_status then
-    action_status = false
     awful.spawn.easy_async_with_shell(
       power_off_cmd,
       function(_)
@@ -80,7 +56,6 @@ local toggle_action = function()
       false
     )
   else
-    action_status = true
     awful.spawn.easy_async_with_shell(
       power_on_cmd,
       function(_)
@@ -88,24 +63,16 @@ local toggle_action = function()
       false
     )
   end
-
-  -- Update imagebox
-  update_imagebox()
 end
 
 -- Button
-local widget_button = clickable_container(wibox.container.margin(button_widget, dpi(7), dpi(7), dpi(7), dpi(7)))
-widget_button:buttons(
-  gears.table.join(
-    awful.button(
-      {},
-      1,
-      nil,
-      function()
-        toggle_action()
-      end
-    )
-  )
+local widget_button =
+  checkbox(
+  action_status,
+  function(checked)
+    action_status = checked
+    update_action()
+  end
 )
 
 -- Tootltip
@@ -126,13 +93,8 @@ awful.tooltip {
 -- Status Checker
 signals.connect_bluetooth_status(
   function(status)
-    if status then
-      action_status = true
-      button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-on" .. ".svg")
-    else
-      action_status = false
-      button_widget.icon:set_image(PATH_TO_ICONS .. "toggled-off" .. ".svg")
-    end
+    action_status = status
+    widget_button.update(status)
   end
 )
 
@@ -148,7 +110,7 @@ local action_name =
 local content =
   wibox.widget {
   action_name,
-  widget_button,
+  wibox.container.margin(widget_button, 0, 0, dpi(5), dpi(5)),
   bg = "#ffffff20",
   shape = gears.shape.rect,
   widget = wibox.container.background(),

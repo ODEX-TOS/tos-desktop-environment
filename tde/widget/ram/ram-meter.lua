@@ -24,7 +24,7 @@
 ]]
 local wibox = require("wibox")
 local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("widget.material.progress_bar")
+local mat_slider = require("lib-widget.progress_bar")
 local mat_icon = require("widget.material.icon")
 local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi

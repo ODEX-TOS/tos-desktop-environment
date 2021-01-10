@@ -205,6 +205,12 @@ screen.connect_signal(
 		s.exit_screen.bg = beautiful.background.hue_800
 		s.exit_screen.fg = beautiful.exit_screen_fg or beautiful.wibar_fg or "#FEFEFE"
 
+		signals.connect_background_theme_changed(
+			function(theme)
+				s.exit_screen.bg = theme.hue_800 .. beautiful.background_transparency
+			end
+		)
+
 		-- Hide exit screen
 		exit_screen_hide = function()
 			signals.emit_module_exit_screen_hide()
@@ -213,6 +219,7 @@ screen.connect_signal(
 			for scrn in screen do
 				scrn.exit_screen.visible = false
 			end
+			s.exit_screen.visible = false
 		end
 
 		local exit_screen_grabber =

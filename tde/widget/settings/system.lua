@@ -26,10 +26,10 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
+local card = require("lib-widget.card")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -63,12 +63,9 @@ return function()
     )
   )
 
-  local graph = wibox.container.background()
-  graph.bg = beautiful.bg_modal
-  graph.shape = rounded()
+  local graph = card()
   graph.forced_height = 200
   graph.forced_width = settings_width - settings_nw - (m * 2)
-  graph.widget = wibox.widget.base.empty_widget()
 
   local scale = wibox.layout.align.vertical()
   local scale_max = wibox.widget.textbox("100%")
@@ -171,65 +168,65 @@ return function()
     end
   )
 
-  graph:setup {
-    layout = wibox.layout.align.vertical,
-    {
-      layout = wibox.container.margin,
-      top = m,
-      wibox.widget.base.empty_widget()
-    },
-    {
-      layout = wibox.layout.align.horizontal,
+  graph.update_body(
+    wibox.widget {
+      layout = wibox.layout.align.vertical,
       {
         layout = wibox.container.margin,
-        margins = m,
-        scale
+        top = m,
+        wibox.widget.base.empty_widget()
       },
       {
-        layout = wibox.container.margin,
-        right = m * 5,
+        layout = wibox.layout.align.horizontal,
         {
-          layout = wibox.container.background,
+          layout = wibox.container.margin,
+          margins = m,
+          scale
+        },
+        {
+          layout = wibox.container.margin,
+          right = m * 5,
           {
-            layout = wibox.layout.flex.horizontal,
-            spacing = m * 2,
+            layout = wibox.container.background,
             {
-              layout = wibox.layout.stack,
-              ram,
-              {layout = wibox.container.place, valign = "bottom", ram_value}
-            },
-            {
-              layout = wibox.layout.stack,
-              cpu,
-              {layout = wibox.container.place, valign = "bottom", cpu_value}
-            },
-            {
-              layout = wibox.layout.stack,
-              disk,
-              {layout = wibox.container.place, valign = "bottom", disk_value}
+              layout = wibox.layout.flex.horizontal,
+              spacing = m * 2,
+              {
+                layout = wibox.layout.stack,
+                ram,
+                {layout = wibox.container.place, valign = "bottom", ram_value}
+              },
+              {
+                layout = wibox.layout.stack,
+                cpu,
+                {layout = wibox.container.place, valign = "bottom", cpu_value}
+              },
+              {
+                layout = wibox.layout.stack,
+                disk,
+                {layout = wibox.container.place, valign = "bottom", disk_value}
+              }
             }
           }
         }
-      }
-    },
-    {
-      layout = wibox.container.margin,
-      left = m * 5,
-      right = m * 5,
+      },
       {
-        layout = wibox.layout.flex.horizontal,
-        forced_height = settings_index,
-        spacing = m * 2,
-        {layout = wibox.container.place, ram_key},
-        {layout = wibox.container.place, cpu_key},
-        {layout = wibox.container.place, disk_key}
+        layout = wibox.container.margin,
+        left = m * 5,
+        right = m * 5,
+        {
+          layout = wibox.layout.flex.horizontal,
+          forced_height = settings_index,
+          spacing = m * 2,
+          {layout = wibox.container.place, ram_key},
+          {layout = wibox.container.place, cpu_key},
+          {layout = wibox.container.place, disk_key}
+        }
       }
     }
-  }
+  )
 
-  local pac = wibox.container.background()
-  pac.bg = beautiful.bg_modal_title
-  pac.shape = rounded()
+  local pac = card()
   pac:buttons(
     gears.table.join(
       awful.button(
@@ -252,16 +249,16 @@ return function()
   local pac_value = wibox.widget.textbox(i18n.translate("None available"))
   pac_value.font = beautiful.title_font
 
-  pac:setup {
-    layout = wibox.layout.align.horizontal,
-    {layout = wibox.container.margin, left = m, pac_icon},
-    {layout = wibox.container.margin, left = m, pac_title},
-    {layout = wibox.container.margin, right = m, pac_value}
-  }
+  pac.update_body(
+    wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      {layout = wibox.container.margin, left = m, pac_icon},
+      {layout = wibox.container.margin, left = m, pac_title},
+      {layout = wibox.container.margin, right = m, pac_value}
+    }
+  )
 
-  local general_info = wibox.container.background()
-  general_info.bg = beautiful.bg_modal_title
-  general_info.shape = rounded()
+  local general_info = card()
 
   local osName =
     wibox.widget {
@@ -305,13 +302,15 @@ return function()
     end
   )
 
-  general_info:setup {
-    layout = wibox.layout.fixed.vertical,
-    wibox.container.margin(osName, dpi(20), 0, dpi(20), 0),
-    wibox.container.margin(kernelVersion, dpi(20)),
-    wibox.container.margin(hostName, dpi(20)),
-    wibox.container.margin(uptime, dpi(20), 0, 0, dpi(20))
-  }
+  general_info.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      wibox.container.margin(osName, dpi(20), 0, dpi(20), 0),
+      wibox.container.margin(kernelVersion, dpi(20)),
+      wibox.container.margin(hostName, dpi(20)),
+      wibox.container.margin(uptime, dpi(20), 0, 0, dpi(20))
+    }
+  )
 
   view:setup {
     layout = wibox.container.background,

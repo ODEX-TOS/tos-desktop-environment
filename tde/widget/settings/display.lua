@@ -35,9 +35,12 @@ local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
+local slider = require("lib-widget.slider")
+local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
--- this will hold the scrollbar, used to reset it
+-- this will hold the scrollbox, used to reset it
 local body = nil
 
 local m = dpi(10)
@@ -73,9 +76,9 @@ local function make_mon(wall, id, fullwall, disable_number)
   monitor:set_image(wall)
   monitor:connect_signal(
     "button::press",
-    function(_, _, _, button)
+    function(_, _, _, btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectWallpaper and button == 1 then
+      if bSelectWallpaper and btn == 1 then
         awful.spawn.easy_async(
           "tos theme set " .. fullwall,
           function()
@@ -160,9 +163,7 @@ return function()
     )
   )
 
-  local monitors = wibox.container.background()
-  monitors.bg = beautiful.bg_modal_title
-  monitors.shape = rounded()
+  local monitors = card()
 
   local layout = wibox.layout.grid()
   layout.spacing = m
@@ -171,133 +172,118 @@ return function()
   layout.expand = true
   layout.min_rows_size = dpi(100)
 
-  local changewall = wibox.container.background()
-  changewall.top = m
-  changewall.bottom = m
-  changewall.shape = rounded()
-  changewall.bg = beautiful.accent.hue_600
-
-  local brightness = wibox.widget.slider()
-  brightness.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  brightness.bar_height = dpi(30)
-  brightness.bar_color = beautiful.bg_modal
-  brightness.bar_active_color = beautiful.accent.hue_500
-  brightness.handle_shape = gears.shape.circle
-  brightness.handle_width = dpi(35)
-  brightness.handle_color = beautiful.accent.hue_500
-  brightness.handle_border_width = 1
-  brightness.handle_border_color = "#00000012"
-  brightness.minimum = 0
-  brightness.maximum = 100
-  brightness:connect_signal(
-    "property::value",
-    function()
+  local brightness =
+    slider(
+    0,
+    100,
+    1,
+    0,
+    function(value)
       if _G.oled then
-        awful.spawn("brightness -s " .. tostring(brightness.value) .. " -F")
+        awful.spawn("brightness -s " .. tostring(value) .. " -F")
       else
         awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
-        awful.spawn("brightness -s " .. tostring(brightness.value))
+        awful.spawn("brightness -s " .. tostring(value))
       end
     end
   )
 
   signals.connect_brightness(
     function(value)
-      brightness:set_value(tonumber(value))
+      brightness.update(tonumber(value))
     end
   )
 
-  local screen_time = wibox.widget.slider()
-  screen_time.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  screen_time.bar_height = dpi(30)
-  screen_time.bar_color = beautiful.bg_modal
-  screen_time.bar_active_color = beautiful.accent.hue_500
-  screen_time.handle_shape = gears.shape.circle
-  screen_time.handle_width = dpi(35)
-  screen_time.handle_color = beautiful.accent.hue_500
-  screen_time.handle_border_width = 1
-  screen_time.handle_border_color = "#00000012"
-  screen_time.minimum = 10
-  screen_time.maximum = 600
-  screen_time.value = tonumber(general["screen_on_time"]) or 120
-
-  local screen_time_tooltip =
-    awful.tooltip {
-    objects = {screen_time},
-    timer_function = function()
-      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
-    end
-  }
-
-  screen_time:connect_signal(
-    "property::value",
-    function()
-      print("Updated screen time: " .. tostring(screen_time.value) .. "sec")
-      screen_time_tooltip.text = datetime.numberInSecToMS(screen_time.value) .. i18n.translate(" before sleeping")
-      general["screen_on_time"] = tostring(screen_time.value)
-      configWriter.update_entry(
-        os.getenv("HOME") .. "/.config/tos/general.conf",
-        "screen_on_time",
-        tostring(screen_time.value)
-      )
+  local screen_time =
+    slider(
+    10,
+    600,
+    1,
+    tonumber(general["screen_on_time"]) or 120,
+    function(value)
+      print("Updated screen time: " .. tostring(value) .. "sec")
+      screen_time_tooltip.text = datetime.numberInSecToMS(value) .. i18n.translate(" before sleeping")
+      general["screen_on_time"] = tostring(value)
+      configWriter.update_entry(os.getenv("HOME") .. "/.config/tos/general.conf", "screen_on_time", tostring(value))
       if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
         awful.spawn("pkill -f autolock.sh")
-        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(screen_time.value))
+        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(value))
       end
-    end
-  )
-
-  changewall:connect_signal(
-    "mouse::enter",
+    end,
     function()
-      changewall.bg = beautiful.accent.hue_700
+      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
     end
   )
-  changewall:connect_signal(
-    "mouse::leave",
+
+  local changewall =
+    button(
+    "Change wallpaper",
     function()
-      changewall.bg = beautiful.accent.hue_600
+      -- TODO: change wallpaper
+      bSelectWallpaper = not bSelectWallpaper
+      refresh()
     end
   )
+  changewall.top = m
+  changewall.bottom = m
 
-  changewall:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          -- TODO: change wallpaper
-          bSelectWallpaper = not bSelectWallpaper
-          refresh()
-        end
-      )
-    )
+  body = scrollbox(layout)
+  monitors.update_body(
+    wibox.widget {
+      layout = wibox.container.margin,
+      margins = m,
+      body
+    }
   )
 
-  changewall:setup {
-    layout = wibox.container.background,
-    shape = rounded(),
-    {
-      layout = wibox.container.place,
-      valign = "center",
-      forced_height = settings_index,
+  local brightness_card = card()
+  local screen_time_card = card()
+
+  brightness_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
       {
-        widget = wibox.widget.textbox,
-        text = "Change wallpaper",
-        font = beautiful.title_font
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Brightness"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        brightness
       }
     }
-  }
-  body = scrollbar(layout)
-  monitors:setup {
-    layout = wibox.container.margin,
-    margins = m,
-    body
-  }
+  )
+  screen_time_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Screen on time"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        screen_time
+      }
+    }
+  )
+
+  brightness_card.forced_height = (m * 6) + dpi(30)
+  screen_time_card.forced_height = (m * 6) + dpi(30)
 
   view:setup {
     layout = wibox.container.background,
@@ -317,59 +303,11 @@ return function()
       },
       {
         layout = wibox.layout.fixed.vertical,
-        {
-          layout = wibox.container.background,
-          bg = beautiful.bg_modal,
-          shape = rounded(),
-          forced_height = (m * 6) + dpi(30),
-          {
-            layout = wibox.layout.fixed.vertical,
-            {
-              layout = wibox.container.margin,
-              margins = m,
-              {
-                font = beautiful.font,
-                text = i18n.translate("Brightness"),
-                widget = wibox.widget.textbox
-              }
-            },
-            {
-              layout = wibox.container.margin,
-              left = m,
-              right = m,
-              bottom = m,
-              brightness
-            }
-          }
-        },
+        brightness_card,
         {
           layout = wibox.container.margin,
           top = m,
-          {
-            layout = wibox.container.background,
-            bg = beautiful.bg_modal,
-            shape = rounded(),
-            forced_height = (m * 6) + dpi(30),
-            {
-              layout = wibox.layout.fixed.vertical,
-              {
-                layout = wibox.container.margin,
-                margins = m,
-                {
-                  font = beautiful.font,
-                  text = i18n.translate("Screen on time"),
-                  widget = wibox.widget.textbox
-                }
-              },
-              {
-                layout = wibox.container.margin,
-                left = m,
-                right = m,
-                bottom = m,
-                screen_time
-              }
-            }
-          }
+          screen_time_card
         },
         {layout = wibox.container.margin, top = m, monitors},
         {layout = wibox.container.margin, top = m, changewall}

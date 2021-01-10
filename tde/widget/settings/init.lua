@@ -26,15 +26,16 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local naughty = require("naughty")
 local plugins = require("lib-tde.plugin-loader")("settings")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
 local animate = require("lib-tde.animations").createAnimObject
+local profilebox = require("lib-widget.profilebox")
+local button = require("lib-widget.button")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -49,7 +50,7 @@ local settings_width = dpi(1100)
 local settings_height = dpi(900)
 local settings_nw = dpi(260)
 
--- This gets populated by the scrollbar
+-- This gets populated by the scrollbox
 local body = {}
 
 -- save the index state of last time
@@ -158,9 +159,11 @@ end
 local function setActiveView(i, link)
   print("Active view: " .. i)
   for index, widget in ipairs(root.elements.settings_views) do
+    print("Searching for active view: " .. index)
     if index == i or widget.link == link then
-      root.elements.settings_views[index].link.bg = beautiful.accent.hue_600
+      print("Found active view @ " .. index)
       root.elements.settings_views[index].link.active = true
+      root.elements.settings_views[index].link.activate()
       INDEX = index
     else
       root.elements.settings_views[index].link.bg = beautiful.bg_modal_title .. "00"
@@ -192,7 +195,7 @@ local function enable_view_by_index(i, s, bNoAnimation)
     local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
     root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
 
-    -- reset the scrollbar when we open the settings app
+    -- reset the scrollbox when we open the settings app
     if not root.elements.settings.visible then
       body:reset()
     end
@@ -206,9 +209,6 @@ local function enable_view_by_index(i, s, bNoAnimation)
 end
 
 local function make_view(i, t, v, a)
-  local button = wibox.container.background()
-  button.forced_height = m + settings_index + m
-
   local icon = wibox.widget.imagebox(i)
   icon.forced_height = settings_index
   icon.forced_width = settings_index
@@ -243,40 +243,8 @@ local function make_view(i, t, v, a)
     view = v
   end
 
-  button:connect_signal(
-    "mouse::enter",
-    function()
-      button.bg = beautiful.accent.hue_600
-    end
-  )
-  button:connect_signal(
-    "mouse::leave",
-    function()
-      -- only reset it if it is not the current view
-      if not button.active then
-        button.bg = beautiful.bg_modal_title .. "00"
-      end
-    end
-  )
-
-  button:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          close_views()
-          view.visible = true
-          title.font = beautiful.title_font
-          setActiveView(-1, button)
-          if view.refresh then
-            view.refresh()
-          end
-        end
-      )
-    )
-  )
-  button:setup {
+  local btn_body =
+    wibox.widget {
     layout = wibox.container.margin,
     margins = m,
     {
@@ -290,7 +258,38 @@ local function make_view(i, t, v, a)
     }
   }
 
-  return {link = button, view = view, title = title}
+  -- weird hack in order to be able to use the setActiveView(-1, btn) line in the callback
+  -- aka making sure a refrence to the head pointer stays the same, even during construction
+  local btn
+  btn =
+    button(
+    btn_body,
+    function()
+      close_views()
+      view.visible = true
+      title.font = beautiful.title_font
+      setActiveView(-1, btn)
+      if view.refresh then
+        view.refresh()
+      end
+    end,
+    nil,
+    true,
+    nil,
+    -- when hover is lost we make the button transparent
+    function(curr_btn)
+      if curr_btn.active == false then
+        curr_btn.bg = beautiful.transparent
+      end
+    end
+  )
+  btn.forced_height = m + settings_index + m
+
+  btn.activate = function()
+    btn.emulate_focus_loss()
+  end
+
+  return {link = btn, view = view, title = title}
 end
 
 local function make_nav()
@@ -307,26 +306,17 @@ local function make_nav()
   )
   local img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
 
-  local profile_picture_image =
-    wibox.widget {
-    widget = wibox.widget.imagebox,
-    image = img,
-    resize = true
-  }
-
   local avatar =
-    wibox.widget {
-    layout = wibox.container.background,
-    shape = gears.shape.circle,
-    shape_clip = gears.shape.circle,
-    forced_width = settings_index,
-    forced_height = settings_index,
-    profile_picture_image
-  }
+    profilebox(
+    img,
+    settings_index,
+    function(_)
+    end
+  )
 
   signals.connect_profile_picture_changed(
     function(picture)
-      profile_picture_image:set_image(picture)
+      avatar.update(picture)
     end
   )
 
@@ -334,6 +324,12 @@ local function make_nav()
   rule.forced_height = 1
   rule.bg = beautiful.background.hue_800
   rule.widget = wibox.widget.base.empty_widget()
+
+  signals.connect_background_theme_changed(
+    function(theme)
+      rule.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
 
   table.insert(
     root.elements.settings_views,
@@ -409,43 +405,17 @@ local function make_nav()
     root.elements.settings_views
   )
 
-  local power = wibox.container.background()
   local red = require("theme.mat-colors").red
-  power.bg = red.hue_600
-  power.shape = rounded()
-  power.forced_height = settings_index
-
-  power:connect_signal(
-    "mouse::enter",
+  local power =
+    button(
+    wibox.widget.imagebox(icons.power),
     function()
-      power.bg = red.hue_800
-    end
-  )
-  power:connect_signal(
-    "mouse::leave",
-    function()
-      power.bg = red.hue_600
-    end
+      _G.exit_screen_show()
+    end,
+    red
   )
 
-  power:setup {
-    layout = wibox.container.place,
-    halign = "center",
-    wibox.widget.imagebox(icons.power)
-  }
-  power:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          _G.exit_screen_show()
-        end
-      )
-    )
-  )
-
-  body = scrollbar(nav_container)
+  body = scrollbox(nav_container)
 
   nav:setup {
     layout = wibox.container.place,
@@ -477,6 +447,12 @@ return function()
       height = settings_height,
       screen = screen.primary
     }
+  )
+
+  signals.connect_background_theme_changed(
+    function(theme)
+      hub.bg = theme.hue_800 .. beautiful.background_transparency
+    end
   )
 
   local nav = make_nav()

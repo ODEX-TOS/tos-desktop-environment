@@ -27,6 +27,7 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local gears = require("gears")
 local hardware = require("lib-tde.hardware-check")
+local signals = require("lib-tde.signals")
 
 local startx = -1
 local starty = -1
@@ -36,6 +37,17 @@ local endy = -1
 local box = nil
 
 local started = false
+local theme = beautiful.accent
+
+signals.connect_primary_theme_changed(
+    function(new_theme)
+        theme = new_theme
+        if box ~= nil then
+            box.bg = theme.hue_800 .. "44"
+            box.border_color = theme.hue_600
+        end
+    end
+)
 
 local function createBox(x, y, width, height)
     local _box =
@@ -46,9 +58,9 @@ local function createBox(x, y, width, height)
             x = x,
             y = y,
             type = "dock",
-            bg = beautiful.accent.hue_800 .. "44",
+            bg = theme.hue_800 .. "44",
             border_width = dpi(1),
-            border_color = beautiful.accent.hue_600,
+            border_color = theme.hue_600,
             width = width,
             height = height,
             screen = mouse.screen

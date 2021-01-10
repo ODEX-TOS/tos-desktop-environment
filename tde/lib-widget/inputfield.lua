@@ -22,35 +22,34 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+---------------------------------------------------------------------------
+-- Create a new inputfield widget
+--
+-- Usefull when you want to seperate widgets from eachother
+--
+--    -- inputfield that is 20 pixels high
+--    local inputfield = lib-widget.inputfield(dpi(20))
+--
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdewidget lib-widget.inputfield
+---------------------------------------------------------------------------
+-- TODO: implement this files
+-- TODO: refactor codebase to use this (network tab)
+
 local wibox = require("wibox")
-local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("lib-widget.progress_bar")
-local mat_icon = require("widget.material.icon")
-local icons = require("theme.icons")
-local dpi = require("beautiful").xresources.apply_dpi
-local signals = require("lib-tde.signals")
 
-local slider =
-  wibox.widget {
-  read_only = true,
-  widget = mat_slider
-}
-
-signals.connect_disk_usage(
-  function(usage)
-    slider:set_value(usage)
-  end
-)
-
-local harddrive_meter =
-  wibox.widget {
-  wibox.widget {
-    icon = icons.harddisk,
-    size = dpi(24),
-    widget = mat_icon
-  },
-  slider,
-  widget = mat_list_item
-}
-
-return harddrive_meter
+--- Create a new inputfield widget
+-- @tparam number size The height of the inputfield
+-- @treturn widget The inputfield widget
+-- @staticfct inputfield
+-- @usage -- This will create a inputfield that is 20 pixels high
+-- -- inputfield that is 20 pixels high
+-- local inputfield = lib-widget.inputfield(dpi(20))
+return function(height)
+    return wibox.widget {
+        widget = wibox.widget.separator,
+        forced_height = height
+    }
+end

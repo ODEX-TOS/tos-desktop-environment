@@ -36,6 +36,7 @@ local icons = require("theme.icons")
 
 local config = require("config")
 local animate = require("lib-tde.animations").createAnimObject
+local signals = require("lib-tde.signals")
 
 local height = dpi(200)
 local width = dpi(380)
@@ -53,7 +54,7 @@ screen.connect_signal(
 
     aboutPage =
       wibox {
-      bg = "#00000000",
+      bg = beautiful.background.hue_800,
       visible = false,
       ontop = true,
       type = "normal",
@@ -62,6 +63,12 @@ screen.connect_signal(
       x = s.geometry.width / 2 - (width / 2),
       y = s.geometry.height / 2 - (height / 2)
     }
+
+    signals.connect_background_theme_changed(
+      function(new_theme)
+        aboutPage.bg = new_theme.hue_800 .. beautiful.background_transparency
+      end
+    )
 
     aboutBackdrop =
       wibox {

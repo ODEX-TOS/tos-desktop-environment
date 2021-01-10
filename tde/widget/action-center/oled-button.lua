@@ -23,84 +23,39 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local clickable_container = require("widget.action-center.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
+local checkbox = require("lib-widget.checkbox")
 local mat_list_item = require("widget.material.list-item")
+local signals = require("lib-tde.signals")
 
-local PATH_TO_ICONS = "/etc/xdg/tde/widget/action-center/icons/"
-local checker
 local mode
 
-local widget =
-  wibox.widget {
-  {
-    id = "icon",
-    widget = wibox.widget.imagebox,
-    resize = true
-  },
-  layout = wibox.layout.align.horizontal
-}
-
-local function update_icon()
-  local widgetIconName
-  if (mode == true) then
-    widgetIconName = "toggled-off"
-    widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
-  else
-    widgetIconName = "toggled-on"
-    widget.icon:set_image(PATH_TO_ICONS .. widgetIconName .. ".svg")
-  end
-end
-
-local function check_oled()
-  awful.spawn.easy_async_with_shell(
-    "cat ~/.cache/oled || touch ~/.cache/oled",
-    function(stdout)
-      checker = stdout:match("on")
-      -- IF NOT NULL THEN OLED is ON
-      -- IF NULL IT THEN WIFI IS OFF
-      if (checker ~= nil) then
-        mode = false
-        update_icon()
-      else
-        mode = true
-        update_icon()
-      end
-    end
-  )
-end
-
-local function toggle_oled()
+local function update_oled()
   if (mode == true) then
     _G.oled = true
-    awful.spawn([[sh -c "echo on > ~/.cache/oled"]])
     awful.spawn("notify-send 'Using OLED brightness mode'")
-    mode = false
-    update_icon()
   else
     _G.oled = false
-    awful.spawn([[sh -c "echo off > ~/.cache/oled"]])
     awful.spawn("notify-send 'Using Backlight brightness mode'")
-    mode = true
-    update_icon()
   end
+  signals.emit_oled_mode(mode)
 end
 
-check_oled()
+local oled_button =
+  checkbox(
+  mode,
+  function(checked)
+    mode = checked
+    update_oled()
+  end
+)
 
-local oled_button = clickable_container(wibox.container.margin(widget, dpi(7), dpi(7), dpi(7), dpi(7))) -- 4 is top and bottom margin
-oled_button:buttons(
-  gears.table.join(
-    awful.button(
-      {},
-      1,
-      nil,
-      function()
-        toggle_oled()
-      end
-    )
-  )
+signals.connect_oled_mode(
+  function(new_mode)
+    mode = new_mode
+    oled_button.update(mode)
+  end
 )
 
 -- Alternative to naughty.notify - tooltip. You can compare both and choose the preferred one
@@ -110,7 +65,7 @@ awful.tooltip(
     mode = "outside",
     align = "right",
     timer_function = function()
-      if checker == nil then
+      if mode == true then
         return i18n.translate("Backlight brightness mode is ON")
       else
         return i18n.translate("OLED brightness mode is ON")
@@ -131,7 +86,7 @@ local settingsName =
 local content =
   wibox.widget {
   settingsName,
-  oled_button,
+  wibox.container.margin(oled_button, 0, 0, dpi(5), dpi(5)),
   bg = "#ffffff20",
   shape = gears.shape.rect,
   widget = wibox.container.background(settingsName),
@@ -148,4 +103,3 @@ local oledButton =
   layout = wibox.layout.fixed.vertical
 }
 return oledButton
---return oled_button

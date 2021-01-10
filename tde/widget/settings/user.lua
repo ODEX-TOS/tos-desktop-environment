@@ -26,18 +26,20 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local filesystem = require("lib-tde.file")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
-local scrollbar = require("widget.scrollbar")
+local scrollbox = require("lib-widget.scrollbox")
+local profilebox = require("lib-widget.profilebox")
+local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
 -- TODO: add option to modify the hostname and group management :)
 
--- this will hold the scrollbar, used to reset it
+-- this will hold the scrollbox, used to reset it
 local body = nil
 
 local m = dpi(10)
@@ -55,20 +57,12 @@ end
 local function make_mon(wall, _, fullwall, size)
   fullwall = fullwall or wall
   local picture =
-    wibox.widget {
-    widget = wibox.widget.imagebox,
-    shape = rounded(size),
-    clip_shape = rounded(size),
-    resize = false,
-    forced_width = size,
-    forced_height = size
-  }
-  picture:set_image(wall)
-  picture:connect_signal(
-    "button::press",
-    function(_, _, _, button)
+    profilebox(
+    wall,
+    size,
+    function(btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectedProfilePicture and button == 1 then
+      if bSelectedProfilePicture and btn == 1 then
         awful.spawn.easy_async(
           "tos -p " .. fullwall,
           function()
@@ -84,6 +78,7 @@ local function make_mon(wall, _, fullwall, size)
       end
     end
   )
+
   return wibox.container.place(picture)
 end
 
@@ -113,9 +108,7 @@ return function()
     )
   )
 
-  local pictures = wibox.container.background()
-  pictures.bg = beautiful.bg_modal_title
-  pictures.shape = rounded()
+  local pictures = card()
 
   local layout = wibox.layout.grid()
   layout.spacing = m
@@ -124,59 +117,20 @@ return function()
   layout.expand = true
   layout.min_rows_size = dpi(100)
 
-  local changeProfilePicture = wibox.container.background()
+  local changeProfilePicture =
+    button(
+    "Change Profile Picture",
+    function()
+      -- TODO: change profilePicture
+      bSelectedProfilePicture = not bSelectedProfilePicture
+      refresh()
+    end
+  )
   changeProfilePicture.top = m
   changeProfilePicture.bottom = m
-  changeProfilePicture.shape = rounded()
-  changeProfilePicture.bg = beautiful.accent.hue_600
 
-  changeProfilePicture:connect_signal(
-    "mouse::enter",
-    function()
-      changeProfilePicture.bg = beautiful.accent.hue_700
-    end
-  )
-  changeProfilePicture:connect_signal(
-    "mouse::leave",
-    function()
-      changeProfilePicture.bg = beautiful.accent.hue_600
-    end
-  )
-
-  changeProfilePicture:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          -- TODO: change profilePicture
-          bSelectedProfilePicture = not bSelectedProfilePicture
-          refresh()
-        end
-      )
-    )
-  )
-
-  changeProfilePicture:setup {
-    layout = wibox.container.background,
-    shape = rounded(),
-    {
-      layout = wibox.container.place,
-      valign = "center",
-      forced_height = settings_index,
-      {
-        widget = wibox.widget.textbox,
-        text = "Change Profile Picture",
-        font = beautiful.title_font
-      }
-    }
-  }
-  body = scrollbar(layout)
-  pictures:setup {
-    layout = wibox.container.margin,
-    margins = m,
-    body
-  }
+  body = scrollbox(layout)
+  pictures.update_body(body)
 
   view:setup {
     layout = wibox.container.background,

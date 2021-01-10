@@ -315,8 +315,63 @@ function test_emit_profile_picture()
     )
 end
 
+function test_connect_do_not_disturb()
+    assert(signals.connect_do_not_disturb, "Make sure the signal connect_do_not_disturb exists")
+    assert(
+        type(signals.connect_do_not_disturb) == "function",
+        "Make sure connect_do_not_disturb is a signal and a function"
+    )
+end
+
+function test_emit_do_not_disturb()
+    assert(signals.emit_do_not_disturb, "Make sure the signal emit_do_not_disturb exists")
+    assert(type(signals.emit_do_not_disturb) == "function", "Make sure emit_do_not_disturb is a signal and a function")
+end
+
+function test_connect_primary_theme_changed()
+    assert(signals.connect_primary_theme_changed, "Make sure the signal connect_primary_theme_changed exists")
+    assert(
+        type(signals.connect_primary_theme_changed) == "function",
+        "Make sure connect_primary_theme_changed is a signal and a function"
+    )
+end
+
+function test_emit_primary_theme_changed()
+    assert(signals.emit_primary_theme_changed, "Make sure the signal emit_primary_theme_changed exists")
+    assert(
+        type(signals.emit_primary_theme_changed) == "function",
+        "Make sure emit_primary_theme_changed is a signal and a function"
+    )
+end
+
+function test_connect_background_theme_changed()
+    assert(signals.connect_background_theme_changed, "Make sure the signal connect_background_theme_changed exists")
+    assert(
+        type(signals.connect_background_theme_changed) == "function",
+        "Make sure connect_background_theme_changed is a signal and a function"
+    )
+end
+
+function test_emit_background_theme_changed()
+    assert(signals.emit_background_theme_changed, "Make sure the signal emit_background_theme_changed exists")
+    assert(
+        type(signals.emit_background_theme_changed) == "function",
+        "Make sure emit_background_theme_changed is a signal and a function"
+    )
+end
+
+function test_connect_olde_mode_changed()
+    assert(signals.connect_oled_mode, "Make sure the signal connect_oled_mode exists")
+    assert(type(signals.connect_oled_mode) == "function", "Make sure connect_oled_mode is a signal and a function")
+end
+
+function test_emit_oled_mode_changed()
+    assert(signals.emit_oled_mode, "Make sure the signal emit_oled_mode exists")
+    assert(type(signals.emit_oled_mode) == "function", "Make sure emit_oled_mode is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 53
+    local amount = 61
     local result = tablelength(signals)
     assert(
         result == amount,
