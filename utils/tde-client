@@ -51,13 +51,28 @@ a_dbus_send()
     fi
 }
 
+print_greetings()
+{
+    echo "Welcome to the tde-client repl interface!"
+    echo "You can execute lua code here."
+    echo "The documentation: https://tos.odex.be/docs"
+    echo ""
+    echo "Build and maintained by Tom Meyers"
+    echo "TDE comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
+    echo ""
+    echo "Run the help command for more information"
+}
+
 print_help()
 {
+    clear
     echo "Usage: tde-client [-h|--help] [command [command...]]
 tos desktop environment remote execution
 
 tde-client is a remote command line interface to TDE.
 It communicates with TDE via D-Bus, allowing remote execution of Lua code.
+
+This code gets ran in a protected mode, making sure you can't crash the desktop environment.
 
 Run without a command to enter REPL (read-eval-print-loop) mode.
 If you are in REPL mode these are the available commands:
@@ -85,6 +100,7 @@ then
 elif [ -t 0 ]
 then
     FATAL_ERRORS=0
+    print_greetings
     while read $READ_ARGS -p "tde ➡ " -r line
     do
         if [ "$line" = "" ]; then
