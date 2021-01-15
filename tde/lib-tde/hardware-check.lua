@@ -78,27 +78,27 @@ end
 
 --- Check to see if a battery exists on the hardware
 -- @treturn bool True if a battery exists, false otherwise
--- @staticfct battery
+-- @staticfct hasBattery
 -- @usage -- This True if it is a laptop
--- lib-tde.hardware-check.battery()
+-- lib-tde.hardware-check.hasBattery()
 local function battery()
     return batteryHandle.getBatteryPath() ~= nil
 end
 
 --- Check to see the hardware has a network card
 -- @treturn bool True if a network card exists, false otherwise
--- @staticfct wifi
+-- @staticfct hasWifi
 -- @usage -- This True if a network card exists
--- lib-tde.hardware-check.wifi()
+-- lib-tde.hardware-check.hasWifi()
 local function wifi()
     return #(fileHandle.lines("/proc/net/wireless")) > 2
 end
 
 --- Check to see the hardware has a network card with bluetooth support
 -- @treturn bool True if a network card exists with bluetooth support, false otherwise
--- @staticfct bluetooth
+-- @staticfct hasBluetooth
 -- @usage -- This True if a network card exists with bluetooth support
--- lib-tde.hardware-check.bluetooth()
+-- lib-tde.hardware-check.hasBluetooth()
 local function bluetooth()
     local _, returnValue = osExecute("systemctl is-active bluetooth")
     -- only check if a bluetooth controller is found if the bluetooth service is active
@@ -127,18 +127,18 @@ end
 
 --- Check to see if ffmpeg is installed
 -- @treturn bool True if ffmpeg is installed, false otherwise
--- @staticfct ffmpeg
+-- @staticfct hasFfmpeg
 -- @usage -- This True if ffmpeg is installed (a video processor)
--- lib-tde.hardware-check.ffmpeg()
+-- lib-tde.hardware-check.hasFfmpeg()
 local function ffmpeg()
     return has_package_installed("ffmpeg")
 end
 
 --- Check to see the hardware has a sound card installed
 -- @treturn bool True if a sound card exists, false otherwise
--- @staticfct sound
+-- @staticfct hasSound
 -- @usage -- This True if a sound card exists
--- lib-tde.hardware-check.sound()
+-- lib-tde.hardware-check.hasSound()
 local function sound()
     local _, returnValue = osExecute("pactl info | grep 'Sink'")
     return returnValue == 0
