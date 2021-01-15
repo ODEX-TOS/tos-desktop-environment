@@ -79,8 +79,11 @@ return function(checked, callback, size)
 
     checkbox:connect_signal(
         "button::press",
-        function()
-            print("Pressed")
+        function(_, _, _, button)
+            if not (button == 1) then
+                return
+            end
+            print("Pressed checkbox")
             checkbox.checked = not checkbox.checked
             callback(checkbox.checked or false)
         end

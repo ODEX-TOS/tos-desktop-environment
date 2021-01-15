@@ -27,15 +27,14 @@ local clickable_container = require("widget.material.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local config = require("config")
-local theme = require("theme.icons.dark-light")
 local signals = require("lib-tde.signals")
 local delayed_timer = require("lib-tde.function.delayed-timer")
+local icons = require("theme.icons")
 
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
 
-local PATH_TO_ICONS = "/etc/xdg/tde/widget/bluetooth/icons/"
 local checker
 
 local widget =
@@ -102,7 +101,7 @@ delayed_timer(
         else
           widgetIconName = "bluetooth-off"
         end
-        widget.icon:set_image(theme(PATH_TO_ICONS .. widgetIconName .. ".svg"))
+        widget.icon:set_image(icons[widgetIconName])
         print("Polling bluetooth status")
       end
     )

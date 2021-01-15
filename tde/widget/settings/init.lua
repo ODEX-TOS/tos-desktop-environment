@@ -36,6 +36,7 @@ local scrollbox = require("lib-widget.scrollbox")
 local animate = require("lib-tde.animations").createAnimObject
 local profilebox = require("lib-widget.profilebox")
 local button = require("lib-widget.button")
+local hardware = require("lib-tde.hardware-check")
 
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
@@ -159,9 +160,7 @@ end
 local function setActiveView(i, link)
   print("Active view: " .. i)
   for index, widget in ipairs(root.elements.settings_views) do
-    print("Searching for active view: " .. index)
     if index == i or widget.link == link then
-      print("Found active view @ " .. index)
       root.elements.settings_views[index].link.active = true
       root.elements.settings_views[index].link.activate()
       INDEX = index
@@ -174,6 +173,10 @@ end
 
 -- If you set the index to -1 then we go to the last remembered index
 local function enable_view_by_index(i, s, bNoAnimation)
+  if root.elements.settings_views[INDEX].view.stop_view then
+    root.elements.settings_views[INDEX].view.stop_view()
+  end
+
   if not (i == -1) then
     INDEX = i
   end
@@ -343,6 +346,14 @@ local function make_nav()
     root.elements.settings_views,
     make_view(icons.wifi, i18n.translate("Connections"), require("widget.settings.connections")())
   )
+
+  if hardware.hasBluetooth() then
+    table.insert(
+      root.elements.settings_views,
+      make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
+    )
+  end
+
   table.insert(
     root.elements.settings_views,
     make_view(icons.chart, i18n.translate("System"), require("widget.settings.system")())
@@ -486,6 +497,10 @@ return function()
   }
 
   hub.close = function()
+    if root.elements.settings_views[INDEX].view.stop_view then
+      root.elements.settings_views[INDEX].view.stop_view()
+    end
+
     root.elements.settings_grabber:stop()
 
     animate(

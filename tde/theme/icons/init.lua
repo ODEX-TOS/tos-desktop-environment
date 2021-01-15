@@ -70,6 +70,8 @@ return {
   lan_off = theme(config["lan_off"] or dir .. "/lan_off.svg"),
   calendar = theme(config["calendar"] or dir .. "/calendar.svg"),
   brush = theme(config["brush"] or dir .. "/brush.svg"),
+  bluetooth = theme(config["bluetooth"] or dir .. "/bluetooth.svg"),
+  bluetooth_off = theme(config["bluetooth_off"] or dir .. "/bluetooth-off.svg"),
   package = theme("/etc/xdg/tde/widget/package-updater/icons/package.svg"),
   about = theme(dir .. "/info.svg"),
   mouse = theme(dir .. "/mouse.svg"),
