@@ -17,7 +17,7 @@ local dbus = dbus
 local type = type
 
 local function table_to_string(tbl, depth, indent)
-    depth = depth or 2
+    depth = depth or 3
     indent = indent or 1
     -- limit the max size
     if indent > depth then
