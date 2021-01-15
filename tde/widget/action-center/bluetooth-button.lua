@@ -50,14 +50,14 @@ notify-send 'Bluetooth device disabled'
 local update_action = function()
   if action_status then
     awful.spawn.easy_async_with_shell(
-      power_off_cmd,
+      power_on_cmd,
       function(_)
       end,
       false
     )
   else
     awful.spawn.easy_async_with_shell(
-      power_on_cmd,
+      power_off_cmd,
       function(_)
       end,
       false
