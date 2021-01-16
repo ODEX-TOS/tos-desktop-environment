@@ -87,12 +87,20 @@ local function send(msg)
     )
 end
 
-awesome.connect_signal(
-    "debug::error_msg",
-    function(msg)
+local in_error = false
+local function send_error(msg)
+    -- Make sure we don't go into an endless error loop
+    if in_error then
+        return
+    end
+    in_error = true
+    if general["minimize_network_usage"] ~= "1" then
         send(msg)
     end
-)
+    in_error = false
+end
+
+awesome.connect_signal("debug::error_msg", send_error)
 
 awesome.connect_signal(
     "debug::warn_msg",
@@ -101,18 +109,6 @@ awesome.connect_signal(
     end
 )
 
-local in_error = false
-awesome.connect_signal(
-    "debug::error",
-    function(err)
-        -- Make sure we don't go into an endless error loop
-        if in_error then
-            return
-        end
-        in_error = true
-        send(err)
-        in_error = false
-    end
-)
+awesome.connect_signal("debug::error", send_error)
 
 return sentry

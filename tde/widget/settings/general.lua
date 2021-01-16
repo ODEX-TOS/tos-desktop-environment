@@ -264,6 +264,12 @@ return function()
       i18n.translate("Automatically make the focus follow the mouse without clicking"),
       general["autofocus"] == "1",
       "autofocus"
+    ),
+    create_checkbox(
+      i18n.translate("Minimize Network Usage"),
+      i18n.translate("Disable a lot of network utilities to reduce network usage"),
+      general["minimize_network_usage"] == "1",
+      "minimize_network_usage"
     )
   }
 

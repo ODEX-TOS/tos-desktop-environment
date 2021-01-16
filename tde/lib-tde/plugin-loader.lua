@@ -72,9 +72,16 @@ local function getPluginSection(section)
         if value ~= nil then
             -- system plugins are also accepted and start with widget.
             if value:sub(1, 7) == "widget." then
-                -- only require plugin if it exists
-                -- otherwise the user entered a wrong pluging
-                table.insert(iterator, require(value))
+                if
+                    general["minimize_network_usage"] == "1" and
+                        (value == "widget.sars-cov-2" or value == "widget.weather")
+                 then
+                    print("Disabled widget: '" .. value .. "' due to low network requirements")
+                else
+                    -- only require plugin if it exists
+                    -- otherwise the user entered a wrong pluging
+                    table.insert(iterator, require(value))
+                end
             elseif dirExists(os.getenv("HOME") .. "/.config/tde/" .. value) then
                 local plugin = prequire(value)
                 if (plugin) then

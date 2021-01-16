@@ -180,7 +180,7 @@ local function topbar_right_plugin(s)
   table_widget:add(show_widget_or_default("widget.battery", hardware.hasBattery(), true))
   table_widget:add(show_widget_or_default("widget.bluetooth", hardware.hasBluetooth()))
   table_widget:add(show_widget_or_default("widget.wifi", hardware.hasWifi()))
-  table_widget:add(require("widget.package-updater"))
+  table_widget:add(show_widget_or_default("widget.package-updater", general["minimize_network_usage"] ~= "1"))
   table_widget:add(
     show_widget_or_default(
       "widget.music",
