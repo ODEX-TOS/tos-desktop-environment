@@ -34,9 +34,8 @@ require("awful.autofocus")
 -- We load in the notifications befor loading in the plugins, this is because if an error occured during plugin loading it will be displayed correctly
 require("module.notifications")
 
-if not (general["draw_mode"] == "none") then
-  require("module.titlebar")()
-end
+require("module.titlebar")()
+
 require("module.backdrop")
 
 -- Layout
