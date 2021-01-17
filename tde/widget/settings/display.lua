@@ -66,21 +66,22 @@ local XRANDR_MODE = 3
 local Display_Mode = NORMAL_MODE
 
 local function make_screen_layout(wall, label)
+  local size = dpi(20)
   local monitor =
     wibox.widget {
     widget = wibox.widget.imagebox,
     shape = rounded(),
     clip_shape = rounded(),
     resize = true,
-    forced_width = mon_size.w,
-    forced_height = mon_size.h
+    forced_width = nil,
+    forced_height = nil
   }
   monitor:set_image(wall)
   return wibox.container.place(
     wibox.widget {
       layout = wibox.layout.stack,
-      forced_width = mon_size.w,
-      forced_height = mon_size.h,
+      forced_width = size * 16,
+      forced_height = size * 9,
       wibox.container.place(monitor),
       {
         layout = wibox.container.place,
@@ -90,9 +91,9 @@ local function make_screen_layout(wall, label)
           layout = wibox.container.background,
           fg = beautiful.fg_normal,
           bg = beautiful.bg_settings_display_number,
-          shape = rounded(dpi(100)),
-          forced_width = dpi(100),
-          forced_height = dpi(100),
+          shape = rounded(dpi(60)),
+          forced_width = dpi(60),
+          forced_height = dpi(60),
           wibox.container.place(
             {
               widget = wibox.widget.textbox,
@@ -522,7 +523,7 @@ return function()
       widget:add(wibox.widget.textbox(label))
       for index = 1, #screen_names, 1 do
         local screen_wdgt = make_screen_layout(monitorScaledImage, screen_names[index])
-        widget:add(wibox.container.margin(screen_wdgt, 0, 0, m, m))
+        widget:add(wibox.container.margin(screen_wdgt, m, m, m, m))
       end
 
       local screen_btn =
@@ -533,13 +534,7 @@ return function()
           awful.spawn.easy_async_with_shell(
             cmd,
             function()
-              awful.spawn.easy_async(
-                -- we add a sleep here because otherwise we don't have time to update the internal datastrucutres
-                "sh -c 'which autorandr && autorandr --load tde'",
-                function()
-                  _G.awesome.restart()
-                end
-              )
+              awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
             end
           )
         end
@@ -571,7 +566,7 @@ return function()
     end
   end
 
-  signals.emit_refresh_screen(
+  signals.connect_refresh_screen(
     function()
       -- If we are in the screen layout mode, refresh it on screen refreshes
       if Display_Mode == XRANDR_MODE then

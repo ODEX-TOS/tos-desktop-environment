@@ -90,7 +90,7 @@ local function menu()
             cmd = cmd .. " --right-of " .. choice[i - 1]
          end
          -- duplicate command due to xrandr bug?
-         cmd = cmd .. "; sleep 1; " .. cmd
+         --cmd = cmd .. "; sleep 1; " .. cmd
       end
       -- Disabled outputs
       for _, o in pairs(out) do
@@ -134,7 +134,7 @@ local function naughty_destroy_callback(_)
          action,
          function()
             awful.spawn("which autorandr && autorandr --save tde --force")
-            _G.awesome.restart()
+            --_G.awesome.restart()
          end
       )
       state.index = nil
