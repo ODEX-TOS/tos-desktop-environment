@@ -60,9 +60,21 @@ screen.connect_signal(
       type = "normal",
       height = height,
       width = width,
-      x = s.geometry.width / 2 - (width / 2),
-      y = s.geometry.height / 2 - (height / 2)
+      x = s.geometry.x + s.geometry.width / 2 - (width / 2),
+      y = s.geometry.y + s.geometry.height / 2 - (height / 2)
     }
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing about page")
+
+        -- the action center itself
+        aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
+        aboutPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+        aboutPage.width = s.geometry.width
+        aboutPage.height = s.geometry.height
+      end
+    )
 
     signals.connect_background_theme_changed(
       function(new_theme)
