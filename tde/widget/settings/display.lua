@@ -571,6 +571,15 @@ return function()
     end
   end
 
+  signals.emit_refresh_screen(
+    function()
+      -- If we are in the screen layout mode, refresh it on screen refreshes
+      if Display_Mode == XRANDR_MODE then
+        refresh()
+      end
+    end
+  )
+
   view.refresh = refresh
   return view
 end
