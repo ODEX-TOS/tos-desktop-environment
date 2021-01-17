@@ -35,6 +35,7 @@ local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
+local xrandr_menu = require("lib-tde.xrandr").menu
 local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
@@ -48,6 +49,7 @@ local settings_index = dpi(40)
 local settings_height = dpi(900)
 
 local tempDisplayDir = filehandle.mktempdir()
+local monitorScaledImage = ""
 
 local screens = {}
 local mon_size = {
@@ -57,7 +59,51 @@ local mon_size = {
 local refresh = function()
 end
 
-local bSelectWallpaper = false
+local NORMAL_MODE = 1
+local WALLPAPER_MODE = 2
+local XRANDR_MODE = 3
+
+local Display_Mode = NORMAL_MODE
+
+local function make_screen_layout(wall, label)
+  local monitor =
+    wibox.widget {
+    widget = wibox.widget.imagebox,
+    shape = rounded(),
+    clip_shape = rounded(),
+    resize = true,
+    forced_width = mon_size.w,
+    forced_height = mon_size.h
+  }
+  monitor:set_image(wall)
+  return wibox.container.place(
+    wibox.widget {
+      layout = wibox.layout.stack,
+      forced_width = mon_size.w,
+      forced_height = mon_size.h,
+      wibox.container.place(monitor),
+      {
+        layout = wibox.container.place,
+        valign = "center",
+        halign = "center",
+        {
+          layout = wibox.container.background,
+          fg = beautiful.fg_normal,
+          bg = beautiful.bg_settings_display_number,
+          shape = rounded(dpi(100)),
+          forced_width = dpi(100),
+          forced_height = dpi(100),
+          wibox.container.place(
+            {
+              widget = wibox.widget.textbox,
+              markup = label
+            }
+          )
+        }
+      }
+    }
+  )
+end
 
 -- wall is the scaled wallpaper
 -- fullwall is a fullscreen (or original wallpaper)
@@ -78,11 +124,11 @@ local function make_mon(wall, id, fullwall, disable_number)
     "button::press",
     function(_, _, _, btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectWallpaper and btn == 1 then
+      if Display_Mode == WALLPAPER_MODE and btn == 1 then
         awful.spawn.easy_async(
           "tos theme set " .. fullwall,
           function()
-            bSelectWallpaper = false
+            Display_Mode = NORMAL_MODE
             refresh()
             local themeFile = os.getenv("HOME") .. "/.config/tos/theme"
             -- our theme file exists
@@ -219,13 +265,31 @@ return function()
     button(
     "Change wallpaper",
     function()
-      -- TODO: change wallpaper
-      bSelectWallpaper = not bSelectWallpaper
+      if not (Display_Mode == WALLPAPER_MODE) then
+        Display_Mode = WALLPAPER_MODE
+      else
+        Display_Mode = NORMAL_MODE
+      end
       refresh()
     end
   )
   changewall.top = m
   changewall.bottom = m
+
+  local screenLayoutBtn =
+    button(
+    "Screen Layout",
+    function()
+      if not (Display_Mode == XRANDR_MODE) then
+        Display_Mode = XRANDR_MODE
+      else
+        Display_Mode = NORMAL_MODE
+      end
+      refresh()
+    end
+  )
+  screenLayoutBtn.top = m
+  screenLayoutBtn.bottom = m
 
   body = scrollbox(layout)
   monitors.update_body(
@@ -310,7 +374,8 @@ return function()
           screen_time_card
         },
         {layout = wibox.container.margin, top = m, monitors},
-        {layout = wibox.container.margin, top = m, changewall}
+        {layout = wibox.container.margin, top = m, changewall},
+        {layout = wibox.container.margin, top = m, screenLayoutBtn}
       },
       nil
     }
@@ -329,7 +394,7 @@ return function()
       if user then
         scaledImage = tempDisplayDir .. "/user-" .. base
       end
-      if filesystem.exists(scaledImage) and bSelectWallpaper then
+      if filesystem.exists(scaledImage) and Display_Mode == WALLPAPER_MODE then
         layout:add(make_mon(scaledImage, k, v, true))
         if done then
           done(user, table, k)
@@ -344,7 +409,7 @@ return function()
           height,
           scaledImage,
           function()
-            if filesystem.exists(scaledImage) and bSelectWallpaper then
+            if filesystem.exists(scaledImage) and Display_Mode == WALLPAPER_MODE then
               layout:add(make_mon(scaledImage, k, v, true))
             else
               print("Something went wrong scaling " .. v)
@@ -383,6 +448,48 @@ return function()
     end
   end
 
+  local function render_normal_mode()
+    changewall.visible = true
+    screenLayoutBtn.visible = true
+    awful.spawn.with_line_callback(
+      "tos theme active",
+      {
+        stdout = function(o)
+          table.insert(screens, o)
+        end,
+        output_done = function()
+          monitors.forced_height = settings_height / 2
+          if #screen < 4 then
+            layout.forced_num_cols = #screen
+          end
+          for k, v in pairs(screens) do
+            local base = filehandle.basename(v)
+            -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+            local width = dpi(600)
+            local height = (width / 16) * 9
+            monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+            if filesystem.exists(monitorScaledImage) then
+              layout:add(make_mon(monitorScaledImage, k, v))
+            else
+              -- We use imagemagick to generate a "thumbnail"
+              -- This is done to save memory consumption
+              -- However note that our cache (tempDisplayDir) is stored in ram
+              imagemagic.scale(
+                v,
+                width,
+                height,
+                monitorScaledImage,
+                function()
+                  layout:add(make_mon(monitorScaledImage, k, v))
+                end
+              )
+            end
+          end
+        end
+      }
+    )
+  end
+
   local timer =
     gears.timer {
     timeout = 0.1,
@@ -391,6 +498,56 @@ return function()
     single_shot = true,
     callback = loadMonitors
   }
+
+  local function render_wallpaper_mode()
+    changewall.visible = true
+    screenLayoutBtn.visible = false
+    -- do an asynchronous render of all wallpapers
+    timer:start()
+    layout.forced_num_cols = 4
+  end
+
+  local function render_xrandr_mode()
+    changewall.visible = false
+    screenLayoutBtn.visible = true
+
+    local permutated_screens = xrandr_menu()
+
+    for _, tbl in ipairs(permutated_screens) do
+      local label = tbl[1]
+      local cmd = tbl[2]
+      local screen_names = tbl[3]
+
+      local widget = wibox.layout.flex.horizontal()
+      widget:add(wibox.widget.textbox(label))
+      for index = 1, #screen_names, 1 do
+        local screen_wdgt = make_screen_layout(monitorScaledImage, screen_names[index])
+        widget:add(wibox.container.margin(screen_wdgt, 0, 0, m, m))
+      end
+
+      local screen_btn =
+        button(
+        widget,
+        function()
+          print("Executing: " .. cmd)
+          awful.spawn.easy_async_with_shell(
+            cmd,
+            function()
+              awful.spawn.easy_async(
+                -- we add a sleep here because otherwise we don't have time to update the internal datastrucutres
+                "sh -c 'which autorandr && autorandr --load tde'",
+                function()
+                  _G.awesome.restart()
+                end
+              )
+            end
+          )
+        end
+      )
+      layout:add(screen_btn)
+      layout.forced_num_cols = 1
+    end
+  end
 
   refresh = function()
     screens = {}
@@ -405,48 +562,12 @@ return function()
         brightness:set_value(math.floor(tonumber(o)))
       end
     )
-    if bSelectWallpaper then
-      -- do an asynchronous render of all wallpapers
-      timer:start()
-      layout.forced_num_cols = 4
+    if Display_Mode == WALLPAPER_MODE then
+      render_wallpaper_mode()
+    elseif Display_Mode == XRANDR_MODE then
+      render_xrandr_mode()
     else
-      awful.spawn.with_line_callback(
-        "tos theme active",
-        {
-          stdout = function(o)
-            table.insert(screens, o)
-          end,
-          output_done = function()
-            monitors.forced_height = settings_height / 2
-            if #screen < 4 then
-              layout.forced_num_cols = #screen
-            end
-            for k, v in pairs(screens) do
-              local base = filehandle.basename(v)
-              -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
-              local width = dpi(600)
-              local height = (width / 16) * 9
-              local scaledImage = tempDisplayDir .. "/monitor-" .. base
-              if filesystem.exists(scaledImage) then
-                layout:add(make_mon(scaledImage, k, v))
-              else
-                -- We use imagemagick to generate a "thumbnail"
-                -- This is done to save memory consumption
-                -- However note that our cache (tempDisplayDir) is stored in ram
-                imagemagic.scale(
-                  v,
-                  width,
-                  height,
-                  scaledImage,
-                  function()
-                    layout:add(make_mon(scaledImage, k, v))
-                  end
-                )
-              end
-            end
-          end
-        }
-      )
+      render_normal_mode()
     end
   end
 

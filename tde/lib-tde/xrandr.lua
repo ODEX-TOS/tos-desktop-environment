@@ -111,11 +111,12 @@ local function menu()
          end
       end
 
-      menu_tbl[#menu_tbl + 1] = {label, cmd}
+      menu_tbl[#menu_tbl + 1] = {label, cmd, choice}
       if #choice == 1 then
          menu_tbl[#menu_tbl + 1] = {
             'Duplicate <span weight="bold">' .. choice[1] .. "</span>",
-            apps.default.duplicate_screens .. " " .. choice[1]
+            apps.default.duplicate_screens .. " " .. choice[1],
+            choice
          }
       end
    end
