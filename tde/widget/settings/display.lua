@@ -534,7 +534,7 @@ return function()
           awful.spawn.easy_async_with_shell(
             cmd,
             function()
-              awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
+              awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'")
             end
           )
         end

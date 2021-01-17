@@ -70,27 +70,27 @@ local function notification_plugin()
   return table
 end
 
-local right_panel = function(screen)
+local right_panel = function(s)
   local panel_width = dpi(350)
 
   local backdrop =
     wibox {
     ontop = true,
-    screen = screen,
+    screen = s,
     bg = "#00000000",
     type = "dock",
-    x = screen.geometry.x,
-    y = screen.geometry.y,
-    width = screen.geometry.width,
-    height = screen.geometry.height
+    x = s.geometry.x,
+    y = s.geometry.y,
+    width = s.geometry.width,
+    height = s.geometry.height
   }
   local panel =
     wibox {
     ontop = true,
-    screen = screen,
+    screen = s,
     width = panel_width,
-    height = screen.geometry.height,
-    x = screen.geometry.width - panel_width,
+    height = s.geometry.height,
+    x = s.geometry.width - panel_width,
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
@@ -101,22 +101,38 @@ local right_panel = function(screen)
     end
   )
 
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if s == removed then
+        panel.visible = false
+        panel = nil
+
+        backdrop.visible = false
+        backdrop = nil
+      end
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing action center")
-      local scrn = panel.screen
+
+      if panel == nil then
+        return
+      end
 
       -- the action center itself
-      panel.x = scrn.geometry.width - panel_width
+      panel.x = s.geometry.width - panel_width
       panel.width = panel_width
-      panel.height = scrn.geometry.height
+      panel.height = s.geometry.height
 
       -- the backdrop
-      backdrop.x = scrn.geometry.x
-      backdrop.y = scrn.geometry.y
-      backdrop.width = scrn.geometry.width
-      backdrop.height = scrn.geometry.height
+      backdrop.x = s.geometry.x
+      backdrop.y = s.geometry.y
+      backdrop.width = s.geometry.width
+      backdrop.height = s.geometry.height
     end
   )
 
@@ -198,21 +214,21 @@ local right_panel = function(screen)
     panel:emit_signal("opened")
 
     -- start the animations
-    panel.x = screen.geometry.width
+    panel.x = s.geometry.width
     panel.opacity = 0
-    animate(_G.anim_speed, panel, {opacity = 1, x = screen.geometry.width - panel_width}, "outCubic")
+    animate(_G.anim_speed, panel, {opacity = 1, x = s.geometry.width - panel_width}, "outCubic")
   end
 
   local closePanel = function()
     -- start the animations
-    panel.x = screen.geometry.width - panel_width
+    panel.x = s.geometry.width - panel_width
     panel.opacity = 1
     backdrop.visible = false
 
     animate(
       _G.anim_speed,
       panel,
-      {opacity = 0, x = screen.geometry.width},
+      {opacity = 0, x = s.geometry.width},
       "outCubic",
       function()
         panel.visible = false

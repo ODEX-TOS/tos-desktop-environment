@@ -64,9 +64,23 @@ screen.connect_signal(
       y = s.geometry.y + s.geometry.height / 2 - (height / 2)
     }
 
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          aboutPage.visible = false
+          aboutPage = nil
+        end
+      end
+    )
+
     signals.connect_refresh_screen(
       function()
         print("Refreshing about page")
+
+        if not s.valid or aboutPage == nil then
+          return
+        end
 
         -- the action center itself
         aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)

@@ -205,9 +205,22 @@ screen.connect_signal(
 		s.exit_screen.bg = beautiful.background.hue_800
 		s.exit_screen.fg = beautiful.exit_screen_fg or beautiful.wibar_fg or "#FEFEFE"
 
+		screen.connect_signal(
+			"removed",
+			function(removed)
+				if s == removed then
+					s.exit_screen.visible = false
+					s.exit_screen = nil
+				end
+			end
+		)
+
 		signals.connect_refresh_screen(
 			function()
 				print("Refreshing exit screen")
+				if not s.valid then
+					return
+				end
 
 				-- the action center itself
 				s.exit_screen.x = s.geometry.x

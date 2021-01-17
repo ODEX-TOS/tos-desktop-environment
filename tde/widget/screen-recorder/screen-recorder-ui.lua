@@ -367,9 +367,23 @@ screen.connect_signal(
 			}
 		)
 
+		screen.connect_signal(
+			"removed",
+			function(removed)
+				if s == removed then
+					s.recorder_screen.visible = false
+					s.recorder_screen = nil
+				end
+			end
+		)
+
 		signals.connect_refresh_screen(
 			function()
 				print("Refreshing screen recorder")
+
+				if not s.valid then
+					return
+				end
 
 				-- the action center itself
 				s.recorder_screen.x = s.geometry.x

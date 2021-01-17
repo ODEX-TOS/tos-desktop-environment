@@ -51,9 +51,23 @@ awful.screen.connect_for_each_screen(
       }
     )
 
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          volumeOverlay.visible = false
+          volumeOverlay = nil
+        end
+      end
+    )
+
     signals.connect_refresh_screen(
       function()
         print("Refreshing volume osd slider")
+
+        if not s.valid or volumeOverlay == nil then
+          return
+        end
 
         -- the action center itself
         volumeOverlay.x = s.geometry.x + s.geometry.width - offsetx
@@ -83,8 +97,11 @@ awful.screen.connect_for_each_screen(
       gears.timer {
       timeout = 5,
       autostart = true,
+      single_shot = true,
       callback = function()
-        volumeOverlay.visible = false
+        if volumeOverlay then
+          volumeOverlay.visible = false
+        end
       end
     }
 

@@ -46,7 +46,7 @@ local body = {}
 
 local plugins = require("lib-tde.plugin-loader")("settings")
 
-local left_panel_func = function(screen)
+local left_panel_func = function(s)
   -- set the panel width equal to the rofi settings
   -- the rofi width is defined in configuration/rofi/sidebar/rofi.rasi
   -- under the section window-> width
@@ -55,23 +55,23 @@ local left_panel_func = function(screen)
   local backdrop =
     wibox {
     ontop = true,
-    screen = screen,
+    screen = s,
     bg = "#00000000",
     type = "dock",
-    x = screen.geometry.x,
-    y = screen.geometry.y,
-    width = screen.geometry.width,
-    height = screen.geometry.height
+    x = s.geometry.x,
+    y = s.geometry.y,
+    width = s.geometry.width,
+    height = s.geometry.height
   }
 
   local left_panel =
     wibox {
     ontop = true,
-    screen = screen,
+    screen = s,
     width = left_panel_width,
-    height = screen.geometry.height,
-    x = screen.geometry.x,
-    y = screen.geometry.y,
+    height = s.geometry.height,
+    x = s.geometry.x,
+    y = s.geometry.y,
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
@@ -82,22 +82,37 @@ local left_panel_func = function(screen)
     end
   )
 
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if s == removed then
+        left_panel.visible = false
+        left_panel = nil
+        backdrop.visible = false
+        backdrop = nil
+      end
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing action center")
-      local scrn = left_panel.screen
+
+      if left_panel == nil then
+        return
+      end
 
       -- the action center itself
       left_panel.x = 0
       left_panel.width = left_panel_width
-      left_panel.height = scrn.geometry.height
+      left_panel.height = s.geometry.height
 
       -- the backdrop
-      backdrop.x = scrn.geometry.x
-      backdrop.y = scrn.geometry.y
-      backdrop.width = scrn.geometry.width
-      backdrop.height = scrn.geometry.height
+      backdrop.x = s.geometry.x
+      backdrop.y = s.geometry.y
+      backdrop.width = s.geometry.width
+      backdrop.height = s.geometry.height
     end
   )
 
@@ -113,20 +128,20 @@ local left_panel_func = function(screen)
     left_panel:emit_signal("opened")
 
     -- start the animations
-    left_panel.x = screen.geometry.x - left_panel_width
+    left_panel.x = s.geometry.x - left_panel_width
     left_panel.opacity = 0
-    animate(_G.anim_speed, left_panel, {opacity = 1, x = screen.geometry.x}, "outCubic")
+    animate(_G.anim_speed, left_panel, {opacity = 1, x = s.geometry.x}, "outCubic")
   end
 
   local closeleft_panel = function()
     -- start the animations
-    left_panel.x = screen.geometry.x
+    left_panel.x = s.geometry.x
     left_panel.opacity = 1
     backdrop.visible = false
     animate(
       _G.anim_speed,
       left_panel,
-      {opacity = 0, x = screen.geometry.x - left_panel_width},
+      {opacity = 0, x = s.geometry.x - left_panel_width},
       "outCubic",
       function()
         left_panel.visible = false
@@ -419,7 +434,7 @@ local left_panel_func = function(screen)
       },
       separator,
       require("widget.control-center.dashboard.quick-settings"),
-      require("widget.control-center.dashboard.hardware-monitor")(screen),
+      require("widget.control-center.dashboard.hardware-monitor")(s),
       require("widget.control-center.dashboard.action-center"),
       separator,
       wibox.container.margin(network_card, dpi(20), dpi(20), dpi(20), dpi(20)),

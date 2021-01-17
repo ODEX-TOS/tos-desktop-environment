@@ -133,7 +133,7 @@ local function naughty_destroy_callback(_)
       awful.spawn.easy_async_with_shell(
          action,
          function()
-            awful.spawn("which autorandr && autorandr --save tde --force")
+            awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
             --_G.awesome.restart()
          end
       )

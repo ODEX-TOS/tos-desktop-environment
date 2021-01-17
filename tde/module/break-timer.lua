@@ -55,9 +55,23 @@ awful.screen.connect_for_each_screen(
       }
     )
 
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          breakOverlay.visible = false
+          breakOverlay = nil
+        end
+      end
+    )
+
     signals.connect_refresh_screen(
       function()
         print("Refreshing break timer screen")
+
+        if not s.valid or breakOverlay == nil then
+          return
+        end
 
         -- the action center itself
         breakOverlay.x = s.geometry.x

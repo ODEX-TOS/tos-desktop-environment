@@ -49,9 +49,9 @@ require("lib-tde.signals").connect_exit(
 
 local lockscreentime = general["screen_on_time"] or "120"
 if general["screen_timeout"] == 1 or general["screen_timeout"] == nil then
-    awful.spawn("/etc/xdg/tde/autorun.sh " .. lockscreentime .. " &>/dev/null")
+    awful.spawn("/etc/xdg/tde/autorun.sh " .. lockscreentime)
 else
-    awful.spawn("/etc/xdg/tde/autorun.sh " .. " &>/dev/null")
+    awful.spawn("/etc/xdg/tde/autorun.sh")
 end
 
 require("module.screen_changed")

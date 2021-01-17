@@ -89,14 +89,21 @@ end
 function mat_slider:layout(_, width, height)
   local layout = {}
   local size_field = 32
-  table.insert(
-    layout,
-    base.place_widget_at(self._private.progress_bar, 0, dpi(size_field / 2), width, height - dpi(size_field))
-  )
+  local calc_height = height - dpi(size_field)
+  if calc_height < 0 then
+    calc_height = 0
+  end
+  table.insert(layout, base.place_widget_at(self._private.progress_bar, 0, dpi(size_field / 2), width, calc_height))
   return layout
 end
 
 function mat_slider:fit(_, width, height)
+  if height < 0 then
+    height = 1
+  end
+  if width < 0 then
+    width = 1
+  end
   return width, height
 end
 

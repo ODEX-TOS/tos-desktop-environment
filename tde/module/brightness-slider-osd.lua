@@ -54,9 +54,23 @@ awful.screen.connect_for_each_screen(
       }
     )
 
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          brightnessOverlay.visible = false
+          brightnessOverlay = nil
+        end
+      end
+    )
+
     signals.connect_refresh_screen(
       function()
         print("Refreshing brightness osd slider")
+
+        if not s.valid or brightnessOverlay == nil then
+          return
+        end
 
         -- the action center itself
         brightnessOverlay.x = s.geometry.x + s.geometry.width - offsetx
@@ -87,8 +101,11 @@ local hideOSD =
   gears.timer {
   timeout = 5,
   autostart = true,
+  single_shot = true,
   callback = function()
-    brightnessOverlay.visible = false
+    if brightnessOverlay then
+      brightnessOverlay.visible = false
+    end
   end
 }
 
@@ -107,6 +124,8 @@ local function toggleBriOSD(bool)
     hideOSD:stop()
   end
 end
-_G.toggleBriOSD = toggleBriOSD
+if _G.toggleBriOSD == nil then
+  _G.toggleBriOSD = toggleBriOSD
+end
 
 return brightnessOverlay

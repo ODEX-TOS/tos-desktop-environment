@@ -253,14 +253,26 @@ local TopPanel = function(s, offset, controlCenterOnly)
     end
   )
 
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if panel ~= nil and panel.screen == removed then
+        panel.visible = false
+        panel = nil
+      end
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing top-panel")
-      local scrn = panel.screen
-      panel.x = scrn.geometry.x + offsetx
-      panel.y = scrn.geometry.y
-      panel.width = scrn.geometry.width - offsetx
+      if panel == nil then
+        return
+      end
+      panel.x = s.geometry.x + offsetx
+      panel.y = s.geometry.y
+      panel.width = s.geometry.width - offsetx
       panel.height = dpi(26)
     end
   )

@@ -61,9 +61,23 @@ screen.connect_signal(
       y = s.geometry.y + padding
     }
 
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          musicPlayer.visible = false
+          musicPlayer = nil
+        end
+      end
+    )
+
     signals.connect_refresh_screen(
       function()
         print("Refreshing music player")
+
+        if not s.valid or musicPlayer == nil then
+          return
+        end
 
         -- the action center itself
         musicPlayer.x = s.geometry.width - dpi(270)

@@ -96,7 +96,7 @@ local function setup_state(state)
                 function()
                     -- update our wallpaper
                     awful.spawn("sh -c 'tos theme set $(tos theme active)'")
-                    awful.spawn("which autorandr && autorandr --save tde --force")
+                    --awful.spawn("sh -c 'which autorandr && autorandr --load tde'")
                 end
             )
         end

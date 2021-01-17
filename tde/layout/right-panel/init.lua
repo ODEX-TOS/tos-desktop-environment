@@ -49,10 +49,23 @@ local bottom_panel = function(screen)
     end
   )
 
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if panel.screen == removed then
+        panel.visible = false
+        panel = nil
+      end
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing right-panel")
+      if panel == nil or panel == nil then
+        return
+      end
       local scrn = panel.screen
       panel.x = scrn.geometry.x + scrn.geometry.width - action_bar_width
       panel.y = scrn.geometry.y + dpi(26)
