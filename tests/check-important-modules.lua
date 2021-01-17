@@ -158,6 +158,10 @@ function test_configuration_mod_key_tde_module_titlebar_table_lua()
     assert(exists("tde/module/titlebar/table.lua"), "Check that tde/module/titlebar/table.lua exists")
 end
 
+function test_configuration_mod_key_tde_module_screen_changed()
+    assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/screen_changed.lua exists")
+end
+
 function test_configuration_mod_key_tde_configuration_apps_lua()
     assert(exists("tde/configuration/apps.lua"), "Check that tde/configuration/apps.lua exists")
 end
@@ -553,7 +557,7 @@ function test_lib_tde_translations_en()
 end
 
 function test_that_all_important_files_are_tested()
-    local amount = 95
+    local amount = 96
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

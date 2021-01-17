@@ -91,7 +91,6 @@ local function setup_state(state)
                 -- we add a sleep here because otherwise we don't have time to update the internal datastrucutres
                 "sh -c 'which autorandr && autorandr --load tde && sleep 2'",
                 function()
-                    signals.emit_refresh_screen()
                 end
             )
             signals.connect_refresh_screen(

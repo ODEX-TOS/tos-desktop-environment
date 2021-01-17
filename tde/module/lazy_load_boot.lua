@@ -25,6 +25,7 @@
 -- menu takes a bit of time to load in.
 -- because of this we put it in the back so the rest of the system can already behave
 -- Look into awesome-freedesktop for more information
+
 require("module.menu")
 
 if not (general["disable_desktop"] == "1") then
@@ -52,3 +53,5 @@ if general["screen_timeout"] == 1 or general["screen_timeout"] == nil then
 else
     awful.spawn("/etc/xdg/tde/autorun.sh " .. " &>/dev/null")
 end
+
+require("module.screen_changed")

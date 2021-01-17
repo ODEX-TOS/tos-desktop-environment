@@ -71,8 +71,6 @@ screen.connect_signal(
         -- the action center itself
         aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
         aboutPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
-        aboutPage.width = s.geometry.width
-        aboutPage.height = s.geometry.height
       end
     )
 
