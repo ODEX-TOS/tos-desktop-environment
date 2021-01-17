@@ -28,6 +28,8 @@ local gettime = require("socket").gettime
 local screen_geometry = {}
 
 local function update_screens()
+    print("Screen layout changed")
+
     -- cleanup
     screen_geometry = {}
 
@@ -44,8 +46,6 @@ end
 awesome.connect_signal(
     "screen::change",
     function()
-        print("Screen layout changed")
-
         update_screens()
     end
 )
@@ -60,7 +60,6 @@ end
 
 local function perform_refresh()
     if not (#screen_geometry == screen.count()) then
-        print("Size is different: " .. #screen_geometry .. " and " .. screen.count())
         update_screens()
     end
     -- check if our output changed
@@ -79,7 +78,6 @@ awesome.connect_signal(
         local time = gettime()
         if prev_time < (time - refresh_timeout_in_seconds) then
             prev_time = time
-            print("Polling screen geometry changes")
             perform_refresh()
         end
     end
