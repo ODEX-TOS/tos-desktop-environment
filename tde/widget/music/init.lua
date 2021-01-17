@@ -57,9 +57,19 @@ screen.connect_signal(
       type = "normal",
       height = dpi(380),
       width = dpi(260),
-      x = s.geometry.width - dpi(260) - dpi(10),
+      x = s.geometry.width - dpi(270),
       y = s.geometry.y + padding
     }
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing music player")
+
+        -- the action center itself
+        musicPlayer.x = s.geometry.width - dpi(270)
+        musicPlayer.y = s.geometry.y + padding
+      end
+    )
 
     signals.connect_background_theme_changed(
       function(new_theme)

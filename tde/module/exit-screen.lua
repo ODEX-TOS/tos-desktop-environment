@@ -205,6 +205,18 @@ screen.connect_signal(
 		s.exit_screen.bg = beautiful.background.hue_800
 		s.exit_screen.fg = beautiful.exit_screen_fg or beautiful.wibar_fg or "#FEFEFE"
 
+		signals.connect_refresh_screen(
+			function()
+				print("Refreshing exit screen")
+
+				-- the action center itself
+				s.exit_screen.x = s.geometry.x
+				s.exit_screen.y = s.geometry.y
+				s.exit_screen.width = s.geometry.width
+				s.exit_screen.height = s.geometry.height
+			end
+		)
+
 		signals.connect_background_theme_changed(
 			function(theme)
 				s.exit_screen.bg = theme.hue_800 .. beautiful.background_transparency

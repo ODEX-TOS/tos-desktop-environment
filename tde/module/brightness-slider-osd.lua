@@ -27,6 +27,7 @@
 local gears = require("gears")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
+local signals = require("lib-tde.signals")
 
 local vol_osd = require("widget.brightness.brightness-slider-osd")
 
@@ -47,9 +48,20 @@ awful.screen.connect_for_each_screen(
         height = offsety,
         width = dpi(48),
         bg = "#00000000",
-        x = s.geometry.width - offsetx,
-        y = (s.geometry.height / dpi(2)) - (offsety / dpi(2))
+        screen = s,
+        x = s.geometry.x + s.geometry.width - offsetx,
+        y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
       }
+    )
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing brightness osd slider")
+
+        -- the action center itself
+        brightnessOverlay.x = s.geometry.x + s.geometry.width - offsetx
+        brightnessOverlay.y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
+      end
     )
   end
 )

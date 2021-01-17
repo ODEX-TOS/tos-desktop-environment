@@ -367,6 +367,18 @@ screen.connect_signal(
 			}
 		)
 
+		signals.connect_refresh_screen(
+			function()
+				print("Refreshing screen recorder")
+
+				-- the action center itself
+				s.recorder_screen.x = s.geometry.x
+				s.recorder_screen.y = s.geometry.y
+				s.recorder_screen.width = s.geometry.width
+				s.recorder_screen.height = s.geometry.height
+			end
+		)
+
 		signals.connect_background_theme_changed(
 			function(new_theme)
 				s.recorder_screen.bg = new_theme.hue_800 .. beautiful.background_transparency
