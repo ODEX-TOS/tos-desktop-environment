@@ -5,6 +5,15 @@
 # when used with "|tail".
 set -o pipefail
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;35m'
+LBLUE="\033[0;36m"
+ORANGE='\033[1;33m'
+COMMENT="\033[2m"
+NC='\033[0m' # No Color
+
+
 if [ -t 0 ]  # is a tty.
 then
     # rlwrap provides readline functionality for "read", which is more enhanced
@@ -53,31 +62,81 @@ a_dbus_send()
 
 print_greetings()
 {
-    echo "Welcome to the tde-client repl interface!"
-    echo "You can execute lua code here."
-    echo "The documentation: https://tos.odex.be/docs"
+    echo -e "${GREEN}Welcome${NC} to the ${ORANGE}tde-client${NC} repl interface!"
+    echo "You can execute Lua code here."
+    echo -e "The documentation: ${LBLUE}https://tos.odex.be/docs${NC}"
+    echo -e "The Lua specific documentation: ${LBLUE}https://www.lua.org/manual/5.3/${NC}"
     echo ""
-    echo "Build and maintained by Tom Meyers"
-    echo "TDE comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
+    echo -e "Build and maintained by Tom Meyers"
+    echo -e "TDE comes with ${RED}ABSOLUTELY NO WARRANTY${NC}, to the extent permitted by applicable law."
     echo ""
-    echo "Run the help command for more information"
+    echo -e "Run the ${BLUE}\`help\`${NC} command for more information"
+    echo -e "Examples can be found using the ${BLUE}\`example\`${NC} command"
 }
 
 print_help()
 {
     clear
-    echo "Usage: tde-client [-h|--help] [command [command...]]
+    echo -e "Usage: ${ORANGE}tde-client${NC} [${BLUE}-h${NC} | ${BLUE}--help${NC} ] [${BLUE}command${NC} [${BLUE}command${RED}...${NC}]]
 tos desktop environment remote execution
 
-tde-client is a remote command line interface to TDE.
+${ORANGE}tde-client${NC} is a remote command line interface to TDE.
 It communicates with TDE via D-Bus, allowing remote execution of Lua code.
 
 This code gets ran in a protected mode, making sure you can't crash the desktop environment.
 
-Run without a command to enter REPL (read-eval-print-loop) mode.
-If you are in REPL mode these are the available commands:
-- help
-- quit
+Run without a command to enter ${LBLUE}REPL${NC} (read-eval-print-loop) mode.
+If you are in ${LBLUE}REPL${NC} mode these are the available commands:
+- ${BLUE}help${NC}
+- ${BLUE}example${NC}
+- ${BLUE}quit${NC}
+"
+}
+
+print_example()
+{
+    clear
+    echo -e "Each line accepts Lua that interfaces with ${ORANGE}tde${NC}
+This is a list with small examples you can use
+
+${ORANGE}Arithmetic:${NC}
+    - ${RED}1 + 1${NC} ${COMMENT}-- return 2${NC}
+    - ${RED}10 * 15${NC} ${COMMENT}-- returns 150${NC}
+    - ${RED}15 / 10${NC} ${COMMENT}-- returns 1.5 ${NC}
+    - ${LBLUE}math${NC}.${BLUE}pow(${RED}2, 8${BLUE})${NC} ${COMMENT}-- returns 2^8 -> 256${NC}
+
+${ORANGE}Basic functions:${NC}
+    - ${LBLUE}os${NC}.${BLUE}clock()${NC} ${COMMENT}-- return the cpu usage in seconds since tde started${NC}
+    - ${LBLUE}os${NC}.${BLUE}time()${NC} ${COMMENT}-- returns the amount of seconds since 1 Jan 1970${NC}
+    - ${LBLUE}i18n${NC}.${BLUE}translate(${GREEN}\"Quick Settings\"${NC}${BLUE})${NC} ${COMMENT}-- translate 'Quick Settings' to you language, note that it uses translations for TDE (not everything)${NC}
+    - ${LBLUE}i18n${NC} ${COMMENT}-- prints back the i18n table${NC}
+    - ${BLUE}print(${GREEN}\"This gets logged to the tde logger\"${NC}${BLUE})${NC} ${COMMENT}-- print the line to ~/.cache/tde/stdout.log (tde logger)${NC}
+
+${ORANGE}LIB-TDE:${NC}
+    - ${LBLUE}require(${GREEN}\"lib-tde.hardware-check\"${LBLUE})${NC}.${BLUE}getDisplayFrequency()${NC} ${COMMENT}-- print the current frequency of your display${NC}
+    - ${LBLUE}require(${GREEN}\"lib-tde.hardware-check\"${LBLUE})${NC}.${BLUE}hasWifi()${NC} ${COMMENT}-- Check if you have wifi or not${NC}
+
+    - ${LBLUE}require(${GREEN}\"lib-tde.function.datetime\"${LBLUE})${NC}.${BLUE}numberInSecToMS(1606)${NC} ${COMMENT}-- convert seconds to MM:SS format (26:46)${NC}
+
+    - ${LBLUE}require(${GREEN}\"lib-tde.sort.quicksort\"${LBLUE})${BLUE}(${RED}{1,10,15,12,3,4,2}${BLUE})${NC} ${COMMENT}-- sort the given table (1,2,3,4,10,12,15)${NC}
+
+${ORANGE}Widgets:${NC}
+     - ${LBLUE}_G${NC}.${BLUE}dev_widget_side_view_init()${NC} ${COMMENT}-- tell tde that you plan to render widgets${NC}
+
+     - ${LBLUE}_G${NC}.${BLUE}dev_widget_side_view_refresh(${RED}your_lua_file${BLUE})${NC} ${COMMENT}-- general syntax to display your widget${NC}
+
+     - ${LBLUE}_G${NC}.${BLUE}dev_widget_side_view_refresh(os.getenv(${GREEN}\"HOME\"${BLUE})${NC} ${RED}..${NC} ${GREEN}\"/.config/tde/animation-widget/init\"${BLUE})${NC} ${COMMENT}-- show our animation demo plugin${NC}
+
+
+${ORANGE}Extras:${NC}
+    - ${LBLUE}awful${NC}.${LBLUE}screen${NC}.${BLUE}focused()${NC}.${LBLUE}tags[awful${NC}.${LBLUE}screen${NC}.${BLUE}focused()${NC}.${LBLUE}selected_tag${NC}.${LBLUE}index${RED}+1${LBLUE}]:${BLUE}view_only()${NC} ${COMMENT}-- go to the next tag${NC}
+    - ${LBLUE}awful${NC}.${LBLUE}screen${NC}.${BLUE}focused()${NC}.${LBLUE}tags[awful${NC}.${LBLUE}screen${NC}.${BLUE}focused()${NC}.${LBLUE}selected_tag${NC}.${LBLUE}index${RED}-1${LBLUE}]:${BLUE}view_only()${NC} ${COMMENT}-- go to the previous tag${NC}
+
+    - ${LBLUE}root${NC}.${LBLUE}elements${NC}.${LBLUE}settings${NC}.${BLUE}enable_view_by_index(${RED}-1${NC}, ${LBLUE}mouse${NC}.${LBLUE}screen${BLUE})${NC} ${COMMENT}-- open the settings application${NC}
+
+
+More information can be found here: ${LBLUE}https://tos.odex.be/docs${NC}
+The Lua specific documentation: ${LBLUE}https://www.lua.org/manual/5.3/${NC}
 "
 }
 
@@ -101,8 +160,12 @@ elif [ -t 0 ]
 then
     FATAL_ERRORS=0
     print_greetings
-    while read $READ_ARGS -p "tde ➡ " -r line
+    line_feed_success="tde ${GREEN}➡${NC} "
+    line_feed_failed="$tde ${RED}➡${NC} "
+    line_feed="$line_feed_success"
+    while { echo -en "$line_feed" ; read $READ_ARGS -r line; }
     do
+        line_feed="$line_feed_success"
         if [ "$line" = "" ]; then
             continue
         fi
@@ -115,12 +178,21 @@ then
             print_help
             continue
         fi
-        # don't use the return keyword when '=' is used, when '==' is used, do use return
-        if echo "$line" | grep -q "[^=]=[^=]"; then
-            a_dbus_send "$line"
+
+        if [ "$line" == "example" ] || [ "$line" == "examples" ] || [ "$line" == "example()" ] || [ "$line" == "examples()" ]; then
+            print_example
             continue
         fi
-        a_dbus_send "return $line"
+        # don't use the return keyword when '=' is used, when '==' is used, do use return
+        if echo "$line" | grep -q "[^=]=[^=]"; then
+            res="$(a_dbus_send "$line")"
+        else
+            res="$(a_dbus_send "return $line")"
+        fi
+        if echo -e "$res" | grep -q "Error during execution: "; then
+            line_feed="$line_feed_failed"
+        fi
+        echo -e "$res"
     done
 else
     a_dbus_send "$(cat)"
