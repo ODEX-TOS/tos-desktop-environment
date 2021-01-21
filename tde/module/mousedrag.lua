@@ -99,16 +99,11 @@ end
 
 -- check if 2 rectangles are colliding
 local function collides(icon, computation)
-    local l1 = {x = computation.x, y = computation.y}
-    local l2 = {x = icon.x, y = icon.y}
-    local r1 = {x = computation.x + computation.width, y = computation.y + computation.height}
-    local r2 = {x = icon.x + icon.width, y = icon.y + icon.height}
-
-    if (l1.x >= r2.x) or (l2.x >= r1.x) then
+    if (computation.x >= icon.x + icon.width) or (icon.x >= computation.x + computation.width) then
         return false
     end
 
-    if (l1.y >= r2.y) or (l2.y >= r1.y) then
+    if (computation.y >= icon.y + icon.height) or (icon.y >= computation.y + computation.height) then
         return false
     end
 
@@ -121,17 +116,24 @@ local function find_colliding_icons(computation)
     if #desktop_icons > 0 then
         for _, icon in ipairs(desktop_icons) do
             if collides(icon, computation) then
-                icon.hover()
+                if not (icon.ontop) then
+                    icon.hover()
+                end
             else
-                icon.unhover()
+                -- optimization to reduce rendering
+                if icon.ontop then
+                    icon.unhover()
+                end
             end
         end
     end
 end
 
+local time_delay = 1 / hardware.getDisplayFrequency()
+
 local timer =
     gears.timer {
-    timeout = 1 / hardware.getDisplayFrequency(),
+    timeout = time_delay,
     call_now = false,
     autostart = false,
     callback = function()
@@ -169,16 +171,20 @@ timer:connect_signal(
             if started then
                 timer:stop()
                 started = false
-                find_colliding_icons({x = 0, y = 0, width = 0, height = 0})
             end
         end
     end
 )
 
+local function clear_selected_icons()
+    find_colliding_icons({x = 0, y = 0, width = 0, height = 0})
+end
+
 local function start()
     local coords = mouse.coords()
     startx = coords.x
     starty = coords.y
+    clear_selected_icons()
     if box == nil then
         box = createBox(startx, starty, 1, 1)
     end

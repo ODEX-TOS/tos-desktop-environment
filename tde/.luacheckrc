@@ -71,7 +71,8 @@ read_globals = {
     "reverse",
     "center",
     "save_state",
-    "dont_disturb"
+    "dont_disturb",
+    "clear_desktop_selection"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about

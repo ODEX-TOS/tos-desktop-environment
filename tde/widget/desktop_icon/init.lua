@@ -44,6 +44,28 @@ desktop_icons = {}
 local text_name = {}
 local icon_timers = {}
 
+-- move all boxes relative to the selected box
+local function move_selected_boxes(base, prev_base)
+    local delta = {x = base.x - prev_base.x, y = base.y - prev_base.y}
+    -- find all selected boxes (they have ontop = true)
+    for _, value in ipairs(desktop_icons) do
+        if value.ontop and not (value == base) then
+            -- now we move this widget by the delta
+            value.x = value.x + delta.x
+            value.y = value.y + delta.y
+        end
+    end
+end
+
+-- clear all selected icons
+local function clear_selections()
+    for _, value in ipairs(desktop_icons) do
+        value.unhover()
+    end
+end
+
+_G.clear_desktop_selection = clear_selections
+
 local function create_icon(icon, name, num, callback, drag)
     _count = _count + 1
     local x = 0
@@ -88,10 +110,12 @@ local function create_icon(icon, name, num, callback, drag)
         call_now = false,
         autostart = false,
         callback = function()
+            local offset = {x = box.x, y = box.y}
             local coords = mouse.coords()
             box.x = coords.x - xoffset
             box.y = coords.y - yoffset
             timercount = timercount + 1
+            move_selected_boxes(box, offset)
         end
     }
 
@@ -206,6 +230,7 @@ local function desktop_file(file, _, index, drag)
         index,
         function()
             print("Opened: " .. file)
+            clear_selections()
             awful.spawn("gtk-launch " .. filehandle.basename(file))
         end,
         drag
@@ -224,6 +249,7 @@ local function from_file(file, index, x, y, drag)
             index or {x = x, y = y},
             function()
                 print("Opened: " .. file)
+                clear_selections()
                 awful.spawn("open " .. file)
             end,
             drag
@@ -246,8 +272,6 @@ local function delete(name)
     table.remove(desktop_icons, i)
     table.remove(icon_timers, i)
     table.remove(text_name, i)
-
-    collectgarbage("collect")
 end
 
 local function location_from_name(name)
