@@ -97,7 +97,8 @@ globals = {
     "backdrop",
     "taglist_occupied",
     "print",
-    "echo"
+    "echo",
+    "desktop_icons"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).

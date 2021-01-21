@@ -97,6 +97,38 @@ local function calculate(sx, sy, ex, ey)
     }
 end
 
+-- check if 2 rectangles are colliding
+local function collides(icon, computation)
+    local l1 = {x = computation.x, y = computation.y}
+    local l2 = {x = icon.x, y = icon.y}
+    local r1 = {x = computation.x + computation.width, y = computation.y + computation.height}
+    local r2 = {x = icon.x + icon.width, y = icon.y + icon.height}
+
+    if (l1.x >= r2.x) or (l2.x >= r1.x) then
+        return false
+    end
+
+    if (l1.y >= r2.y) or (l2.y >= r1.y) then
+        return false
+    end
+
+    return true
+end
+
+-- this function tries to find all desktop icons that are under the current selection
+local function find_colliding_icons(computation)
+    local desktop_icons = _G.desktop_icons or {}
+    if #desktop_icons > 0 then
+        for _, icon in ipairs(desktop_icons) do
+            if collides(icon, computation) then
+                icon.hover()
+            else
+                icon.unhover()
+            end
+        end
+    end
+end
+
 local timer =
     gears.timer {
     timeout = 1 / hardware.getDisplayFrequency(),
@@ -124,6 +156,8 @@ local timer =
         box.width = computation.width or 1
         box.height = computation.height or 1
         box.visible = true
+
+        find_colliding_icons(computation)
     end
 }
 
@@ -135,6 +169,7 @@ timer:connect_signal(
             if started then
                 timer:stop()
                 started = false
+                find_colliding_icons({x = 0, y = 0, width = 0, height = 0})
             end
         end
     end

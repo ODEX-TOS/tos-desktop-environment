@@ -40,7 +40,7 @@ local height = width
 local amount = math.floor((mouse.screen.workarea.height / height) - 1)
 local _count = 0
 
-local icon_widgets = {}
+desktop_icons = {}
 local text_name = {}
 local icon_timers = {}
 
@@ -154,19 +154,19 @@ local function create_icon(icon, name, num, callback, drag)
         forced_width = width
     }
 
-    widget:connect_signal(
-        "mouse::enter",
-        function()
-            box.bg = active_theme.hue_600 .. "99"
-        end
-    )
+    box.hover = function()
+        box.ontop = true
+        box.bg = active_theme.hue_600 .. "99"
+    end
 
-    widget:connect_signal(
-        "mouse::leave",
-        function()
-            box.bg = active_theme.hue_800 .. "00"
-        end
-    )
+    box.unhover = function()
+        box.ontop = false
+        box.bg = active_theme.hue_800 .. "00"
+    end
+
+    widget:connect_signal("mouse::enter", box.hover)
+
+    widget:connect_signal("mouse::leave", box.unhover)
 
     signals.connect_primary_theme_changed(
         function(theme)
@@ -180,7 +180,7 @@ local function create_icon(icon, name, num, callback, drag)
         widget,
         forced_width = width
     }
-    table.insert(icon_widgets, box)
+    table.insert(desktop_icons, box)
     table.insert(text_name, name)
     table.insert(icon_timers, timer)
     return box
@@ -238,12 +238,12 @@ local function delete(name)
             i = index
         end
     end
-    if i == -1 or i > #icon_widgets then
+    if i == -1 or i > #desktop_icons then
         print("Trying to remove: " .. name .. " from the desktop but it no longer exists", err)
     end
-    icon_widgets[i].visible = false
+    desktop_icons[i].visible = false
     icon_timers[i]:stop()
-    table.remove(icon_widgets, i)
+    table.remove(desktop_icons, i)
     table.remove(icon_timers, i)
     table.remove(text_name, i)
 
@@ -258,7 +258,7 @@ local function location_from_name(name)
         end
     end
     if not (i == -1) then
-        return {x = icon_widgets[i].x, y = icon_widgets[i].y}
+        return {x = desktop_icons[i].x, y = desktop_icons[i].y}
     end
     return {x = nil, y = nil}
 end
