@@ -456,7 +456,7 @@ return function()
       bg = beautiful.background.hue_800,
       width = settings_width,
       height = settings_height,
-      screen = screen.primary
+      screen = scrn
     }
   )
 
@@ -495,6 +495,16 @@ return function()
       view_container
     }
   }
+
+  signals.connect_refresh_screen(
+    function()
+      -- we only need to update the 'center' position when the hub is visible
+      if hub.visible then
+        hub.x = ((scrn.workarea.width / 2) - (settings_width / 2)) + scrn.workarea.x
+        hub.y = scrn.geometry.y - settings_height
+      end
+    end
+  )
 
   hub.close = function()
     if root.elements.settings_views[INDEX].view.stop_view then
