@@ -350,10 +350,18 @@ awful.rules.rules = {
       }
     }
   },
-  -- For Firefox Popup when you install extension
+  -- For Firefox Popup when you install extension and others
   {
-    rule = {
-      instance = "Popup"
+    rule_any = {
+      role = "Popup",
+      class = {
+        "mini panel",
+        "Popup",
+        "popup",
+        "dialog",
+        "Dialog"
+      },
+      type = "utility"
     },
     properties = {
       skip_decoration = true,
