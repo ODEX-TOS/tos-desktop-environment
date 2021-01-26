@@ -25,7 +25,6 @@
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local dpi = beautiful.xresources.apply_dpi
-local rounded = require("lib-tde.widget.rounded")
 local gears = require("gears")
 local icons = require("theme.icons")
 local menubar = require("menubar")
@@ -97,7 +96,6 @@ local function create_icon(icon, name, num, callback, drag)
             y = y,
             type = "dock",
             bg = beautiful.background.hue_800 .. "00",
-            shape = rounded(dpi(20)),
             width = width,
             height = height,
             screen = awful.screen.primary
