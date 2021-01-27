@@ -25,13 +25,13 @@
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local dpi = beautiful.xresources.apply_dpi
-local rounded = require("lib-tde.widget.rounded")
 local gears = require("gears")
 local icons = require("theme.icons")
 local menubar = require("menubar")
 local filehandle = require("lib-tde.file")
 local hardware = require("lib-tde.hardware-check")
 local err = require("lib-tde.logger").error
+local signals = require("lib-tde.signals")
 
 local width = dpi(100)
 local height = width
@@ -39,14 +39,37 @@ local height = width
 local amount = math.floor((mouse.screen.workarea.height / height) - 1)
 local _count = 0
 
-local icon_widgets = {}
+desktop_icons = {}
 local text_name = {}
 local icon_timers = {}
+
+-- move all boxes relative to the selected box
+local function move_selected_boxes(base, prev_base)
+    local delta = {x = base.x - prev_base.x, y = base.y - prev_base.y}
+    -- find all selected boxes (they have ontop = true)
+    for _, value in ipairs(desktop_icons) do
+        if value.ontop and not (value == base) then
+            -- now we move this widget by the delta
+            value.x = value.x + delta.x
+            value.y = value.y + delta.y
+        end
+    end
+end
+
+-- clear all selected icons
+local function clear_selections()
+    for _, value in ipairs(desktop_icons) do
+        value.unhover()
+    end
+end
+
+_G.clear_desktop_selection = clear_selections
 
 local function create_icon(icon, name, num, callback, drag)
     _count = _count + 1
     local x = 0
     local y = 0
+    local active_theme = beautiful.accent
 
     if type(num) == "number" then
         x = dpi(10) + (math.floor((num / amount)) * (width + dpi(10)))
@@ -73,7 +96,6 @@ local function create_icon(icon, name, num, callback, drag)
             y = y,
             type = "dock",
             bg = beautiful.background.hue_800 .. "00",
-            shape = rounded(dpi(20)),
             width = width,
             height = height,
             screen = awful.screen.primary
@@ -86,10 +108,12 @@ local function create_icon(icon, name, num, callback, drag)
         call_now = false,
         autostart = false,
         callback = function()
+            local offset = {x = box.x, y = box.y}
             local coords = mouse.coords()
             box.x = coords.x - xoffset
             box.y = coords.y - yoffset
             timercount = timercount + 1
+            move_selected_boxes(box, offset)
         end
     }
 
@@ -152,17 +176,24 @@ local function create_icon(icon, name, num, callback, drag)
         forced_width = width
     }
 
-    widget:connect_signal(
-        "mouse::enter",
-        function()
-            box.bg = beautiful.accent.hue_600 .. "99"
-        end
-    )
+    box.hover = function()
+        box.ontop = true
+        box.bg = active_theme.hue_600 .. "99"
+    end
 
-    widget:connect_signal(
-        "mouse::leave",
-        function()
-            box.bg = beautiful.background.hue_800 .. "00"
+    box.unhover = function()
+        box.ontop = false
+        box.bg = active_theme.hue_800 .. "00"
+    end
+
+    widget:connect_signal("mouse::enter", box.hover)
+
+    widget:connect_signal("mouse::leave", box.unhover)
+
+    signals.connect_primary_theme_changed(
+        function(theme)
+            active_theme = theme
+            box.bg = active_theme.hue_800 .. "00"
         end
     )
 
@@ -171,7 +202,7 @@ local function create_icon(icon, name, num, callback, drag)
         widget,
         forced_width = width
     }
-    table.insert(icon_widgets, box)
+    table.insert(desktop_icons, box)
     table.insert(text_name, name)
     table.insert(icon_timers, timer)
     return box
@@ -197,6 +228,7 @@ local function desktop_file(file, _, index, drag)
         index,
         function()
             print("Opened: " .. file)
+            clear_selections()
             awful.spawn("gtk-launch " .. filehandle.basename(file))
         end,
         drag
@@ -215,6 +247,7 @@ local function from_file(file, index, x, y, drag)
             index or {x = x, y = y},
             function()
                 print("Opened: " .. file)
+                clear_selections()
                 awful.spawn("open " .. file)
             end,
             drag
@@ -229,16 +262,14 @@ local function delete(name)
             i = index
         end
     end
-    if i == -1 or i > #icon_widgets then
+    if i == -1 or i > #desktop_icons then
         print("Trying to remove: " .. name .. " from the desktop but it no longer exists", err)
     end
-    icon_widgets[i].visible = false
+    desktop_icons[i].visible = false
     icon_timers[i]:stop()
-    table.remove(icon_widgets, i)
+    table.remove(desktop_icons, i)
     table.remove(icon_timers, i)
     table.remove(text_name, i)
-
-    collectgarbage("collect")
 end
 
 local function location_from_name(name)
@@ -249,7 +280,7 @@ local function location_from_name(name)
         end
     end
     if not (i == -1) then
-        return {x = icon_widgets[i].x, y = icon_widgets[i].y}
+        return {x = desktop_icons[i].x, y = desktop_icons[i].y}
     end
     return {x = nil, y = nil}
 end

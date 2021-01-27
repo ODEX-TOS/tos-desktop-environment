@@ -35,6 +35,8 @@ local clickable_container = require("widget.material.clickable-container")
 local icons = require("theme.icons")
 
 local config = require("config")
+local animate = require("lib-tde.animations").createAnimObject
+local signals = require("lib-tde.signals")
 
 local height = dpi(200)
 local width = dpi(380)
@@ -52,15 +54,45 @@ screen.connect_signal(
 
     aboutPage =
       wibox {
-      bg = "#00000000",
+      bg = beautiful.background.hue_800,
       visible = false,
       ontop = true,
       type = "normal",
       height = height,
       width = width,
-      x = s.geometry.width / 2 - (width / 2),
-      y = s.geometry.height / 2 - (height / 2)
+      x = s.geometry.x + s.geometry.width / 2 - (width / 2),
+      y = s.geometry.y + s.geometry.height / 2 - (height / 2)
     }
+
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          aboutPage.visible = false
+          aboutPage = nil
+        end
+      end
+    )
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing about page")
+
+        if not s.valid or aboutPage == nil then
+          return
+        end
+
+        -- the action center itself
+        aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
+        aboutPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+      end
+    )
+
+    signals.connect_background_theme_changed(
+      function(new_theme)
+        aboutPage.bg = new_theme.hue_800 .. beautiful.background_transparency
+      end
+    )
 
     aboutBackdrop =
       wibox {
@@ -85,7 +117,15 @@ local grabber =
       key = "Escape",
       on_press = function()
         aboutBackdrop.visible = false
-        aboutPage.visible = false
+        animate(
+          _G.anim_speed,
+          aboutPage,
+          {y = aboutPage.screen.geometry.y - aboutPage.height},
+          "outCubic",
+          function()
+            aboutPage.visible = false
+          end
+        )
       end
     }
   },
@@ -99,8 +139,25 @@ local function toggleAbout()
   aboutPage.visible = not aboutPage.visible
   if aboutPage.visible then
     grabber:start()
+    aboutPage.y = aboutPage.screen.geometry.y - aboutPage.height
+    animate(
+      _G.anim_speed,
+      aboutPage,
+      {y = aboutPage.screen.geometry.y + aboutPage.screen.geometry.height / 2 - (aboutPage.height / 2)},
+      "outCubic"
+    )
   else
     grabber:stop()
+    aboutPage.visible = true
+    animate(
+      _G.anim_speed,
+      aboutPage,
+      {y = aboutPage.screen.geometry.y - aboutPage.height},
+      "outCubic",
+      function()
+        aboutPage.visible = false
+      end
+    )
   end
 end
 

@@ -27,6 +27,7 @@
 local gears = require("gears")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
+local signals = require("lib-tde.signals")
 
 local vol_osd = require("widget.brightness.brightness-slider-osd")
 
@@ -47,9 +48,34 @@ awful.screen.connect_for_each_screen(
         height = offsety,
         width = dpi(48),
         bg = "#00000000",
-        x = s.geometry.width - offsetx,
-        y = (s.geometry.height / dpi(2)) - (offsety / dpi(2))
+        screen = s,
+        x = s.geometry.x + s.geometry.width - offsetx,
+        y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
       }
+    )
+
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          brightnessOverlay.visible = false
+          brightnessOverlay = nil
+        end
+      end
+    )
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing brightness osd slider")
+
+        if not s.valid or brightnessOverlay == nil then
+          return
+        end
+
+        -- the action center itself
+        brightnessOverlay.x = s.geometry.x + s.geometry.width - offsetx
+        brightnessOverlay.y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
+      end
     )
   end
 )
@@ -75,8 +101,11 @@ local hideOSD =
   gears.timer {
   timeout = 5,
   autostart = true,
+  single_shot = true,
   callback = function()
-    brightnessOverlay.visible = false
+    if brightnessOverlay then
+      brightnessOverlay.visible = false
+    end
   end
 }
 
@@ -95,6 +124,8 @@ local function toggleBriOSD(bool)
     hideOSD:stop()
   end
 end
-_G.toggleBriOSD = toggleBriOSD
+if _G.toggleBriOSD == nil then
+  _G.toggleBriOSD = toggleBriOSD
+end
 
 return brightnessOverlay

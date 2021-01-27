@@ -23,21 +23,13 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local gears = require("gears")
 local beautiful = require("beautiful")
-
-local mat_list_item = require("widget.material.list-item")
+local dpi = beautiful.xresources.apply_dpi
+local card = require("lib-widget.card")
 
 local function build(screen)
-  local hardwareTitle =
-    wibox.widget {
-    text = i18n.translate("Hardware monitor"),
-    font = "Iosevka Regular 10",
-    align = "left",
-    widget = wibox.widget.textbox
-  }
+  local hardware_card = card("Hardware monitor")
 
-  local barColor = beautiful.bg_modal
   local cpu = require("widget.cpu.cpu-meter")
   local ram = require("widget.ram.ram-meter")
   local temp = require("widget.temperature.temperature-meter")
@@ -45,84 +37,18 @@ local function build(screen)
   local network_up = require("widget.network.network-meter")(true, screen)
   local network_down = require("widget.network.network-meter")(false, screen)
 
-  return wibox.widget {
-    spacing = 1,
+  local body =
     wibox.widget {
-      wibox.widget {
-        hardwareTitle,
-        bg = beautiful.bg_modal_title,
-        layout = wibox.layout.flex.vertical
-      },
-      widget = mat_list_item
-    },
-    wibox.widget {
-      wibox.widget {
-        cpu,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, true, true, false, false, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    },
-    wibox.widget {
-      wibox.widget {
-        ram,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, false, false, false, false, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    },
-    wibox.widget {
-      wibox.widget {
-        temp,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, false, false, false, false, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    },
-    wibox.widget {
-      wibox.widget {
-        drive,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, false, false, false, false, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    },
-    wibox.widget {
-      wibox.widget {
-        network_up,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, false, false, false, false, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    },
-    layout = wibox.layout.fixed.vertical,
-    wibox.widget {
-      wibox.widget {
-        network_down,
-        bg = barColor,
-        shape = function(cr, width, height)
-          gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true, 12)
-        end,
-        widget = wibox.container.background
-      },
-      widget = mat_list_item
-    }
+    cpu,
+    ram,
+    temp,
+    drive,
+    network_up,
+    network_down,
+    layout = wibox.layout.fixed.vertical
   }
+  hardware_card.update_body(body)
+  return wibox.container.margin(hardware_card, dpi(20), dpi(20), dpi(20), dpi(20))
 end
 
 return build

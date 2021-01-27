@@ -581,4 +581,109 @@ connections.connect_refresh_screen = function(func)
     awesome.connect_signal("TDE::screen:refresh", func)
 end
 
+--- Notify when the user profile picture changed
+-- @tparam string picture The profile picture file path
+-- @staticfct emit_profile_picture_changed
+-- @usage -- Notify other TDE components when the user profile picture changed
+-- lib-tde.signals.emit_profile_picture_changed()
+connections.emit_profile_picture_changed = function(picture)
+    awesome.emit_signal("TDE::profile:picture::changed", picture)
+end
+
+--- Trigger a callback function when the user profile picture changed
+-- @tparam function func The callback function that will be called when the user profile picture changed
+-- @staticfct profile_picture_changed
+-- @usage --
+-- lib-tde.signals.profile_picture_changed(
+--    function (picture)
+--      print("Changed profile picture to: " .. picture)
+--    end)
+connections.connect_profile_picture_changed = function(func)
+    awesome.connect_signal("TDE::profile:picture::changed", func)
+end
+
+--- Notify when the notification disturb state changes
+-- @tparam bool bDoNotDisturb If Do Not Disturbe mode is turned on
+-- @staticfct emit_do_not_disturb
+-- @usage -- Notify other TDE components what the current do not disturb mode is
+-- lib-tde.signals.emit_do_not_disturb()
+connections.emit_do_not_disturb = function(bDoNotDisturb)
+    awesome.emit_signal("TDE::do_not_disturb::changed", bDoNotDisturb)
+end
+
+--- Trigger a callback function when the do not disturb mode changed
+-- @tparam function func The callback function that will be called when the do not disturb mode changed
+-- @staticfct connect_do_not_disturb
+-- @usage --
+-- lib-tde.signals.connect_do_not_disturb(
+--    function (bDoNotDisturb)
+--      print("Do not disturbe mode: " .. tostring(bDoNotDisturb))
+--    end)
+connections.connect_do_not_disturb = function(func)
+    awesome.connect_signal("TDE::do_not_disturb::changed", func)
+end
+
+--- Notify when the primary theme changed
+-- @tparam table theme The new theme pallet
+-- @staticfct emit_primary_theme_changed
+-- @usage -- Notify other TDE components that the primary theme changed
+-- lib-tde.signals.emit_primary_theme_changed()
+connections.emit_primary_theme_changed = function(bDoNotDisturb)
+    awesome.emit_signal("TDE::primary::theme::changed", bDoNotDisturb)
+end
+
+--- Trigger a callback function when the primary theme changed
+-- @tparam function func The callback function that will be called when the primary theme changed
+-- @staticfct connect_primary_theme_changed
+-- @usage --
+-- lib-tde.signals.connect_primary_theme_changed(
+--    function (theme)
+--      print("The hue_600 color of this theme: " .. theme.hue_600)
+--    end)
+connections.connect_primary_theme_changed = function(func)
+    awesome.connect_signal("TDE::primary::theme::changed", func)
+end
+
+--- Notify when the background theme changed
+-- @tparam table theme The new theme pallet
+-- @staticfct emit_background_theme_changed
+-- @usage -- Notify other TDE components that the background theme changed
+-- lib-tde.signals.emit_background_theme_changed()
+connections.emit_background_theme_changed = function(bDoNotDisturb)
+    awesome.emit_signal("TDE::background::theme::changed", bDoNotDisturb)
+end
+
+--- Trigger a callback function when the background theme changed
+-- @tparam function func The callback function that will be called when the background theme changed
+-- @staticfct connect_background_theme_changed
+-- @usage --
+-- lib-tde.signals.connect_background_theme_changed(
+--    function (theme)
+--      print("The hue_600 color of this theme: " .. theme.hue_600)
+--    end)
+connections.connect_background_theme_changed = function(func)
+    awesome.connect_signal("TDE::background::theme::changed", func)
+end
+
+--- Notify when the oled brightness mode changed
+-- @tparam table theme The new theme pallet
+-- @staticfct emit_oled_mode
+-- @usage -- Notify other TDE components that the oled brightness mode changed
+-- lib-tde.signals.emit_oled_mode(true)
+connections.emit_oled_mode = function(bIsOledMode)
+    awesome.emit_signal("TDE::oled::mode::changed", bIsOledMode)
+end
+
+--- Trigger a callback function when the oled brightness mode changed
+-- @tparam function func The callback function that will be called when the oled brightness mode changed
+-- @staticfct connect_oled_mode
+-- @usage --
+-- lib-tde.signals.connect_oled_mode(
+--    function (bIsOledMode)
+--      print("Is oled mode enabled?: " .. tostring(bIsOledMode))
+--    end)
+connections.connect_oled_mode = function(func)
+    awesome.connect_signal("TDE::oled::mode::changed", func)
+end
+
 return connections

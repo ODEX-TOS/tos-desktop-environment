@@ -22,55 +22,36 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local wibox = require("wibox")
-local gears = require("gears")
+-- menu takes a bit of time to load in.
+-- because of this we put it in the back so the rest of the system can already behave
+-- Look into awesome-freedesktop for more information
 
-local function build(widget)
-  local container =
-    wibox.widget {
-    widget,
-    widget = wibox.container.background,
-    shape = gears.shape.rectangle
-  }
-  local old_cursor, old_wibox
-  container:connect_signal(
-    "mouse::enter",
-    function()
-      -- Hm, no idea how to get the wibox from this signal's arguments...
-      local w = _G.mouse.current_wibox
-      if w then
-        old_cursor, old_wibox = w.cursor, w
-        w.cursor = "hand1"
-      end
-    end
-  )
+require("module.menu")
 
-  container:connect_signal(
-    "mouse::leave",
-    function()
-      container.bg = "#ffffff00"
-      if old_wibox then
-        old_wibox.cursor = old_cursor
-        old_wibox = nil
-      end
-    end
-  )
-
-  container:connect_signal(
-    "button::press",
-    function()
-      container.bg = "#ffffff00"
-    end
-  )
-
-  container:connect_signal(
-    "button::release",
-    function()
-      container.bg = "#ffffff00"
-    end
-  )
-
-  return container
+if not (general["disable_desktop"] == "1") then
+    require("module.installer")
+    require("module.desktop")
 end
 
-return build
+-- restore the last state
+require("module.state")
+require("tutorial")
+
+require("module.dev-widget-update")
+
+require("lib-tde.signals").connect_exit(
+    function()
+        -- stop current autorun.sh
+        -- This is done because otherwise multiple instances would be running at the same time
+        awful.spawn("pgrep -f /etc/xdg/tde/autorun.sh | xargs kill -9")
+    end
+)
+
+local lockscreentime = general["screen_on_time"] or "120"
+if general["screen_timeout"] == 1 or general["screen_timeout"] == nil then
+    awful.spawn("/etc/xdg/tde/autorun.sh " .. lockscreentime)
+else
+    awful.spawn("/etc/xdg/tde/autorun.sh")
+end
+
+require("module.screen_changed")

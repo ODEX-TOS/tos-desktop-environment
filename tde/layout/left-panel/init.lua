@@ -27,7 +27,7 @@ local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local signals = require("lib-tde.signals")
 
-local bottom_panel = function(screen, offset)
+local bottom_panel = function(s, offset)
   local action_bar_width = dpi(45) -- 48
   local offsetY = dpi(26)
   if offset then
@@ -35,26 +35,44 @@ local bottom_panel = function(screen, offset)
   end
   local panel =
     wibox {
-    screen = screen,
-    height = screen.geometry.height,
+    screen = s,
+    height = s.geometry.height,
     width = action_bar_width,
     type = "dock",
-    x = screen.geometry.x,
-    y = screen.geometry.y + offsetY,
+    x = s.geometry.x,
+    y = s.geometry.y + offsetY,
     ontop = true,
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
 
+  signals.connect_background_theme_changed(
+    function(theme)
+      panel.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
+
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if s == removed then
+        panel.visible = false
+        panel = nil
+      end
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing left-panel")
-      local scrn = panel.screen
-      panel.x = scrn.geometry.x
-      panel.y = scrn.geometry.y + offsetY
+      if panel == nil or panel == nil then
+        return
+      end
+      panel.x = s.geometry.x
+      panel.y = s.geometry.y + offsetY
       panel.width = action_bar_width
-      panel.height = scrn.geometry.height
+      panel.height = s.geometry.height
     end
   )
 
@@ -66,7 +84,7 @@ local bottom_panel = function(screen, offset)
 
   panel:setup {
     layout = wibox.layout.align.vertical,
-    require("layout.left-panel.action-bar")(screen, action_bar_width)
+    require("layout.left-panel.action-bar")(s, action_bar_width)
   }
   return panel
 end

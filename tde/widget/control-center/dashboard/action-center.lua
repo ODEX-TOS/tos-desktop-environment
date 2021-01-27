@@ -23,42 +23,15 @@
 --SOFTWARE.
 ]]
 local wibox = require("wibox")
-local mat_list_item = require("widget.material.list-item")
 local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
 
-local separator =
-  wibox.widget {
-  orientation = "vertical",
-  forced_height = 16,
-  opacity = 0.00,
-  widget = wibox.widget.separator
-}
+local card = require("lib-widget.card")
 
-local actionTitle =
-  wibox.widget {
-  text = i18n.translate("Action Center"),
-  font = "Iosevka Regular 10",
-  align = "left",
-  widget = wibox.widget.textbox
-}
+local action_card = card("Action Center")
 
 local actionWidget = require("widget.action-center")
 
-return wibox.widget {
-  spacing = 1,
-  wibox.widget {
-    wibox.widget {
-      separator,
-      actionTitle,
-      bg = beautiful.bg_modal_title,
-      layout = wibox.layout.fixed.vertical
-    },
-    widget = mat_list_item
-  },
-  layout = wibox.layout.fixed.vertical,
-  {
-    actionWidget,
-    bg = beautiful.bg_modal,
-    layout = wibox.layout.align.vertical
-  }
-}
+action_card.update_body(actionWidget)
+
+return wibox.container.margin(action_card, dpi(20), dpi(20), dpi(20), dpi(20))

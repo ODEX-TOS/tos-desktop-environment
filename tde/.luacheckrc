@@ -70,7 +70,9 @@ read_globals = {
     "math.pow",
     "reverse",
     "center",
-    "save_state"
+    "save_state",
+    "dont_disturb",
+    "clear_desktop_selection"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about
@@ -96,7 +98,8 @@ globals = {
     "backdrop",
     "taglist_occupied",
     "print",
-    "echo"
+    "echo",
+    "desktop_icons"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).

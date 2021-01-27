@@ -31,18 +31,13 @@ local dpi = require("beautiful").xresources.apply_dpi
 -- Commons requirements
 local wibox = require("wibox")
 local clickable_container = require("widget.material.clickable-container")
+local seperator_widget = require("lib-widget.separator")
 -- Local declarations
 
 local mat_list_item = {mt = {}}
 
 function mat_list_item:build_separator()
-  self._private.separator =
-    wibox.widget {
-    orientation = "horizontal",
-    forced_height = 1,
-    opacity = 0.08,
-    widget = wibox.widget.separator
-  }
+  self._private.separator = seperator_widget(1, "horizontal", 0.08)
   self:emit_signal("widget::layout_changed")
 end
 

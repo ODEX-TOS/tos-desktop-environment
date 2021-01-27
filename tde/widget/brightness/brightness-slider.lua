@@ -24,34 +24,33 @@
 ]]
 local wibox = require("wibox")
 local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("widget.material.slider")
+local slider = require("lib-widget.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 
 local spawn = require("awful.spawn")
 
-local slider =
-  wibox.widget {
-  read_only = false,
-  widget = mat_slider
-}
-
-_G.brightness1 = slider
-slider:connect_signal(
-  "property::value",
-  function()
+local brightness_slider =
+  slider(
+  5,
+  100,
+  1,
+  5,
+  function(value)
     if (_G.menuopened) then
-      _G.brightness2:set_value(slider.value)
+      _G.brightness2.update(value)
     end
     if (_G.oled) then
-      spawn("brightness -s " .. math.max(slider.value, 5) .. " -F") -- toggle pixel values
+      spawn("brightness -s " .. value .. " -F") -- toggle pixel values
     else
       spawn("brightness -s 100 -F") -- reset pixel values
-      spawn("brightness -s " .. math.max(slider.value, 5))
+      spawn("brightness -s " .. value)
     end
   end
 )
+
+_G.brightness1 = brightness_slider
 
 local update = function()
   awful.spawn.easy_async_with_shell(
@@ -73,7 +72,7 @@ awesome.connect_signal(
 -- The emit will come from the OSD
 signals.connect_brightness(
   function(value)
-    slider:set_value(value)
+    brightness_slider.update(value)
   end
 )
 
@@ -88,7 +87,7 @@ local button = mat_icon_button(icon)
 local brightness_setting =
   wibox.widget {
   button,
-  slider,
+  brightness_slider,
   widget = mat_list_item
 }
 

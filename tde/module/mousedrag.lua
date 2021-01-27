@@ -27,6 +27,7 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local gears = require("gears")
 local hardware = require("lib-tde.hardware-check")
+local signals = require("lib-tde.signals")
 
 local startx = -1
 local starty = -1
@@ -36,6 +37,17 @@ local endy = -1
 local box = nil
 
 local started = false
+local theme = beautiful.accent
+
+signals.connect_primary_theme_changed(
+    function(new_theme)
+        theme = new_theme
+        if box ~= nil then
+            box.bg = theme.hue_800 .. "44"
+            box.border_color = theme.hue_600
+        end
+    end
+)
 
 local function createBox(x, y, width, height)
     local _box =
@@ -46,9 +58,9 @@ local function createBox(x, y, width, height)
             x = x,
             y = y,
             type = "dock",
-            bg = beautiful.accent.hue_800 .. "44",
+            bg = theme.hue_800 .. "44",
             border_width = dpi(1),
-            border_color = beautiful.accent.hue_600,
+            border_color = theme.hue_600,
             width = width,
             height = height,
             screen = mouse.screen
@@ -85,9 +97,43 @@ local function calculate(sx, sy, ex, ey)
     }
 end
 
+-- check if 2 rectangles are colliding
+local function collides(icon, computation)
+    if (computation.x >= icon.x + icon.width) or (icon.x >= computation.x + computation.width) then
+        return false
+    end
+
+    if (computation.y >= icon.y + icon.height) or (icon.y >= computation.y + computation.height) then
+        return false
+    end
+
+    return true
+end
+
+-- this function tries to find all desktop icons that are under the current selection
+local function find_colliding_icons(computation)
+    local desktop_icons = _G.desktop_icons or {}
+    if #desktop_icons > 0 then
+        for _, icon in ipairs(desktop_icons) do
+            if collides(icon, computation) then
+                if not (icon.ontop) then
+                    icon.hover()
+                end
+            else
+                -- optimization to reduce rendering
+                if icon.ontop then
+                    icon.unhover()
+                end
+            end
+        end
+    end
+end
+
+local time_delay = 1 / hardware.getDisplayFrequency()
+
 local timer =
     gears.timer {
-    timeout = 1 / hardware.getDisplayFrequency(),
+    timeout = time_delay,
     call_now = false,
     autostart = false,
     callback = function()
@@ -112,6 +158,8 @@ local timer =
         box.width = computation.width or 1
         box.height = computation.height or 1
         box.visible = true
+
+        find_colliding_icons(computation)
     end
 }
 
@@ -128,10 +176,15 @@ timer:connect_signal(
     end
 )
 
+local function clear_selected_icons()
+    find_colliding_icons({x = 0, y = 0, width = 0, height = 0})
+end
+
 local function start()
     local coords = mouse.coords()
     startx = coords.x
     starty = coords.y
+    clear_selected_icons()
     if box == nil then
         box = createBox(startx, starty, 1, 1)
     end

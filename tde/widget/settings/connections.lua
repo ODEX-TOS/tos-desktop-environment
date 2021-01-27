@@ -26,89 +26,79 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local hardware = require("lib-tde.hardware-check")
 local file = require("lib-tde.file")
 local icons = require("theme.icons")
 local split = require("lib-tde.function.common").split
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
-local clickable_container = require("widget.material.clickable-container")
+local card = require("lib-widget.card")
+local inputfield = require("lib-widget.inputfield")
+local tde_button = require("lib-widget.button")
+local signals = require("lib-tde.signals")
 
 local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
+local settings_height = dpi(900)
 local settings_nw = dpi(260)
 
-local active_box = nil
 local active_text = ""
 
 local static_connections = {}
+local password_fields = {}
 
-local password_to_star = function(pass)
-  local str = ""
-  for _ = 1, #pass do
-    str = str .. "*"
-  end
-  return str
+local refresh = function()
 end
 
-local write_to_textbox = function(char)
-  if active_box then
-    active_text = active_text .. char
-    active_box:set_text(password_to_star(active_text))
+local qr_code_image = ""
+local bIsShowingNetworkTab = true
+
+signals.connect_exit(
+  function()
+    file.rm(qr_code_image)
   end
+)
+
+-- returns the filename of the qr code image
+local function generate_qr_code(ssid, password)
+  local qr_text = "WIFI:T:WPA;S:" .. ssid .. ";P:" .. password .. ";;"
+  local output = "/tmp/qrcode" .. ssid .. ".png"
+  hardware.execute("qrencode -l L -v 1 -m 1 -s 9 -o " .. output .. " '" .. qr_text .. "'")
+  qr_code_image = output
 end
 
-local delete_key = function()
-  if active_box then
-    active_text = active_text:sub(1, #active_text - 1)
-    active_box:set_text(password_to_star(active_text))
-  end
+local function make_qr_code_field()
+  local img =
+    wibox.widget {
+    image = qr_code_image,
+    resize = true,
+    forced_height = (settings_height / 2),
+    widget = wibox.widget.imagebox
+  }
+  local done_btn =
+    tde_button(
+    wibox.widget.imagebox(icons.qr_code),
+    function()
+      bIsShowingNetworkTab = true
+      refresh()
+    end
+  )
+
+  return wibox.widget {
+    wibox.container.place(img),
+    wibox.container.margin(done_btn, m, m, m, m),
+    layout = wibox.layout.fixed.vertical
+  }
 end
-
-local reset_textbox = function()
-  if active_box then
-    active_text = ""
-    active_box:set_text(password_to_star(active_text))
-  end
-end
-
-local input_grabber =
-  awful.keygrabber {
-  auto_start = true,
-  stop_event = "release",
-  keypressed_callback = function(_, _, key, _)
-    if key == "BackSpace" then
-      delete_key()
-    end
-    if #key == 1 then
-      write_to_textbox(key)
-    end
-  end,
-  keyreleased_callback = function(self, _, key, _)
-    if key == "Return" then
-      self:stop()
-    end
-
-    if key == "Escape" then
-      self:stop()
-      -- restart the settings_grabber listner
-      root.elements.settings_grabber:start()
-      reset_textbox()
-    end
-  end
-}
 
 local function make_network_widget(ssid, active)
   -- make sure ssid is not nil
   ssid = ssid or ""
 
-  local box = wibox.container.background()
-  box.bg = beautiful.bg_modal
-  box.shape = rounded()
+  local box = card()
 
   local button = mat_icon_button(mat_icon(icons.plus, dpi(25)))
   button:buttons(
@@ -123,14 +113,14 @@ local function make_network_widget(ssid, active)
             awful.spawn.easy_async(
               "tos network connect " .. ssid,
               function(_)
-                root.elements.settings_views[3].view.refresh()
+                refresh()
               end
             )
           else
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
               function(_)
-                root.elements.settings_views[3].view.refresh()
+                refresh()
               end
             )
           end
@@ -140,56 +130,37 @@ local function make_network_widget(ssid, active)
   )
 
   local password =
-    wibox.widget {
-    {
-      {
-        {
-          id = "password_" .. ssid,
-          markup = "",
-          font = "SF Pro Display Bold 16",
-          align = "left",
-          valign = "center",
-          widget = wibox.widget.textbox
-        },
-        margins = dpi(5),
-        widget = wibox.container.margin
-      },
-      widget = clickable_container
-    },
-    bg = beautiful.groups_bg,
-    shape = function(cr, width, height)
-      gears.shape.rounded_rect(cr, width, height, beautiful.groups_radius)
+    inputfield(
+    function(text)
+      active_text = text
     end,
-    widget = wibox.container.background
-  }
-
-  password:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        nil,
-        function()
-          -- clear the old password
-          if active_box then
-            active_text = ""
-            active_box:set_text(active_text)
-          end
-          -- get the new one
-          active_box = password:get_children_by_id("password_" .. ssid)[1]
-          -- stop grabbing input of a potential other field
-          input_grabber:stop()
-          print("Start grabbing input")
-          input_grabber:start()
-        end
-      )
-    )
+    function(_)
+      root.elements.settings_grabber:start()
+    end,
+    true
   )
 
   if active then
     -- override button to be a checkmark to indicate connection
     button = wibox.container.margin(wibox.widget.imagebox(icons.network), dpi(10), dpi(10), dpi(10), dpi(10))
-    password = wibox.widget.textbox("")
+    password =
+      tde_button(
+      wibox.widget.imagebox(icons.qr_code),
+      function()
+        print("Generating qr code")
+        local passwd =
+          string.gsub(
+          hardware.execute("nmcli --show-secrets -g 802-11-wireless-security.psk connection show id " .. ssid),
+          "\n",
+          ""
+        )
+        generate_qr_code(ssid, passwd)
+        bIsShowingNetworkTab = false
+        refresh()
+      end
+    )
+  else
+    table.insert(password_fields, password)
   end
 
   -- name on the left, password entry in the middle, connect button on the right
@@ -211,7 +182,7 @@ local function make_network_widget(ssid, active)
     layout = wibox.layout.align.horizontal
   }
 
-  box.widget = widget
+  box.update_body(widget)
 
   local container = wibox.container.margin()
   container.bottom = m
@@ -226,9 +197,7 @@ local function make_connection(t, n)
   container.bottom = m
   container.forced_width = settings_width - settings_nw - (m * 2)
 
-  local conx = wibox.container.background()
-  conx.bg = beautiful.bg_modal
-  conx.shape = rounded()
+  local conx = card()
 
   local i
   local wireless = "wireless"
@@ -281,17 +250,19 @@ local function make_connection(t, n)
     font = beautiful.title_font
   }
 
-  conx:setup {
-    layout = wibox.layout.align.horizontal,
-    {
-      layout = wibox.container.margin,
-      margins = m,
-      wibox.container.margin(icon, dpi(10), dpi(10), dpi(10), dpi(10))
-    },
-    address,
-    wibox.container.margin(name, 0, m),
-    {layout = wibox.container.margin, right = m, type}
-  }
+  conx.update_body(
+    wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        wibox.container.margin(icon, dpi(10), dpi(10), dpi(10), dpi(10))
+      },
+      address,
+      wibox.container.margin(name, 0, m),
+      {layout = wibox.container.margin, right = m, type}
+    }
+  )
 
   container.widget = conx
 
@@ -316,7 +287,9 @@ return function()
         1,
         function()
           -- stop grabbing password input
-          input_grabber:stop()
+          for _, widget in ipairs(password_fields) do
+            widget.stop_grabbing()
+          end
           if root.elements.settings then
             root.elements.settings.close()
           end
@@ -377,28 +350,39 @@ return function()
     }
   }
 
-  view.refresh = function()
+  local function setup_network_connections()
+    awful.spawn.easy_async_with_shell(
+      'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
+      function(out)
+        -- remove all wifi connections
+        connections.children = static_connections
+
+        for _, value in ipairs(split(out, "\n")) do
+          local line = split(value, " ")
+          if line[2] == "*" then
+            connections:add(make_network_widget(line[3], true))
+          else
+            connections:add(make_network_widget(line[3], false))
+          end
+        end
+      end
+    )
+  end
+
+  refresh = function()
+    password_fields = {}
     local interface = file.string("/tmp/interface.txt")
     if hardware.hasWifi() and not (interface == "") then
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
       wireless.ip.text = hardware.getDefaultIP()
-      awful.spawn.easy_async_with_shell(
-        'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
-        function(out)
-          -- remove all wifi connections
-          connections.children = static_connections
-
-          for _, value in ipairs(split(out, "\n")) do
-            local line = split(value, " ")
-            if line[2] == "*" then
-              connections:add(make_network_widget(line[3], true))
-            else
-              connections:add(make_network_widget(line[3], false))
-            end
-          end
-        end
-      )
+      if bIsShowingNetworkTab then
+        setup_network_connections()
+      else
+        -- remove all wifi connections
+        connections.children = static_connections
+        connections:add(make_qr_code_field())
+      end
     else
       wireless.icon:set_image(icons.wifi_off)
       wireless.name.text = i18n.translate("Disconnected")
@@ -422,5 +406,6 @@ return function()
     )
   end
 
+  view.refresh = refresh
   return view
 end

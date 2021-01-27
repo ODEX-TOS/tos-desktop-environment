@@ -90,7 +90,7 @@ local function menu()
             cmd = cmd .. " --right-of " .. choice[i - 1]
          end
          -- duplicate command due to xrandr bug?
-         cmd = cmd .. "; sleep 1; " .. cmd
+         --cmd = cmd .. "; sleep 1; " .. cmd
       end
       -- Disabled outputs
       for _, o in pairs(out) do
@@ -111,11 +111,12 @@ local function menu()
          end
       end
 
-      menu_tbl[#menu_tbl + 1] = {label, cmd}
+      menu_tbl[#menu_tbl + 1] = {label, cmd, choice}
       if #choice == 1 then
          menu_tbl[#menu_tbl + 1] = {
             'Duplicate <span weight="bold">' .. choice[1] .. "</span>",
-            apps.default.duplicate_screens .. " " .. choice[1]
+            apps.default.duplicate_screens .. " " .. choice[1],
+            choice
          }
       end
    end
@@ -132,8 +133,8 @@ local function naughty_destroy_callback(_)
       awful.spawn.easy_async_with_shell(
          action,
          function()
-            awful.spawn("which autorandr && autorandr --save tde --force")
-            _G.awesome.restart()
+            awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
+            --_G.awesome.restart()
          end
       )
       state.index = nil

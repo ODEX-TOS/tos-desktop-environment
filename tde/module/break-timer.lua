@@ -28,6 +28,7 @@ local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = require("beautiful").xresources.apply_dpi
+local signals = require("lib-tde.signals")
 local breakTimerFunctions = require("lib-tde.function.datetime")
 
 _G.pause = {}
@@ -50,9 +51,36 @@ awful.screen.connect_for_each_screen(
         width = s.geometry.width,
         bg = beautiful.bg_modal,
         x = s.geometry.x,
-        y = s.geometry.x
+        y = s.geometry.y
       }
     )
+
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          breakOverlay.visible = false
+          breakOverlay = nil
+        end
+      end
+    )
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing break timer screen")
+
+        if not s.valid or breakOverlay == nil then
+          return
+        end
+
+        -- the action center itself
+        breakOverlay.x = s.geometry.x
+        breakOverlay.y = s.geometry.y
+        breakOverlay.width = s.geometry.width
+        breakOverlay.height = s.geometry.height
+      end
+    )
+
     -- Put its items in a shaped container
     breakOverlay:setup {
       -- Container

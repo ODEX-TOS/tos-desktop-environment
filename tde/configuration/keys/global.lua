@@ -217,7 +217,7 @@ local globalKeys =
       print("Showing action center")
       _G.screen.primary.left_panel:toggle(true)
     end,
-    {description = i18n.translate("Open Control panel"), group = i18n.translate("awesome")}
+    {description = i18n.translate("Open Control panel"), group = i18n.translate("Launcher")}
   ),
   awful.key({modkey}, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
   awful.key(
@@ -615,6 +615,9 @@ for i = 1, 9 do
         local screen = awful.screen.focused()
         local tag = screen.tags[i]
         print("Going to tag: " .. i)
+        if _G.clear_desktop_selection then
+          _G.clear_desktop_selection()
+        end
         if tag then
           tag:view_only()
         end
@@ -628,6 +631,9 @@ for i = 1, 9 do
         local screen = awful.screen.focused()
         local tag = screen.tags[i]
         print("Toggeling tag: " .. i)
+        if _G.clear_desktop_selection then
+          _G.clear_desktop_selection()
+        end
         if tag then
           awful.tag.viewtoggle(tag)
         end
@@ -639,6 +645,9 @@ for i = 1, 9 do
       "#" .. i + 9,
       function()
         print("Moving client to tag: " .. i)
+        if _G.clear_desktop_selection then
+          _G.clear_desktop_selection()
+        end
 
         if _G.client.focus then
           local tag = _G.client.focus.screen.tags[i]
@@ -654,6 +663,9 @@ for i = 1, 9 do
       "#" .. i + 9,
       function()
         print("Toggeling tag " .. i .. " focused client")
+        if _G.clear_desktop_selection then
+          _G.clear_desktop_selection()
+        end
 
         if _G.client.focus then
           local tag = _G.client.focus.screen.tags[i]

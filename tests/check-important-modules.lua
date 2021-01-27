@@ -158,6 +158,10 @@ function test_configuration_mod_key_tde_module_titlebar_table_lua()
     assert(exists("tde/module/titlebar/table.lua"), "Check that tde/module/titlebar/table.lua exists")
 end
 
+function test_configuration_mod_key_tde_module_screen_changed()
+    assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/screen_changed.lua exists")
+end
+
 function test_configuration_mod_key_tde_configuration_apps_lua()
     assert(exists("tde/configuration/apps.lua"), "Check that tde/configuration/apps.lua exists")
 end
@@ -245,13 +249,6 @@ function test_configuration_mod_key_tde_widget_material_icon_button_lua()
     assert(exists("tde/widget/material/icon-button.lua"), "Check that tde/widget/material/icon-button.lua exists")
 end
 
-function test_configuration_mod_key_tde_widget_action_center_clickable_container_lua()
-    assert(
-        exists("tde/widget/action-center/clickable-container.lua"),
-        "Check that tde/widget/action-center/clickable-container.lua exists"
-    )
-end
-
 function test_configuration_mod_key_tde_widget_action_center_init_lua()
     assert(exists("tde/widget/action-center/init.lua"), "Check that tde/widget/action-center/init.lua exists")
 end
@@ -279,10 +276,6 @@ end
 
 function test_configuration_mod_key_tde_widget_about_init_lua()
     assert(exists("tde/widget/about/init.lua"), "Check that tde/widget/about/init.lua exists")
-end
-
-function test_configuration_mod_key_tde_widget_scrollbar_lua()
-    assert(exists("tde/widget/scrollbar.lua"), "Check that tde/widget/scrollbar.lua exists")
 end
 
 function test_configuration_mod_key_tde_widget_user_profile_init_lua()
@@ -386,6 +379,26 @@ end
 
 function test_module_volume_slider_osd()
     assert(exists("tde/module/volume-slider-osd.lua"), "Check that tde/module/volume-slider-osd.lua exists")
+end
+
+function test_module_init()
+    local file = "tde/module/init.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_module_lazy_load()
+    local file = "tde/module/lazy_load_boot.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_module_bootup_configuration()
+    local file = "tde/module/bootup_configuration.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_global_var()
+    local file = "tde/global_var.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
 end
 
 function test_lib_tde_config_writer()
@@ -544,7 +557,7 @@ function test_lib_tde_translations_en()
 end
 
 function test_that_all_important_files_are_tested()
-    local amount = 92
+    local amount = 96
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

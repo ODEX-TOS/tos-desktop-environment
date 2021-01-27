@@ -36,8 +36,11 @@ local theme = require("theme.icons.dark-light")
 local dpi = require("beautiful").xresources.apply_dpi
 local filehandle = require("lib-tde.file")
 local config = require("config")
+local animate = require("lib-tde.animations").createAnimObject
+local signals = require("lib-tde.signals")
 
 local bShowingWidget = false
+local padding = dpi(30)
 
 local musicPlayer
 
@@ -45,18 +48,48 @@ screen.connect_signal(
   "request::desktop_decoration",
   function(s)
     -- Create the box
-    local padding = dpi(30)
+
     musicPlayer =
       wibox {
-      bg = "#00000000",
+      bg = beautiful.background.hue_800,
       visible = false,
       ontop = true,
       type = "normal",
       height = dpi(380),
       width = dpi(260),
-      x = s.geometry.width - dpi(260) - dpi(10),
-      y = padding
+      x = s.geometry.width - dpi(270),
+      y = s.geometry.y + padding
     }
+
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          musicPlayer.visible = false
+          musicPlayer = nil
+        end
+      end
+    )
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing music player")
+
+        if not s.valid or musicPlayer == nil then
+          return
+        end
+
+        -- the action center itself
+        musicPlayer.x = s.geometry.width - dpi(270)
+        musicPlayer.y = s.geometry.y + padding
+      end
+    )
+
+    signals.connect_background_theme_changed(
+      function(new_theme)
+        musicPlayer.bg = new_theme.hue_800 .. beautiful.background_transparency
+      end
+    )
   end
 )
 
@@ -67,8 +100,17 @@ local grabber =
       modifiers = {},
       key = "Escape",
       on_press = function()
-        musicPlayer.visible = false
+        musicPlayer.visible = true
         bShowingWidget = false
+        animate(
+          _G.anim_speed,
+          musicPlayer,
+          {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+          "outCubic",
+          function()
+            musicPlayer.visible = false
+          end
+        )
       end
     }
   },
@@ -82,9 +124,21 @@ local function togglePlayer()
   if musicPlayer.visible then
     grabber:start()
     bShowingWidget = true
+    musicPlayer.y = musicPlayer.screen.geometry.y - musicPlayer.height
+    animate(_G.anim_speed, musicPlayer, {y = musicPlayer.screen.geometry.y + padding}, "outCubic")
   else
     grabber:stop()
     bShowingWidget = false
+    musicPlayer.visible = true
+    animate(
+      _G.anim_speed,
+      musicPlayer,
+      {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+      "outCubic",
+      function()
+        musicPlayer.visible = false
+      end
+    )
   end
 end
 
@@ -174,9 +228,17 @@ musicPlayer:setup {
 musicPlayer:connect_signal(
   "mouse::leave",
   function()
-    musicPlayer.visible = false
     grabber:stop()
     bShowingWidget = false
+    animate(
+      _G.anim_speed,
+      musicPlayer,
+      {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+      "outCubic",
+      function()
+        musicPlayer.visible = false
+      end
+    )
   end
 )
 

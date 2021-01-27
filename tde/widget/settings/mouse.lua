@@ -26,9 +26,11 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local icons = require("theme.icons")
 local mouse = require("lib-tde.mouse")
+local slider = require("lib-widget.slider")
+local card = require("lib-widget.card")
+local checkbox = require("lib-widget.checkbox")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -61,100 +63,43 @@ return function()
   )
 
   local function make_mouse(id, name, default_value, default_accel_value, natural_scrolling)
+    local mouse_card = card()
+
     local mouse_heading = wibox.widget.textbox(name)
     mouse_heading.font = beautiful.font
 
-    local mouse_slider = wibox.widget.slider()
-    mouse_slider.bar_shape = function(c, w, h)
-      gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-    end
-    mouse_slider.bar_height = dpi(30)
-    mouse_slider.bar_color = beautiful.bg_modal
-    mouse_slider.bar_active_color = beautiful.accent.hue_500
-    mouse_slider.handle_shape = gears.shape.circle
-    mouse_slider.handle_width = dpi(35)
-    mouse_slider.handle_color = beautiful.accent.hue_500
-    mouse_slider.handle_border_width = 1
-    mouse_slider.handle_border_color = "#00000012"
-    mouse_slider.minimum = 5
-    mouse_slider.maximum = 1000
-
-    mouse_slider:set_value((default_value * 100) or 1)
-
-    mouse_slider:connect_signal(
-      "property::value",
-      function()
-        mouse.setMouseSpeed(id, mouse_slider.value / 100)
+    local mouse_slider =
+      slider(
+      0.05,
+      10,
+      0.05,
+      default_value,
+      function(value)
+        mouse.setMouseSpeed(id, value)
       end
     )
 
-    local mouse_accel_slider = wibox.widget.slider()
-    mouse_accel_slider.bar_shape = function(c, w, h)
-      gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-    end
-    mouse_accel_slider.bar_height = dpi(30)
-    mouse_accel_slider.bar_color = beautiful.bg_modal
-    mouse_accel_slider.bar_active_color = beautiful.accent.hue_500
-    mouse_accel_slider.handle_shape = gears.shape.circle
-    mouse_accel_slider.handle_width = dpi(35)
-    mouse_accel_slider.handle_color = beautiful.accent.hue_500
-    mouse_accel_slider.handle_border_width = 1
-    mouse_accel_slider.handle_border_color = "#00000012"
-    mouse_accel_slider.minimum = 1
-    mouse_accel_slider.maximum = 100
-
-    mouse_accel_slider:set_value((default_accel_value * 100) or 1)
-
-    mouse_accel_slider:connect_signal(
-      "property::value",
-      function()
-        mouse.setAccellaration(id, mouse_accel_slider.value / 100)
+    local mouse_accel_slider =
+      slider(
+      0.01,
+      1,
+      0.01,
+      default_accel_value,
+      function(value)
+        mouse.setAccellaration(id, value)
       end
     )
 
     local natural_scrolling_checkbox =
-      wibox.widget {
-      checked = natural_scrolling or false,
-      color = beautiful.accent.hue_700,
-      paddings = dpi(2),
-      check_border_color = beautiful.accent.hue_600,
-      check_color = beautiful.accent.hue_600,
-      check_border_width = dpi(2),
-      shape = gears.shape.circle,
-      forced_height = settings_index,
-      widget = wibox.widget.checkbox
-    }
-
-    natural_scrolling_checkbox:connect_signal(
-      "button::press",
-      function()
-        print("Pressed")
-        natural_scrolling_checkbox.checked = not natural_scrolling_checkbox.checked
-        -- the checked property can also contain a nil value
-        mouse.setNaturalScrolling(id, natural_scrolling_checkbox.checked == true)
-      end
-    )
-    natural_scrolling_checkbox:connect_signal(
-      "mouse::enter",
-      function()
-        if natural_scrolling_checkbox.checked then
-          natural_scrolling_checkbox.check_color = beautiful.accent.hue_700
-        end
-      end
-    )
-    natural_scrolling_checkbox:connect_signal(
-      "mouse::leave",
-      function()
-        if natural_scrolling_checkbox.checked then
-          natural_scrolling_checkbox.check_color = beautiful.accent.hue_600
-        end
-      end
+      checkbox(
+      natural_scrolling or false,
+      function(checked)
+        mouse.setNaturalScrolling(id, checked == true)
+      end,
+      settings_index
     )
 
-    return wibox.widget {
-      layout = wibox.container.background,
-      bg = beautiful.bg_modal,
-      shape = rounded(),
+    mouse_card.update_body(
       wibox.widget {
         layout = wibox.layout.fixed.vertical,
         {
@@ -208,7 +153,8 @@ return function()
           }
         }
       }
-    }
+    )
+    return mouse_card
   end
 
   local layout = wibox.layout.flex.vertical()

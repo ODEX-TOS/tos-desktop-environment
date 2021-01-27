@@ -60,9 +60,9 @@ if [[ "$(command -v lxsession)" ]]; then
 fi
 
 # autolock the system
-if [[ "$(command -v xidlehook)" && ! "$1" == "" ]]; then
+if [[ "$(command -v xidlehook)" != "" && "$1" -gt "5" ]]; then
     echo "Lock screen time set to: $1 seconds"
-    sh /etc/xdg/tde/autolock.sh "$1" &
+    sh /etc/xdg/tde/autolock.sh "$1" &>/dev/null &
 fi
 
 # run clipboard manager

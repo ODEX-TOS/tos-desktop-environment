@@ -180,7 +180,7 @@ local function topbar_right_plugin(s)
   table_widget:add(show_widget_or_default("widget.battery", hardware.hasBattery(), true))
   table_widget:add(show_widget_or_default("widget.bluetooth", hardware.hasBluetooth()))
   table_widget:add(show_widget_or_default("widget.wifi", hardware.hasWifi()))
-  table_widget:add(require("widget.package-updater"))
+  table_widget:add(show_widget_or_default("widget.package-updater", general["minimize_network_usage"] ~= "1"))
   table_widget:add(
     show_widget_or_default(
       "widget.music",
@@ -247,14 +247,32 @@ local TopPanel = function(s, offset, controlCenterOnly)
     }
   )
 
+  signals.connect_background_theme_changed(
+    function(theme)
+      panel.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
+
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if panel ~= nil and panel.screen == removed then
+        panel.visible = false
+        panel = nil
+      end
+    end
+  )
+
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing top-panel")
-      local scrn = panel.screen
-      panel.x = scrn.geometry.x + offsetx
-      panel.y = scrn.geometry.y
-      panel.width = scrn.geometry.width - offsetx
+      if panel == nil then
+        return
+      end
+      panel.x = s.geometry.x + offsetx
+      panel.y = s.geometry.y
+      panel.width = s.geometry.width - offsetx
       panel.height = dpi(26)
     end
   )

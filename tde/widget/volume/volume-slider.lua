@@ -24,20 +24,19 @@
 ]]
 local wibox = require("wibox")
 local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("widget.material.slider")
+local slider = require("lib-widget.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 
-local slider =
-  wibox.widget {
-  read_only = false,
-  widget = mat_slider
-}
-slider:connect_signal(
-  "property::value",
-  function()
-    signals.emit_volume(slider.value)
+local vol_slider =
+  slider(
+  0,
+  100,
+  1,
+  0,
+  function(value)
+    signals.emit_volume(value)
   end
 )
 
@@ -50,8 +49,8 @@ local icon =
 signals.connect_volume(
   function(value)
     local number = tonumber(value)
-    if not (number == slider.value) then
-      slider:set_value(number)
+    if not (number == vol_slider.value) then
+      vol_slider.update(number)
     end
   end
 )
@@ -78,7 +77,7 @@ button:connect_signal("button::press", toggleIcon)
 local volume_setting =
   wibox.widget {
   button,
-  slider,
+  vol_slider,
   widget = mat_list_item
 }
 

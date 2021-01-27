@@ -29,23 +29,22 @@ local beautiful = require("beautiful")
 local dpi = require("beautiful").xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
 local signals = require("lib-tde.signals")
+local animate = require("lib-tde.animations").createAnimObject
+local seperator_widget = require("lib-widget.separator")
 
-local scrollbar = require("widget.scrollbar")
+local keyconfig = require("configuration.keys.mod")
+local modKey = keyconfig.modKey
+
+local scrollbox = require("lib-widget.scrollbox")
 
 -- load the notification plugins
 local plugins = require("lib-tde.plugin-loader")("notification")
 
--- body gets populated with a scrollbar widget once generated
+-- body gets populated with a scrollbox widget once generated
 local body = {}
 
 local function notification_plugin()
-  local separator =
-    wibox.widget {
-    orientation = "vertical",
-    forced_height = 16,
-    opacity = 0.00,
-    widget = wibox.widget.separator
-  }
+  local separator = seperator_widget(16, "vertical", 0)
 
   local table_widget =
     wibox.widget {
@@ -71,47 +70,69 @@ local function notification_plugin()
   return table
 end
 
-local right_panel = function(screen)
+local right_panel = function(s)
   local panel_width = dpi(350)
 
   local backdrop =
     wibox {
     ontop = true,
-    screen = screen,
+    screen = s,
     bg = "#00000000",
     type = "dock",
-    x = screen.geometry.x,
-    y = screen.geometry.y,
-    width = screen.geometry.width,
-    height = screen.geometry.height
+    x = s.geometry.x,
+    y = s.geometry.y,
+    width = s.geometry.width,
+    height = s.geometry.height
   }
   local panel =
     wibox {
     ontop = true,
-    screen = screen,
+    screen = s,
     width = panel_width,
-    height = screen.geometry.height,
-    x = screen.geometry.width - panel_width,
+    height = s.geometry.height,
+    x = s.geometry.width - panel_width,
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
+
+  signals.connect_background_theme_changed(
+    function(theme)
+      panel.bg = theme.hue_800 .. beautiful.background_transparency
+    end
+  )
+
+  screen.connect_signal(
+    "removed",
+    function(removed)
+      if s == removed then
+        panel.visible = false
+        panel = nil
+
+        backdrop.visible = false
+        backdrop = nil
+      end
+    end
+  )
 
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()
       print("Refreshing action center")
-      local scrn = panel.screen
+
+      if panel == nil then
+        return
+      end
 
       -- the action center itself
-      panel.x = scrn.geometry.width - panel_width
+      panel.x = s.geometry.width - panel_width
       panel.width = panel_width
-      panel.height = scrn.geometry.height
+      panel.height = s.geometry.height
 
       -- the backdrop
-      backdrop.x = scrn.geometry.x
-      backdrop.y = scrn.geometry.y
-      backdrop.width = scrn.geometry.width
-      backdrop.height = scrn.geometry.height
+      backdrop.x = s.geometry.x
+      backdrop.y = s.geometry.y
+      backdrop.width = s.geometry.width
+      backdrop.height = s.geometry.height
     end
   )
 
@@ -123,13 +144,7 @@ local right_panel = function(screen)
     }
   )
 
-  local separator =
-    wibox.widget {
-    orientation = "horizontal",
-    opacity = 0.0,
-    forced_height = 15,
-    widget = wibox.widget.separator
-  }
+  local separator = seperator_widget(15, "horizontal", 0)
 
   local clear_all_text =
     wibox.widget {
@@ -197,17 +212,34 @@ local right_panel = function(screen)
       grabber:start()
     end
     panel:emit_signal("opened")
+
+    -- start the animations
+    panel.x = s.geometry.width
+    panel.opacity = 0
+    animate(_G.anim_speed, panel, {opacity = 1, x = s.geometry.width - panel_width}, "outCubic")
   end
 
   local closePanel = function()
-    panel.visible = false
+    -- start the animations
+    panel.x = s.geometry.width - panel_width
+    panel.opacity = 1
     backdrop.visible = false
-    if grabber then
-      grabber:stop()
-    end
-    panel:emit_signal("closed")
-    -- reset the scrollbar
-    body:reset()
+
+    animate(
+      _G.anim_speed,
+      panel,
+      {opacity = 0, x = s.geometry.width},
+      "outCubic",
+      function()
+        panel.visible = false
+        if grabber then
+          grabber:stop()
+        end
+        panel:emit_signal("closed")
+        -- reset the scrollbox
+        body:reset()
+      end
+    )
   end
 
   grabber =
@@ -216,6 +248,14 @@ local right_panel = function(screen)
       awful.key {
         modifiers = {},
         key = "Escape",
+        on_press = function()
+          panel.opened = false
+          closePanel()
+        end
+      },
+      awful.key {
+        modifiers = {modKey},
+        key = keyconfig.notificationPanel,
         on_press = function()
           panel.opened = false
           closePanel()
@@ -282,7 +322,7 @@ local right_panel = function(screen)
   }
 
   body =
-    scrollbar(
+    scrollbox(
     wibox.widget {
       separator,
       {

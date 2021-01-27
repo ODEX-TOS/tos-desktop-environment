@@ -231,6 +231,9 @@ local TagList_bottom = function(s)
 				{},
 				1,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					t:view_only()
 				end
 			),
@@ -238,6 +241,9 @@ local TagList_bottom = function(s)
 				{modkey},
 				1,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					if _G.client.focus then
 						_G.client.focus:move_to_tag(t)
 						t:view_only()
@@ -249,6 +255,9 @@ local TagList_bottom = function(s)
 				{modkey},
 				3,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					if _G.client.focus then
 						_G.client.focus:toggle_tag(t)
 					end
@@ -258,6 +267,9 @@ local TagList_bottom = function(s)
 				{},
 				4,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					awful.tag.viewprev(t.screen)
 				end
 			),
@@ -265,6 +277,9 @@ local TagList_bottom = function(s)
 				{},
 				5,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					awful.tag.viewnext(t.screen)
 				end
 			)
@@ -283,6 +298,9 @@ local TagList_left = function(s)
 				{},
 				1,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					t:view_only()
 				end
 			),
@@ -290,6 +308,9 @@ local TagList_left = function(s)
 				{modkey},
 				1,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					if _G.client.focus then
 						_G.client.focus:move_to_tag(t)
 						t:view_only()
@@ -301,6 +322,9 @@ local TagList_left = function(s)
 				{modkey},
 				3,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					if _G.client.focus then
 						_G.client.focus:toggle_tag(t)
 					end
@@ -310,6 +334,9 @@ local TagList_left = function(s)
 				{},
 				4,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					awful.tag.viewprev(t.screen)
 				end
 			),
@@ -317,6 +344,9 @@ local TagList_left = function(s)
 				{},
 				5,
 				function(t)
+					if _G.clear_desktop_selection then
+						_G.clear_desktop_selection()
+					end
 					awful.tag.viewnext(t.screen)
 				end
 			)

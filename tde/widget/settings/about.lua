@@ -26,11 +26,12 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local rounded = require("lib-tde.widget.rounded")
 local execute = require("lib-tde.hardware-check").execute
 local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
 local signals = require("lib-tde.signals")
 local hardware = require("lib-tde.hardware-check")
+local seperator_widget = require("lib-widget.separator")
+local card = require("lib-widget.card")
 
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
@@ -55,18 +56,18 @@ local function generate_setting_panel(title)
     font = beautiful.font,
     fg = beautiful.fg_normal .. "AA"
   }
-  local container = wibox.container.background()
-  container.bg = beautiful.bg_modal_title
-  container.shape = rounded()
+  local container = card()
   container.forced_width = settings_width - (settings_nw * 2)
   container.forced_height = settings_index
 
-  container:setup {
-    layout = wibox.layout.align.horizontal,
-    {layout = wibox.container.margin, left = m, typeWidget},
-    {layout = wibox.container.margin, left = m, wibox.widget.base.empty_widget()},
-    {layout = wibox.container.margin, right = m, name}
-  }
+  container.update_body(
+    wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      {layout = wibox.container.margin, left = m, typeWidget},
+      {layout = wibox.container.margin, left = m, wibox.widget.base.empty_widget()},
+      {layout = wibox.container.margin, right = m, name}
+    }
+  )
   return wibox.container.margin(container, dpi(10), dpi(10), dpi(10), dpi(10)), name
 end
 
@@ -97,11 +98,7 @@ return function()
 
   local logo = wibox.widget.imagebox(icons.logo)
 
-  local separator =
-    wibox.widget {
-    widget = wibox.widget.separator,
-    forced_height = settings_index / 1.5
-  }
+  local separator = seperator_widget(settings_index / 1.5)
 
   local container = wibox.layout.fixed.vertical()
   local device_name, device_text = generate_setting_panel(i18n.translate("Device name"))

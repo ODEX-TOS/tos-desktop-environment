@@ -35,9 +35,13 @@ local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
 local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
-local scrollbar = require("widget.scrollbar")
+local xrandr_menu = require("lib-tde.xrandr").menu
+local scrollbox = require("lib-widget.scrollbox")
+local slider = require("lib-widget.slider")
+local card = require("lib-widget.card")
+local button = require("lib-widget.button")
 
--- this will hold the scrollbar, used to reset it
+-- this will hold the scrollbox, used to reset it
 local body = nil
 
 local m = dpi(10)
@@ -45,14 +49,68 @@ local settings_index = dpi(40)
 local settings_height = dpi(900)
 
 local tempDisplayDir = filehandle.mktempdir()
+local monitorScaledImage = ""
+
+signals.connect_exit(
+  function()
+    filehandle.rm(tempDisplayDir)
+  end
+)
 
 local screens = {}
 local mon_size = {
   w = nil,
   h = nil
 }
+local refresh = function()
+end
 
-local bSelectWallpaper = false
+local NORMAL_MODE = 1
+local WALLPAPER_MODE = 2
+local XRANDR_MODE = 3
+
+local Display_Mode = NORMAL_MODE
+
+local function make_screen_layout(wall, label)
+  local size = dpi(20)
+  local monitor =
+    wibox.widget {
+    widget = wibox.widget.imagebox,
+    shape = rounded(),
+    clip_shape = rounded(),
+    resize = true,
+    forced_width = nil,
+    forced_height = nil
+  }
+  monitor:set_image(wall)
+  return wibox.container.place(
+    wibox.widget {
+      layout = wibox.layout.stack,
+      forced_width = size * 16,
+      forced_height = size * 9,
+      wibox.container.place(monitor),
+      {
+        layout = wibox.container.place,
+        valign = "center",
+        halign = "center",
+        {
+          layout = wibox.container.background,
+          fg = beautiful.fg_normal,
+          bg = beautiful.bg_settings_display_number,
+          shape = rounded(dpi(60)),
+          forced_width = dpi(60),
+          forced_height = dpi(60),
+          wibox.container.place(
+            {
+              widget = wibox.widget.textbox,
+              markup = label
+            }
+          )
+        }
+      }
+    }
+  )
+end
 
 -- wall is the scaled wallpaper
 -- fullwall is a fullscreen (or original wallpaper)
@@ -71,14 +129,14 @@ local function make_mon(wall, id, fullwall, disable_number)
   monitor:set_image(wall)
   monitor:connect_signal(
     "button::press",
-    function(_, _, _, button)
+    function(_, _, _, btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectWallpaper and button == 1 then
+      if Display_Mode == WALLPAPER_MODE and btn == 1 then
         awful.spawn.easy_async(
           "tos theme set " .. fullwall,
           function()
-            bSelectWallpaper = false
-            root.elements.settings_views[4].view.refresh()
+            Display_Mode = NORMAL_MODE
+            refresh()
             local themeFile = os.getenv("HOME") .. "/.config/tos/theme"
             -- our theme file exists
             if filesystem.exists(themeFile) then
@@ -158,9 +216,7 @@ return function()
     )
   )
 
-  local monitors = wibox.container.background()
-  monitors.bg = beautiful.bg_modal_title
-  monitors.shape = rounded()
+  local monitors = card()
 
   local layout = wibox.layout.grid()
   layout.spacing = m
@@ -169,133 +225,136 @@ return function()
   layout.expand = true
   layout.min_rows_size = dpi(100)
 
-  local changewall = wibox.container.background()
-  changewall.top = m
-  changewall.bottom = m
-  changewall.shape = rounded()
-  changewall.bg = beautiful.accent.hue_600
-
-  local brightness = wibox.widget.slider()
-  brightness.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  brightness.bar_height = dpi(30)
-  brightness.bar_color = beautiful.bg_modal
-  brightness.bar_active_color = beautiful.accent.hue_500
-  brightness.handle_shape = gears.shape.circle
-  brightness.handle_width = dpi(35)
-  brightness.handle_color = beautiful.accent.hue_500
-  brightness.handle_border_width = 1
-  brightness.handle_border_color = "#00000012"
-  brightness.minimum = 0
-  brightness.maximum = 100
-  brightness:connect_signal(
-    "property::value",
-    function()
+  local brightness =
+    slider(
+    0,
+    100,
+    1,
+    0,
+    function(value)
       if _G.oled then
-        awful.spawn("brightness -s " .. tostring(brightness.value) .. " -F")
+        awful.spawn("brightness -s " .. tostring(value) .. " -F")
       else
         awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
-        awful.spawn("brightness -s " .. tostring(brightness.value))
+        awful.spawn("brightness -s " .. tostring(value))
       end
     end
   )
 
   signals.connect_brightness(
     function(value)
-      brightness:set_value(tonumber(value))
+      brightness.update(tonumber(value))
     end
   )
 
-  local screen_time = wibox.widget.slider()
-  screen_time.bar_shape = function(c, w, h)
-    gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
-  end
-  screen_time.bar_height = dpi(30)
-  screen_time.bar_color = beautiful.bg_modal
-  screen_time.bar_active_color = beautiful.accent.hue_500
-  screen_time.handle_shape = gears.shape.circle
-  screen_time.handle_width = dpi(35)
-  screen_time.handle_color = beautiful.accent.hue_500
-  screen_time.handle_border_width = 1
-  screen_time.handle_border_color = "#00000012"
-  screen_time.minimum = 10
-  screen_time.maximum = 600
-  screen_time.value = tonumber(general["screen_on_time"]) or 120
-
-  local screen_time_tooltip =
-    awful.tooltip {
-    objects = {screen_time},
-    timer_function = function()
-      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
-    end
-  }
-
-  screen_time:connect_signal(
-    "property::value",
-    function()
-      print("Updated screen time: " .. tostring(screen_time.value) .. "sec")
-      screen_time_tooltip.text = datetime.numberInSecToMS(screen_time.value) .. i18n.translate(" before sleeping")
-      general["screen_on_time"] = tostring(screen_time.value)
-      configWriter.update_entry(
-        os.getenv("HOME") .. "/.config/tos/general.conf",
-        "screen_on_time",
-        tostring(screen_time.value)
-      )
+  local screen_time =
+    slider(
+    10,
+    600,
+    1,
+    tonumber(general["screen_on_time"]) or 120,
+    function(value)
+      print("Updated screen time: " .. tostring(value) .. "sec")
+      screen_time_tooltip.text = datetime.numberInSecToMS(value) .. i18n.translate(" before sleeping")
+      general["screen_on_time"] = tostring(value)
+      configWriter.update_entry(os.getenv("HOME") .. "/.config/tos/general.conf", "screen_on_time", tostring(value))
       if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
         awful.spawn("pkill -f autolock.sh")
-        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(screen_time.value))
+        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(value))
       end
-    end
-  )
-
-  changewall:connect_signal(
-    "mouse::enter",
+    end,
     function()
-      changewall.bg = beautiful.accent.hue_700
+      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
     end
   )
-  changewall:connect_signal(
-    "mouse::leave",
+
+  local changewall =
+    button(
+    "Change wallpaper",
     function()
-      changewall.bg = beautiful.accent.hue_600
+      if not (Display_Mode == WALLPAPER_MODE) then
+        Display_Mode = WALLPAPER_MODE
+      else
+        Display_Mode = NORMAL_MODE
+      end
+      refresh()
     end
   )
+  changewall.top = m
+  changewall.bottom = m
 
-  changewall:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          -- TODO: change wallpaper
-          bSelectWallpaper = not bSelectWallpaper
-          root.elements.settings_views[4].view.refresh()
-        end
-      )
-    )
+  local screenLayoutBtn =
+    button(
+    "Screen Layout",
+    function()
+      if not (Display_Mode == XRANDR_MODE) then
+        Display_Mode = XRANDR_MODE
+      else
+        Display_Mode = NORMAL_MODE
+      end
+      refresh()
+    end
+  )
+  screenLayoutBtn.top = m
+  screenLayoutBtn.bottom = m
+
+  body = scrollbox(layout)
+  monitors.update_body(
+    wibox.widget {
+      layout = wibox.container.margin,
+      margins = m,
+      body
+    }
   )
 
-  changewall:setup {
-    layout = wibox.container.background,
-    shape = rounded(),
-    {
-      layout = wibox.container.place,
-      valign = "center",
-      forced_height = settings_index,
+  local brightness_card = card()
+  local screen_time_card = card()
+
+  brightness_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
       {
-        widget = wibox.widget.textbox,
-        text = "Change wallpaper",
-        font = beautiful.title_font
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Brightness"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        brightness
       }
     }
-  }
-  body = scrollbar(layout)
-  monitors:setup {
-    layout = wibox.container.margin,
-    margins = m,
-    body
-  }
+  )
+  screen_time_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Screen on time"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        screen_time
+      }
+    }
+  )
+
+  brightness_card.forced_height = (m * 6) + dpi(30)
+  screen_time_card.forced_height = (m * 6) + dpi(30)
 
   view:setup {
     layout = wibox.container.background,
@@ -315,62 +374,15 @@ return function()
       },
       {
         layout = wibox.layout.fixed.vertical,
-        {
-          layout = wibox.container.background,
-          bg = beautiful.bg_modal,
-          shape = rounded(),
-          forced_height = (m * 6) + dpi(30),
-          {
-            layout = wibox.layout.fixed.vertical,
-            {
-              layout = wibox.container.margin,
-              margins = m,
-              {
-                font = beautiful.font,
-                text = i18n.translate("Brightness"),
-                widget = wibox.widget.textbox
-              }
-            },
-            {
-              layout = wibox.container.margin,
-              left = m,
-              right = m,
-              bottom = m,
-              brightness
-            }
-          }
-        },
+        brightness_card,
         {
           layout = wibox.container.margin,
           top = m,
-          {
-            layout = wibox.container.background,
-            bg = beautiful.bg_modal,
-            shape = rounded(),
-            forced_height = (m * 6) + dpi(30),
-            {
-              layout = wibox.layout.fixed.vertical,
-              {
-                layout = wibox.container.margin,
-                margins = m,
-                {
-                  font = beautiful.font,
-                  text = i18n.translate("Screen on time"),
-                  widget = wibox.widget.textbox
-                }
-              },
-              {
-                layout = wibox.container.margin,
-                left = m,
-                right = m,
-                bottom = m,
-                screen_time
-              }
-            }
-          }
+          screen_time_card
         },
         {layout = wibox.container.margin, top = m, monitors},
-        {layout = wibox.container.margin, top = m, changewall}
+        {layout = wibox.container.margin, top = m, changewall},
+        {layout = wibox.container.margin, top = m, screenLayoutBtn}
       },
       nil
     }
@@ -389,7 +401,7 @@ return function()
       if user then
         scaledImage = tempDisplayDir .. "/user-" .. base
       end
-      if filesystem.exists(scaledImage) and bSelectWallpaper then
+      if filesystem.exists(scaledImage) and Display_Mode == WALLPAPER_MODE then
         layout:add(make_mon(scaledImage, k, v, true))
         if done then
           done(user, table, k)
@@ -404,7 +416,7 @@ return function()
           height,
           scaledImage,
           function()
-            if filesystem.exists(scaledImage) and bSelectWallpaper then
+            if filesystem.exists(scaledImage) and Display_Mode == WALLPAPER_MODE then
               layout:add(make_mon(scaledImage, k, v, true))
             else
               print("Something went wrong scaling " .. v)
@@ -443,6 +455,48 @@ return function()
     end
   end
 
+  local function render_normal_mode()
+    changewall.visible = true
+    screenLayoutBtn.visible = true
+    awful.spawn.with_line_callback(
+      "tos theme active",
+      {
+        stdout = function(o)
+          table.insert(screens, o)
+        end,
+        output_done = function()
+          monitors.forced_height = settings_height / 2
+          if #screen < 4 then
+            layout.forced_num_cols = #screen
+          end
+          for k, v in pairs(screens) do
+            local base = filehandle.basename(v)
+            -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+            local width = dpi(600)
+            local height = (width / 16) * 9
+            monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+            if filesystem.exists(monitorScaledImage) then
+              layout:add(make_mon(monitorScaledImage, k, v))
+            else
+              -- We use imagemagick to generate a "thumbnail"
+              -- This is done to save memory consumption
+              -- However note that our cache (tempDisplayDir) is stored in ram
+              imagemagic.scale(
+                v,
+                width,
+                height,
+                monitorScaledImage,
+                function()
+                  layout:add(make_mon(monitorScaledImage, k, v))
+                end
+              )
+            end
+          end
+        end
+      }
+    )
+  end
+
   local timer =
     gears.timer {
     timeout = 0.1,
@@ -452,7 +506,51 @@ return function()
     callback = loadMonitors
   }
 
-  view.refresh = function()
+  local function render_wallpaper_mode()
+    changewall.visible = true
+    screenLayoutBtn.visible = false
+    -- do an asynchronous render of all wallpapers
+    timer:start()
+    layout.forced_num_cols = 4
+  end
+
+  local function render_xrandr_mode()
+    changewall.visible = false
+    screenLayoutBtn.visible = true
+
+    local permutated_screens = xrandr_menu()
+
+    for _, tbl in ipairs(permutated_screens) do
+      local label = tbl[1]
+      local cmd = tbl[2]
+      local screen_names = tbl[3]
+
+      local widget = wibox.layout.flex.horizontal()
+      widget:add(wibox.widget.textbox(label))
+      for index = 1, #screen_names, 1 do
+        local screen_wdgt = make_screen_layout(monitorScaledImage, screen_names[index])
+        widget:add(wibox.container.margin(screen_wdgt, m, m, m, m))
+      end
+
+      local screen_btn =
+        button(
+        widget,
+        function()
+          print("Executing: " .. cmd)
+          awful.spawn.easy_async_with_shell(
+            cmd,
+            function()
+              awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'")
+            end
+          )
+        end
+      )
+      layout:add(screen_btn)
+      layout.forced_num_cols = 1
+    end
+  end
+
+  refresh = function()
     screens = {}
     layout:reset()
     body:reset()
@@ -465,50 +563,24 @@ return function()
         brightness:set_value(math.floor(tonumber(o)))
       end
     )
-    if bSelectWallpaper then
-      -- do an asynchronous render of all wallpapers
-      timer:start()
-      layout.forced_num_cols = 4
+    if Display_Mode == WALLPAPER_MODE then
+      render_wallpaper_mode()
+    elseif Display_Mode == XRANDR_MODE then
+      render_xrandr_mode()
     else
-      awful.spawn.with_line_callback(
-        "tos theme active",
-        {
-          stdout = function(o)
-            table.insert(screens, o)
-          end,
-          output_done = function()
-            monitors.forced_height = settings_height / 2
-            if #screen < 4 then
-              layout.forced_num_cols = #screen
-            end
-            for k, v in pairs(screens) do
-              local base = filehandle.basename(v)
-              -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
-              local width = dpi(600)
-              local height = (width / 16) * 9
-              local scaledImage = tempDisplayDir .. "/monitor-" .. base
-              if filesystem.exists(scaledImage) then
-                layout:add(make_mon(scaledImage, k, v))
-              else
-                -- We use imagemagick to generate a "thumbnail"
-                -- This is done to save memory consumption
-                -- However note that our cache (tempDisplayDir) is stored in ram
-                imagemagic.scale(
-                  v,
-                  width,
-                  height,
-                  scaledImage,
-                  function()
-                    layout:add(make_mon(scaledImage, k, v))
-                  end
-                )
-              end
-            end
-          end
-        }
-      )
+      render_normal_mode()
     end
   end
 
+  signals.connect_refresh_screen(
+    function()
+      -- If we are in the screen layout mode, refresh it on screen refreshes
+      if Display_Mode == XRANDR_MODE then
+        refresh()
+      end
+    end
+  )
+
+  view.refresh = refresh
   return view
 end

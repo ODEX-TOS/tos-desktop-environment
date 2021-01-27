@@ -37,7 +37,9 @@ local function load()
         volume = 50,
         volume_muted = false,
         brightness = 100,
-        mouse = {}
+        mouse = {},
+        do_not_disturb = false,
+        oled_mode = false
     }
     if not filehandle.exists(file) then
         return table
@@ -48,6 +50,8 @@ local function load()
     result.volume_muted = result.volume_muted or table.volume_muted
     result.brightness = result.brightness or table.brightness
     result.mouse = result.mouse or table.mouse
+    result.do_not_disturb = result.do_not_disturb or table.do_not_disturb
+    result.oled_mode = result.oled_mode or table.oled_mode
     return result
 end
 
@@ -77,22 +81,22 @@ local function setup_state(state)
     end
 
     signals.emit_brightness(math.max(state.brightness, 5))
-
+    signals.emit_do_not_disturb(state.do_not_disturb or false)
+    signals.emit_oled_mode(state.oled_mode or false)
     -- execute xrandr script
     awesome.connect_signal(
         "startup",
         function()
             awful.spawn.easy_async(
-                -- we add a sleep here because otherwise we don't have time to update the internal datastrucutres
-                "sh -c 'which autorandr && autorandr --load tde && sleep 2'",
+                "sh -c 'which autorandr && autorandr --load tde'",
                 function()
-                    signals.emit_refresh_screen()
                 end
             )
             signals.connect_refresh_screen(
                 function()
                     -- update our wallpaper
                     awful.spawn("sh -c 'tos theme set $(tos theme active)'")
+                    --awful.spawn("sh -c 'which autorandr && autorandr --load tde'")
                 end
             )
         end
@@ -193,6 +197,22 @@ signals.connect_mouse_accellaration(
             save_state.mouse[id].accel = tbl.speed
             save(save_state)
         end
+    end
+)
+
+signals.connect_do_not_disturb(
+    function(bDoNotDisturb)
+        print("Changed do not disturb: " .. tostring(bDoNotDisturb))
+        save_state.do_not_disturb = bDoNotDisturb
+        save(save_state)
+    end
+)
+
+signals.connect_oled_mode(
+    function(bIsOledMode)
+        print("Changed oled mode to: " .. tostring(bIsOledMode))
+        save_state.oled_mode = bIsOledMode
+        save(save_state)
     end
 )
 

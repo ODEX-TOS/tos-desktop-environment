@@ -27,6 +27,7 @@
 local gears = require("gears")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
+local signals = require("lib-tde.signals")
 
 local vol_osd = require("widget.volume.volume-slider-osd")
 
@@ -45,10 +46,35 @@ awful.screen.connect_for_each_screen(
         height = offsety,
         width = dpi(48),
         bg = "#00000000",
-        x = s.geometry.width - offsetx,
-        y = (s.geometry.height / dpi(2)) - (offsety / dpi(2))
+        x = s.geometry.x + s.geometry.width - offsetx,
+        y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
       }
     )
+
+    screen.connect_signal(
+      "removed",
+      function(removed)
+        if s == removed then
+          volumeOverlay.visible = false
+          volumeOverlay = nil
+        end
+      end
+    )
+
+    signals.connect_refresh_screen(
+      function()
+        print("Refreshing volume osd slider")
+
+        if not s.valid or volumeOverlay == nil then
+          return
+        end
+
+        -- the action center itself
+        volumeOverlay.x = s.geometry.x + s.geometry.width - offsetx
+        volumeOverlay.y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
+      end
+    )
+
     _G.volumeOverlay = volumeOverlay
     -- Put its items in a shaped container
     volumeOverlay:setup {
@@ -71,8 +97,11 @@ awful.screen.connect_for_each_screen(
       gears.timer {
       timeout = 5,
       autostart = true,
+      single_shot = true,
       callback = function()
-        volumeOverlay.visible = false
+        if volumeOverlay then
+          volumeOverlay.visible = false
+        end
       end
     }
 

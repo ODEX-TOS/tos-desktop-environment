@@ -25,6 +25,7 @@
 local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
+local signals = require("lib-tde.signals")
 
 local dpi = require("beautiful").xresources.apply_dpi
 
@@ -364,6 +365,38 @@ screen.connect_signal(
 				bg = beautiful.background.hue_800,
 				fg = beautiful.fg_normal
 			}
+		)
+
+		screen.connect_signal(
+			"removed",
+			function(removed)
+				if s == removed then
+					s.recorder_screen.visible = false
+					s.recorder_screen = nil
+				end
+			end
+		)
+
+		signals.connect_refresh_screen(
+			function()
+				print("Refreshing screen recorder")
+
+				if not s.valid then
+					return
+				end
+
+				-- the action center itself
+				s.recorder_screen.x = s.geometry.x
+				s.recorder_screen.y = s.geometry.y
+				s.recorder_screen.width = s.geometry.width
+				s.recorder_screen.height = s.geometry.height
+			end
+		)
+
+		signals.connect_background_theme_changed(
+			function(new_theme)
+				s.recorder_screen.bg = new_theme.hue_800 .. beautiful.background_transparency
+			end
 		)
 
 		s.recorder_screen:setup {
