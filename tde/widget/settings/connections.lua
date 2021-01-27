@@ -66,7 +66,7 @@ signals.connect_exit(
 local function generate_qr_code(ssid, password)
   local qr_text = "WIFI:T:WPA;S:" .. ssid .. ";P:" .. password .. ";;"
   local output = "/tmp/qrcode" .. ssid .. ".png"
-  hardware.execute("qrencode -l L -v 1 -o " .. output .. " '" .. qr_text .. "'")
+  hardware.execute("qrencode -l L -v 1 -m 1 -s 9 -o " .. output .. " '" .. qr_text .. "'")
   qr_code_image = output
 end
 
