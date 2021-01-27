@@ -76,6 +76,7 @@ return {
   about = theme(dir .. "/info.svg"),
   mouse = theme(dir .. "/mouse.svg"),
   user = theme(dir .. "/user.svg"),
+  qr_code = theme(dir .. "/qr_code.svg"),
   --pngs
   unknown = theme(dir .. "/noicon.png")
 }

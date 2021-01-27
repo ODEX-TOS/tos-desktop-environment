@@ -34,12 +34,14 @@ local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
 local inputfield = require("lib-widget.inputfield")
+local tde_button = require("lib-widget.button")
 
 local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
+local settings_height = dpi(900)
 local settings_nw = dpi(260)
 
 local active_text = ""
@@ -48,6 +50,41 @@ local static_connections = {}
 local password_fields = {}
 
 local refresh = function()
+end
+
+local qr_code_image = ""
+local bIsShowingNetworkTab = true
+
+-- returns the filename of the qr code image
+local function generate_qr_code(ssid, password)
+  local qr_text = "WIFI:T:WPA;S:" .. ssid .. ";P:" .. password .. ";;"
+  local output = "/tmp/qrcode" .. ssid .. ".png"
+  hardware.execute("qrencode -l L -v 1 -o " .. output .. " '" .. qr_text .. "'")
+  qr_code_image = output
+end
+
+local function make_qr_code_field()
+  local img =
+    wibox.widget {
+    image = qr_code_image,
+    resize = true,
+    forced_height = (settings_height / 2),
+    widget = wibox.widget.imagebox
+  }
+  local done_btn =
+    tde_button(
+    wibox.widget.imagebox(icons.qr_code),
+    function()
+      bIsShowingNetworkTab = true
+      refresh()
+    end
+  )
+
+  return wibox.widget {
+    wibox.container.place(img),
+    wibox.container.margin(done_btn, m, m, m, m),
+    layout = wibox.layout.fixed.vertical
+  }
 end
 
 local function make_network_widget(ssid, active)
@@ -99,7 +136,22 @@ local function make_network_widget(ssid, active)
   if active then
     -- override button to be a checkmark to indicate connection
     button = wibox.container.margin(wibox.widget.imagebox(icons.network), dpi(10), dpi(10), dpi(10), dpi(10))
-    password = wibox.widget.textbox("")
+    password =
+      tde_button(
+      wibox.widget.imagebox(icons.qr_code),
+      function()
+        print("Generating qr code")
+        local passwd =
+          string.gsub(
+          hardware.execute("nmcli --show-secrets -g 802-11-wireless-security.psk connection show id " .. ssid),
+          "\n",
+          ""
+        )
+        generate_qr_code(ssid, passwd)
+        bIsShowingNetworkTab = false
+        refresh()
+      end
+    )
   else
     table.insert(password_fields, password)
   end
@@ -291,6 +343,25 @@ return function()
     }
   }
 
+  local function setup_network_connections()
+    awful.spawn.easy_async_with_shell(
+      'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
+      function(out)
+        -- remove all wifi connections
+        connections.children = static_connections
+
+        for _, value in ipairs(split(out, "\n")) do
+          local line = split(value, " ")
+          if line[2] == "*" then
+            connections:add(make_network_widget(line[3], true))
+          else
+            connections:add(make_network_widget(line[3], false))
+          end
+        end
+      end
+    )
+  end
+
   refresh = function()
     password_fields = {}
     local interface = file.string("/tmp/interface.txt")
@@ -298,22 +369,13 @@ return function()
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
       wireless.ip.text = hardware.getDefaultIP()
-      awful.spawn.easy_async_with_shell(
-        'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
-        function(out)
-          -- remove all wifi connections
-          connections.children = static_connections
-
-          for _, value in ipairs(split(out, "\n")) do
-            local line = split(value, " ")
-            if line[2] == "*" then
-              connections:add(make_network_widget(line[3], true))
-            else
-              connections:add(make_network_widget(line[3], false))
-            end
-          end
-        end
-      )
+      if bIsShowingNetworkTab then
+        setup_network_connections()
+      else
+        -- remove all wifi connections
+        connections.children = static_connections
+        connections:add(make_qr_code_field())
+      end
     else
       wireless.icon:set_image(icons.wifi_off)
       wireless.name.text = i18n.translate("Disconnected")
