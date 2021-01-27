@@ -354,9 +354,6 @@ return function()
     awful.spawn.easy_async_with_shell(
       'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
       function(out)
-        -- remove all wifi connections
-        connections.children = static_connections
-
         for _, value in ipairs(split(out, "\n")) do
           local line = split(value, " ")
           if line[2] == "*" then
@@ -377,6 +374,8 @@ return function()
       wireless.name.text = interface
       wireless.ip.text = hardware.getDefaultIP()
       if bIsShowingNetworkTab then
+        -- remove all wifi connections
+        connections.children = static_connections
         setup_network_connections()
       else
         -- remove all wifi connections
