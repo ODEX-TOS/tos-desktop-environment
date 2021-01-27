@@ -51,6 +51,12 @@ local settings_height = dpi(900)
 local tempDisplayDir = filehandle.mktempdir()
 local monitorScaledImage = ""
 
+signals.connect_exit(
+  function()
+    filehandle.rm(tempDisplayDir)
+  end
+)
+
 local screens = {}
 local mon_size = {
   w = nil,

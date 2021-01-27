@@ -35,6 +35,7 @@ local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
 local inputfield = require("lib-widget.inputfield")
 local tde_button = require("lib-widget.button")
+local signals = require("lib-tde.signals")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -54,6 +55,12 @@ end
 
 local qr_code_image = ""
 local bIsShowingNetworkTab = true
+
+signals.connect_exit(
+  function()
+    file.rm(qr_code_image)
+  end
+)
 
 -- returns the filename of the qr code image
 local function generate_qr_code(ssid, password)
