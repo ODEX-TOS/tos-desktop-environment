@@ -56,6 +56,14 @@ end
 local qr_code_image = ""
 local bIsShowingNetworkTab = true
 
+local active_pallet = beautiful.primary
+
+signals.connect_primary_theme_changed(
+  function(pallete)
+    active_pallet = pallete
+  end
+)
+
 signals.connect_exit(
   function()
     file.rm(qr_code_image)
@@ -84,7 +92,8 @@ local function make_qr_code_field()
     function()
       bIsShowingNetworkTab = true
       refresh()
-    end
+    end,
+    active_pallet
   )
 
   return wibox.widget {
@@ -157,7 +166,8 @@ local function make_network_widget(ssid, active)
         generate_qr_code(ssid, passwd)
         bIsShowingNetworkTab = false
         refresh()
-      end
+      end,
+      active_pallet
     )
   else
     table.insert(password_fields, password)

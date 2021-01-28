@@ -51,6 +51,14 @@ local settings_height = dpi(900)
 local tempDisplayDir = filehandle.mktempdir()
 local monitorScaledImage = ""
 
+local active_pallet = beautiful.primary
+
+signals.connect_primary_theme_changed(
+  function(pallete)
+    active_pallet = pallete
+  end
+)
+
 signals.connect_exit(
   function()
     filehandle.rm(tempDisplayDir)
@@ -543,7 +551,8 @@ return function()
               awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'")
             end
           )
-        end
+        end,
+        active_pallet
       )
       layout:add(screen_btn)
       layout.forced_num_cols = 1
