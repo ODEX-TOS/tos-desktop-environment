@@ -33,6 +33,7 @@ local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
 local naughty = require("naughty")
+local execute = require("lib-tde.hardware-check").execute
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -81,10 +82,37 @@ local function make_bluetooth_widget(tbl)
   local name = tbl.name or tbl.mac
   local mac = tbl.mac
   local paired = tbl.paired
+  local connected = tbl.connected
 
   local box = card()
 
   -- TODO: add tooltip for the buttons to make a difference between pair and connect
+  local disconnect_btn = mat_icon_button(mat_icon(icons.minus, dpi(25)))
+  disconnect_btn:buttons(
+    gears.table.join(
+      awful.button(
+        {},
+        1,
+        nil,
+        function()
+          print("Disconnecting from: " .. name)
+          local cmd = "bluetoothctl disconnect '" .. mac .. "'"
+          print("Executing command: " .. cmd)
+          loading()
+          awful.spawn.easy_async(
+            cmd,
+            function(out, _, _, code)
+              print("Bluetooth connection result: " .. out)
+              if not (code == 0) then
+                notify("Disconnection failed", out)
+              end
+              refresh()
+            end
+          )
+        end
+      )
+    )
+  )
 
   local connect_btn = mat_icon_button(mat_icon(icons.plus, dpi(25)))
   connect_btn:buttons(
@@ -185,12 +213,19 @@ local function make_bluetooth_widget(tbl)
       text = i18n.translate("Pair with ") .. name
     }
   end
-
-  buttons:add(connect_btn)
-  awful.tooltip {
-    objects = {connect_btn},
-    text = i18n.translate("Connect to ") .. name
-  }
+  if connected then
+    buttons:add(disconnect_btn)
+    awful.tooltip {
+      objects = {disconnect_btn},
+      text = i18n.translate("Disconnect from ") .. name
+    }
+  else
+    buttons:add(connect_btn)
+    awful.tooltip {
+      objects = {connect_btn},
+      text = i18n.translate("Connect to ") .. name
+    }
+  end
 
   -- name on the left, password entry in the middle, connect button on the right
   local widget =
@@ -298,17 +333,23 @@ return function()
     end
   )
 
+  local function is_connected(mac, stdout)
+    return (stdout:find(mac) ~= nil)
+  end
+
   local function check_data()
     -- TODO:  don't add a button to a already connected bluetooth device
     -- only generate the list if both commands completed
     if #devices > 0 and #paired_devices > 0 then
+      local stdout, _ = execute("bluetoothctl info")
       for _, value in ipairs(devices) do
         connections:add(
           make_bluetooth_widget(
             {
               name = value.name,
               mac = value.mac,
-              paired = paired_devices[value.mac] ~= nil
+              paired = paired_devices[value.mac] ~= nil,
+              connected = is_connected(value.mac, stdout)
             }
           )
         )

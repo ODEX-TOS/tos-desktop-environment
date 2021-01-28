@@ -145,6 +145,10 @@ function test_theme_icon_plus()
     assert(file_exists(icons.plus), "Check that the plus icon exists")
 end
 
+function test_theme_icon_minus()
+    assert(file_exists(icons.minus), "Check that the minus icon exists")
+end
+
 function test_theme_icon_network()
     assert(file_exists(icons.network), "Check that the network icon exists")
 end
@@ -210,7 +214,7 @@ function test_theme_icon_bluetooth_off()
 end
 
 function test_that_all_icons_are_tested()
-    local amount = 46
+    local amount = 47
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

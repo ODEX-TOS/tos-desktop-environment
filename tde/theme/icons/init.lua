@@ -62,6 +62,7 @@ return {
   harddisk = theme(config["harddisk"] or dir .. "/harddisk.svg"),
   thermometer = theme(config["thermometer"] or dir .. "/thermometer.svg"),
   plus = theme(config["plus"] or dir .. "/plus.svg"),
+  minus = theme(config["minus"] or dir .. "/minus.svg"),
   network = theme(config["network"] or dir .. "/network.svg"),
   upload = theme(config["upload"] or dir .. "/upload.svg"),
   download = theme(config["download"] or dir .. "/download.svg"),
