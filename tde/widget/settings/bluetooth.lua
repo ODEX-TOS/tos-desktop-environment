@@ -38,6 +38,7 @@ local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
+local settings_height = dpi(900)
 local settings_width = dpi(1100)
 local settings_nw = dpi(260)
 
@@ -46,6 +47,22 @@ end
 
 local devices = {}
 local paired_devices = {}
+
+local connections = wibox.layout.fixed.vertical()
+
+local function loading()
+  connections.children = {}
+  local text =
+    wibox.widget {
+    text = i18n.translate("Connecting..."),
+    font = "SFNS Display Regular 24",
+    align = "center",
+    valign = "center",
+    widget = wibox.widget.textbox,
+    forced_height = settings_height - settings_index
+  }
+  connections:add(text)
+end
 
 local function notify(title, msg)
   naughty.notification(
@@ -80,6 +97,7 @@ local function make_bluetooth_widget(tbl)
           print("Connect to bluetooth using the name: " .. name)
           local cmd = "bluetoothctl connect '" .. mac .. "'"
           print("Executing command: " .. cmd)
+          loading()
           awful.spawn.easy_async(
             cmd,
             function(out, _, _, code)
@@ -107,6 +125,7 @@ local function make_bluetooth_widget(tbl)
           print("Pairing to " .. name)
           local cmd = "bluetoothctl pair '" .. mac .. "'"
           print("Executing command: " .. cmd)
+          loading()
           awful.spawn.easy_async(
             cmd,
             function(out, _, _, code)
@@ -114,7 +133,36 @@ local function make_bluetooth_widget(tbl)
               if not (code == 0) then
                 notify("Pairing failed", out)
               end
+              awful.spawn("bluetoothctl trust '" .. mac .. "'")
               refresh()
+            end
+          )
+        end
+      )
+    )
+  )
+
+  local unpair_btn = mat_icon_button(mat_icon(icons.bluetooth_off, dpi(25)))
+  unpair_btn:buttons(
+    gears.table.join(
+      awful.button(
+        {},
+        1,
+        nil,
+        function()
+          print("unpairing to " .. name)
+          local cmd = "bluetoothctl untrust '" .. mac .. "'"
+          local cmd2 = "bluetoothctl remove '" .. mac .. "'"
+          loading()
+          awful.spawn.easy_async(
+            cmd,
+            function()
+              awful.spawn.easy_async(
+                cmd2,
+                function()
+                  refresh()
+                end
+              )
             end
           )
         end
@@ -124,7 +172,13 @@ local function make_bluetooth_widget(tbl)
 
   local buttons = wibox.layout.fixed.horizontal()
   -- only allow pairing if we aren't paired yet
-  if not paired then
+  if paired then
+    buttons:add(unpair_btn)
+    awful.tooltip {
+      objects = {unpair_btn},
+      text = i18n.translate("Forget ") .. name
+    }
+  else
     buttons:add(pair_btn)
     awful.tooltip {
       objects = {pair_btn},
@@ -176,8 +230,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local connections = wibox.layout.fixed.vertical()
-
   local close = wibox.widget.imagebox(icons.close)
   close.forced_height = settings_index
   close:buttons(
@@ -220,8 +272,19 @@ return function()
     }
   }
 
+  local timer =
+    gears.timer {
+    autostart = true,
+    timeout = 20,
+    callback = function()
+      print("Refreshing")
+      refresh(true)
+    end
+  }
+
   local stop_view = function()
     print("Stopping bluetooth advertisment")
+    timer:stop()
     -- disable our discovery
     awful.spawn("bluetoothctl scan off")
     awful.spawn("bluetoothctl pairable off")
@@ -253,11 +316,15 @@ return function()
     end
   end
 
-  refresh = function()
-    print("Starting bluetooth advertisment")
-    awful.spawn("bluetoothctl scan on")
-    awful.spawn("bluetoothctl pairable on")
-    awful.spawn("bluetoothctl discoverable on")
+  refresh = function(bIsTimer)
+    if bIsTimer == nil then
+      print("Starting bluetooth advertisment")
+      awful.spawn("bluetoothctl scan on")
+      awful.spawn("bluetoothctl pairable on")
+      awful.spawn("bluetoothctl discoverable on")
+    elseif timer.started == nil then
+      timer:start()
+    end
 
     -- TODO: add connections when a new scanned device is turned on
 
