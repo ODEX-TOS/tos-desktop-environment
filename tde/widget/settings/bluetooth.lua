@@ -358,7 +358,9 @@ return function()
       function(out)
         for _, value in ipairs(split(out, "\n")) do
           local mac = string.match(value, "^Device ([A-F0-9:]+) .*$") or split(value, " ")[2]
-          paired_devices[mac] = true
+          if mac ~= nil then
+            paired_devices[mac] = true
+          end
         end
         -- this is to indicate that we are done
         table.insert(paired_devices, true)
