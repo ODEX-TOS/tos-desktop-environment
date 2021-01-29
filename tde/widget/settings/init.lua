@@ -498,10 +498,11 @@ return function()
 
   signals.connect_refresh_screen(
     function()
+      scrn = mouse.screen
       -- we only need to update the 'center' position when the hub is visible
       if hub.visible then
         hub.x = ((scrn.workarea.width / 2) - (settings_width / 2)) + scrn.workarea.x
-        hub.y = scrn.geometry.y - settings_height
+        hub.y = ((scrn.workarea.height - settings_height - m) / 2) + scrn.workarea.y
       end
     end
   )

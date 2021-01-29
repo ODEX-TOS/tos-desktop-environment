@@ -549,6 +549,8 @@ return function()
             cmd,
             function()
               awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'")
+              Display_Mode = NORMAL_MODE
+              refresh()
             end
           )
         end,
