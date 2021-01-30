@@ -36,6 +36,7 @@ local signals = require("lib-tde.signals")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
 local checkbox = require("lib-widget.checkbox")
+local datetime = require("lib-tde.function.datetime")
 
 local m = dpi(5)
 local settings_index = dpi(40)
@@ -99,6 +100,8 @@ local function create_multi_option_array(name, tooltip, options, default, config
       leave
     )
 
+    option_widget.forced_height = settings_index * 0.7
+
     if option == default then
       option_widget.active = true
     else
@@ -128,7 +131,7 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
       end
       configWriter.update_entry(configFile, configOption, value)
     end,
-    settings_index
+    settings_index * 0.7
   )
 
   awful.tooltip {
@@ -152,7 +155,7 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
   )
 end
 
-local function create_option_slider(title, min, max, inc, option, start_value)
+local function create_option_slider(title, min, max, inc, option, start_value, callback, tooltip_callback)
   local option_slider =
     slider(
     min,
@@ -160,16 +163,17 @@ local function create_option_slider(title, min, max, inc, option, start_value)
     inc,
     start_value,
     function(value)
-      _G.update_anim_speed(value)
+      callback(value)
       configWriter.update_entry(configFile, option, tostring(value))
-    end
+    end,
+    tooltip_callback
   )
 
   return wibox.widget {
     layout = wibox.layout.align.horizontal,
     wibox.container.margin(wibox.widget.textbox(title), 0, m),
     option_slider,
-    forced_height = dpi(40)
+    forced_height = dpi(30)
   }
 end
 
@@ -224,14 +228,6 @@ return function()
       i18n.translate("Send error messages to the developers, this is useful for debugging and reducing errors/bugs"),
       general["tde_opt_out"] == "1",
       "tde_opt_out"
-    ),
-    create_checkbox(
-      i18n.translate("Break timer"),
-      i18n.translate(
-        "A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc"
-      ),
-      general["break"] == "1",
-      "break"
     ),
     create_checkbox(
       i18n.translate("Titlebar drawing"),
@@ -308,6 +304,50 @@ return function()
     layout = wibox.layout.flex.vertical
   }
 
+  local break_timeout_value = tonumber(general["break_timeout"]) or 60
+  local break_time_value = tonumber(general["break_time"]) or 60
+
+  local break_widget =
+    wibox.widget {
+    create_checkbox(
+      i18n.translate("Break Timer"),
+      i18n.translate(
+        "A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc"
+      ),
+      general["break"] == "1",
+      "break"
+    ),
+    create_option_slider(
+      i18n.translate("Break Timeout"),
+      60, -- one minute
+      60 * 60 * 12, -- 12 hours
+      60,
+      "break_timeout",
+      break_timeout_value,
+      function(value)
+        break_timeout_value = value
+      end,
+      function()
+        return i18n.translate("Timeout before the break triggers: ") .. datetime.numberInSecToMS(break_timeout_value)
+      end
+    ),
+    create_option_slider(
+      i18n.translate("Break Time"),
+      1, -- one second
+      60 * 15, -- 15 minutes
+      5,
+      "break_time",
+      break_time_value,
+      function(value)
+        break_time_value = value
+      end,
+      function()
+        return i18n.translate("Duration of the break: ") .. datetime.numberInSecToMS(break_time_value)
+      end
+    ),
+    layout = wibox.layout.flex.vertical
+  }
+
   local slider_widget =
     wibox.widget {
     create_option_slider(
@@ -316,7 +356,10 @@ return function()
       1.5,
       0.05,
       "animation_speed",
-      tonumber(general["window_screen_mode"]) or _G.anim_speed
+      tonumber(general["window_screen_mode"]) or _G.anim_speed,
+      function(value)
+        _G.update_anim_speed(value)
+      end
     ),
     layout = wibox.layout.flex.vertical
   }
@@ -329,6 +372,9 @@ return function()
 
   local slider_card = card()
   slider_card.update_body(wibox.container.margin(slider_widget, dpi(10), dpi(10), dpi(3), dpi(3)))
+
+  local break_card = card()
+  break_card.update_body(wibox.container.margin(break_widget, dpi(10), dpi(10), dpi(3), dpi(3)))
 
   view:setup {
     layout = wibox.container.background,
@@ -352,6 +398,8 @@ return function()
       wibox.container.margin(multi_option_card, dpi(10), dpi(10)),
       separator,
       wibox.container.margin(slider_card, dpi(10), dpi(10)),
+      separator,
+      wibox.container.margin(break_card, dpi(10), dpi(10)),
       separator,
       wibox.container.margin(save, m, m, m, m)
     }
