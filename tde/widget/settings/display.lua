@@ -263,7 +263,6 @@ return function()
     tonumber(general["screen_on_time"]) or 120,
     function(value)
       print("Updated screen time: " .. tostring(value) .. "sec")
-      screen_time_tooltip.text = datetime.numberInSecToMS(value) .. i18n.translate(" before sleeping")
       general["screen_on_time"] = tostring(value)
       configWriter.update_entry(os.getenv("HOME") .. "/.config/tos/general.conf", "screen_on_time", tostring(value))
       if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
