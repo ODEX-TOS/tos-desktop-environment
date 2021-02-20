@@ -55,6 +55,7 @@ return {
   wifi = theme(config["wifi"] or dir .. "/wifi.svg"),
   wifi_off = theme(config["wifi_off"] or dir .. "/wifi_off.svg"),
   volume = theme(config["volume"] or dir .. "/volume-high.svg"),
+  microphone = theme(config["microphone"] or dir .. "/microphone.svg"),
   muted = theme(config["muted"] or dir .. "/volume-mute.svg"),
   brightness = theme(config["brightness"] or dir .. "/brightness-7.svg"),
   chart = theme(config["chart"] or dir .. "/chart-areaspline.svg"),

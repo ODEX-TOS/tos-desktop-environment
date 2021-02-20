@@ -546,6 +546,11 @@ function test_lib_tde_widget_rounded()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function test_lib_tde_volume()
+    local file = "tde/lib-tde/volume.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function test_lib_tde_translations_nl()
     local file = "tde/lib-tde/translations/nl.lua"
     assert(exists(file), "Check that " .. file .. " exists")
@@ -557,7 +562,7 @@ function test_lib_tde_translations_en()
 end
 
 function test_that_all_important_files_are_tested()
-    local amount = 96
+    local amount = 97
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

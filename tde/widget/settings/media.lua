@@ -30,11 +30,19 @@ local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
+local volume = require("lib-tde.volume")
+local mat_icon_button = require("widget.material.icon-button")
+local mat_icon = require("widget.material.icon")
 
 local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
+local settings_width = dpi(1100)
+local settings_nw = dpi(260)
+
+local refresh = function()
+end
 
 return function()
   local view = wibox.container.margin()
@@ -92,27 +100,120 @@ return function()
     end
   )
 
-  view.refresh = function()
-    awful.spawn.easy_async_with_shell(
-      'pactl list sinks | grep "Active Port:" | awk \'{print $3}\'',
-      function(o)
-        if o then
-          vol_footer.markup =
-            'Output: <span font="' .. beautiful.font .. '">' .. o:gsub("^%s*(.-)%s*$", "%1") .. "</span>"
-        end
-      end
+  local function create_volume_widget(button_icon, text, obj, set_function)
+    local button = mat_icon_button(mat_icon(button_icon, dpi(25)))
+    button:buttons(
+      gears.table.join(
+        awful.button(
+          {},
+          1,
+          nil,
+          function()
+            print("Setting default sink to: " .. obj.sink)
+            set_function(obj.sink)
+            refresh()
+          end
+        )
+      )
     )
 
-    awful.spawn.easy_async_with_shell(
-      'pactl list sources | grep "Active Port:" | awk \'{print $3}\'',
-      function(o, _)
-        if o then
-          mic_footer.markup =
-            'Input: <span font="' .. beautiful.font .. '">' .. o:gsub("^%s*(.-)%s*$", "%1") .. "</span>"
-        end
-      end
-    )
+    return wibox.widget {
+      wibox.container.margin(
+        wibox.widget {
+          widget = wibox.widget.textbox,
+          text = text,
+          font = beautiful.font,
+          forced_width = (((settings_width - settings_nw) / 2) - (m * 8) - dpi(25))
+        },
+        dpi(10),
+        dpi(10),
+        dpi(10),
+        dpi(10)
+      ),
+      nil,
+      button,
+      forced_height = settings_index,
+      layout = wibox.layout.align.horizontal
+    }
   end
+
+  local function create_sink_widget(sink)
+    return create_volume_widget(icons.volume, sink.name, sink, volume.set_default_sink)
+  end
+
+  local function create_source_widget(source)
+    return create_volume_widget(icons.microphone, source.name, source, volume.set_default_source)
+  end
+
+  local body = wibox.layout.flex.horizontal()
+
+  local function generate_sink_setting_body(sinks, sources, sink_sink, source_sink)
+    body.children = {}
+
+    local sink_children = wibox.layout.fixed.vertical()
+    local source_children = wibox.layout.fixed.vertical()
+
+    for _, sink in ipairs(sinks) do
+      if not (sink.sink == sink_sink) then
+        sink_children:add(create_sink_widget(sink))
+      end
+    end
+
+    for _, source in ipairs(sources) do
+      if not (source.sink == source_sink) then
+        source_children:add(create_source_widget(source))
+      end
+    end
+
+    if #sink_children.children == 0 then
+      sink_children:add(
+        wibox.widget {
+          text = i18n.translate("No extra output found"),
+          align = "center",
+          valign = "center",
+          font = beautiful.font,
+          widget = wibox.widget.textbox
+        }
+      )
+    end
+
+    if #source_children.children == 0 then
+      source_children:add(
+        wibox.widget {
+          text = i18n.translate("No extra input found"),
+          align = "center",
+          valign = "center",
+          font = beautiful.font,
+          widget = wibox.widget.textbox
+        }
+      )
+    end
+
+    local sink_widget = card("Output")
+    sink_widget.update_body(wibox.container.margin(sink_children, m, m, m, m))
+
+    local source_widget = card("Input")
+
+    source_widget.update_body(wibox.container.margin(source_children, m, m, m, m))
+
+    body:add(wibox.container.margin(sink_widget, m, m, m, m))
+    body:add(wibox.container.margin(source_widget, m, m, m, m))
+  end
+
+  refresh = function()
+    local sink = volume.get_default_sink()
+    local source = volume.get_default_source()
+    local sinks = volume.get_sinks()
+    local sources = volume.get_sources()
+
+    vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. "</span>"
+
+    mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. "</span>"
+
+    generate_sink_setting_body(sinks, sources, sink.sink, source.sink)
+  end
+
+  view.refresh = refresh
 
   local volume_card = card()
   volume_card.update_body(
@@ -152,6 +253,19 @@ return function()
     }
   )
 
+  local audio_settings =
+    wibox.container.margin(
+    wibox.widget {
+      widget = wibox.widget.textbox,
+      text = i18n.translate("Audio list"),
+      font = "SF Pro Display Bold 24"
+    },
+    dpi(20),
+    0,
+    dpi(20),
+    dpi(20)
+  )
+
   view:setup {
     layout = wibox.container.background,
     {
@@ -169,7 +283,9 @@ return function()
         ),
         close
       },
-      volume_card
+      volume_card,
+      audio_settings,
+      body
     }
   }
 

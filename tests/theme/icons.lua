@@ -213,8 +213,12 @@ function test_theme_icon_bluetooth_off()
     assert(file_exists(icons.qr_code), "Check that the bluetooth_off icon exists")
 end
 
+function test_theme_icon_microphone()
+    assert(file_exists(icons.microphone), "Check that the microphone icon exists")
+end
+
 function test_that_all_icons_are_tested()
-    local amount = 47
+    local amount = 48
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..
