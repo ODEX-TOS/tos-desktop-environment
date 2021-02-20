@@ -13,6 +13,9 @@ ORANGE='\033[1;33m'
 COMMENT="\033[2m"
 NC='\033[0m' # No Color
 
+root_dir="/etc/xdg/tde"
+current_dir="$root_dir"
+
 
 if [ -t 0 ]  # is a tty.
 then
@@ -89,7 +92,13 @@ Run without a command to enter ${LBLUE}REPL${NC} (read-eval-print-loop) mode.
 If you are in ${LBLUE}REPL${NC} mode these are the available commands:
 - ${BLUE}help${NC}
 - ${BLUE}example${NC}
+- ${BLUE}list${NC} ${ORANGE}<file>${NC}
 - ${BLUE}quit${NC}
+
+You can also execute files in ${LBLUE}REPL${NC} mode by simply typing the file.
+Examples:
+- ${BLUE}rc.lua${NC}
+- ${BLUE}module/lazy_load_boot.lua${NC}
 "
 }
 
@@ -173,28 +182,52 @@ then
         # gracefull shutdown
         if [ "$line" == "exit" ] || [ "$line" == "exit()" ] || [ "$line" == "quit" ] || [ "$line" == "quit()" ]; then
             exit 0
-        fi
-
-        if [ "$line" == "help" ] || [ "$line" == "help()" ]; then
+        elif [ "$line" == "help" ] || [ "$line" == "help()" ]; then
             print_help
             continue
-        fi
-
-        if [ "$line" == "example" ] || [ "$line" == "examples" ] || [ "$line" == "example()" ] || [ "$line" == "examples()" ]; then
+        elif [ "$line" == "example" ] || [ "$line" == "examples" ] || [ "$line" == "example()" ] || [ "$line" == "examples()" ]; then
             print_example
             continue
-        fi
+        elif [[ "$line" == "list "* ]]; then
+            file="$(echo "$line" | cut -d " " -f2- )"
+            content="$(/bin/cat "$file" 2>/dev/null || /bin/cat "$current_dir/$file")"
+            echo -e "$content" | lua "$root_dir"/pretty_print.lua
+            continue
+        elif [ -f "$line" ] || [ -f "$current_dir/$line" ]; then
+            content="$(/bin/cat "$line" 2>/dev/null || /bin/cat "$current_dir/$line")"
+            res="$(a_dbus_send "$content")"
+            echo -e "$content" | lua "$root_dir"/pretty_print.lua
+            echo
+        elif [[ "$line" == "ls "* ]]; then
+            ls "$current_dir/$(echo "$line" | cut -d " " -f2- )"
+        elif [[ "$line" == "ls" ]]; then
+            ls "$current_dir/"
+        elif [[ "$line" == "cd" ]]; then
+            current_dir="$root_dir"
+            continue
+        elif [[ "$line" == "cd "* ]]; then
+            new_dir="$current_dir/$(echo "$line" | cut -d " " -f2- )"
+            if [[ -d "$new_dir" ]]; then
+                current_dir="$(realpath $new_dir)"
+            fi
+            continue
+        elif [[ "$line" == "pwd" ]]; then
+            echo "$current_dir"
+            continue
         # don't use the return keyword when '=' is used, when '==' is used, do use return
-        if echo "$line" | grep -q "[^=]=[^=]"; then
+        elif echo "$line" | grep -q "[^=]=[^=]"; then
             res="$(a_dbus_send "$line")"
         else
             res="$(a_dbus_send "return $line")"
         fi
+
+
         if echo -e "$res" | grep -q "Error during execution: "; then
             line_feed="$line_feed_failed"
         fi
-        echo -e "$line" | lua /etc/xdg/tde/pretty_print.lua
-        echo -e "$res" | lua /etc/xdg/tde/pretty_print.lua
+        echo -e "$line" | lua "$root_dir"/pretty_print.lua
+        echo
+        echo -e "$res" | lua "$root_dir"/pretty_print.lua
     done
 else
     a_dbus_send "$(cat)"
