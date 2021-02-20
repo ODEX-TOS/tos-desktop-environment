@@ -185,6 +185,7 @@ naughty.connect_signal(
 			queue.push(n)
 			return
 		end
+		n.message = gears.string.xml_escape(n.message)
 		-- Actions Blueprint
 		local actions_template =
 			wibox.widget {
