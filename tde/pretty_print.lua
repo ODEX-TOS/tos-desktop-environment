@@ -198,6 +198,47 @@ local function split(inputstr, sep)
     return result, separators
 end
 
+local function find_next_quote_index(splitted_line, first_quote_index)
+    for i = first_quote_index+1, #splitted_line, 1 do
+        if string.find(splitted_line[i], '"') then
+            return i
+        end
+    end
+    return nil
+end
+
+-- find string that potentially have been splitted and create a seperate token for them
+local function join_string(splitted_line)
+    local result = {}
+    local i = 1
+    while i <= #splitted_line do
+        if string.find(splitted_line[i], '"') then
+            local next_quote = find_next_quote_index(splitted_line, i)
+
+            if next_quote ~= nil then
+                local combinded = splitted_line[i]
+                for j = i + 1, next_quote, 1 do
+                    combinded = combinded .. " " .. splitted_line[j]
+                end
+                local start, finish = string.find(combinded, '".*"')
+
+                table.insert(result, combinded:sub(1, start-1))
+                table.insert(result, combinded:sub(start, finish))
+                table.insert(result, combinded:sub(finish+1, #combinded))
+
+                i = next_quote + 1
+            else
+                table.insert(result, splitted_line[i])
+                i = i+1
+            end
+        else
+            table.insert(result, splitted_line[i])
+            i = i+1
+        end
+    end
+    return result
+end
+
 local function is_string(token)
     return string.sub(token, 1, 1) == '"' and string.sub(token, #token, #token + 1) == '"'
 end
@@ -247,6 +288,7 @@ local function tokenize_lines(line, splitted, separators, token_depth)
 
     if splitted == nil then
         splitted = split(line, " ")
+        splitted = join_string(splitted)
     end
 
     if separators == nil then
@@ -273,7 +315,6 @@ local function tokenize_lines(line, splitted, separators, token_depth)
                 }
             )
         elseif internalVariables[token] == 1 or keywords[token] == 1 then
-            -- TODO: strings with spaces is broken
             table.insert(
                 tokens,
                 {
@@ -307,6 +348,17 @@ local function tokenize_lines(line, splitted, separators, token_depth)
                     text = token,
                     bIsColored = true,
                     color = ORANGE
+                }
+            )
+        -- this edge case denotes the end of a multiline comment
+        -- TODO: this could also be a multi line string, currently not supported
+        elseif token == "]]" then
+            table.insert(
+                tokens,
+                {
+                    text = token,
+                    bIsColored = true,
+                    color = COMMENT
                 }
             )
         else
