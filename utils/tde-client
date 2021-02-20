@@ -92,7 +92,7 @@ Run without a command to enter ${LBLUE}REPL${NC} (read-eval-print-loop) mode.
 If you are in ${LBLUE}REPL${NC} mode these are the available commands:
 - ${BLUE}help${NC}
 - ${BLUE}example${NC}
-- ${BLUE}list${NC} ${ORANGE}<file>${NC}
+- ${BLUE}cat${NC} ${ORANGE}<file>${NC}
 - ${BLUE}quit${NC}
 
 You can also execute files in ${LBLUE}REPL${NC} mode by simply typing the file.
@@ -188,7 +188,7 @@ then
         elif [ "$line" == "example" ] || [ "$line" == "examples" ] || [ "$line" == "example()" ] || [ "$line" == "examples()" ]; then
             print_example
             continue
-        elif [[ "$line" == "list "* ]]; then
+        elif [[ "$line" == "cat "* ]]; then
             file="$(echo "$line" | cut -d " " -f2- )"
             content="$(/bin/cat "$file" 2>/dev/null || /bin/cat "$current_dir/$file")"
             echo -e "$content" | lua "$root_dir"/pretty_print.lua
