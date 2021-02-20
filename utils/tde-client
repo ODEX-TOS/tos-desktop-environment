@@ -165,6 +165,7 @@ then
     line_feed="$line_feed_success"
     while { echo -en "$line_feed" ; read $READ_ARGS -r line; }
     do
+        clear
         line_feed="$line_feed_success"
         if [ "$line" = "" ]; then
             continue
@@ -192,7 +193,8 @@ then
         if echo -e "$res" | grep -q "Error during execution: "; then
             line_feed="$line_feed_failed"
         fi
-        echo -e "$res"
+        echo -e "$line" | lua /etc/xdg/tde/pretty_print.lua
+        echo -e "$res" | lua /etc/xdg/tde/pretty_print.lua
     done
 else
     a_dbus_send "$(cat)"
