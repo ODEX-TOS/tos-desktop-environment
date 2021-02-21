@@ -1,0 +1,38 @@
+tde:
+  - ./tde/**/*
+  - ./tde/*
+
+translations:
+  - ./tde/**/translations/*.lua
+  
+lib-tde:
+  - ./tde/lib-tde/**/*
+  - ./tde/lib-tde/*
+  
+lib-widget:
+  - ./tde/lib-widget/**/*
+  - ./tde/lib-widget/*
+  
+tests:
+  - ./tests/**/*
+  - ./tests/*
+  
+plugins:
+  - ./plugins/**/*
+  - ./plugins/*
+  
+profiler:
+  - ./profiler/**/*
+  - ./profiler/*
+  
+configuration:
+  - ./tos/**/*
+  - ./tos/*
+
+script:
+  - ./**/*.sh
+  - *.sh
+
+documentation:
+  - ./**/*.md
+  - *.md
