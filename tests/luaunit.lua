@@ -2227,7 +2227,7 @@ end
 function TapOutput:updateStatus(node)
     if node:isSkipped() then
         --io.stdout:write("ok ", self.result.currentTestNumber, "\t# SKIP ", node.msg, "\n")
-        io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
+        io.stdout:write(functionState(node.testName, not node:isSuccess() , node:isSkipped()))
         io.stdout:flush()
         return
     end
@@ -2235,7 +2235,7 @@ function TapOutput:updateStatus(node)
     io.stdout:write("not ok ", self.result.currentTestNumber, "\t", node.testName, "\n")
     if self.verbosity > M.VERBOSITY_LOW then
         --print(prefixString("#   ", node.msg))
-        io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
+        io.stdout:write(functionState(node.testName, not node:isSuccess(), node:isSkipped()))
         io.stdout:flush()
     end
     if (node:isFailure() or node:isError()) and self.verbosity > M.VERBOSITY_DEFAULT then
@@ -2297,7 +2297,7 @@ function JUnitOutput:startClass(className)
 end
 function JUnitOutput:startTest(testName)
     --print("# Starting test: " .. testName)
-    io.stdout:write(functionState(testName, self.result.currentNode:isFailure(), self.result.currentNode:isSkipped()))
+    io.stdout:write(functionState(testName, not self.result.currentNode:isSuccess(), self.result.currentNode:isSkipped()))
     io.stdout:flush()
 end
 
@@ -2491,7 +2491,7 @@ function TextOutput:endTest(node)
         if self.verbosity > M.VERBOSITY_DEFAULT then
             io.stdout:write("Ok\n")
         else
-            io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
+            io.stdout:write(functionState(node.testName, not node:isSuccess(), node:isSkipped()))
             io.stdout:flush()
         end
     else
@@ -2506,7 +2506,7 @@ function TextOutput:endTest(node)
             print(node.msg)
         else
             -- write only the first character of status E, F or S
-            io.stdout:write(functionState(node.testName, node:isFailure(), node:isSkipped()))
+            io.stdout:write(functionState(node.testName, not node:isSuccess(), node:isSkipped()))
             io.stdout:flush()
         end
     end
