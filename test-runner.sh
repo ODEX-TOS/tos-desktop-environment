@@ -53,9 +53,10 @@ else
 
   export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"
 
-  if [[ -n "$1" ]]; then
+  if [[ -n "$1" && -f "$1" ]]; then
     RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua
   else
-    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua
+    # shellcheck disable=SC2068
+    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua $@
   fi
 fi

@@ -27,4 +27,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run test suite
-        run: docker-compose run test-suite bash test-runner.sh
+        # exclude invalid unit test in the github env
+        run: docker-compose run test-suite bash test-runner.sh -x test_hardware_check_packages
