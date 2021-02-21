@@ -11,10 +11,10 @@
     <img src="https://tos.odex.be/images/logo.svg" alt="Logo" width="150" height="150">
   </a>
 
-  <h3 align="center">TOS-Live</h3>
+  <h3 align="center">TOS Desktop Environment</h3>
 
   <p align="center">
-    This repo contains the build for TOS (Tom OS live iso)
+    A desktop environment build ontop of awesome wm
     <br />
     <a href="https://tos.odex.be/docs/"><strong>Explore the docs »</strong></a>
     <br />
