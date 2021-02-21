@@ -23,20 +23,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      - uses: nebularg/actions-luacheck@v1
+      - uses: Roang-zero1/factorio-mod-luacheck@master
         with:
-            files: 'tde'
-
-            # The working directory for luacheck. The file list should be relative to
-            # this path and output filenames be displayed relative to this path.
-            # Default: ${{ github.workspace }}
-            path: ''
-
-            # Additional command-line arguments.
-            # See https://luacheck.readthedocs.io/en/stable/cli.html
-            args: '--codes'
-
-            # URL to a custom configuration (`.luacheckrc`) file that will be used as
-            # the default configuration file.
-            config: 'https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/master/tde/.luacheckrc'
+          luacheckrc_url: https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/master/tde/.luacheckrc
