@@ -50,7 +50,7 @@ function run_linter() {
     exit 1
   fi
 
-  LINTING_OUT="$(luacheck --config tde/.luacheckrc tde --codes)"
+  LINTING_OUT="$(luacheck --config tde/.luacheckrc . --codes)"
   LINTING_EXIT_CODE="$?"
   # only show the output if an error occured
   [[ ! "$LINTING_EXIT_CODE" -eq "0" ]] && echo -e "$LINTING_OUT"

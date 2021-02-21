@@ -49,7 +49,13 @@ exclude_files = {
     "tde/lib-tde/lib-lua/socket/tp.lua",
     "tde/lib-tde/lib-lua/socket/url.lua",
     "tde/lib-tde/lib-lua/ssl.lua",
-    "tde/lib-tde/lib-lua/ssl/https.lua"
+    "tde/lib-tde/lib-lua/ssl/https.lua",
+    -- contains a lot of globals
+    "tests/**",
+    -- TODO: refactor plugins, then remove this
+    "plugins/**",
+    -- TODO: refactor profiler, then remove this
+    "profiler/**",
 }
 
 -- Global objects defined by the C code
