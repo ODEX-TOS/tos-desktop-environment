@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Lint lua code
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: nebularg/actions-luacheck@v1
+          with:
+            files: 'tde'
+
+            # The working directory for luacheck. The file list should be relative to
+            # this path and output filenames be displayed relative to this path.
+            # Default: ${{ github.workspace }}
+            path: ''
+
+            # Additional command-line arguments.
+            # See https://luacheck.readthedocs.io/en/stable/cli.html
+            args: '--codes'
+
+            # URL to a custom configuration (`.luacheckrc`) file that will be used as
+            # the default configuration file.
+            config: 'https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/master/tde/.luacheckrc'
