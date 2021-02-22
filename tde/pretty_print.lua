@@ -218,7 +218,15 @@ local function join_string(splitted_line)
     local result = {}
     local i = 1
     while i <= #splitted_line do
-        if string.find(splitted_line[i], '"') then
+        if string.find(splitted_line[i], '"[^"]*"') then
+            local start = splitted_line[i]:match('^([^"]*)"')
+            local str = splitted_line[i]:match('"[^"]*"')
+            local stop = splitted_line[i]:match('"([^"]*)$')
+            table.insert(result, start)
+            table.insert(result, str)
+            table.insert(result, stop)
+            i = i + 1
+        elseif string.find(splitted_line[i], '"') then
             local next_quote = find_next_quote_index(splitted_line, i)
 
             if next_quote ~= nil then
@@ -226,7 +234,7 @@ local function join_string(splitted_line)
                 for j = i + 1, next_quote, 1 do
                     combinded = combinded .. " " .. splitted_line[j]
                 end
-                local start, finish = string.find(combinded, '".*"')
+                local start, finish = string.find(combinded, '"[^"]*"')
 
                 table.insert(result, combinded:sub(1, start-1))
                 table.insert(result, combinded:sub(start, finish))
@@ -262,11 +270,19 @@ local function sub_divide(sub_divided_token, depth)
     if (depth == nil) then
         depth = 1
     end
-    local tokens, separators = split(sub_divided_token, "(,)")
+    local special_chars = {
+        [","] = 1,
+        [":"] = 1,
+        ["("] = 1,
+        [")"] = 1,
+        ["["] = 1,
+        ["]"] = 1
+    }
+    local tokens, separators = split(sub_divided_token, "(,:%[%])")
     local last_char
     for index, token in ipairs(tokens) do
         last_char = string.sub(token, #token, #token + 1)
-        if last_char == "(" or last_char == "," or last_char == ")" then
+        if special_chars[last_char] == 1 then
             tokens[index] = string.sub(token, 1, #token - 1)
         end
     end
