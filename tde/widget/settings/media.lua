@@ -31,8 +31,11 @@ local signals = require("lib-tde.signals")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
 local volume = require("lib-tde.volume")
+local button = require("lib-widget.button")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
+local sound = require("lib-tde.sound")
+
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -101,8 +104,8 @@ return function()
   )
 
   local function create_volume_widget(button_icon, text, obj, set_function)
-    local button = mat_icon_button(mat_icon(button_icon, dpi(25)))
-    button:buttons(
+    local button_wgt = mat_icon_button(mat_icon(button_icon, dpi(25)))
+    button_wgt:buttons(
       gears.table.join(
         awful.button(
           {},
@@ -131,7 +134,7 @@ return function()
         dpi(10)
       ),
       nil,
-      button,
+      button_wgt,
       forced_height = settings_index,
       layout = wibox.layout.align.horizontal
     }
@@ -284,6 +287,12 @@ return function()
         close
       },
       volume_card,
+      wibox.container.margin(button("Reset Audio Server", function()
+        volume.reset_server()
+      end),m, m, m*2),
+      wibox.container.margin(button("Test sound", function()
+        sound()
+      end),m, m, m),
       audio_settings,
       body
     }

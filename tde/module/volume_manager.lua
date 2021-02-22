@@ -25,6 +25,7 @@
 local signals = require("lib-tde.signals")
 local sound = require("lib-tde.sound")
 local time = require("socket").gettime
+local volume = require("lib-tde.volume")
 
 local startup = true
 local prev_time = 0
@@ -39,7 +40,7 @@ signals.connect_volume(
         end
         if prev_time < (time() - deltaTime) then
             sound()
-            awful.spawn("amixer -D pulse sset Master " .. tostring(value) .. "%")
+            volume.set_volume(value)
             prev_time = time()
         end
     end
@@ -47,14 +48,12 @@ signals.connect_volume(
 
 signals.connect_volume_update(
     function()
-        awful.spawn.easy_async_with_shell(
-            "amixer -D pulse get Master",
-            function(out)
-                local muted = string.find(out, "off")
-                local volume = string.match(out, "(%d?%d?%d)%%")
+        volume.get_volume(
+            function(volume_level, muted)
+
                 -- if the sound system is down then default to a volume of 0
-                signals.emit_volume(tonumber(volume) or 0)
-                signals.emit_volume_is_muted(muted ~= nil or muted == "off")
+                signals.emit_volume(volume_level)
+                signals.emit_volume_is_muted(muted)
                 if not startup and time() > (boot_time + 5) then
                     if _G.toggleVolOSD ~= nil then
                         _G.toggleVolOSD(true)

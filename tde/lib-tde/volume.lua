@@ -31,7 +31,8 @@
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.volume
 -----------------
-local execute = require("lib-tde.hardware-check").execute
+local hardware = require("lib-tde.hardware-check")
+local execute = hardware.execute
 local split = require("lib-tde.function.common").split
 
 local err = "\27[0;31m[ ERROR "
@@ -95,13 +96,31 @@ local function _extract_pa_ctl_state(command, id, port, description)
     return result
 end
 
-
-local function get_volume()
-    -- TODO: use the volume manager to get the volume
+--- Get the volume asynchronously
+-- @tparam function callback A callback function to trigger when the volume is gathered
+-- @staticfct get_volume
+-- @usage -- Get the volume in percentage
+--    get_volume(function(percentage, muted)
+--        print("Current volume level: " .. tostring(percentage))
+--    end)
+local function get_volume(callback)
+    awful.spawn.easy_async_with_shell(
+        "amixer -D pulse get Master",
+        function(out)
+            local muted = string.find(out, "off")
+            local volume = tonumber(string.match(out, "(%d?%d?%d)%%")) or 0
+            callback(volume, muted ~= nil or muted == "off")
+        end
+    )
 end
 
-local function set_volume(_)
-    -- TODO: use the volume manager to set the volume
+--- Set the volume in percentage
+-- @tparam number value The value of the volume in percentage
+-- @staticfct set_volume
+-- @usage -- Set the volume to max
+--    set_volume(100)
+local function set_volume(value)
+    awful.spawn("amixer -D pulse sset Master " .. tostring(value) .. "%")
 end
 
 --- Get a list of all audio sinks back (A sink is an audio player such as headphones, speakers or monitors)
@@ -203,13 +222,39 @@ local function get_default_source()
     return {}
 end
 
+
+-- reset the pipewire server
+local function _reset_pipewire()
+    awful.spawn("systemctl --user restart pipewire")
+end
+
+-- reset the pulseaudio server
+local function _reset_pulseaudio()
+    awful.spawn("pulseaudio -k && pulseaudio --start")
+end
+
+--- Resets the active audio server (either pulseaudio or pipewire)
+-- @staticfct reset_server
+-- @usage -- Reset the entire audio server (temporarily breaks audio)
+--    reset_server()
+local function reset_server()
+    local bIsPipewire = hardware.has_package_installed("pipewire")
+    if bIsPipewire then
+        _reset_pipewire()
+    else
+        _reset_pulseaudio()
+    end
+    print("Resetting audio server")
+end
+
 return {
     get_volume = get_volume,
     set_volume = set_volume,
     get_sinks = get_sinks,
+    get_sources = get_sources,
     set_default_sink = set_default_sink,
     get_default_sink = get_default_sink,
-    get_sources = get_sources,
     set_default_source = set_default_source,
-    get_default_source = get_default_source
+    get_default_source = get_default_source,
+    reset_server = reset_server
 }
