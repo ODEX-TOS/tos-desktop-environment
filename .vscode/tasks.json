@@ -1,0 +1,57 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run unit tests",
+        "type": "shell",
+        "command": "bash ./test-runner.sh",
+        "windows": {
+          "command": "false"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Run integration tests",
+        "type": "shell",
+        "command": "TDE_IT_TEST_RUN=1 MULTIPLIER=2 bash ./test-runner.sh",
+        "windows": {
+          "command": "false"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Run developer environment",
+        "type": "shell",
+        "command": "wm-launch -r 1280x1000",
+        "windows": {
+          "command": "false"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Lint/Check sources",
+        "type": "shell",
+        "command": "bash ./hooks/pre-commit",
+        "windows": {
+          "command": "false"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      }
+    ]
+  }
