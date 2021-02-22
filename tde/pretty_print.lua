@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-
 -- Usage: cat file.lua | lua pretty_print.lua
 -- colorizes the lua file
 
@@ -31,13 +30,38 @@
 -- I just don't want to invest the time as this is mainly used in tde-client
 -- and tde-client is usually a one-liner
 
-local RED = "\27[0;31m"
+-- dracula theme (https://draculatheme.com/contribute)
+local keyword_color = "#ff79c6"
+local operation_color = "#ff5555"
+local number_color = "#bd93f9"
+local comment_color = "#6272a4"
+local string_color = "#f1fa8c"
+local variable_color = "#f8f8f2"
+local internal_variables_color = "#bd93f9"
+local special_chars_color = "#ffb86c"
+local plain_color = "#ffb86c"
+local function_call_color = "#50fa7b"
+
+--[[local RED = "\27[0;31m"
 local GREEN = "\27[0;32m"
 local BLUE = "\27[0;35m"
 local LBLUE = "\27[0;36m"
 local ORANGE = "\27[1;33m"
 local COMMENT = "\27[2m"
+]]
 local NC = "\27[0m"
+
+local function todec(hex_str)
+    local decimal = tonumber(hex_str, 16) or 255
+    return tostring(decimal)
+end
+
+local function color_to_escape_sequence(color)
+    local r = todec(string.sub(color, 2, 3) or "FF")
+    local g = todec(string.sub(color, 4, 5) or "FF")
+    local b = todec(string.sub(color, 6, 7) or "FF")
+    return "\27[38;2;" .. r .. ";" .. g .. ";" .. b .. "m"
+end
 
 local opperators = {
     ["~="] = 1,
@@ -201,11 +225,19 @@ local function split(inputstr, sep)
     for sep_2 in string.gmatch(inputstr, "([" .. sep .. "]+)") do
         table.insert(separators, sep_2)
     end
+    --  check if our first separator is before the first result, if so notify the tokenizer
+    if separators[1] ~= nil and result[1] ~= nil then
+        local start = string.find(inputstr, separators[1], nil, true)
+        local match_start = string.find(inputstr, result[1], nil, true)
+        if start ~= nil and match_start ~= nil and start < match_start then
+            separators["first"] = true
+        end
+    end
     return result, separators
 end
 
 local function find_next_quote_index(splitted_line, first_quote_index)
-    for i = first_quote_index+1, #splitted_line, 1 do
+    for i = first_quote_index + 1, #splitted_line, 1 do
         if string.find(splitted_line[i], '"') then
             return i
         end
@@ -236,18 +268,18 @@ local function join_string(splitted_line)
                 end
                 local start, finish = string.find(combinded, '"[^"]*"')
 
-                table.insert(result, combinded:sub(1, start-1))
+                table.insert(result, combinded:sub(1, start - 1))
                 table.insert(result, combinded:sub(start, finish))
-                table.insert(result, combinded:sub(finish+1, #combinded))
+                table.insert(result, combinded:sub(finish + 1, #combinded))
 
                 i = next_quote + 1
             else
                 table.insert(result, splitted_line[i])
-                i = i+1
+                i = i + 1
             end
         else
             table.insert(result, splitted_line[i])
-            i = i+1
+            i = i + 1
         end
     end
     return result
@@ -263,6 +295,26 @@ end
 
 local function is_number(token)
     return tonumber(token) ~= nil
+end
+
+local function is_function_call(token)
+    local end_is_brace = string.sub(token, #token, #token)
+    end_is_brace = end_is_brace == "(" or end_is_brace == ")"
+    local possible_variable = string.match(token, "^(.*)%(") or ""
+
+    local dot_or_double_point_start = string.find(possible_variable, "[.:]")
+
+    if dot_or_double_point_start ~= nil then
+        local bIsFunctionCall = true
+        local splitted = split(token, ",:")
+        for _, value in ipairs(splitted) do
+            if not is_variable(value) then
+                bIsFunctionCall = false
+            end
+        end
+        return bIsFunctionCall and end_is_brace
+    end
+    return is_variable(possible_variable) and end_is_brace
 end
 
 -- in case we don't match
@@ -318,31 +370,46 @@ local function tokenize_lines(line, splitted, separators, token_depth)
     end
 
     for index, token in ipairs(splitted) do
+        if separators[index] ~= nil and separators["first"] ~= nil then
+            table.insert(
+                tokens,
+                {
+                    text = separators[index],
+                    bIsColored = true,
+                    color = color_to_escape_sequence(special_chars_color)
+                }
+            )
+        end
+
         if opperators[token] == 1 then
             table.insert(
                 tokens,
                 {
                     text = token,
                     bIsColored = true,
-                    color = RED
+                    color = color_to_escape_sequence(operation_color)
                 }
             )
-        elseif libraryFunctions[token] == 1 then
+        elseif
+            libraryFunctions[token] == 1 or internalVariables[token] == 1 or
+                libraryFunctions[string.sub(token, 1, #token - 1)] == 1 or
+                internalVariables[string.sub(token, 1, #token - 1)] == 1
+         then
             table.insert(
                 tokens,
                 {
                     text = token,
                     bIsColored = true,
-                    color = BLUE
+                    color = color_to_escape_sequence(internal_variables_color)
                 }
             )
-        elseif internalVariables[token] == 1 or keywords[token] == 1 then
+        elseif keywords[token] == 1 then
             table.insert(
                 tokens,
                 {
                     text = token,
                     bIsColored = true,
-                    color = RED
+                    color = color_to_escape_sequence(keyword_color)
                 }
             )
         elseif is_string(token) then
@@ -351,7 +418,16 @@ local function tokenize_lines(line, splitted, separators, token_depth)
                 {
                     text = token,
                     bIsColored = true,
-                    color = GREEN
+                    color = color_to_escape_sequence(string_color)
+                }
+            )
+        elseif is_function_call(token) then
+            table.insert(
+                tokens,
+                {
+                    text = token,
+                    bIsColored = true,
+                    color = color_to_escape_sequence(function_call_color)
                 }
             )
         elseif is_variable(token) then
@@ -360,27 +436,27 @@ local function tokenize_lines(line, splitted, separators, token_depth)
                 {
                     text = token,
                     bIsColored = true,
-                    color = LBLUE
+                    color = color_to_escape_sequence(variable_color)
                 }
             )
         elseif is_number(token) then
+            -- this edge case denotes the end of a multiline comment
+            -- TODO: this could also be a multi line string, currently not supported
             table.insert(
                 tokens,
                 {
                     text = token,
                     bIsColored = true,
-                    color = ORANGE
+                    color = color_to_escape_sequence(number_color)
                 }
             )
-        -- this edge case denotes the end of a multiline comment
-        -- TODO: this could also be a multi line string, currently not supported
         elseif token == "]]" then
             table.insert(
                 tokens,
                 {
                     text = token,
                     bIsColored = true,
-                    color = COMMENT
+                    color = color_to_escape_sequence(comment_color)
                 }
             )
         else
@@ -395,19 +471,18 @@ local function tokenize_lines(line, splitted, separators, token_depth)
                     {
                         text = token,
                         bIsColored = true,
-                        color = BLUE
+                        color = color_to_escape_sequence(plain_color)
                     }
                 )
             end
         end
-
-        if separators[index] ~= nil then
+        if separators[index] ~= nil and separators["first"] == nil then
             table.insert(
                 tokens,
                 {
                     text = separators[index],
                     bIsColored = true,
-                    color = RED
+                    color = color_to_escape_sequence(special_chars_color)
                 }
             )
         end
@@ -418,7 +493,7 @@ local function tokenize_lines(line, splitted, separators, token_depth)
             tokens,
             {
                 text = comment,
-                color = COMMENT,
+                color = color_to_escape_sequence(comment_color),
                 bIsColored = true
             }
         )
