@@ -22,8 +22,14 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+
 -- Usage: cat file.lua | lua pretty_print.lua
 -- colorizes the lua file
+
+-- This is a crude implementation of a lexer that then colorizes the input tokens
+-- Feel free to make this program better (It can easily be improved)
+-- I just don't want to invest the time as this is mainly used in tde-client
+-- and tde-client is usually a one-liner
 
 local RED = "\27[0;31m"
 local GREEN = "\27[0;32m"
