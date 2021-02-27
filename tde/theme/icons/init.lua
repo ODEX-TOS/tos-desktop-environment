@@ -74,6 +74,7 @@ return {
   brush = theme(config["brush"] or dir .. "/brush.svg"),
   bluetooth = theme(config["bluetooth"] or dir .. "/bluetooth.svg"),
   bluetooth_off = theme(config["bluetooth_off"] or dir .. "/bluetooth-off.svg"),
+  bios = theme(config["bios"] or dir .. "/bios.svg"),
   package = theme("/etc/xdg/tde/widget/package-updater/icons/package.svg"),
   about = theme(dir .. "/info.svg"),
   mouse = theme(dir .. "/mouse.svg"),

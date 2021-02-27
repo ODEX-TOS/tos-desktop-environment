@@ -142,6 +142,25 @@ local reboot_command = function()
 	signals.emit_module_exit_screen_hide()
 end
 
+local bios_command = function()
+	print("Telling firmware to boot into the bios...")
+	awful.spawn.with_shell("systemctl reboot --firmware-setup")
+	signals.emit_module_exit_screen_hide()
+end
+
+local hide_screen_command = function()
+	print("Hiding exit screen")
+	signals.emit_module_exit_screen_hide()
+end
+
+local ignore = buildButton(icons.close, i18n.translate("Return"))
+ignore:connect_signal(
+	"button::release",
+	function()
+		hide_screen_command()
+	end
+)
+
 local poweroff = buildButton(icons.power, i18n.translate("Shutdown"))
 poweroff:connect_signal(
 	"button::release",
@@ -179,6 +198,14 @@ lock:connect_signal(
 	"button::release",
 	function()
 		lock_command()
+	end
+)
+
+local bios = buildButton(icons.bios, i18n.translate("BIOS"))
+bios:connect_signal(
+	"button::release",
+	function()
+		bios_command()
 	end
 )
 
@@ -236,20 +263,9 @@ screen.connect_signal(
 			end
 		)
 
-		-- Hide exit screen
-		exit_screen_hide = function()
-			signals.emit_module_exit_screen_hide()
-
-			-- Hide exit_screen in all screens
-			for scrn in screen do
-				scrn.exit_screen.visible = false
-			end
-			s.exit_screen.visible = false
-		end
-
 		local exit_screen_grabber =
 			awful.keygrabber {
-			auto_start = true,
+			auto_start = false,
 			stop_event = "release",
 			keypressed_callback = function(_, _, key, _)
 				if key == "s" then
@@ -262,14 +278,28 @@ screen.connect_signal(
 					poweroff_command()
 				elseif key == "r" then
 					reboot_command()
+				elseif key == "b" then
+					bios_command()
 				elseif key == "Escape" or key == "q" or key == "x" then
-					exit_screen_hide()
+					signals.emit_module_exit_screen_hide()
 				end
 			end
 		}
 
+		-- Hide exit screen
+		exit_screen_hide = function()
+			exit_screen_grabber:stop()
+
+			-- Hide exit_screen in all screens
+			for scrn in screen do
+				scrn.exit_screen.visible = false
+			end
+			s.exit_screen.visible = false
+		end
+
 		-- Exit screen show
 		_G.exit_screen_show = function()
+			print("Showing exit screen ---")
 			exit_screen_grabber:start()
 
 			-- Hide exit_screen in all screens to avoid duplication
@@ -343,11 +373,13 @@ screen.connect_signal(
 				{
 					user_name,
 					{
+						ignore,
 						poweroff,
 						reboot,
 						suspend,
 						exit,
 						lock,
+						bios,
 						layout = wibox.layout.fixed.horizontal
 					},
 					spacing = dpi(40),

@@ -399,6 +399,7 @@ local left_panel_func = function(s)
     exit_button_widget,
     function()
       left_panel:toggle()
+      action_grabber:stop()
       _G.exit_screen_show()
     end
   )
