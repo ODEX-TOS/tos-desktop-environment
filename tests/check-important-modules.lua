@@ -511,6 +511,11 @@ function test_lib_tde_datastructure_stack()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function test_lib_tde_datastructure_set()
+    local file = "tde/lib-tde/datastructure/set.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function test_lib_tde_function_application()
     local file = "tde/lib-tde/function/application_runner.lua"
     assert(exists(file), "Check that " .. file .. " exists")
@@ -562,7 +567,7 @@ function test_lib_tde_translations_en()
 end
 
 function test_that_all_important_files_are_tested()
-    local amount = 97
+    local amount = 98
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")
