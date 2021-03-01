@@ -421,6 +421,7 @@ local function make_nav()
     button(
     wibox.widget.imagebox(icons.power),
     function()
+      root.elements.settings.close()
       _G.exit_screen_show()
     end,
     red
