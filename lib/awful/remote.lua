@@ -47,18 +47,23 @@ local function table_to_string(tbl, depth, indent)
     return result
 end
 
+local LOG_ERR = "\27[0;31m[ ERROR "
+
 if dbus then
     dbus.connect_signal(
         "org.awesomewm.awful.Remote",
         function(data, code)
             if data.member == "Eval" then
+                print("Loading code from dbus\n" .. code)
                 local f, e = load(code)
                 if not f then
                     return "s", e
                 end
                 local results = {pcall(f)}
                 if not table.remove(results, 1) then
-                    return "s", "Error during execution: " .. tostring(results[1])
+                    local err_res = "Error during tde-client code execution: " .. tostring(results[1])
+                    print(err_res, LOG_ERR)
+                    return "s", err_res
                 end
                 local retvals = {}
                 for _, v in ipairs(results) do
