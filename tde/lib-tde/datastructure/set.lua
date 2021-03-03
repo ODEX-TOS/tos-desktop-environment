@@ -42,8 +42,8 @@
 --
 -- * `Insert element`    O(1)
 -- * `Remove element`    O(1)
--- * `To List`           O(n)
--- * `To Ordered List`   O(n)
+-- * `To List`           O(1)
+-- * `To Ordered List`   O(1)
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
