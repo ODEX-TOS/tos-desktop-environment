@@ -46,8 +46,10 @@ function test_data_structure_set_remove_works()
     local map = set()
     map.add("test")
     assert(map.exists("test"), "The set should have a: 'test' key in it")
+    assert(#map.to_list() == 1, "The length of the map should be 1")
     map.remove("test")
     assert(not map.exists("test"), "The set should't have a: 'test' key in it")
+    assert(#map.to_list() == 0, "The length of the map should be 0")
 end
 
 function test_data_structure_set_loop()

@@ -43,7 +43,7 @@
 -- * `Insert element`    O(1)
 -- * `Remove element`    O(1)
 -- * `To List`           O(n)
--- * `To Ordered List`   O(n^2)
+-- * `To Ordered List`   O(n)
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
@@ -57,11 +57,10 @@
 -- lib-tde.datastrucuture.set()
 return function()
     local _set = {}
+    -- a list representation of the current set
+    local _list = {}
     local _index = 0
 
-    -- cache used for the slow to_list function
-    local _list_cache = {}
-    local _invalidate_cache = true
 
     --- Add an element to the set, if it was succesfully added return true (didn't exist yet)
     -- @tparam object value The value to put into the set
@@ -75,7 +74,7 @@ return function()
         end
         _index = _index + 1
         _set[value] = _index
-        _invalidate_cache = true
+        table.insert(_list, value)
         return true
     end
 
@@ -87,9 +86,9 @@ return function()
     --   set.remove("tde")
     local function _remove(value)
         if _set[value] ~= nil then
+            table.remove(_list, _set[value])
             _set[value] = nil
             _index = _index - 1
-            _invalidate_cache = true
             return true
         end
         return false
@@ -101,37 +100,7 @@ return function()
     -- @usage
     --     local list = set.to_ordered_list()
     local function _to_ordered_list()
-        if not _invalidate_cache then
-            return _list_cache
-        end
-
-        local list = {}
-        if _index == 0 then
-            _list_cache = list
-            _invalidate_cache = false
-            return list
-        end
-
-        -- make a copy of the set
-        local _set_copy = {}
-        for k,v in pairs(_set) do
-            _set_copy[k] = v
-        end
-        -- TODO: converting to a list is very inefficient
-        for i = 1, _index, 1 do
-            for k, value in pairs(_set_copy) do
-                if (i == value) then
-                    table.insert(list, k)
-                    -- reduce the size of the set to increase speads dramatically
-                    -- 1000 elements get sorted in ~1s without this and in roughtl 10ms with this
-                    _set_copy[k] = nil
-                    break
-                end
-            end
-        end
-        _list_cache = list
-        _invalidate_cache = false
-        return list
+        return _list
     end
 
     --- Convert the set to a regular lua list
@@ -140,14 +109,7 @@ return function()
     -- @usage
     --     local list = set.to_list()
     local function _to_list()
-        local list = {}
-        if _index == 0 then
-            return list
-        end
-        for k, _ in pairs(_set) do
-            table.insert(list, k)
-        end
-        return list
+        return _to_ordered_list()
     end
 
     --- Itterate over the set with an itterator (much like ipairs())

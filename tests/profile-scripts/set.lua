@@ -24,7 +24,7 @@
 ]]
 local set = require("lib-tde.datastructure.set")()
 
-for i = 1, 1000, 1 do
+for i = 1, 1000000, 1 do
     set.add(i)
 end
 
