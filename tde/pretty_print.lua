@@ -538,15 +538,28 @@ local function colorize(tokens)
     return result
 end
 
-local function ParseFile(fileContent)
+local function printColorized(string)
+    io.write(string)
+end
+
+local function ParseString(fileContent)
     local lines = {}
     for s in fileContent:gmatch("[^\r\n]+") do
         table.insert(lines, s)
     end
 
     local tokens = tokenize_content(lines)
-    io.write(colorize(tokens))
+    return colorize(tokens)
 end
 
-local t = io.read("*all")
-ParseFile(t)
+-- we are running this code directly from a lua interpreter
+if debug.getinfo(3) == nil then
+    local t = io.read("*all")
+    local colorized = ParseString(t)
+    printColorized(colorized)
+else
+    return {
+        ParseString = ParseString,
+        printColorized = printColorized,
+    }
+end
