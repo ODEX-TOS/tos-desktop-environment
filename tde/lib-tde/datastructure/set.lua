@@ -111,11 +111,21 @@ return function()
             _invalidate_cache = false
             return list
         end
+
+        -- make a copy of the set
+        local _set_copy = {}
+        for k,v in pairs(_set) do
+            _set_copy[k] = v
+        end
         -- TODO: converting to a list is very inefficient
         for i = 1, _index, 1 do
-            for k, value in pairs(_set) do
+            for k, value in pairs(_set_copy) do
                 if (i == value) then
                     table.insert(list, k)
+                    -- reduce the size of the set to increase speads dramatically
+                    -- 1000 elements get sorted in ~1s without this and in roughtl 10ms with this
+                    _set_copy[k] = nil
+                    break
                 end
             end
         end
