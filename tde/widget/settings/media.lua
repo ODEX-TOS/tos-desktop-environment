@@ -47,6 +47,10 @@ local settings_nw = dpi(260)
 local refresh = function()
 end
 
+local mic_test_start_message="Test microphone"
+local mic_test_stop_message="Stop"
+local mic_test_pid=-1
+
 return function()
   local view = wibox.container.margin()
   view.left = m
@@ -192,6 +196,28 @@ return function()
       )
     end
 
+    -- add buttons to test the audio
+    sink_children:add(wibox.container.margin(button("Test speaker", function()
+      sound()
+    end),m, m, m))
+
+    -- If we are currently listing for microphone input
+    if mic_test_pid == -1 then
+      source_children:add(wibox.container.margin(button(mic_test_start_message, function()
+        -- start the process and get the pid
+        mic_test_pid= awful.spawn("sh -c 'arecord -f cd - | aplay'")
+        refresh()
+      end),m, m, m))
+    else
+      source_children:add(wibox.container.margin(button(mic_test_stop_message, function()
+        local cmd = "pkill -P " .. tostring(mic_test_pid)
+        print(cmd)
+        awful.spawn(cmd)
+        mic_test_pid=-1
+        refresh()
+      end),m, m, m))
+    end
+
     local sink_widget = card("Output")
     sink_widget.update_body(wibox.container.margin(sink_children, m, m, m, m))
 
@@ -290,9 +316,6 @@ return function()
       wibox.container.margin(button("Reset Audio Server", function()
         volume.reset_server()
       end),m, m, m*2),
-      wibox.container.margin(button("Test sound", function()
-        sound()
-      end),m, m, m),
       audio_settings,
       body
     }
