@@ -40,7 +40,14 @@ local function parse_file(file)
             line = split(line, "#")[1]
             local data, payload = extract(line)
             if not (data == nil) then
-                lines[data] = payload
+                if type(lines[data]) == "table" then
+                    table.insert(lines[data], payload)
+                elseif lines[data] == nil then
+                    lines[data] = payload
+                else
+                    lines[data] = {lines[data]}
+                    table.insert(lines[data], payload)
+                end
             end
         end
     end

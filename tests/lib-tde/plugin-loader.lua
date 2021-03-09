@@ -35,7 +35,7 @@ end
 
 function test_loader_section_test()
     plugins = {
-        test_1 = "mock-plugin"
+        test = "mock-plugin"
     }
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
@@ -46,7 +46,7 @@ end
 
 function test_loader_section_mock_test()
     plugins = {
-        test_1 = "widget.mock-plugin"
+        test = "widget.mock-plugin"
     }
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
@@ -58,9 +58,7 @@ end
 
 function test_loader_section_multi_plugin()
     plugins = {
-        test_1 = "widget.mock-plugin",
-        test_2 = "widget.mock-plugin",
-        test_3 = "widget.mock-plugin"
+        test = { "widget.mock-plugin", "widget.mock-plugin", "widget.mock-plugin"}
     }
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
@@ -75,10 +73,10 @@ function test_loader_section_multi_plugin()
     print = echo
 end
 
-function test_loader_section_multi_plugin()
+function test_loader_section_multi_plugin2()
     plugins = {
-        test_1 = "widget.mock-plugin",
-        mock_1 = "widget.mock-plugin"
+        test = "widget.mock-plugin",
+        mock = "widget.mock-plugin"
     }
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
@@ -99,10 +97,8 @@ end
 
 function test_loader_section_multi_multi_plugin()
     plugins = {
-        test_1 = "widget.mock-plugin",
-        test_2 = "widget.mock-plugin",
-        mock_1 = "widget.mock-plugin",
-        mock_2 = "widget.mock-plugin"
+        test = { "widget.mock-plugin", "widget.mock-plugin"},
+        mock = { "widget.mock-plugin", "widget.mock-plugin"}
     }
 
     local plugin_loader = require("tde.lib-tde.plugin-loader")
@@ -127,22 +123,21 @@ end
 
 function test_loader_section_inconsistent_flow_state()
     plugins = {
-        test_1 = "widget.mock-plugin",
-        test_2 = "widget.mock-plugin",
-        test_3 = "widget.mock-plugin",
-        test_5 = "widget.mock-plugin"
+        test = { "widget.mock-plugin", "widget.mock-plugin", "widget.mock-plugin"},
     }
+
+    plugins["test"][5] = "widget.mock-plugin"
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
-    assert(#result == 3, "The plugin loader should return 3 plugins")
+    assert(#result == 3, "The plugin loader should return 3 plugins but got: " .. tostring(#result))
 
     local mock = require("widget.mock-plugin")
     assert(result[1] == mock, "The first plugin in the table should be the mock plugin")
     assert(result[2] == mock, "The second plugin in the table should be the mock plugin")
     assert(result[3] == mock, "The third plugin in the table should be the mock plugin")
     assert(result[5] == nil, "The fifth plugin shouldn't exist")
-    assert(type(plugins["test_5"]) == "string")
+    assert(type(plugins["test"][5]) == "string")
 
     print = echo
 end

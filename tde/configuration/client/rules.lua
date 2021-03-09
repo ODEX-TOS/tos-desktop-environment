@@ -37,47 +37,47 @@ local function getItemFloat(item)
 end
 
 local function getApplicationsPerTag(number)
-  local screen = "screen_" .. number .. "_"
+  local screen = "screen_" .. number
   local iterator = {}
-  local i = 0
-  while true do
-    i = i + 1
-    if getItem(screen .. i) ~= nil then
-      table.insert(iterator, getItem(screen .. i))
-    else
-      return iterator
+  local item = getItem(screen)
+  if item ~= nil and type(item) == "table" then
+    for _, value in ipairs(item) do
+      table.insert(iterator, value)
     end
+  elseif item ~= nil and type(item) == "string" then
+    table.insert(iterator, item)
   end
+  return iterator
 end
 
 local function getFloatingWindow()
-  local name = "float_"
+  local name = "float"
   -- Add default applications that are always floating
   local iterator = {"Xephyr", "Steam"}
-  local i = 0
-  while true do
-    i = i + 1
-    if getItemFloat(name .. i) ~= nil then
-      table.insert(iterator, getItemFloat(name .. i))
-    else
-      return iterator
+  local item = getItemFloat(name)
+  if  item ~= nil and type(item) == "table" then
+    for _, value in ipairs(item) do
+      table.insert(iterator, value)
     end
+  elseif item ~= nil and type(item) == "string" then
+    table.insert(iterator, item)
   end
+  return iterator
 end
 
 local function getTitlebarWindow()
-  local name = "no_titlebar_"
+  local name = "no_titlebar"
   -- Add default applications that are always floating
   local iterator = {"Steam"}
-  local i = 0
-  while true do
-    i = i + 1
-    if getItem(name .. i) ~= nil then
-      table.insert(iterator, getItem(name .. i))
-    else
-      return iterator
+  local item = getItem(name)
+  if  item ~= nil and type(item) == "table" then
+    for _, value in ipairs(item) do
+      table.insert(iterator, value)
     end
+  elseif item ~= nil and type(item) == "string" then
+    table.insert(iterator, item)
   end
+  return iterator
 end
 
 local floater = getFloatingWindow()

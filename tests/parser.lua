@@ -50,26 +50,26 @@ function test_config_parser_works_single_value()
 end
 
 function test_config_parser_works_multi_value()
-    create_file("test.conf", "value=1\nvalue2=2")
+    create_file("test.conf", "value=1\nvalue=2")
     local result = parser("test.conf")
-    assert(result["value"] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"]))
-    assert(result["value2"] == "2", "Parsing 'value2' should be 2 but got " .. tostring(result["value2"]))
+    assert(result["value"][1] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"][1]))
+    assert(result["value"][2] == "2", "Parsing second 'value' should be 2 but got " .. tostring(result["value"][2]))
     rm_file("test.conf")
 end
 
 function test_config_parser_works_spacing()
-    create_file("test.conf", "value =1\nvalue2= 2")
+    create_file("test.conf", "value =1\nvalue= 2")
     local result = parser("test.conf")
-    assert(result["value"] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"]))
-    assert(result["value2"] == "2", "Parsing 'value2' should be 2 but got " .. tostring(result["value2"]))
+    assert(result["value"][1] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"][1]))
+    assert(result["value"][2] == "2", "Parsing second 'value' should be 2 but got " .. tostring(result["value"][2]))
     rm_file("test.conf")
 end
 
 function test_config_parser_works_newlines()
-    create_file("test.conf", "value =1\n\nvalue2= 2")
+    create_file("test.conf", "value =1\n\nvalue= 2")
     local result = parser("test.conf")
-    assert(result["value"] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"]))
-    assert(result["value2"] == "2", "Parsing 'value2' should be 2 but got " .. tostring(result["value2"]))
+    assert(result["value"][1] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"][1]))
+    assert(result["value"][2] == "2", "Parsing second 'value' should be 2 but got " .. tostring(result["value"][2]))
     rm_file("test.conf")
 end
 
@@ -98,6 +98,21 @@ function test_config_parser_comments_behind_values()
     create_file("test.conf", 'value = "abc" # this is a comment')
     local result = parser("test.conf")
     assert(result["value"] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"]))
+    rm_file("test.conf")
+end
+
+function test_config_parser_single_value_is_no_list_multi_value_is_list()
+    create_file("test.conf", 'value = "abc" # this is a comment')
+    local result = parser("test.conf")
+    assert(type(result["value"]) == "string", "result should be a string but is: " .. type(result["value"]))
+    assert(result["value"] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"]))
+    rm_file("test.conf")
+
+    create_file("test.conf", 'value = "abc" # this is a comment\nvalue = "abc2"')
+    result = parser("test.conf")
+    assert(type(result["value"]) == "table", "result should be a table")
+    assert(result["value"][1] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"][1]))
+    assert(result["value"][2] == "abc2", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"][2]))
     rm_file("test.conf")
 end
 
