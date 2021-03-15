@@ -74,6 +74,23 @@ local function split(inputstr, sep)
     return t
 end
 
+--- Convert a number to a string with a given precision
+-- @tparam number num The number to convert to a given precision
+-- @tparam[opt] number precision The precision after the decimal point (by default 2)
+-- @staticfct num_to_str
+-- @usage -- returns 12.123
+-- lib-tde.function.common.num_to_str(12.1234567)
+local function num_to_str(num, precision)
+    if precision == nil then
+        precision = 2
+    end
+    if type(num) == "number" then
+        return string.format("%." .. tostring(precision) .. "f", num)
+    end
+    return tostring(num)
+end
+
+
 --- sleep for x seconds where x can be subseconds long
 -- @tparam number time The time in seconds
 -- @staticfct sleep
@@ -114,7 +131,7 @@ local function num_to_si_prefix(num, start)
     if index == 0 then
         return number
     end
-    return number .. prefix[index]
+    return num_to_str(number, 1) .. prefix[index]
 end
 
 --- Take any byte and add the appropriate si prefix
@@ -139,5 +156,6 @@ return {
     split = split,
     sleep = sleep,
     num_to_si_prefix = num_to_si_prefix,
-    bytes_to_grandness = bytes_to_grandness
+    bytes_to_grandness = bytes_to_grandness,
+    num_to_str = num_to_str,
 }

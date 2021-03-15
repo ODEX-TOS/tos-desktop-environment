@@ -142,6 +142,21 @@ function test_function_bytes_to_grandness_corrrect_si_unites_offset()
     assert(common.bytes_to_grandness(8700, 4) == "8.7PB", "Result should be in the petabyte range")
 end
 
+function test_function_num_to_str()
+    assert(common.num_to_str(12.123) == "12.12", "Got: " .. common.num_to_str(12.123))
+    assert(common.num_to_str(12.1234) == "12.12", "Got: " .. common.num_to_str(12.1234))
+    assert(common.num_to_str(12.1234, 3) == "12.123", "Got: " .. common.num_to_str(12.1234, 3))
+end
+
+function test_function_num_to_str_high_precision()
+    assert(common.num_to_str(12.123, 5) == "12.12300", "Got: " .. common.num_to_str(12.123, 5))
+end
+
+function test_function_num_to_str_wierd_inputs()
+    assert(common.num_to_str("12") == "12", "Got: " .. common.num_to_str("12"))
+    assert(common.num_to_str(nil) == "nil", "Got: " .. common.num_to_str(nil))
+end
+
 function test_imagemagic_api_unit_tested()
     local amount = 4
     local result = tablelength(common)

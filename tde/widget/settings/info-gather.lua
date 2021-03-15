@@ -71,7 +71,7 @@ local function get_ram_info()
         function()
             local usage, total = hardware.getRamInfo()
             signals.emit_ram_usage(usage)
-            signals.emit_ram_total(total)
+            signals.emit_ram_total(common.num_to_str(total))
             print("Ram usage: " .. usage .. "%")
         end,
         config.ram_startup_delay
