@@ -35,6 +35,7 @@ local button = require("lib-widget.button")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local sound = require("lib-tde.sound")
+local scrollbox = require("lib-widget.scrollbox")
 
 
 local dpi = beautiful.xresources.apply_dpi
@@ -43,6 +44,8 @@ local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
 local settings_nw = dpi(260)
+
+local scrollbox_body = {}
 
 local refresh = function()
 end
@@ -232,7 +235,75 @@ return function()
     body:add(wibox.container.margin(source_widget, m, m, m, m))
   end
 
+  local applications_body = wibox.layout.grid.vertical()
+  applications_body.forced_num_cols = 2
+  applications_body.expand = true
+  applications_body.homogeneous = true
+
+  local function create_volume_from_application(app)
+    local app_volume_card = card()
+
+    local app_vol_slider = slider(
+    0,
+    100,
+    1,
+    0,
+    function(value)
+      volume.set_application_volume(app.sink, value)
+    end
+  )
+
+  volume.get_application_volume(app.sink , function (value)
+    if not (app_vol_slider.value == value) then
+      print("Detected the volume: " .. value)
+      app_vol_slider.update(value)
+    end
+  end)
+
+  local app_vol_header = wibox.widget.textbox(app.name)
+  app_vol_header.font = beautiful.font
+
+    app_volume_card.update_body(
+      wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        {
+          layout = wibox.container.margin,
+          margins = m,
+          {
+            layout = wibox.layout.align.horizontal,
+            app_vol_header,
+            nil,
+            nil
+          }
+        },
+        {
+          layout = wibox.container.margin,
+          left = m,
+          right = m,
+          bottom = m,
+          forced_height = dpi(30) + (m * 2),
+          app_vol_slider
+        }
+      }
+    )
+    return app_volume_card
+  end
+
+  -- returns a widget with all application volume sliders
+  local function populate_applications()
+    applications_body.children = {}
+    local applications = volume.get_applications()
+    for _, app in ipairs(applications) do
+      applications_body:add(wibox.container.margin(create_volume_from_application(app), m, m, m, m))
+    end
+  end
+
   refresh = function()
+
+    populate_applications()
+    scrollbox_body.reset()
+
+
     local sink = volume.get_default_sink()
     local source = volume.get_default_source()
     local sinks = volume.get_sinks()
@@ -298,6 +369,21 @@ return function()
     dpi(20)
   )
 
+  local application_settings =
+  wibox.container.margin(
+  wibox.widget {
+    widget = wibox.widget.textbox,
+    text = i18n.translate("Application list"),
+    font = "SF Pro Display Bold 24"
+  },
+  dpi(20),
+  0,
+  dpi(20),
+  dpi(20)
+)
+
+  scrollbox_body = scrollbox(applications_body)
+
   view:setup {
     layout = wibox.container.background,
     {
@@ -320,7 +406,9 @@ return function()
         volume.reset_server()
       end),m, m, m*2),
       audio_settings,
-      body
+      body,
+      application_settings,
+      scrollbox_body,
     }
   }
 

@@ -29,9 +29,19 @@ function test_api_lib_tde_volume_get_volume()
     assert(type(volume.get_volume) == "function", "Volume api is wrong, volume.get_volume should be a function")
 end
 
+function test_api_lib_tde_volume_get_application_volume()
+    assert(volume.get_application_volume, "Make sure the volume.get_application_volume api exists")
+    assert(type(volume.get_application_volume) == "function", "Volume api is wrong, volume.get_application_volume should be a function")
+end
+
 function test_api_lib_tde_volume_set_volume()
     assert(volume.set_volume, "Make sure the volume.set_volume api exists")
     assert(type(volume.set_volume) == "function", "Volume api is wrong, volume.set_volume should be a function")
+end
+
+function test_api_lib_tde_volume_set_application_volume()
+    assert(volume.set_application_volume, "Make sure the volume.set_application_volume api exists")
+    assert(type(volume.set_application_volume) == "function", "Volume api is wrong, volume.set_application_volume should be a function")
 end
 
 function test_api_lib_tde_volume_get_sinks()
@@ -42,6 +52,11 @@ end
 function test_api_lib_tde_volume_get_sources()
     assert(volume.get_sources, "Make sure the volume.get_sources api exists")
     assert(type(volume.get_sources) == "function", "Volume api is wrong, volume.get_sources should be a function")
+end
+
+function test_api_lib_tde_volume_get_applications()
+    assert(volume.get_applications, "Make sure the volume.get_applications api exists")
+    assert(type(volume.get_applications) == "function", "Volume api is wrong, volume.get_applications should be a function")
 end
 
 function test_api_lib_tde_volume_set_default_sink()

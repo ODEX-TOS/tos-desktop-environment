@@ -26,6 +26,7 @@ local translations = {}
 translations["+10%"] = "+10%"
 translations["-10%"] = "-10%"
 translations["About"] = "Over"
+translations["Application list"] = "Applicatie lijst"
 translations["Audio list"] = "Geluids lijst"
 translations["A break timer gets triggered every hour, this is intended to give you some time to stretch, take a break etc"] = "Een pauze timer word elk uur geactiveerd, de bedoeling hiervan is om u tijd te geven voor te stretchen en een pauze te pakken"
 translations["Action Center"] = "Actie Centrum"

@@ -37,7 +37,7 @@ local split = require("lib-tde.function.common").split
 
 local err = "\27[0;31m[ ERROR "
 
-local function _extract_pa_ctl_state(command, id, port, description)
+local function _extract_pa_ctl_state(command, id, port, description, hasID)
     local res = split(execute("pactl list " .. command), "\n")
     local lastPort
     local lastSink
@@ -45,6 +45,10 @@ local function _extract_pa_ctl_state(command, id, port, description)
     local lastSinkId
 
     local result = {}
+
+    if(hasID == nil) then
+        hasID = true
+    end
 
     for _, value in ipairs(res) do
         local descriptionMatch = value:match(description)
@@ -55,15 +59,16 @@ local function _extract_pa_ctl_state(command, id, port, description)
         local portMatch = value:match(port)
         if portMatch ~= nil then
             lastPort = portMatch
+
         end
 
         local sinkMatch = value:match(id)
         if sinkMatch ~= nil then
             lastSink = sinkMatch
-        end
 
+        end
         local sinkId = value:match("Name: (.*)$")
-        if sinkId ~= nil then
+        if sinkId ~= nil and hasID then
             lastSinkId = sinkId
         end
 
@@ -92,6 +97,18 @@ local function _extract_pa_ctl_state(command, id, port, description)
             lastPort = nil
             lastSinkId = nil
         end
+
+        if lastPort ~= nil and lastSink ~= nil and lastDescription ~= nil and not hasID then
+            table.insert(result, {
+                name = lastDescription,
+                sink = tonumber(lastSink) or 0,
+                port = lastPort,
+            })
+            lastDescription = nil
+            lastSink = nil
+            lastPort = nil
+            lastSinkId = nil
+        end
     end
     return result
 end
@@ -114,13 +131,53 @@ local function get_volume(callback)
     )
 end
 
+--- Get the volume of an application asynchronously
+-- @tparam number sink The sink property of the application
+-- @tparam function callback A callback function to trigger when the volume data is gathered
+-- @staticfct get_application_volume
+-- @usage -- Get the volume of sink number 10
+--    get_application_volume(10,function(percentage, muted)
+--        print("Current volume level of application" .. sink.name ..": " .. tostring(percentage))
+--    end)
+local function get_application_volume(sink, callback)
+   -- TODO: get the input state from pactl list
+   awful.spawn.easy_async_with_shell(
+       "pactl list sink-inputs",
+       function (out)
+           local splitted = split(out, "\n")
+           local is_in_sink = false
+           for _, value in ipairs(splitted) do
+                if value:match("Sink Input #" .. tostring(sink)) ~= nil then
+                    is_in_sink=true
+                end
+
+                if is_in_sink and value:match("Volume: .*$") ~= nil then
+                    local volume = value:match("Volume: .* (%d+)%% / .*$")
+                    callback(tonumber(volume) or 0)
+                    return
+                end
+           end
+       end
+   )
+end
+
+--- Set the volume of an application in percentage
+-- @tparam number sink The sink of a given application
+-- @tparam number value The value of the volume in percentage
+-- @staticfct set_volume
+-- @usage -- Set the volume to max (of application with sink #75)
+--    set_volume(75, 100)
+local function set_application_volume(sink, value)
+    execute("pactl set-sink-input-volume " .. tostring(sink) .. " " .. tostring(math.floor(value)) .. "%")
+end
+
 --- Set the volume in percentage
 -- @tparam number value The value of the volume in percentage
 -- @staticfct set_volume
 -- @usage -- Set the volume to max
 --    set_volume(100)
 local function set_volume(value)
-    awful.spawn("amixer -D pulse sset Master " .. tostring(value) .. "%")
+    awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ " .. tostring(math.floor(value)) .. "%")
 end
 
 --- Get a list of all audio sinks back (A sink is an audio player such as headphones, speakers or monitors)
@@ -130,6 +187,15 @@ end
 local function get_sinks()
     return _extract_pa_ctl_state("sinks", "Sink #(.*)$", "Active Port: (.*)$", "Description: (.*)$")
 end
+
+--- Get a list of all applications that are currently playing audio
+-- @staticfct get_applications
+-- @usage -- Returns an iterable table containing all applications playing audio
+--    get_applications() --  returns a list of application
+local function get_applications()
+    return _extract_pa_ctl_state("sink-inputs", "Sink Input #(.*)$", 'media.name = "(.*)"$', 'application.name = "(.*)"$', false)
+end
+
 
 --- Change the default sink (change the audio playback device)
 -- @tparam number sink The sink property of our audio device
@@ -249,9 +315,12 @@ end
 
 return {
     get_volume = get_volume,
+    get_application_volume = get_application_volume,
     set_volume = set_volume,
+    set_application_volume = set_application_volume,
     get_sinks = get_sinks,
     get_sources = get_sources,
+    get_applications = get_applications,
     set_default_sink = set_default_sink,
     get_default_sink = get_default_sink,
     set_default_source = set_default_source,
