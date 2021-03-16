@@ -54,6 +54,20 @@ local mic_test_start_message="Test microphone"
 local mic_test_stop_message="Stop"
 local mic_test_pid=-1
 
+local function kill_mic_pid()
+  local cmd = "pkill -P " .. tostring(mic_test_pid)
+  print(cmd)
+  awful.spawn(cmd)
+  mic_test_pid=-1
+  refresh()
+end
+
+signals.connect_exit(function ()
+  if not (mic_test_pid == -1) then
+    kill_mic_pid()
+  end
+end)
+
 return function()
   local view = wibox.container.margin()
   view.left = m
@@ -215,13 +229,7 @@ return function()
         refresh()
       end),m, m, m))
     else
-      source_children:add(wibox.container.margin(button(mic_test_stop_message, function()
-        local cmd = "pkill -P " .. tostring(mic_test_pid)
-        print(cmd)
-        awful.spawn(cmd)
-        mic_test_pid=-1
-        refresh()
-      end),m, m, m))
+      source_children:add(wibox.container.margin(button(mic_test_stop_message, kill_mic_pid),m, m, m))
     end
 
     local sink_widget = card("Output")
@@ -299,11 +307,6 @@ return function()
   end
 
   refresh = function()
-
-    populate_applications()
-    scrollbox_body.reset()
-
-
     local sink = volume.get_default_sink()
     local source = volume.get_default_source()
     local sinks = volume.get_sinks()
@@ -314,6 +317,9 @@ return function()
     mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. "</span>"
 
     generate_sink_setting_body(sinks, sources, sink.sink, source.sink)
+
+    populate_applications()
+    scrollbox_body.reset()
   end
 
   view.refresh = refresh
