@@ -48,6 +48,10 @@ local settings_height = dpi(900)
 
 local tempUserDir = filehandle.mktempdir()
 
+signals.connect_exit(function ()
+  filehandle.rm(tempUserDir)
+end)
+
 local bSelectedProfilePicture = false
 local refresh = function(_)
 end

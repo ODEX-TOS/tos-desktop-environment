@@ -310,6 +310,10 @@ end
 --- Function to remove a file for the filesystem
 --@param string filename the path to the file
 local function rm(filename)
+  -- make sure we don't destroy the root :-)
+  if filename == "/" then
+    return
+  end
   if dir_exists(filename) then
     local execute = require("lib-tde.hardware-check").execute
     -- TODO: lua implementation for rm
