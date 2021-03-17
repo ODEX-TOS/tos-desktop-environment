@@ -81,10 +81,6 @@ end
 
 --- Starts collecting data.
 function profile.start()
-    if rawget(_G, "jit") then
-        jit.off()
-        jit.flush()
-    end
     debug.sethook(profile.hooker, "cr")
 end
 
@@ -192,7 +188,7 @@ function profile.report(n)
 end
 
 -- store all internal profiler functions
-for k, v in pairs(profile) do
+for _, v in pairs(profile) do
     if type(v) == "function" then
         _internal[v] = true
     end

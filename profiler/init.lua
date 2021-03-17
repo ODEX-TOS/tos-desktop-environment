@@ -26,7 +26,7 @@ local profile_runner = require("profiler.isolation_runner")
 local filehandle = require("lib-tde.file")
 
 local function profile_tde()
-    local res, out = profile_runner.run_rc_config_in_xephyr(os.getenv("PWD") .. "/profiler/runtime.lua")
+    local _, out = profile_runner.run_rc_config_in_xephyr(os.getenv("PWD") .. "/profiler/runtime.lua")
     print(out)
 end
 
@@ -36,7 +36,7 @@ local function profile_file()
         profile.setclock(require("socket").gettime)
     end
     profile.start()
-    rlprnt = print
+    local rlprnt = print
 
     if os.getenv("NO_FD") == "1" then
         print = function(_, _)

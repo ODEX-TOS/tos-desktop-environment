@@ -58,8 +58,8 @@ local size = dpi(20)
 -- 10 and 50 have a margin of error of 40
 -- this function returns true when the margin is smaller that <margin>
 local function margin_of_error(point1, point2, margin)
-    local smaller = 0
-    local bigger = 0
+    local smaller
+    local bigger
     if point1 == point2 then
         return true
     end
@@ -81,8 +81,8 @@ end
 
 -- create one "section" of the snake at a specific x and y position
 -- if head and fruit define the color of the box
-local function createPart(x, y, head, fruit)
-    local bg = head or fruit or beautiful.accent.hue_800
+local function createPart(x, y, head, fruit_in)
+    local bg = head or fruit_in or beautiful.accent.hue_800
     local box =
         wibox(
         {

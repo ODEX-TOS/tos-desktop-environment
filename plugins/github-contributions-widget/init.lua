@@ -39,9 +39,6 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local GET_CONTRIBUTIONS_CMD =
     [[bash -c "curl -s https://github-contributions.now.sh/api/v1/%s | jq -r '[.contributions[] | select ( .date | strptime(\"%%Y-%%m-%%d\") | mktime < now)][:%s]| .[].color'"]]
--- in case github-contributions.now.sh stops working contributions can be scrapped from the github.com with the command below. Note that the order is reversed.
-local GET_CONTRIBUTIONS_CMD_FALLBACK =
-    [[bash -c "curl -s https://github.com/users/%s/contributions | grep -o '\" fill=\"\#[0-9a-fA-F]\{6\}\" da' | grep -o '\#[0-9a-fA-F]\{6\}'"]]
 
 local github_contributions_widget =
     wibox.widget {
@@ -53,7 +50,7 @@ local github_contributions_widget =
 }
 
 local function worker(args)
-    local args = args or {}
+    args = args or {}
 
     local username = args.username or "F0xedb"
     local days = args.days or 60
@@ -77,10 +74,10 @@ local function worker(args)
         local r, g, b = hex2rgb(color)
 
         return wibox.widget {
-            fit = function(self, context, width, height)
+            fit = function(_, _, _, _)
                 return dpi(7), dpi(7)
             end,
-            draw = function(self, context, cr, width, height)
+            draw = function(_, _, cr, _, _)
                 cr:set_source_rgb(r / 255, g / 255, b / 255)
                 cr:rectangle(0, 0, with_border and dpi(5) or dpi(7), with_border and dpi(5) or dpi(7))
                 cr:fill()
@@ -92,11 +89,11 @@ local function worker(args)
     local col = {layout = wibox.layout.fixed.vertical}
     local row = {layout = wibox.layout.fixed.horizontal}
     local a = 5 - os.date("%w")
-    for i = 0, a do
+    for _ = 0, a do
         table.insert(col, get_square("#ebedf0"))
     end
 
-    local update_widget = function(widget, stdout, _, _, _)
+    local update_widget = function(_, stdout, _, _, _)
         for colors in stdout:gmatch("[^\r\n]+") do
             if a % 7 == 0 then
                 table.insert(row, col)
@@ -116,7 +113,7 @@ local function worker(args)
 
     awful.spawn.easy_async(
         string.format(GET_CONTRIBUTIONS_CMD, username, days),
-        function(stdout, stderr)
+        function(stdout, _)
             update_widget(github_contributions_widget, stdout)
         end
     )

@@ -34,9 +34,8 @@ local rounded = require("lib-tde.widget.rounded")
 -- title is the text below the progress bar
 -- timeout is an optional value that specifies how often to update the widget default to one second
 -- bar_size is an optional value that specifies how thick the radial bar should be
-local chart = function(x, y, width, height, title, fillFunc, timeout, bar_size)
+local chart = function(x, y, width, height, title, fillFunc, timeout, _)
     timeout = timeout or 1
-    bar_size = bar_size or 8
 
     local margin_ratio = 0.10 -- in percentage
     local bar_ratio = 0.75 -- in percentage

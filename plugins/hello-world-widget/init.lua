@@ -33,7 +33,7 @@ local beautiful = require("beautiful")
 local PATH_TO_ICONS = os.getenv("HOME") .. "/.config/tde/hello-world-widget/icons/"
 
 -- generate the icon widget
-hello_icon_widget =
+local hello_icon_widget =
   wibox.widget {
   {
     id = "icon",
@@ -47,7 +47,7 @@ hello_icon_widget =
 }
 
 -- generate a text widget that acts like the header
-hello_header =
+local hello_header =
   wibox.widget {
   text = "Hello, World!",
   font = "SFNS Display Regular 14",
@@ -57,7 +57,7 @@ hello_header =
 }
 
 -- generate a text widget that acts like a subtitle
-hello_subtitle =
+local hello_subtitle =
   wibox.widget {
   text = "Good to see you",
   font = "SFNS Display Regular 16",

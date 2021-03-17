@@ -47,6 +47,7 @@ function log() {
 
 function run_prepend_commit_msg() {
   GREP_REGEX=""
+  # shellcheck disable=SC2068
   for t in ${VALID_START_REGEX[@]}; do
     GREP_REGEX="$GREP_REGEX|^$t: "
   done
@@ -58,6 +59,7 @@ function run_prepend_commit_msg() {
     log "$COMMIT_MSG_EXIT_CODE" "Commit message prepended"
   else
     COMMIT_MSG_EXIT_CODE="1"
+    # shellcheck disable=SC2068
     for t in ${VALID_START_REGEX[@]}; do
       echo -e "\e[32m$t:\e[39m \e[33m$1\e[39m"
     done
@@ -109,7 +111,7 @@ function run_check_if_merge_commit {
   fi
 }
 
-data="$(sed '/^ *#/d' "$1")"
+data="$(sed '/^ *#/d' "$MSG")"
 
 run_check_if_merge_commit "$data"
 run_prepend_commit_msg "$data"

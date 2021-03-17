@@ -30,7 +30,7 @@ function log() {
   len="$((${#2} - 1))"
   columns=$(tput cols)
   echo -en "$2 "
-  printf '.%.0s' $(seq $(( $columns - $len - 15)))
+  printf '.%.0s' $(seq $(( columns - len - 15)))
 
   if [[ "$1" == "$WARNING" ]]; then
     _warning="${3:-WARNING}"
@@ -65,6 +65,7 @@ function run_linter_shell() {
 
   SHELL_LINTING_OUT=""
   SHELL_LINTING_EXIT_CODE=""
+  # shellcheck disable=SC2044
   for file in $(find . -type f -name "*.sh" ! -name "rofi-spotlight.sh"); do
     out="$(shellcheck "$file")"
     code="$?"
@@ -105,6 +106,7 @@ function run_license_linter_lua() {
 --SOFTWARE.
 ]]"
   _LICENSE_LUA_OUT=""
+  # shellcheck disable=SC2044
   for file in $(find . -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*"); do
     out="$(head -n24 "$file")"
     if [[ ! "$out" == "$_LICENSE" ]]; then
@@ -147,6 +149,7 @@ function run_license_linter_bash() {
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE."
   _LICENSE_BASH_OUT=""
+  # shellcheck disable=SC2044
   for file in $(find . -type f -name "*.sh"); do
     out="$(head -n24 "$file")"
     if [[ ! "$out" == "$_LICENSE" ]]; then
@@ -163,7 +166,7 @@ function run_license_linter_bash() {
 }
 
 function run_test_suite() {
-  if [[ "$(cat /etc/os-release | grep '^NAME' | cut -d'=' -f2 | tr -d '"')" == "TOS Linux" ]]; then
+  if [[ "$(grep '^NAME' /etc/os-release | cut -d'=' -f2 | tr -d '"')" == "TOS Linux" ]]; then
     UNIT_TEST_OUT="$(bash test-runner.sh 2>/dev/null)"
     UNIT_EXIT_CODE="$?"
   else

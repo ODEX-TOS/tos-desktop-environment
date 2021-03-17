@@ -40,7 +40,7 @@ local cal =
 }
 
 -- generate a text widget that acts like the header
-header =
+local header =
   wibox.widget {
   text = "Calendar",
   font = "SFNS Display Regular 14",

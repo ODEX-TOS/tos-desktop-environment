@@ -53,9 +53,7 @@ exclude_files = {
     -- contains a lot of globals
     "tests/**",
     -- TODO: refactor plugins, then remove this
-    "plugins/**",
-    -- TODO: refactor profiler, then remove this
-    "profiler/**",
+    --"plugins/**",
 }
 
 -- Global objects defined by the C code
@@ -78,7 +76,9 @@ read_globals = {
     "center",
     "save_state",
     "dont_disturb",
-    "clear_desktop_selection"
+    "clear_desktop_selection",
+    "wibox",
+    "rawlen"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about
@@ -105,7 +105,7 @@ globals = {
     "taglist_occupied",
     "print",
     "echo",
-    "desktop_icons"
+    "desktop_icons",
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).

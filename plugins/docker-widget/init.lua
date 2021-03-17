@@ -145,7 +145,7 @@ local status_to_icon_name = {
 }
 
 local function worker(args)
-    local args = args or {}
+    args = args or {}
 
     local icon = args.icon or ICONS_DIR .. "docker.svg"
     local number_of_containers = args.number_of_containers or -1
@@ -225,14 +225,14 @@ local function worker(args)
 
                                 awful.spawn.easy_async(
                                     "docker " .. command .. " " .. container["name"],
-                                    function(stdout, stderr)
-                                        if stderr ~= "" then
-                                            show_warning(stderr)
+                                    function(_, stderr_2)
+                                        if stderr_2 ~= "" then
+                                            show_warning(stderr_2)
                                         end
                                         spawn.easy_async(
                                             string.format(LIST_CONTAINERS_CMD, number_of_containers),
-                                            function(stdout, stderr)
-                                                rebuild_widget(stdout, stderr)
+                                            function(stdout_3, stderr_3)
+                                                rebuild_widget(stdout_3, stderr_3)
                                             end
                                         )
                                     end
@@ -293,14 +293,14 @@ local function worker(args)
 
                                 awful.spawn.easy_async(
                                     "docker " .. command .. " " .. container["name"],
-                                    function(stdout, stderr)
-                                        if stderr ~= "" then
-                                            show_warning(stderr)
+                                    function(_, stderr2)
+                                        if stderr2 ~= "" then
+                                            show_warning(stderr2)
                                         end
                                         spawn.easy_async(
                                             string.format(LIST_CONTAINERS_CMD, number_of_containers),
-                                            function(stdout, stderr)
-                                                rebuild_widget(stdout, stderr)
+                                            function(stdout3, stderr3)
+                                                rebuild_widget(stdout3, stderr3)
                                             end
                                         )
                                     end

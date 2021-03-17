@@ -26,8 +26,8 @@ local profile = require("profiler.profile")
 local delayed_timer = require("lib-tde.function.delayed-timer")
 local filehandle = require("lib-tde.file")
 
-originalPrint = print
-print = function(str)
+local originalPrint = print
+print = function(_)
 end
 -- start profiling
 if os.getenv("REALTIME") == "1" then

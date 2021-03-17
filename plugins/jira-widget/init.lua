@@ -41,7 +41,6 @@ local naughty = require("naughty")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local gfs = require("gears.filesystem")
-local color = require("gears.color")
 local clickable_container = require("widget.material.clickable-container")
 local dpi = require("beautiful").xresources.apply_dpi
 
@@ -76,23 +75,11 @@ local image =
 
 local button = wibox.container.margin(image, 0, dpi(5), 0, 0)
 
-local urgent_widget = {
-    id = "d",
-    draw = function(self, context, cr, width, height)
-        cr:set_source(color(beautiful.fg_urgent))
-        cr:arc(height / 4, height / 4, height / 4, 0, math.pi * 2)
-        cr:fill()
-    end,
-    visible = false,
-    layout = wibox.widget.base.make_widget
-}
-
 local jira_widget =
     wibox.widget {
     {
         {
             button,
-            urgent,
             id = "b",
             layout = wibox.layout.stack
         },
@@ -108,17 +95,15 @@ local jira_widget =
     set_text = function(self, new_value)
         self.txt.text = new_value
     end,
-    set_icon = function(self, path)
+    set_icon = function(_, path)
         image:set_icon(path)
     end,
     is_everything_ok = function(self, is_ok)
         if is_ok then
-            urgent_widget.visible = false
             image:set_opacity(1)
             image:emit_signal("widget:redraw_needed")
         else
             self.txt:set_text("")
-            urgent_widget.visible = true
             image:set_opacity(0.2)
             image:emit_signal("widget:redraw_needed")
         end
@@ -162,7 +147,7 @@ local tooltip =
     preferred_positions = {"bottom"}
 }
 
-local function createRow(issue, host, path_to_avatar)
+local function createRow(issue, host_in, path_to_avatar)
     local row =
         wibox.widget {
         {
@@ -224,7 +209,7 @@ local function createRow(issue, host, path_to_avatar)
                 {},
                 1,
                 function()
-                    spawn.with_shell("xdg-open " .. host .. "/browse/" .. issue.key)
+                    spawn.with_shell("xdg-open " .. host_in .. "/browse/" .. issue.key)
                     popup.visible = false
                     grabber:stop()
                 end
@@ -234,7 +219,7 @@ local function createRow(issue, host, path_to_avatar)
     return row
 end
 
-local function createRowTable(issues, host)
+local function createRowTable(issues, host_in)
     local rows = {
         {widget = wibox.widget.textbox},
         layout = wibox.layout.fixed.vertical
@@ -255,14 +240,14 @@ local function createRowTable(issues, host)
                 )
             end
         end
-        table.insert(rows, createRow(issue, host, path_to_avatar))
+        table.insert(rows, createRow(issue, host_in, path_to_avatar))
     end
     return rows
 end
 
-local function createTable(result, host, maxelements)
+local function createTable(result_in, host_in, maxelements)
     if maxelements == nil then
-        maxelements = #result.issues
+        maxelements = #result_in.issues
     end
 
     -- the partial variable hold the result set of one vertical table set
@@ -270,11 +255,11 @@ local function createTable(result, host, maxelements)
     local previousTableIndex = 1
     -- arr holds the information about one vertical table set
     local arr = {}
-    for index, issue in ipairs(result.issues) do
+    for index, issue in ipairs(result_in.issues) do
         -- get the index in the table
         local tableIndex = math.ceil(index / maxelements)
         if not (previousTableIndex == tableIndex) then
-            table.insert(arr, createRowTable(partialIssues, host))
+            table.insert(arr, createRowTable(partialIssues, host_in))
             -- reset variable for next vertical set
             partialIssues = {}
             previousTableIndex = tableIndex
@@ -282,7 +267,7 @@ local function createTable(result, host, maxelements)
         table.insert(partialIssues, issue)
         print("Inserting issue: " .. issue.key .. " into " .. tableIndex)
     end
-    table.insert(arr, createRowTable(partialIssues, host))
+    table.insert(arr, createRowTable(partialIssues, host_in))
     local table_widget =
         wibox.widget {
         arr[1],
@@ -301,7 +286,7 @@ local function createTable(result, host, maxelements)
 end
 
 local function worker(args)
-    local args = args or {}
+    args = args or {}
 
     local icon = args.icon or HOME_DIR .. "/.config/tde/jira-widget/jira-mark-gradient-blue.svg"
     host = args.host or show_warning("Jira host is unknown")

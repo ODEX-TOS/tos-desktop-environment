@@ -33,7 +33,7 @@ _G.DISPLAY_ID = 100
 -- the boolean tells us if we found IT-test-result:true in the output
 -- this string should tell us if we encountered what we expect from the Integration Test
 -- The last element is the stdout from awesomewm
-function run_rc_config_in_xephyr(config, starttime, endtime, funcs)
+local function run_rc_config_in_xephyr(config, _, _, _)
     local timeout = (tonumber(os.getenv("TOTAL_TIME")) + 1) or 10
 
     if os.getenv("MULTIPLIER") then

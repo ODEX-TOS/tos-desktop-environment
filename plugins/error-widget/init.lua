@@ -26,7 +26,7 @@
 --local wibox = require("wibox")
 
 -- generate a text widget that acts like the header
-header =
+local header =
     wibox.widget {
     text = "Error",
     font = "SFNS Display Regular 14",
