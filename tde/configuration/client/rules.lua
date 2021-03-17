@@ -53,7 +53,7 @@ end
 local function getFloatingWindow()
   local name = "float"
   -- Add default applications that are always floating
-  local iterator = {"Xephyr", "Steam"}
+  local iterator = {"Steam"}
   local item = getItemFloat(name)
   if  item ~= nil and type(item) == "table" then
     for _, value in ipairs(item) do
@@ -260,6 +260,17 @@ awful.rules.rules = {
   {
     rule_any = {
       class = floater
+    },
+    properties = {
+      skip_decoration = true,
+      floating = true,
+      placement = awful.placement.centered,
+      ontop = false
+    }
+  },
+  {
+    rule_any = {
+      class = {"Xephyr"}
     },
     properties = {
       skip_decoration = true,
