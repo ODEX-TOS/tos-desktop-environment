@@ -271,7 +271,7 @@ awful.rules.rules = {
   {
     rule_any = {
       class = {"Toolkit"},
-      name = {"Picture-in-Picture"}
+      name = {"Picture-in-Picture", "Picture in picture"}
     },
     properties = {
       floating = true,
