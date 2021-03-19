@@ -35,6 +35,7 @@ local signals = require("lib-tde.signals")
 local clickable_container = require("widget.clickable-container")
 local queue = require("lib-tde.datastructure.queue")()
 
+
 -- Defaults
 naughty.config.defaults.ontop = true
 naughty.config.defaults.icon_size = dpi(32)
@@ -185,7 +186,7 @@ naughty.connect_signal(
 			queue.push(n)
 			return
 		end
-		n.message = gears.string.xml_escape(n.message)
+
 		-- Actions Blueprint
 		local actions_template =
 			wibox.widget {

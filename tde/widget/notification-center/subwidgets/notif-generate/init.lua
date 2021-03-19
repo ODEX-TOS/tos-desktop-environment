@@ -32,6 +32,9 @@ local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 local theme = require("theme.icons.dark-light")
 
+local lgi = require("lgi")
+local Pango = lgi.Pango
+
 local beautiful = require("beautiful")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
@@ -84,6 +87,12 @@ local empty_message = i18n.translate("There's nothing in here... Come back later
 
 -- The function that generates notifications in right-panel
 local function notif_generate(title, message, icon, noti)
+  -- make sure the message is valid, otherwise we escape it
+  local attr, _ = Pango.parse_markup(message, -1, 0)
+  if not attr then
+    message = gears.string.xml_escape(message)
+  end
+
   -- naughty.list.actions
   local notif_actions =
     wibox.widget {
