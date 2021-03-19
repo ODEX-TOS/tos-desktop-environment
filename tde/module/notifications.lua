@@ -261,7 +261,7 @@ naughty.connect_signal(
 												{
 													{
 														layout = wibox.layout.align.vertical,
-														expand = "none",
+														expand = "inside",
 														nil,
 														{
 															align = "left",
