@@ -84,3 +84,30 @@ function test_api_lib_tde_volume_reset_server()
     assert(type(volume.reset_server) == "function", "Volume api is wrong, volume.reset_server should be a function")
 end
 
+function test_api_lib_tde_volume_inc_volume()
+    assert(volume.inc_volume, "Make sure the volume.inc_volume api exists")
+    assert(type(volume.inc_volume) == "function", "Volume api is wrong, volume.inc_volume should be a function")
+end
+
+function test_api_lib_tde_volume_dec_volume()
+    assert(volume.dec_volume, "Make sure the volume.dec_volume api exists")
+    assert(type(volume.dec_volume) == "function", "Volume api is wrong, volume.dec_volume should be a function")
+end
+
+function test_api_lib_tde_volume_set_muted_state()
+    assert(volume.set_muted_state, "Make sure the volume.set_muted_state api exists")
+    assert(type(volume.set_muted_state) == "function", "Volume api is wrong, volume.set_muted_state should be a function")
+end
+
+function test_api_lib_tde_volume_toggle_master()
+    assert(volume.toggle_master, "Make sure the volume.toggle_master api exists")
+    assert(type(volume.toggle_master) == "function", "Volume api is wrong, volume.toggle_master should be a function")
+end
+
+
+function test_api_lib_tde_volume_all_functions_tested()
+    local amount = 16
+    local length = tablelength(volume)
+    assert(length == amount, "You didn't write unit tests for all api functions, tested: " .. tostring(amount) .. " but there are: " .. tostring(length) .. " api functions")
+end
+

@@ -29,6 +29,7 @@ local signals = require("lib-tde.signals")
 local serialize = require("lib-tde.serialize")
 local filehandle = require("lib-tde.file")
 local mouse = require("lib-tde.mouse")
+local volume = require("lib-tde.volume")
 
 local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 
@@ -62,14 +63,11 @@ end
 
 local function setup_state(state)
     -- set volume mute state
-    if state.volume_muted then
-        awful.spawn("amixer -D pulse sset Master off")
-    else
-        awful.spawn("amixer -D pulse sset Master on")
-    end
+    volume.set_muted_state(state.volume_muted)
+
     -- set the volume
     print("Setting volume: " .. state.volume)
-    awful.spawn("amixer -D pulse sset Master " .. tostring(state.volume or 0) .. "%")
+    volume.set_volume(state.volume or 0)
     signals.emit_volume_update()
 
     -- set the brightness

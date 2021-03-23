@@ -28,6 +28,7 @@ local slider = require("lib-widget.slider")
 local mat_icon_button = require("widget.material.icon-button")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
+local volume = require("lib-tde.volume")
 
 local vol_slider =
   slider(
@@ -58,7 +59,7 @@ signals.connect_volume(
 local button = mat_icon_button(icon)
 
 local function toggleIcon()
-  awful.spawn("amixer -D pulse set Master +1 toggle")
+  volume.toggle_master()
   signals.emit_volume_update()
 end
 

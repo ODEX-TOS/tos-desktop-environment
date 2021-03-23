@@ -33,6 +33,7 @@ local altkey = config.altKey
 local apps = require("configuration.apps")
 local xrandr = require("lib-tde.xrandr")
 local signals = require("lib-tde.signals")
+local volume = require("lib-tde.volume")
 
 -- returns true if we cannot create a screenshot
 local function send_notification_if_maim_missing()
@@ -400,7 +401,7 @@ local globalKeys =
     "XF86AudioRaiseVolume",
     function()
       print("Raising volume")
-      awful.spawn("amixer -D pulse sset Master 5%+")
+      volume.inc_volume()
       signals.emit_volume_update()
     end,
     {description = i18n.translate("volume up"), group = i18n.translate(i18n.translate("hardware"))}
@@ -410,7 +411,7 @@ local globalKeys =
     "XF86AudioLowerVolume",
     function()
       print("Lowering volume")
-      awful.spawn("amixer -D pulse sset Master 5%-")
+      volume.dec_volume()
       signals.emit_volume_update()
     end,
     {description = i18n.translate("volume down"), group = i18n.translate(i18n.translate("hardware"))}
@@ -420,7 +421,7 @@ local globalKeys =
     "XF86AudioMute",
     function()
       print("Toggeling volume")
-      awful.spawn("amixer -D pulse set Master 1+ toggle")
+      volume.toggle_master()
       signals.emit_volume_update()
     end,
     {description = i18n.translate("toggle mute"), group = i18n.translate(i18n.translate("hardware"))}

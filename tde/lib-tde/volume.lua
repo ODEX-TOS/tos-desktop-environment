@@ -37,6 +37,10 @@ local split = require("lib-tde.function.common").split
 
 local err = "\27[0;31m[ ERROR "
 
+local function _should_control_via_software()
+    return not (general["disable_software_volume_control"] == "1")
+end
+
 local function _extract_pa_ctl_state(command, id, port, description, hasID)
     local res = split(execute("pactl list " .. command), "\n")
     local lastPort
@@ -73,7 +77,7 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
         end
 
 
-        if lastPort ~= nil and lastSink ~= nil and lastDescription ~= nil and lastSinkId ~= nil then
+        if lastSink ~= nil and lastDescription ~= nil and lastSinkId ~= nil then
             table.insert(result, {
                 --- The canonical name of the audio device
                 -- @property name
@@ -131,6 +135,53 @@ local function get_volume(callback)
     )
 end
 
+--- Increase the current volume level by 5%
+-- @staticfct inc_volume
+-- @usage -- Increase the current volume level
+--    inc_volume()
+local function inc_volume()
+    if _should_control_via_software() then
+        awful.spawn("amixer -D pulse sset Master 5%+")
+    end
+end
+
+--- Decrease the current volume level by 5%
+-- @staticfct dec_volume
+-- @usage -- Decrease the current volume level
+--    dec_volume()
+local function dec_volume()
+    if _should_control_via_software() then
+        awful.spawn("amixer -D pulse sset Master 5%-")
+    end
+end
+
+--- Toggle the current volume state between muted and unmuted on the master channel
+-- @staticfct toggle_master
+-- @usage -- Toggle the muted state
+--    toggle_master()
+local function toggle_master()
+    if _should_control_via_software() then
+        awful.spawn("amixer -D pulse set Master 1+ toggle")
+    end
+end
+
+--- Set the muted state
+-- @tparam boolean bIsMuted The state that we need to set (true if we need to mute the output)
+-- @staticfct set_muted_state
+-- @usage -- Set the master channel to mute
+--   set_muted_state(true)
+local function set_muted_state(bIsMuted)
+    if _should_control_via_software() then
+        if bIsMuted then
+            awful.spawn("amixer -D pulse sset Master off")
+        else
+            awful.spawn("amixer -D pulse sset Master on")
+        end
+    else
+        awful.spawn("amixer -D pulse sset Master on")
+    end
+end
+
 --- Get the volume of an application asynchronously
 -- @tparam number sink The sink property of the application
 -- @tparam function callback A callback function to trigger when the volume data is gathered
@@ -177,7 +228,11 @@ end
 -- @usage -- Set the volume to max
 --    set_volume(100)
 local function set_volume(value)
-    awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ " .. tostring(math.floor(value)) .. "%")
+    if _should_control_via_software() then
+        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ " .. tostring(math.floor(value)) .. "%")
+    else
+        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 100%")
+    end
 end
 
 --- Get a list of all audio sinks back (A sink is an audio player such as headphones, speakers or monitors)
@@ -315,6 +370,10 @@ end
 
 return {
     get_volume = get_volume,
+    inc_volume = inc_volume,
+    dec_volume = dec_volume,
+    set_muted_state = set_muted_state,
+    toggle_master = toggle_master,
     get_application_volume = get_application_volume,
     set_volume = set_volume,
     set_application_volume = set_application_volume,
