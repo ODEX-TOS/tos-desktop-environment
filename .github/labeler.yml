@@ -31,8 +31,6 @@ configuration:
 
 script:
   - ./**/*.sh
-  - *.sh
 
 documentation:
   - ./**/*.md
-  - *.md
