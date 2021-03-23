@@ -81,6 +81,7 @@ local return_button = function()
 		align = "right",
 		margin_leftright = dpi(8),
 		margin_topbottom = dpi(8),
+		font = "Mono 10",
 		preferred_positions = {"right", "left", "top", "bottom"}
 	}
 
