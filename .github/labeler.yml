@@ -28,6 +28,7 @@ profiler:
 configuration:
   - ./tos/**/*
   - ./tos/*
+  - ./**/*.conf
 
 script:
   - ./**/*.sh
