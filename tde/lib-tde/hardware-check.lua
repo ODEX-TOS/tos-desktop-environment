@@ -121,7 +121,7 @@ local function has_package_installed(name)
     if name == "" or not (type(name) == "string") then
         return false
     end
-    local _, returnValue = osExecute("pacman -Q " .. name .. " &>/dev/null")
+    local _, returnValue = osExecute("pacman -Q " .. name)
     return returnValue == 0
 end
 

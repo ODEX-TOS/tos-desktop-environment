@@ -45,14 +45,14 @@ echo "Selected color: $COLOR"
 
 # Check save directory
 # Creates it if it doesn't exist
-function check_dir() {
+check_dir() {
 	if [ ! -d "$screenshot_dir" ];
 	then
 		mkdir -p "$screenshot_dir"
 	fi
 }
 
-function window() {
+window() {
 	check_dir
 
 	file_loc="${screenshot_dir}$(date +%Y%m%d_%H%M%S).png"
@@ -89,7 +89,7 @@ function window() {
 }
 
 # Main function
-function shot() {
+shot() {
 
 	check_dir
 
