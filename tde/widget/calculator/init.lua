@@ -587,10 +587,10 @@ awful.tooltip {
 
 	<b>Note:</b>
 	While in keygrabbing mode, your keyboard's focus will be on the calculator.
-	So you're AwesomeWM keybinding will stop working. 
+	So you're AwesomeWM keybinding will stop working.
 
 	<b>Stopping the keygrabbing mode:</b>
-	* Move away your cursor from the calculator. 
+	* Move away your cursor from the calculator.
 	* Toggle it off using the keyboard button.
 	* Press <b>x</b>.
 	]]
