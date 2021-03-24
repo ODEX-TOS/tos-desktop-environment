@@ -61,19 +61,19 @@ function print_status() {
     # green color
     printf "\r[\e[0;32m"
     if [[ "$_success_count" -gt 0 ]]; then
-        printf "=%.0s" $(seq $_success_count)
+        printf "=%.0s" "$(seq "$_success_count")"
     else
         printf " "
     fi
     # red color
     printf "\e[0;31m"
     if [[ "$_failed_count" -gt 0 ]]; then
-        printf "=%.0s" $(seq $_failed_count)
+        printf "=%.0s" "$(seq "$_failed_count")"
     else
         printf " "
     fi
     printf "\e[0m"
-    printf " %.0s" $(seq $_rest_count)
+    printf " %.0s" "$(seq "$_rest_count")"
     printf "]"
 }
 
@@ -118,7 +118,7 @@ function lint() {
     markdown=('README.md' 'SECURITY.md' '**/*.md')
 
     # shellcheck disable=SC2068
-    spellchecker -d spellchecker.dict --files ${markdown[@]}
+    spellchecker -d spellchecker.dict --files "${markdown[@]}"
 
     lint_lua_comments
 }
