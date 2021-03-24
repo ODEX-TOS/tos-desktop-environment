@@ -62,7 +62,7 @@ function test_check_tutorial_file_creation()
         filehandle.rm(file)
     end
     assert(not file_exists(file), file .. " should not exist")
-    -- returns true if the tutorial is beeing shown
+    -- returns true if the tutorial is being shown
     local func = require("tde.tutorial")
     assert(func["status"], "tutorial did not run")
     -- should be called internally but no GUI stack exist so we call it from here

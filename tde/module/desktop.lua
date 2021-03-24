@@ -94,7 +94,7 @@ local function find_pos_by_name(name)
     return {x = nil, y = nil}
 end
 
--- TODO: run filesystem event listner each time the desktop changes
+-- TODO: run filesystem event listener each time the desktop changes
 if filehandle.dir_exists(desktopLocation) then
     for index, file in ipairs(filehandle.list_dir(desktopLocation)) do
         -- initialize x and y to nil, find the stored location otherwise use the default location

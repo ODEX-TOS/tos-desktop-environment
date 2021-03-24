@@ -43,8 +43,8 @@ local signals = require("lib-tde.signals")
 local weather_details_script = "/bin/bash /etc/xdg/tde/weather.sh"
 
 -- Sometimes it's too slow for internet to connect so the weather widget
--- will not update until the next 20mins so this is helpful to update it
--- 20seconds after logging in.
+-- will not update until the next 20 mins so this is helpful to update it
+-- 20 seconds after logging in.
 gears.timer {
     timeout = 20,
     autostart = true,
@@ -72,7 +72,7 @@ gears.timer {
     end
 }
 
--- Update widget every 1200 seconds/20mins
+-- Update widget every 1200 seconds/20 mins
 awful.widget.watch(
     weather_details_script,
     update_interval,
@@ -103,44 +103,24 @@ signals.connect_weather(
 
         -- Set icon and color depending on icon_code
         if string.find(icon_code, "11") then
-            -- icon = sun_icon
-            -- color = beautiful.xcolor3
             widgetIconName = "sun_icon"
         elseif string.find(icon_code, "22") then
-            -- icon = moon_icon
-            -- color = beautiful.xcolor4
             widgetIconName = "moon_icon"
         elseif string.find(icon_code, "33") then
-            -- icon = dcloud_icon
-            -- color = beautiful.xcolor3
             widgetIconName = "dcloud_icon"
         elseif string.find(icon_code, "44") then
-            -- icon = ncloud_icon
-            -- color = beautiful.xcolor6
             widgetIconName = "ncloud_icon"
         elseif string.find(icon_code, "55") or string.find(icon_code, "04") then
-            -- icon = cloud_icon
-            -- color = beautiful.xcolor1
             widgetIconName = "cloud_icon"
         elseif string.find(icon_code, "66") or string.find(icon_code, "10") then
-            -- icon = rain_icon
-            -- color = beautiful.xcolor4
             widgetIconName = "rain_icon"
         elseif string.find(icon_code, "77") then
-            -- icon = storm_icon
-            -- color = beautiful.xcolor1
             widgetIconName = "storm_icon"
         elseif string.find(icon_code, "88") then
-            -- icon = snow_icon
-            -- color = beautiful.xcolor6
             widgetIconName = "snow_icon"
         elseif string.find(icon_code, "99") or string.find(icon_code, "40") then
-            -- icon = mist_icon
-            -- color = beautiful.xcolor5
             widgetIconName = "mist_icon"
         else
-            -- icon = whatever_icon
-            -- color = beautiful.xcolor2
             widgetIconName = "whatever_icon"
         end
 

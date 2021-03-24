@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Create a new slider widget
 --
--- Usefull when you to get the user to input a range of numbers
+-- Useful when you to get the user to input a range of numbers
 --
 --    -- A slider between 0 and 10 with increments of 0.05, the default value is 5 and a callback function each time the value is updated
 --    local slider = lib-widget.slider(0, 10, 0.05, 5, function(value)

@@ -41,7 +41,7 @@ local frameStatus
 -- because lua is choosy on MATCH method
 -- So the output will be 'blurbackgroundframefalse'
 -- if it matches the assigned value inside the match method below
--- then it will declared as value of frameCheker
+-- then it will declared as value of frameChecker
 -- The rest is history
 local frameChecker
 

@@ -28,7 +28,7 @@ for i = 1, 1000000, 1 do
     set.add(i)
 end
 
--- inefficient itteration
+-- inefficient iteration
 for index, value in set.itterate() do
     print(index .. ": " .. value)
 end

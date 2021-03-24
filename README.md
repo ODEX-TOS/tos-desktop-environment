@@ -48,7 +48,7 @@
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
+- [Acknowledgments](#acknowledgements)
 
 <!-- ABOUT THE PROJECT -->
 
@@ -162,7 +162,7 @@ docker build -t "tde-test-suite" tests
 docker run -v "$(pwd):/data" tde-test-suite
 ```
 
-Alternativly we have provided a docker-compose file that does this all for you
+Alternatively we have provided a docker-compose file that does this all for you
 
 ```sh
 docker-compose up
@@ -228,8 +228,8 @@ If that is the case then use the `-s` option this will make the widget consume 5
 
 We don't use the Escape key to close the widget
 This is because we would need to consume the Escape key.
-This would result it the underlying widget from not beeing able to capture this event.
-Thus we decided to stricly use the backdrop/close button to close the widget.
+This would result it the underlying widget from not being able to capture this event.
+Thus we decided to strictly use the backdrop/close button to close the widget.
 
 ### Commit hooks
 
@@ -289,7 +289,7 @@ Project Link:
 
 <!-- ACKNOWLEDGEMENTS -->
 
-## Acknowledgements
+## Acknowledgments
 
 - [F0xedb](https://www.odex.be)
 - [TOS Homepage](https://tos.odex.be)

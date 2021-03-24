@@ -57,7 +57,7 @@ panel:HideDashboard()
 local panelHideFunctionWorks = not panel.visible
 originalPrint("Notification panel hide works? " .. tostring(panelHideFunctionWorks))
 
--- when suplying nothing it should return the default state
+-- when supplying nothing it should return the default state
 local notifications, widgets = panel:switch_mode()
 -- check if we are in the notifications
 local panelStartNotification = notifications.visible and not widgets.visible

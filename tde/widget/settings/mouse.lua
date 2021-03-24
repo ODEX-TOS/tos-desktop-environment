@@ -86,7 +86,7 @@ return function()
       0.01,
       default_accel_value,
       function(value)
-        mouse.setAccellaration(id, value)
+        mouse.setAcceleration(id, value)
       end
     )
 

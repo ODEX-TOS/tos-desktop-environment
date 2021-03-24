@@ -34,7 +34,7 @@ local deltaTime = 0.1
 
 signals.connect_volume(
     function(value)
-        -- we set prev_time initially to a higer value so we don't hear a pop sound when starting up the DE
+        -- we set prev_time initially to a higher value so we don't hear a pop sound when starting up the DE
         if prev_time == 0 then
             prev_time = time() + 1
         end

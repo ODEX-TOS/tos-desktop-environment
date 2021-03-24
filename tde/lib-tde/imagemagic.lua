@@ -34,7 +34,7 @@
 --
 --    -- scale the image to 300x200 pixels and store it in out.png
 --    lib-tde.imagemagic.scale("file.png", 300, 200, "out.png", function()
---        print("Finished scalling image")
+--        print("Finished scaling image")
 --    end)
 --
 -- @author Tom Meyers
@@ -59,11 +59,11 @@ end
 -- @tparam width number The width of the scaled image in pixels
 -- @tparam height number The height of the scaled image in pixels
 -- @tparam output string The path where you want to save the scaled image to
--- @tparam callback function The function to trigger when the image is scalled
+-- @tparam callback function The function to trigger when the image is scaled
 -- @staticfct scale
 -- @usage
 --    lib-tde.imagemagic.scale("file.png", 300, 200, "out.png", function()
---        print("Finished scalling image")
+--        print("Finished scaling image")
 --    end)
 local function scale(input, width, height, output, callback)
     -- perform sanity check to make sure the rest works

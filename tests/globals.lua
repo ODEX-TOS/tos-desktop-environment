@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- This file overrides existing global vaiables in TDE with mock implementations
+-- This file overrides existing global variables in TDE with mock implementations
 
 awesome = {
     conffile = os.getenv("PWD"),

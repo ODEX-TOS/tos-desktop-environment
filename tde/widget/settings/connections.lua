@@ -248,7 +248,7 @@ local function make_connection(t, n)
   local type =
     wibox.widget {
     widget = wibox.widget.textbox,
-    -- Holds the string "wireless", "wired" or simular
+    -- Holds the string "wireless", "wired" or similar
     text = i18n.translate(t),
     font = beautiful.title_font
   }

@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Crude implementation of a hashmap
 --
--- Lua by default already ships a hasmap (called a table)
+-- Lua by default already ships a hashmap (called a table)
 -- This file is a wrapper for lua's hashmap, intended for people who come from object oriented languages
 -- This api provides easy to use functions with which most people are familiar
 --

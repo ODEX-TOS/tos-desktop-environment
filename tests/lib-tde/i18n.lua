@@ -48,8 +48,8 @@ function test_i18n_system_language()
 end
 
 function test_i18n_custome_translations()
-    -- we set the language to anything else than english
-    -- because translating from english to english is not valid
+    -- we set the language to anything else than English
+    -- because translating from English to English is not valid
     i18n.set_system_language("dutch")
     assert(i18n.translate("random") == "random", "the word 'random' should not have a default translation")
     i18n.custom_translations(

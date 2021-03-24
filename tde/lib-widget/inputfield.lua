@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Create a new inputfield widget
 --
--- Usefull when you want to seperate widgets from eachother
+-- Useful when you want to separate widgets from each other
 --
 --    -- basic inputfield
 --    local inputfield = lib-widget.inputfield()
@@ -93,7 +93,7 @@ end
 --- Create a new inputfield widget
 -- @tparam[opt] function typing_callback This callback gets triggered on every keystroke
 -- @tparam[opt] function done_callback This callback gets triggered when the user finished typing
--- @tparam[opt] bool hidden This option tels us if we need to mask the input (with * instead of the real text)
+-- @tparam[opt] bool hidden This option tells us if we need to mask the input (with * instead of the real text)
 -- @treturn widget The inputfield widget
 -- @staticfct inputfield
 -- @usage -- This will create a basic inputfield
@@ -193,7 +193,7 @@ return function(typing_callback, done_callback, hidden)
         return active_text
     end
 
-    --- Change the text in the input field, usefull when you want to validate input
+    --- Change the text in the input field, useful when you want to validate input
     -- @tparam string text the text to supply
     -- @staticfct update_text
     -- @usage -- Update the text in the inputfield

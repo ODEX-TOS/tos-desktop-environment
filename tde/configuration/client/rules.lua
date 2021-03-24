@@ -222,7 +222,7 @@ awful.rules.rules = {
       skip_decoration = true
     }
   },
-  -- Intstances
+  -- Instances
   -- Network Manager Editor
   {
     rule = {

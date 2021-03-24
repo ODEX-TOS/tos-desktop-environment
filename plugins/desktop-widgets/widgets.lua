@@ -30,7 +30,7 @@ local rounded = require("lib-tde.widget.rounded")
 -- the x and y variables are used to show the current position
 -- width and height are the sizes of your widget
 -- fillFunc should be a function without any arguments that returns a number between 0 and 100
--- 0 indicating no resource and 100 is completly full
+-- 0 indicating no resource and 100 is completely full
 -- title is the text below the progress bar
 -- timeout is an optional value that specifies how often to update the widget default to one second
 -- bar_size is an optional value that specifies how thick the radial bar should be
@@ -106,7 +106,7 @@ end
 -- the x and y variables are used to show the current position
 -- width and height are the sizes of your widget
 -- fillFunc should be a function without any arguments that returns a number between 0 and 100
--- 0 indicating no resource and 100 is completly full
+-- 0 indicating no resource and 100 is completely full
 -- title is the text below the progress bar
 -- timeout is an optional value that specifies how often to update the widget default to one second
 -- bar_size is an optional value that specifies how thick the radial bar should be

@@ -64,10 +64,10 @@ Using Collision is easy. You just have to hit the arrow keys (<kbd>➡</kbd>
 
 # Using different keys
 
-Due to the large ammount of keyboard shortcut Collision create, they are
+Due to the large amount of keyboard shortcut Collision create, they are
 auto-generated automatically. While this make installation simpler, it also make
 Collision somewhat hard-coded magic. Some alternative keymaps can also be
-ackward to use because of the reliance on mod keys such as <kbd>Alt</kbd> and
+awkward to use because of the reliance on mod keys such as <kbd>Alt</kbd> and
 <kbd>Control</kbd>.
 
 That being said, Collision allow some basic remapping. Instead of:
@@ -93,7 +93,7 @@ be removed from rc.lua.
 
 # Appearance
 
-Collision appearance can be changed in yout theme using the `collision`
+Collision appearance can be changed in your theme using the `collision`
 namespace
 
 ## Focus

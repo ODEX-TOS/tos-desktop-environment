@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- This module exposes an api to manipulate volume events through pulseaudio/pipewire
 --
--- Usefull functional for setting volume active sinks, input/output etc
+-- Useful functional for setting volume active sinks, input/output etc
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
@@ -294,7 +294,7 @@ local function get_default_sink()
     return {}
 end
 
---- Get a list of all audio sources back (A source is a audio recording device such as microphones)
+--- Get a list of all audio sources back (A source is an audio recording device such as microphones)
 -- @staticfct get_sources
 -- @usage -- Returns an iterable table containing all sources
 --    get_sources() --  returns a list of sources

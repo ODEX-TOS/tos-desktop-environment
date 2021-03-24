@@ -89,7 +89,7 @@ function module.get_geometry(tag)
     end
   end
 
-  -- The magnifier layout require a focussed client
+  -- The magnifier layout require a focused client
   -- there wont be any as that layout is not selected
   -- take one at random or (TODO) use stack data
   if not focus_wrap then

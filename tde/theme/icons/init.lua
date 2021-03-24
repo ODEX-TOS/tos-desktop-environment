@@ -80,6 +80,6 @@ return {
   mouse = theme(dir .. "/mouse.svg"),
   user = theme(dir .. "/user.svg"),
   qr_code = theme(dir .. "/qr_code.svg"),
-  --pngs
+  --png's
   unknown = theme(dir .. "/noicon.png")
 }

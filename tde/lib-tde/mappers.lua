@@ -23,9 +23,9 @@
 --SOFTWARE.
 ]]
 ---------------------------------------------------------------------------
--- This module exposes helper functions wrapped around lists in ordeer to manipulate them
+-- This module exposes helper functions wrapped around lists in order to manipulate them
 --
--- Usefull functional principles exist such as, maps, reducers and filters.
+-- Useful functional principles exist such as, maps, reducers and filters.
 --
 -- Examples:
 --
@@ -69,7 +69,7 @@
 -----------------
 
 --- Returns a new array containing the results of calling a function on every element in this array.
--- @param arr table The array on which we itterate over
+-- @param arr table The array on which we iterate over
 -- @param func function The function to call on each element (element, index)
 -- @treturn array The array containing the mapped values
 -- @staticfct map
@@ -87,7 +87,7 @@ local function map(arr, func)
 end
 
 --- Returns a new array containing all elements of the calling array for which the provided filtering function returns `true`.
--- @param arr table The array on which we itterate over
+-- @param arr table The array on which we iterate over
 -- @param func function The function to call on each element (element, index)
 -- @treturn array The array containing the 'allowed' elements
 -- @staticfct filter
@@ -107,7 +107,7 @@ local function filter(arr, func)
 end
 
 --- Apply a function against an accumulator and each value of the array (from left-to-right) as to reduce it to a single value.
--- @param arr table The array on which we itterate over
+-- @param arr table The array on which we iterate over
 -- @param func function The function to call on each element (element, index)
 -- @param initial_value any The initial value when first entering the reduce function
 -- @treturn array The array containing the 'allowed' elements
@@ -126,7 +126,7 @@ local function reduce(arr, func, initial_value)
 end
 
 --- Returns true if at least one element in this array satisfies the provided testing function.
--- @param arr table The array on which we itterate over
+-- @param arr table The array on which we iterate over
 -- @param func function The function to call on each element (element, index)
 -- @treturn bool If at least one element returned `true` in the testing function
 -- @staticfct contains
