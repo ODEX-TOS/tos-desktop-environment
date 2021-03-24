@@ -79,7 +79,8 @@ To get a local copy up and running follow these simple steps.
 sudo tos -S tde xorg-server-xephyr
 ```
 
-if you are using an arch based distro that is not tos add the following repo to `/etc/pacman.conf`
+if you are using an arch based distro that is not tos add the following repo to
+`/etc/pacman.conf`
 
 ```ini
 [tos]
@@ -170,10 +171,11 @@ docker-compose up
 
 ### Profiling
 
-When developing you can also perform some profiling.
-The `TDE profiler` listens for function calls and counts how many times the happen. For each function call we measure the time it took.
-This way we can have educated guesses where the time gets spent the most.
-Thus improving performance in the most critical parts of the system.
+When developing you can also perform some profiling. The `TDE profiler` listens
+for function calls and counts how many times the happen. For each function call
+we measure the time it took. This way we can have educated guesses where the
+time gets spent the most. Thus improving performance in the most critical parts
+of the system.
 
 Profiling can be done by executing the following command:
 
@@ -194,9 +196,10 @@ bash profiler.sh -f tests/scripts/full
 
 ### Hot Reload Widgets
 
-You can also quickly develop widgets for `tde` this can be done through the `hot-reload-widget.sh` file
-Note that you need to have `inotify-tools` installed.
-If you are using the `TOS` operating system, this script will auto download it for you.
+You can also quickly develop widgets for `tde` this can be done through the
+`hot-reload-widget.sh` file Note that you need to have `inotify-tools`
+installed. If you are using the `TOS` operating system, this script will auto
+download it for you.
 
 Development using this script is as followed:
 
@@ -219,28 +222,33 @@ bash scripts/hot-reload-widget.sh hello.lua # replace hello.lua with your file
 > NOTE: The file you are developing on needs to return a `wibox.widget` object
 > Otherwise `TDE` doesn't know how to display it
 
-> Second NOTE: the script listens for filesystem event and reloads your widget each time it is changed
+> Second NOTE: the script listens for filesystem event and reloads your widget
+> each time it is changed
 
 Some people don't like that the hot-reloaded widget consumes the entire space.
-If that is the case then use the `-s` option this will make the widget consume 50% of the screen instead of everything. (This issue is not present with multi monitor setups)
+If that is the case then use the `-s` option this will make the widget consume
+50% of the screen instead of everything. (This issue is not present with multi
+monitor setups)
 
 #### closing the widget
 
-We don't use the Escape key to close the widget
-This is because we would need to consume the Escape key.
-This would result it the underlying widget from not being able to capture this event.
-Thus we decided to strictly use the backdrop/close button to close the widget.
+We don't use the Escape key to close the widget This is because we would need to
+consume the Escape key. This would result it the underlying widget from not
+being able to capture this event. Thus we decided to strictly use the
+backdrop/close button to close the widget.
 
 ### Commit hooks
 
-Before creating commits you need to setup commit hooks.
-These commit hooks perform a series of checks to make sure you didn't forget something important
+Before creating commits you need to setup commit hooks. These commit hooks
+perform a series of checks to make sure you didn't forget something important
 
 This ranges from linting, license checks, correct usage of branching etc
 
-It is not mandatory to use this feature, however it will make it more likely to be allowed.
+It is not mandatory to use this feature, however it will make it more likely to
+be allowed.
 
-Setting the commit hooks is as easy as executing the following commands from the project root:
+Setting the commit hooks is as easy as executing the following commands from the
+project root:
 
 ```bash
 ln -s "$PWD"/hooks/pre-commit .git/hooks/pre-commit
@@ -297,16 +305,24 @@ Project Link:
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[repo-build]: https://jenkins.odex.be/buildStatus/icon?job=tos-repo&style=flat-square&subject=tde-build
+[repo-build]:
+  https://jenkins.odex.be/buildStatus/icon?job=tos-repo&style=flat-square&subject=tde-build
 [repo-url]: https://jenkins.odex.be/job/tos-repo/
-[contributors-shield]: https://img.shields.io/github/contributors/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
-[contributors-url]: https://github.com/ODEX-TOS/tos-desktop-environment/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[contributors-shield]:
+  https://img.shields.io/github/contributors/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[contributors-url]:
+  https://github.com/ODEX-TOS/tos-desktop-environment/graphs/contributors
+[forks-shield]:
+  https://img.shields.io/github/forks/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [forks-url]: https://github.com/ODEX-TOS/tos-desktop-environment/network/members
-[stars-shield]: https://img.shields.io/github/stars/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[stars-shield]:
+  https://img.shields.io/github/stars/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [stars-url]: https://github.com/ODEX-TOS/tos-desktop-environment/stargazers
-[issues-shield]: https://img.shields.io/github/issues/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[issues-shield]:
+  https://img.shields.io/github/issues/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [issues-url]: https://github.com/ODEX-TOS/tos-desktop-environment/issues
-[license-shield]: https://img.shields.io/github/license/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
-[license-url]: https://github.com/ODEX-TOS/tos-desktop-environment/blob/master/LICENSE.txt
+[license-shield]:
+  https://img.shields.io/github/license/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
+[license-url]:
+  https://github.com/ODEX-TOS/tos-desktop-environment/blob/master/LICENSE.txt
 [product-screenshot]: https://tos.odex.be/images/logo.svg
