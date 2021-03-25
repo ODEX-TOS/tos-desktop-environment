@@ -44,6 +44,8 @@
 -- @tdemod lib-tde.function.common
 ---------------------------------------------------------------------------
 
+local socket = require("socket")
+
 --- split the input to a table based on the separator
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
@@ -102,7 +104,7 @@ local function sleep(time)
         if time < 0 then
             return
         end
-        require("socket").select(nil, nil, time)
+        socket.select(nil, nil, time)
     end
 end
 
