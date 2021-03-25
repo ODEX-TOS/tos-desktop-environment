@@ -40,7 +40,7 @@
 local extract = {}
 -- TODO: get image information from spotify
 
---- Creates a file in /tmp/cover.jpg asynchronousely containing the cover image of the current song
+--- Creates a file in /tmp/cover.jpg asynchronously containing the cover image of the current song
 -- @staticfct extractalbum
 -- @usage -- This will return {1: "abc", 2: "def"}
 -- lib-tde.extract_cover.extractalbum() -> returns nothing

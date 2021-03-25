@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- This profile shoud run in O(n) times
+-- This profile should run in O(n) times
 
 local list = require("lib-tde.datastructure.stack")()
 for i = 1, 100000 do

@@ -34,7 +34,7 @@
 --        print("Received: " .. value)
 --      end)
 --
--- This module tries to improve reusage of know variables throughout the tde infrastructure.
+-- This module tries to improve re-usage of know variables throughout the tde infrastructure.
 --
 --
 -- @author Tom Meyers
@@ -73,7 +73,7 @@ connections.emit_module_exit_screen_show = function()
     awesome.emit_signal("module::exit_screen_show")
 end
 
---- Trigger a callback function when the exit screen is beeing show
+--- Trigger a callback function when the exit screen is being show
 -- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_module_exit_screen_show
 -- @usage -- notify other components
@@ -212,7 +212,7 @@ end
 
 --- Notify other TDE components that the weather updated
 -- @tparam temp string The temperature in string representation
--- @tparam desc string A short desciption about the weather
+-- @tparam desc string A short description about the weather
 -- @tparam icon string An icon code use to differentiate the weather
 -- @staticfct emit_weather
 -- @usage -- notify other components when the weather is updated
@@ -224,7 +224,7 @@ end
 --- Trigger a callback function when the weather info changed
 -- @tparam function func The callback function that will be called when the event happens
 -- @staticfct connect_weather
--- @usage -- notify other components when the weahter is updated
+-- @usage -- notify other components when the weather is updated
 -- lib-tde.signals.connect_weather(
 --    function (temp, desc, icon)
 --      print("Current temperature: " .. tostring(temp))
@@ -318,7 +318,7 @@ connections.connect_kernel = function(func)
     awesome.connect_signal("kernel::changed", func)
 end
 
---- Notify other TDE components howmany packages should be updated
+--- Notify other TDE components how many packages should be updated
 -- @tparam string value The amount of updates
 -- @staticfct emit_packages_to_update
 -- @usage -- notify other components how much packages need to be updated
@@ -453,7 +453,7 @@ connections.emit_bluetooth_status = function(value)
     awesome.emit_signal("BLUETOOTH::status", value)
 end
 
---- Trigger a callback function for the the current bluetooth status
+--- Trigger a callback function for the current bluetooth status
 -- @tparam function func The callback function that will be called when the bluetooth status changes
 -- @staticfct connect_bluetooth_status
 -- @usage -- notify other components when bluetooth status changes
@@ -474,7 +474,7 @@ connections.emit_wifi_status = function(value)
     awesome.emit_signal("WIFI::status", value)
 end
 
---- Trigger a callback function for the the current wifi status
+--- Trigger a callback function for the current wifi status
 -- @tparam function func The callback function that will be called when the bluetooth status changes
 -- @staticfct connect_wifi_status
 -- @usage -- notify other components when wifi status changes
@@ -498,25 +498,25 @@ connections.connect_exit = function(func)
     awesome.connect_signal("exit", func)
 end
 
---- Notify other TDE components about the change in mouse accellaration
+--- Notify other TDE components about the change in mouse acceleration
 -- @tparam table the mouse id and speed value
--- @staticfct emit_mouse_accellaration
--- @usage -- Notify other TDE components about the change in mouse accellaration
--- lib-tde.signals.emit_mouse_accellaration({id: 11, speed: 1.5})
-connections.emit_mouse_accellaration = function(value)
-    awesome.emit_signal("TDE::mouse::accellaration", value)
+-- @staticfct emit_mouse_acceleration
+-- @usage -- Notify other TDE components about the change in mouse acceleration
+-- lib-tde.signals.emit_mouse_acceleration({id: 11, speed: 1.5})
+connections.emit_mouse_acceleration = function(value)
+    awesome.emit_signal("TDE::mouse::acceleration", value)
 end
 
---- Trigger a callback function when the mouse accellaration changed
--- @tparam function func The callback function that will be called when the mouse accellaration changed
--- @staticfct connect_mouse_accellaration
--- @usage -- notify other components when the mouse accellaration changed
--- lib-tde.signals.connect_mouse_accellaration(
+--- Trigger a callback function when the mouse acceleration changed
+-- @tparam function func The callback function that will be called when the mouse acceleration changed
+-- @staticfct connect_mouse_acceleration
+-- @usage -- notify other components when the mouse acceleration changed
+-- lib-tde.signals.connect_mouse_acceleration(
 --    function (value)
---      print("Mouse accellaration settings: " .. value.id .. " with speed:" .. value.speed)
+--      print("Mouse acceleration settings: " .. value.id .. " with speed:" .. value.speed)
 --    end)
-connections.connect_mouse_accellaration = function(func)
-    awesome.connect_signal("TDE::mouse::accellaration", func)
+connections.connect_mouse_acceleration = function(func)
+    awesome.connect_signal("TDE::mouse::acceleration", func)
 end
 
 --- Notify other TDE components about the change in mouse speed
@@ -603,7 +603,7 @@ connections.connect_profile_picture_changed = function(func)
 end
 
 --- Notify when the notification disturb state changes
--- @tparam bool bDoNotDisturb If Do Not Disturbe mode is turned on
+-- @tparam bool bDoNotDisturb If Do Not Disturb mode is turned on
 -- @staticfct emit_do_not_disturb
 -- @usage -- Notify other TDE components what the current do not disturb mode is
 -- lib-tde.signals.emit_do_not_disturb()
@@ -617,7 +617,7 @@ end
 -- @usage --
 -- lib-tde.signals.connect_do_not_disturb(
 --    function (bDoNotDisturb)
---      print("Do not disturbe mode: " .. tostring(bDoNotDisturb))
+--      print("Do not disturb mode: " .. tostring(bDoNotDisturb))
 --    end)
 connections.connect_do_not_disturb = function(func)
     awesome.connect_signal("TDE::do_not_disturb::changed", func)

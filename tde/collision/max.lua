@@ -160,7 +160,7 @@ local function draw_shape(s, collection, current_idx, icon_f, y, text_height)
     cr3:line_to(dx + margin + width - 2 * margin, height - text_height - border)
     cr3:stroke()
 
-    -- Pring the text
+    -- Print the text
     pango_l.text = v.name
     pango_l.width = pango.units_from_double(width - 16)
     pango_l.height = pango.units_from_double(height - text_height - 10)

@@ -45,7 +45,7 @@
 --    -- this prints out 48
 --    print(list.head.previous.previous.value)
 --
--- Alternativly you can do the same with previous
+-- Alternatively you can do the same with previous
 --
 --    local linkedList = require("lib-tde.datastructure.linkedList")
 --    local list = linkedList()
@@ -64,7 +64,7 @@
 -- * `Remove element`    O(1)
 -- * `update element`    0(1)
 --
--- Linked lists are extremly good to update values and read them
+-- Linked lists are extremely good to update values and read them
 -- They are however bad at searching/traversing lists
 --
 --
@@ -104,7 +104,7 @@ local function genList()
         value = nil
     }
 
-    -- functions to implement behavior of the linkes list
+    -- functions to implement behavior of the linked list
 
     --- Update the value of the current head to value
     -- @tparam object value The value to put into the head
@@ -169,7 +169,7 @@ local function genList()
         end
     end
 
-    --- Insert a new item inbetween list.head and list.head.next
+    --- Insert a new item in between list.head and list.head.next
     -- @tparam object value The value to put between head and next
     -- @staticfct lib-tde.datastrucuture.linkedList.insertNext
     -- @usage -- Insert a new item with value "tde" between list.head and list.head.next
@@ -183,7 +183,7 @@ local function genList()
         }
     end
 
-    --- Insert a new item inbetween list.head and list.head.previous
+    --- Insert a new item in between list.head and list.head.previous
     -- @tparam object value The value to put between head and previous
     -- @staticfct lib-tde.datastrucuture.linkedList.insertPrevious
     -- @usage -- Insert a new item with value "tde" between list.head and list.head.previous

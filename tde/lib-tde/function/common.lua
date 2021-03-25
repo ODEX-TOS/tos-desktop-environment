@@ -26,16 +26,16 @@
 -- This module adds extra functionality to widgets by exposing commonly used functions.
 --
 -- Lua directly implements the C - standard library and nothing more.
--- As a result a lot of common functions in higer level languages lack.
--- A solution is to use the this common module including some usefull functions.
+-- As a result a lot of common functions in higher level languages lack.
+-- A solution is to use the this common module including some useful functions.
 --
 -- For example the split() function splits strings into a table of indexes:
 --
 --    lib-tde.function.common.split("a,b,c,d", ",") -- returns {1:"a",2:"b",3:"c",4:"d"}
 --
 -- As another example you can use the sleep() function to implement delay into you logic.
--- Be carefull using sleep() as it blocks the main thread and can result in extreem poor performance.
--- As it also blocks user input from beeing processes.
+-- Be careful using sleep() as it blocks the main thread and can result in extreme poor performance.
+-- As it also blocks user input from being processes.
 --
 --    lib-tde.function.common.sleep(0.5) -- blocks this thread for 0.5 seconds
 --
@@ -44,7 +44,7 @@
 -- @tdemod lib-tde.function.common
 ---------------------------------------------------------------------------
 
---- split the input to a table based on the seperator
+--- split the input to a table based on the separator
 -- @tparam string inputstr The string to split.
 -- @tparam[opt] string sep a regular expression that splits the string (all matches are removed from the set).
 -- @treturn table The table as a list of strings
@@ -108,9 +108,9 @@ end
 
 --- Take any number bigger that 1 and return the number with its si prefix
 -- @tparam number num the number to prefix
--- @tparam[opt] number start indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
+-- @tparam[opt] number start indicate if the number already has a prefix e.g. Kilo = 1, Mega =2, Giga = 3 etc
 -- @staticfct num_to_si_prefix
--- @usage -- returns 42.0K and 123.0M respectivly
+-- @usage -- returns 42.0K and 123.0M respectively
 -- lib-tde.function.common.num_to_si_prefix(42000)
 -- lib-tde.function.common.num_to_si_prefix(123000000)
 local function num_to_si_prefix(num, start)
@@ -136,9 +136,9 @@ end
 
 --- Take any byte and add the appropriate si prefix
 -- @tparam number bytes the amount of bytes to prefix
--- @tparam[opt] number start indicate if the number already has a prefix eg Kilo = 1, Mega =2, Giga = 3 etc
+-- @tparam[opt] number start indicate if the number already has a prefix e.g. Kilo = 1, Mega =2, Giga = 3 etc
 -- @staticfct bytes_to_grandness
--- @usage -- returns 42.0KB and 123.0MB respectivly
+-- @usage -- returns 42.0KB and 123.0MB respectively
 -- lib-tde.function.common.bytes_to_grandness(42000)
 -- lib-tde.function.common.bytes_to_grandness(123000000)
 local function bytes_to_grandness(bytes, start)

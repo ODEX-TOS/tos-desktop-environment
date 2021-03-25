@@ -41,13 +41,13 @@ local settings_nw = dpi(260)
 
 -- We need to expose these variables in a more "global" scope
 -- This way we can update the colors on the fly
--- The active color pallete
+-- The active color pallet
 local activePrimary = beautiful.accent
 local activePrimaryName = "purple"
 local activeBackground = beautiful.background
 local activeBackgroundName = "blue_grey"
 
--- the 2 big buttons that decide where the color pallete will be applied
+-- the 2 big buttons that decide where the color pallet will be applied
 local primaryButton = nil
 local backgroundButton = nil
 -- the save button that updates the color pallet
@@ -119,7 +119,7 @@ end
 
 -- the font_black option is always optional and tells use if the font color must be black (because the background color is otherwise unreadable)
 local function make_color_entry(name, slide, font_black)
-  local pallete = mat_colors[name] or mat_colors["purple"]
+  local pallet = mat_colors[name] or mat_colors["purple"]
 
   local color = beautiful.fg_white
   if font_black then
@@ -138,17 +138,17 @@ local function make_color_entry(name, slide, font_black)
     function()
       print("Updating theme to: " .. name)
       if colorModeIsPrimary then
-        activePrimary = pallete
+        activePrimary = pallet
         activePrimaryName = name
         signals.emit_primary_theme_changed(activePrimary)
       else
-        activeBackground = pallete
+        activeBackground = pallet
         activeBackgroundName = name
         signals.emit_background_theme_changed(activeBackground)
       end
       refresh()
     end,
-    pallete,
+    pallet,
     nil,
     nil,
     nil,
@@ -164,8 +164,8 @@ local function make_color_entry(name, slide, font_black)
     bar_shape = gears.shape.rounded_rect,
     bar_height = dpi(25),
     bar_color = beautiful.background.hue_700 .. beautiful.background_transparency,
-    handle_color = pallete.hue_500,
-    bar_active_color = pallete.hue_500,
+    handle_color = pallet.hue_500,
+    bar_active_color = pallet.hue_500,
     handle_shape = gears.shape.circle,
     handle_border_color = "#00000012",
     handle_border_width = 1,

@@ -114,9 +114,9 @@ local function table_to_string(tbl, depth, indent)
 	return result
 end
 
---- The default lua print message is overriden
+--- The default lua print message is overridden
 -- @tparam string arg The string to print
--- @tparam[opt] enum log_type The type of logmessage
+-- @tparam[opt] enum log_type The type of log message
 -- @tparam[opt] depth number In case you print a table, show the table until a certain depth
 -- @staticfct print
 -- @usage -- Print the error message "hello"

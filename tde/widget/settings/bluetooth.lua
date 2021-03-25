@@ -338,7 +338,7 @@ return function()
   end
 
   local function check_data()
-    -- TODO:  don't add a button to a already connected bluetooth device
+    -- TODO:  don't add a button to an already connected bluetooth device
     -- only generate the list if both commands completed
     if #devices > 0 and #paired_devices > 0 then
       local stdout, _ = execute("bluetoothctl info")

@@ -205,7 +205,7 @@ local function create_wibox(s)
   return w
 end
 
--- Hopefully, the wiboxes will be gargabe collected
+-- Hopefully, the wiboxes will be garbage collected
 local init = false
 local function init_wiboxes()
   if init then

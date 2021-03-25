@@ -232,7 +232,7 @@ local globalKeys =
     end,
     {description = i18n.translate("go back"), group = i18n.translate("client")}
   ),
-  -- Programms
+  -- Programs
   awful.key(
     {modkey},
     config.lock,

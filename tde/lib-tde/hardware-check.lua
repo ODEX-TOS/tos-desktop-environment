@@ -36,12 +36,12 @@
 --
 -- You can also use this module to verify if the environment is configured correctly.
 -- For example you can have hard dependencies on some software to get a plugin working.
--- An example is the build in screen recorder that depends on ffmpeg beeing installed.
+-- An example is the build in screen recorder that depends on ffmpeg being installed.
 --
 --    lib-tde.hardware-check.has_package_installed("ffmpeg") -- returns True if ffmpeg is installed
 --
 -- Warning never try to use `lib-tde.hardware-check.execute` unless you known what you are doing.
--- execute runs on the main thread and can cause input from not beeing handled.
+-- execute runs on the main thread and can cause input from not being handled.
 -- Which introduces lag to the system.
 -- Here is an example that locks the desktop for 2 seconds (where you can't do anything).
 --
@@ -73,7 +73,7 @@ end
 
 -- These functions check if the hardware component exists
 -- These are usually used to enable/disable certain widgets that are not needed on our system
--- Extend the below functions depening if you need the perform another check on some widget
+-- Extend the below functions depending if you need the perform another check on some widget
 -- PS: Each function should return a boolean depending on if the hardware is available
 
 --- Check to see if a battery exists on the hardware
@@ -195,7 +195,7 @@ local function getCpuInfo()
     local name = string.gmatch(stdout[5], ": (.*)$")()
     local frequency = string.gmatch(stdout[8], "%d+")()
 
-    -- find all cpu's (some systems have mutli cpu setups)
+    -- find all cpu's (some systems have multi cpu setups)
     local processors = {}
     for index, line in ipairs(stdout) do
         if string.find(line, "^processor[%s]+:") then
@@ -210,8 +210,8 @@ local function getCpuInfo()
     return cores, threads, name, tonumber(frequency)
 end
 
---- Returns if the hardware is to weak, eg little amount of ram, cpu etc
--- @return bool true if the hardware is below a certain treshold
+--- Returns if the hardware is to weak, e.g. little amount of ram, cpu etc
+-- @return bool true if the hardware is below a certain threshold
 -- @staticfct isWeakHardware
 -- @usage -- If ram is below 1G or only one cpu core is present
 -- lib-tde.hardware-check.isWeakHardware()
@@ -222,10 +222,10 @@ local function isWeakHardware()
     return (threads < 2) or (ramtotal < minRamInKB)
 end
 
---- Returns The frequency of the display panel in Herts, for example 60 Hz
+--- Returns The frequency of the display panel in Hertz, for example 60 Hz
 -- @return number The frequency of the display in Hertz
 -- @staticfct getDisplayFrequency
--- @usage -- Returns The frequency of the display panel in Herts, for example 60 Hz
+-- @usage -- Returns The frequency of the display panel in Hertz, for example 60 Hz
 -- lib-tde.hardware-check.getDisplayFrequency()
 local function getDisplayFrequency()
     local out, rc = osExecute("xrandr -q --current | grep -o '[0-9\\.]*\\*' | awk '{printf $1}' | tr -d '*'")

@@ -22,8 +22,8 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- I decided to create another slider for the OSDs
--- So we can modify its behaviour without messing
+-- I decided to create another slider for the OSD's
+-- So we can modify its behavior without messing
 -- the slider in the dashboard.
 -- Excuse my messy code.
 

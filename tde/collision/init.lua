@@ -188,7 +188,7 @@ local function new(key)
   keys = key or keys
   local aw = {}
 
-  -- This have to be executer after rc.lua
+  -- This have to be executor after rc.lua
   glib.idle_add(
     glib.PRIORITY_DEFAULT_IDLE,
     function()

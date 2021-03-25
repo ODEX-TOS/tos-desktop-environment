@@ -62,7 +62,7 @@ return function()
     local _index = 0
 
 
-    --- Add an element to the set, if it was succesfully added return true (didn't exist yet)
+    --- Add an element to the set, if it was successfully added return true (didn't exist yet)
     -- @tparam object value The value to put into the set
     -- @staticfct lib-tde.datastrucuture.set.add
     -- @return boolean Returns true if a new element was inserted, false if it already exists
@@ -78,7 +78,7 @@ return function()
         return true
     end
 
-    --- Remove an element from the set, if it was succesfully removed return true
+    --- Remove an element from the set, if it was successfully removed return true
     -- @tparam object value The value to remove from the set
     -- @staticfct lib-tde.datastrucuture.set.remove
     -- @return boolean Returns true if the element was removed, false if it didn't exist
@@ -112,17 +112,17 @@ return function()
         return _to_ordered_list()
     end
 
-    --- Itterate over the set with an itterator (much like ipairs())
-    -- @staticfct lib-tde.datastrucuture.set.itterate
+    --- Iterate over the set with an iterator (much like ipairs())
+    -- @staticfct lib-tde.datastrucuture.set.iterate
     -- @return fun(t: table, i?: integer):integer, any iterator
     -- @return table t
     -- @return integer i
     -- @usage
-    --   for index, value in set.itterate() do
+    --   for index, value in set.iterate() do
     --    print("Index: " .. index)
     --    print("Value: " .. value)
     --   end
-    local function _itterate()
+    local function _iterate()
         return ipairs(_to_ordered_list())
     end
 
@@ -140,7 +140,7 @@ return function()
         add = _add,
         remove = _remove,
         exists = _exists,
-        itterate = _itterate,
+        iterate = _iterate,
         to_list = _to_list,
         to_ordered_list = _to_ordered_list
     }

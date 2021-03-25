@@ -146,7 +146,7 @@ local function dir_exists(dir)
   return exists(dir)
 end
 
---- Recursivly create a directory
+--- Recursively create a directory
 -- @tparam string path The path to create
 -- @staticfct dir_create
 -- @usage
@@ -176,7 +176,7 @@ end
 --- Override the entire file
 -- @tparam string file The path to the file, can be both absolute or relative.
 -- @tparam string data The data to put into the file
--- @treturn bool if the write was succesfull
+-- @treturn bool if the write was successful
 -- @staticfct overwrite
 -- @usage -- This true
 -- lib-tde.file.overwrite("hallo.txt", "this is content in the file")
@@ -194,7 +194,7 @@ end
 --- Write data to a new file
 -- @tparam string file The path to the file, can be both absolute or relative.
 -- @tparam string data The data to put into the file
--- @treturn bool if the write was succesfull
+-- @treturn bool if the write was successful
 -- @staticfct write
 -- @usage -- This true
 -- lib-tde.file.write("hallo.txt", "this is content in the file")
@@ -227,7 +227,7 @@ local function lines_from(file, match, head)
   local i = 0
   for line in io.lines(file) do
     i = i + 1
-    -- TODO: early returing in io.lines results in not closing the filedescriptor
+    -- TODO: early returning in io.lines results in not closing the filedescriptor
     if head ~= nil and i > head then
       return lines
     end
@@ -258,7 +258,7 @@ end
 
 --- Return a table of filename found in a directory
 -- @tparam string dir The path to the directory, can be both absolute or relative.
--- @treturn table an iterable table containg all files in the directory
+-- @treturn table an iterable table containing all files in the directory
 -- @staticfct list_dir
 -- @usage -- This returns a table
 -- lib-tde.file.list_dir("/etc") -> {1:"/etc/passwd", 2:"/etc/shadow", 3:"/etc/hosts", ...}
@@ -266,7 +266,7 @@ local function list_dir(str)
   if not (type(str) == "string") then
     return {}
   end
-  -- use posix complient checks
+  -- use posix compliant checks
   local M = require("posix.dirent")
   local ok, files = pcall(M.dir, str)
   if not ok then
@@ -282,9 +282,9 @@ local function list_dir(str)
   return ABS_files
 end
 
---- Return a table of filename found in a directory and all child directories (be carefull for big directories)
+--- Return a table of filename found in a directory and all child directories (be careful for big directories)
 -- @tparam string dir The path to the directory, can be both absolute or relative.
--- @treturn table an iterable table containg all files in the directory
+-- @treturn table an iterable table containing all files in the directory
 -- @staticfct list_dir_full
 -- @usage -- This returns a table
 -- lib-tde.file.list_dir_full("/etc") -> {1:"/etc/passwd", 2:"/etc/ssh/sshd_config", 3:"/etc/pacman/pacman.conf", ...}

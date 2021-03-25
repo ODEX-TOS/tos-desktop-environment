@@ -29,7 +29,7 @@ local function create_file(location, value)
     file:close()
 end
 
--- WARNING: Be carefull with this function
+-- WARNING: Be careful with this function
 -- It removes files for the filesystem
 local function rm_file(location)
     os.remove(location)

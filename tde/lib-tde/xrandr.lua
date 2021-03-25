@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- Separating Multiple Monitor functions as a separeted module (taken from awesome wiki)
+-- Separating Multiple Monitor functions as a separated module (taken from awesome wiki)
 local gtable = require("gears.table")
 
 local naughty = require("naughty")

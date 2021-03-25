@@ -76,7 +76,7 @@ signals.connect_primary_theme_changed(
 ruled.notification.connect_signal(
 	"request::rules",
 	function()
-		-- Critical notifs
+		-- Critical notifications
 		ruled.notification.append_rule {
 			rule = {urgency = "critical"},
 			properties = {
@@ -89,7 +89,7 @@ ruled.notification.connect_signal(
 			}
 		}
 
-		-- Normal notifs
+		-- Normal notifications
 		ruled.notification.append_rule {
 			rule = {urgency = "normal"},
 			properties = {
@@ -102,7 +102,7 @@ ruled.notification.connect_signal(
 			}
 		}
 
-		-- Low notifs
+		-- Low notifications
 		ruled.notification.append_rule {
 			rule = {urgency = "low"},
 			properties = {
@@ -220,7 +220,7 @@ naughty.connect_signal(
 			widget = naughty.list.actions
 		}
 
-		-- Notifbox Blueprint
+		-- Notification box Blueprint
 		naughty.layout.box {
 			notification = n,
 			type = "notification",

@@ -26,7 +26,7 @@
 -- A helper script should use this file as the following:
 -- tde-client "_G.dev_widget_refresh('the.import.location.of.the.new.widget')"
 -- This will update the widget that is in that file
--- you can hook this up to a inotify script to auto load the widget :)
+-- you can hook this up to an inotify script to auto load the widget :)
 
 local awful = require("awful")
 local wibox = require("wibox")
@@ -109,7 +109,7 @@ screen.connect_signal(
             -- remove the widget in the container
             -- as it is a developer widget and can cause memory and cpu leaks
             view_container:reset()
-            -- we also perform a garbage collection cycle as we don't know what happend with the widget
+            -- we also perform a garbage collection cycle as we don't know what happens with the widget
             collectgarbage("collect")
         end
 

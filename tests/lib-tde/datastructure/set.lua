@@ -36,7 +36,7 @@ function test_data_structure_set_api_exists()
     assert(type(map.exists) == "function", "set should have a exists function")
     assert(type(map.add) == "function", "set should have a add function")
     assert(type(map.remove) == "function", "set should have a remove function")
-    assert(type(map.itterate) == "function", "set should have a itterate function")
+    assert(type(map.iterate) == "function", "set should have a itterate function")
     assert(type(map.to_list) == "function", "set should have a to_list function")
     assert(type(map.to_ordered_list) == "function", "set should have a to_ordered_list function")
 
@@ -77,7 +77,7 @@ function test_data_structure_set_works_with_number_as_key()
     assert(not map.exists(1), "The set should't have a: '1' key in it")
 end
 
-function test_data_structure_set_itterator()
+function test_data_structure_set_iterator()
     local map = set()
     for i = 1, 10, 1 do
         print("Adding: " .. tostring(i*2))
@@ -86,8 +86,8 @@ function test_data_structure_set_itterator()
 
     assert(#(map.to_list()) == 10, "Expected 10 elements but got: " .. #(map.to_list()))
 
-    for index, item in map.itterate() do
-        assert(item == (index*2), "The itterator gives a wrong result for the given index " .. item .. ":" .. index*2)
+    for index, item in map.iterate() do
+        assert(item == (index*2), "The iterator gives a wrong result for the given index " .. item .. ":" .. index*2)
     end
 end
 

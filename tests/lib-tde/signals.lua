@@ -255,18 +255,18 @@ function test_emit_mouse_speed()
 end
 
 function test_connect_mouse_accel()
-    assert(signals.connect_mouse_accellaration, "Make sure the signal connect_mouse_accellaration exists")
+    assert(signals.connect_mouse_acceleration, "Make sure the signal connect_mouse_acceleration exists")
     assert(
-        type(signals.connect_mouse_accellaration) == "function",
-        "Make sure connect_mouse_accellaration is a signal and a function"
+        type(signals.connect_mouse_acceleration) == "function",
+        "Make sure connect_mouse_acceleration is a signal and a function"
     )
 end
 
 function test_emit_mouse_accel()
-    assert(signals.emit_mouse_accellaration, "Make sure the signal emit_mouse_accellaration exists")
+    assert(signals.emit_mouse_acceleration, "Make sure the signal emit_mouse_acceleration exists")
     assert(
-        type(signals.emit_mouse_accellaration) == "function",
-        "Make sure emit_mouse_accellaration is a signal and a function"
+        type(signals.emit_mouse_acceleration) == "function",
+        "Make sure emit_mouse_acceleration is a signal and a function"
     )
 end
 

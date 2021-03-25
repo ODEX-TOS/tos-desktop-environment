@@ -146,7 +146,7 @@ local left_panel_func = function(s)
       function()
         left_panel.visible = false
 
-        -- Change to notif mode on close
+        -- Change to notify mode on close
         if grabber then
           grabber:stop()
         end
