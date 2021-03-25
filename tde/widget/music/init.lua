@@ -180,6 +180,9 @@ local cover =
 }
 
 local function checkCover()
+  if gears.surface.clear_cache ~= nil then
+    gears.surface.clear_cache()
+  end
   if filehandle.exists("/tmp/cover.jpg") then
     cover.icon:set_image(gears.surface("/tmp/cover.jpg"))
   else
