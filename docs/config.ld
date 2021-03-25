@@ -24,8 +24,8 @@ Welcome to the documentation for TDE. Below you find an
 overview of the individual parts which links to the full documentation.
 
 If you area new user you should read our wiki https://wiki.odex.be for more introductory information
-
 ]]
+
 topics={
     '00-authors.md',
     '01-readme.md',
@@ -35,6 +35,7 @@ topics={
     '05-awesomerc.md',
     '06-appearance.md',
     '07-my-first-awesome.md',
+    '08-client-layout-system.md',
     '09-options.md',
     '16-using-cairo.md',
     '17-porting-tips.md',

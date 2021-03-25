@@ -37,15 +37,16 @@ This document was last updated at commit v4.3-197-g9085ed631.
 
 ## Noteworthy fixes
 
--   `$SOURCE_DATE_EPOCH` is honored in more places when generating the
-    documentation
--   Fix setting shapes via `awful.rules`
--   Set `_NET_WM_DESKTOP` for sticky windows correctly
--   Under complicated circumstances, AwesomeWM could have run Lua code while
-    having the X11 server grabbed. This had the potential to cause deadlocks with
-    Lua code using `io.popen`. Usage of `io.popen` is still strongly discouraged.
--   `wibox{ input_passthrough = true }` now works correctly. Previously, the
-    property could only be set on already-constructed wiboxes.
+* `$SOURCE_DATE_EPOCH` is honored in more places when generating the
+  documentation
+* Fix setting shapes via `awful.rules`
+* Set `_NET_WM_DESKTOP` for sticky windows correctly
+* Under complicated circumstances, AwesomeWM could have run Lua code while
+  having the X11 server grabbed. This had the potential to cause deadlocks with
+  Lua code using `io.popen`. Usage of `io.popen` is still strongly discouraged.
+* `wibox{ input_passthrough = true }` now works correctly. Previously, the
+  property could only be set on already-constructed wiboxes.
+* Remove unused first parameter from multiple widget constructors: `wibox.container.place`,  `wibox.container.radialprogressbar`,  `wibox.layout.stack`,  `wibox.widget.slider`.
 
 ## Behavior changes
 
