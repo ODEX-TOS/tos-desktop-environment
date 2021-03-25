@@ -79,9 +79,13 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
 
     -- if the duration is 0 then we should 'teleport' to the end state
     if duration == 0 then
+        print("Animation is zero")
         -- iterate over all key value pairs and assign them to the subject
         for key, value in pairs(target) do
             subject[key] = value
+        end
+        if end_callback then
+            end_callback()
         end
         return
     end
