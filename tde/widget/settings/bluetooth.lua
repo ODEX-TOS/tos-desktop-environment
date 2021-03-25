@@ -334,6 +334,9 @@ return function()
   )
 
   local function is_connected(mac, stdout)
+    if stdout == nil then
+      return false
+    end
     return (stdout:find(mac) ~= nil)
   end
 
