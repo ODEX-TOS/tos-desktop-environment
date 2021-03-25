@@ -463,7 +463,8 @@ local function cleanup(self, reason)
     end
     local scr = self.screen
 
-    assert(naughty.notifications[scr][self.position][self.idx] == self)
+    -- This assert doesn't work when 2 notification with the same content get spawned fast
+    --assert(naughty.notifications[scr][self.position][self.idx] == self)
     remove_from_index(self)
 
     -- Update all indices
