@@ -113,6 +113,14 @@ function surface.load_uncached(_surface)
     return do_load_and_handle_errors(_surface, surface.load_uncached_silently)
 end
 
+--- Clear the image cache
+-- This is needed when adding a file with the same name but different content
+-- @staticfct gears.clear_cache
+function surface.clear_cache()
+    surface_cache = setmetatable({}, { __mode = 'v' })
+    collectgarbage("collect")
+end
+
 --- Try to convert the argument into an lgi cairo surface.
 -- This is usually needed for loading images by file name. Errors are handled
 -- via `gears.debug.print_error`.
