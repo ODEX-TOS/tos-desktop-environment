@@ -63,7 +63,7 @@ local calculator_screen =
 --  #        ####  #    #  ####    #   #  ####  #    #  ####
 
 -- format integer numbers with delimiters every 3 numbers
--- eg 123,456 or 12,345 or 345
+-- e.g. 123,456 or 12,345 or 345
 local formatInt = function(number, seperator)
 	local sign = number:sub(1, 1)
 	if (sign == "-") then
@@ -87,7 +87,7 @@ local formatInt = function(number, seperator)
 	end
 	return sign .. out
 end
--- format digits including rational numbers eg 12,345.0607
+-- format digits including rational numbers e.g. 12,345.0607
 local formatDigits = function(number, seperator)
 	local i = 0
 	local out = ""
@@ -112,7 +112,7 @@ local formatDigits = function(number, seperator)
 end
 
 -- perform calculations that doesn't have a signed number as a beginning
--- format basic mathematical expressions eg 777,777 * 99,999.03
+-- format basic mathematical expressions e.g. 777,777 * 99,999.03
 -- or 123;456 ^ 2
 local unsignedNumberFormat = function(calculation, seperator)
 	local i = 0
@@ -132,7 +132,7 @@ local unsignedNumberFormat = function(calculation, seperator)
 	return out
 end
 
--- format basic mathematical expressions eg 777,777 * 99,999.03
+-- format basic mathematical expressions e.g. 777,777 * 99,999.03
 -- or -123,456 ^ 2
 -- can have a - as the first parameter
 local numberFormat = function(calculation, seperator)
@@ -158,7 +158,7 @@ local calculate = function()
 	local func = assert(load("return " .. string_expression))
 	local ans = tostring(func())
 
-	-- Convert -nan to undefined
+	-- Convert -NaN to undefined
 	if ans == "-nan" then
 		calcu_screen:set_text("undefined")
 		return

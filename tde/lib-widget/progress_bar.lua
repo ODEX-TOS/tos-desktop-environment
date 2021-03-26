@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Create a new progress_bar (like a slider, but you can't use it as an input)
 --
--- Usefull to display percentage data
+-- Useful to display percentage data
 --
 --    -- make a progress bar and set it to 20%
 --    local bar = lib-widget.progress_bar()
@@ -53,7 +53,7 @@ local gears = require("gears")
 local mat_slider = {mt = {}}
 
 --- Set the value of the progress_bar
--- @tparam number value the value in percentag (0-100)
+-- @tparam number value the value in percentage (0-100)
 -- @staticfct set_value
 -- @usage -- Set the value of the progress_bar in percentage
 -- progress_bar:set_value()

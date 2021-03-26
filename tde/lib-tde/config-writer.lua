@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Write/override a configuration file to contain new settings.
 --
--- Usefull when you want to override user settings.
+-- Useful when you want to override user settings.
 -- Such as in the settings app.
 --
 -- @author Tom Meyers
@@ -40,7 +40,7 @@ local file_handle = require("lib-tde.file")
 -- @tparam string file The path to the file, can be both absolute or relative.
 -- @tparam string field The specific configuration field to update
 -- @tparam string value The value that the configuration field should contain
--- @treturn bool if the write was succesfull
+-- @treturn bool if the write was successful
 -- @staticfct update_entry
 -- @usage -- This will create the content in hallo.txt to var=value
 -- lib-tde.file.update_entry("hallo.txt", "var", "value")
@@ -48,7 +48,7 @@ local function update_entry(file, field, value)
     if not file_handle.exists(file) then
         return false
     end
-    -- lets parse the existsing file
+    -- lets parse the existing file
     local parsed = parser(file)
     -- our field doesn't exist, let's add it
     if parsed[field] == nil then

@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- Create a new scrollbox widget
 --
--- Usefull when you want the internal widget to scroll
+-- Useful when you want the internal widget to scroll
 --
 --    -- make a widget scrollable
 --    local scrollbox = lib-widget.scrollbox(lib-widget.imagebox("file.png"))
@@ -41,7 +41,7 @@ local wibox = require("wibox")
 --- Create a new scrollable widget
 -- @tparam widget scrollable The widget that we make scrollable
 -- @treturn widget The scrollbox widget
--- @staticfct seperator
+-- @staticfct separator
 -- @usage -- This will create a scrollbox out of the internal widget
 -- -- make a widget scrollable
 -- local scrollbox = lib-widget.scrollbox(lib-widget.imagebox("file.png"))
@@ -60,7 +60,7 @@ return function(scrollable)
 
     widget = wibox.container.margin(scrollable)
 
-    --- Reset the scrollbox to its inital state
+    --- Reset the scrollbox to its initial state
     -- @staticfct reset
     -- @usage -- This will reset the scroll state
     -- -- reset the scrollbox as it was initially

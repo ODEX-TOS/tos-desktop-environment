@@ -197,7 +197,7 @@ local function notif_generate(title, message, icon, noti)
   notif_actions:connect_signal(
     "button::press",
     function(_, _, _, _)
-      -- Dont let the user make the notification center null
+      -- Don't let the user make the notification center null
       if #notif_layout.children == 1 then
         notif_layout:reset(notif_layout)
         _G.notification_firstime = true
@@ -208,11 +208,11 @@ local function notif_generate(title, message, icon, noti)
     end
   )
 
-  -- Delete notification if the generated notif was pressed
+  -- Delete notification if the generated notification was pressed
   notif_template:connect_signal(
     "button::press",
     function(_, _, _, _)
-      -- Dont let the user make the notification center null
+      -- Don't let the user make the notification center null
       if #notif_layout.children == 1 then
         notif_layout:reset(notif_layout)
         _G.notification_firstime = true
@@ -227,7 +227,7 @@ local function notif_generate(title, message, icon, noti)
   return notif_template
 end
 
--- add a message to an empty notif center
+-- add a message to an empty notification center
 local function add_empty()
   notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
 end
@@ -249,7 +249,7 @@ naughty.connect_signal(
   "request::display",
   function(n)
     if _G.notification_firstime then
-      -- Delete empty message if the 1st notif is generated
+      -- Delete empty message if the 1st notification is generated
       notif_layout:remove(1)
       _G.notification_firstime = false
     end

@@ -27,7 +27,7 @@ local file_exists = require("lib-tde.file").exists
 local split = require("lib-tde.function.common").split
 
 -- suffix the icon name with dark if light theme is enabled (icons have an inverted color compared with the background)
--- light theme is enabled if the backgrund property is set to light in colors.conf
+-- light theme is enabled if the background property is set to light in colors.conf
 -- This function then checks to see if the new file exists otherwise we default to the normal icon
 return function(icon, backgrnd)
   if backgrnd == nil then

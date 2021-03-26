@@ -23,12 +23,12 @@
 --SOFTWARE.
 ]]
 ---------------------------------------------------------------------------
--- Create a new seperator widget
+-- Create a new separate widget
 --
--- Usefull when you want to seperate widgets from eachother
+-- Useful when you want to separate widgets from eachother
 --
---    -- seperator that is 20 pixels high
---    local seperator = lib-widget.seperator(dpi(20))
+--    -- separate that is 20 pixels high
+--    local separate = lib-widget.separate(dpi(20))
 --
 --
 -- @author Tom Meyers
@@ -38,15 +38,15 @@
 
 local wibox = require("wibox")
 
---- Create a new seperator widget
--- @tparam[opt] number size The height of the seperator
--- @tparam[opt] string orientation In whic way it the seperator oritented (horizontal or vertical)
--- @tparam[opt] number opacity How visible is the seperator (Between 0 and 1)
--- @treturn widget The seperator widget
--- @staticfct seperator
--- @usage -- This will create a seperator that is 20 pixels high
--- -- seperator that is 20 pixels high
--- local seperator = lib-widget.seperator(dpi(20))
+--- Create a new separate widget
+-- @tparam[opt] number size The height of the separate
+-- @tparam[opt] string orientation In which way it the separate oriented (horizontal or vertical)
+-- @tparam[opt] number opacity How visible is the separate (Between 0 and 1)
+-- @treturn widget The separate widget
+-- @staticfct separate
+-- @usage -- This will create a separate that is 20 pixels high
+-- -- separate that is 20 pixels high
+-- local separate = lib-widget.separate(dpi(20))
 return function(height, orientation, opacity)
     height = height or 20
     orientation = orientation or "horizontal"

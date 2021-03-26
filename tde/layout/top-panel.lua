@@ -40,12 +40,12 @@ local pluginsright = require("lib-tde.plugin-loader")("topbar-right")
 local pluginscenter = require("lib-tde.plugin-loader")("topbar-center")
 local pluginsleft = require("lib-tde.plugin-loader")("topbar-left")
 
--- Clock / Calendar 12h format
+-- Clock / Calendar 12 h format
 local textclock = wibox.widget.textclock('<span font="Roboto bold 10">%l:%M %p</span>')
 
 local weak_hardware = general["weak_hardware"] == "0" or general["weak_hardware"] == nil
 
--- Clock / Calendar 12AM/PM fornat
+-- Clock / Calendar 12 AM/PM format
 -- local textclock = wibox.widget.textclock('<span font="Roboto Mono bold 11">%I\n%M</span>\n<span font="Roboto Mono bold 9">%p</span>')
 -- textclock.forced_height = 56
 local clock_widget = wibox.container.margin(textclock, dpi(0), dpi(0))

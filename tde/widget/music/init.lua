@@ -180,10 +180,13 @@ local cover =
 }
 
 local function checkCover()
+  if gears.surface.clear_cache ~= nil then
+    gears.surface.clear_cache()
+  end
   if filehandle.exists("/tmp/cover.jpg") then
-    cover.icon:set_image(gears.surface.load_uncached("/tmp/cover.jpg"))
+    cover.icon:set_image(gears.surface("/tmp/cover.jpg"))
   else
-    cover.icon:set_image(gears.surface.load_uncached(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
+    cover.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
   end
 end
 
@@ -279,7 +282,7 @@ widget.icon:set_image(theme(PATH_TO_ICONS .. "music" .. ".svg"))
 -- Update music info on Initialization
 local function initMusicInfo()
   -- set the cover to vinyl until the right image is loaded
-  cover.icon:set_image(gears.surface.load_uncached(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
+  cover.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
   apps.bins.coverUpdate()
   checkCover()
   _G.getTitle()

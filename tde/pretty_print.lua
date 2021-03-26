@@ -245,7 +245,7 @@ local function find_next_quote_index(splitted_line, first_quote_index)
     return nil
 end
 
--- find string that potentially have been splitted and create a seperate token for them
+-- find string that potentially have been splitted and create a separate token for them
 local function join_string(splitted_line)
     local result = {}
     local i = 1
@@ -440,7 +440,7 @@ local function tokenize_lines(line, splitted, separators, token_depth)
                 }
             )
         elseif is_number(token) then
-            -- this edge case denotes the end of a multiline comment
+            -- this edge case denotes the end of a multi-line comment
             -- TODO: this could also be a multi line string, currently not supported
             table.insert(
                 tokens,

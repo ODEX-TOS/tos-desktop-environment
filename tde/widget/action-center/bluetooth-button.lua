@@ -75,7 +75,7 @@ local widget_button =
   end
 )
 
--- Tootltip
+-- Tooltip
 awful.tooltip {
   objects = {widget_button},
   mode = "outside",

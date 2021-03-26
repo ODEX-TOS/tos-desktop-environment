@@ -26,7 +26,7 @@
 -- Serialize lua objects (tables) into a string and back
 --
 -- You can easily convert lua objects into a serialized representation
--- This is usefull for storing and restoring lua objects
+-- This is useful for storing and restoring lua objects
 --
 --    serialize({1,2,3, {hello="world"}}) -- becomes "[1,2,3, {hello='world'}]" (string)
 --    deserialize("[1,2,3, {hello='world'}]") -- becomes {1,2,3, {hello="world"}} (table)
@@ -35,7 +35,7 @@
 --   serialize_to_file("file.json", {1,2,3}) -- serialize the data and send it to the file
 --   deserialize_from_file("file.json") -- returns {1,2,3}
 --
--- This module tries to improve reusage of know variables throughout the tde infrastructure.
+-- This module tries to improve re-usage of know variables throughout the tde infrastructure.
 --
 --
 -- @author Tom Meyers

@@ -25,7 +25,7 @@
 ---------------------------------------------------------------------------
 -- This module exposes an api to manipulate mouse events through libinput
 --
--- Usefull functional for setting mouse acceleration, natural scrolling, mouse speed and more
+-- Useful functional for setting mouse acceleration, natural scrolling, mouse speed and more
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
@@ -79,13 +79,13 @@ local function getInputDevices()
     return result
 end
 
---- Set the accellaration of a specific input device through xinput
+--- Set the acceleration of a specific input device through xinput
 -- @tparam number id the identifier of the mouse @see getInputDevices
--- @tparam number speed The accellaration speed of the mouse, 1.0 means no accellaration and anything above indicates faster speed than default as a multiplier
--- @staticfct setAccellaration
--- @usage -- Make the "HID-compliant Mouse Trust Gaming Mouse" accellarate by twice its normal speed
---    setAccellaration(11, 2)
-local function setAccellaration(id, speed)
+-- @tparam number speed The acceleration speed of the mouse, 1.0 means no acceleration and anything above indicates faster speed than default as a multiplier
+-- @staticfct setAcceleration
+-- @usage -- Make the "HID-compliant Mouse Trust Gaming Mouse" accelerate by twice its normal speed
+--    setAcceleration(11, 2)
+local function setAcceleration(id, speed)
     if type(id) ~= "number" then
         return
     end
@@ -100,10 +100,10 @@ local function setAccellaration(id, speed)
     end
 
     local cmd = string.format("xinput set-prop %d 'libinput Accel Speed' %.1f", id, speed)
-    print("Setting mouse accellaration speed: " .. cmd)
+    print("Setting mouse acceleration speed: " .. cmd)
     execute(cmd)
 
-    signals.emit_mouse_accellaration(
+    signals.emit_mouse_acceleration(
         {
             id = id,
             speed = speed
@@ -111,7 +111,7 @@ local function setAccellaration(id, speed)
     )
 end
 
---- Set the accellaration of a specific input device through xinput
+--- Set the acceleration of a specific input device through xinput
 -- @tparam number id the identifier of the mouse @see getInputDevices
 -- @tparam number speed The default speed of the mouse, 1.0 means standard libinput speed anything larger is faster, anything smaller is slower (minimum speed is 0.01)
 -- @staticfct setMouseSpeed
@@ -179,7 +179,7 @@ end
 
 return {
     getInputDevices = getInputDevices,
-    setAccellaration = setAccellaration,
+    setAcceleration = setAcceleration,
     setMouseSpeed = setMouseSpeed,
     setNaturalScrolling = setNaturalScrolling
 }

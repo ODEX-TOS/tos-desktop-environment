@@ -40,7 +40,7 @@
 --    -- In this example we use out cubic (see the tweening diagram below)
 --    animate(2, example, { width=200, height=200 }, "outCubic")
 --
--- Usefull when you want to override user settings.
+-- Useful when you want to override user settings.
 -- Such as in the settings app.
 --
 -- The possible tween values plotted:
@@ -60,12 +60,12 @@ local tween = require("lib-tde.animations.tween")
 local freq = math.max(1 / 24, 1 / hardware.getDisplayFrequency())
 
 --- Create an animation out of a lua table
--- @tparam number duration Howlong should the animation take
+-- @tparam number duration How long should the animation take
 -- @tparam wibox subject The subject to animate
 -- @tparam table target A table of properties of the subject to tween (these will be animated)
 -- @tparam string easing The easing function to use
 -- @tparam[opt] function end_callback This function will be called when the animation finished
--- @tparam[opt] number delay Howlong to wait until we start the animation
+-- @tparam[opt] number delay How long to wait until we start the animation
 -- @tparam[opt] wibox widget Alternative widget we use to hook animation properties on
 -- @tparam[opt] function tween_callback A callback that happens on every animation trigger (every frame)
 -- @staticfct createAnimObject
@@ -79,9 +79,13 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
 
     -- if the duration is 0 then we should 'teleport' to the end state
     if duration == 0 then
+        print("Animation is zero")
         -- iterate over all key value pairs and assign them to the subject
         for key, value in pairs(target) do
             subject[key] = value
+        end
+        if end_callback then
+            end_callback()
         end
         return
     end

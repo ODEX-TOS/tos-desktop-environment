@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 -- This module listens for events and stores then
--- This makes certain data persistant
+-- This makes certain data persistent
 
 local signals = require("lib-tde.signals")
 local serialize = require("lib-tde.serialize")
@@ -105,7 +105,7 @@ local function setup_state(state)
         for _, device in ipairs(devices) do
             -- if they exist then set their properties
             if state.mouse[device.name] ~= nil then
-                mouse.setAccellaration(device.id, state.mouse[device.name].accel or 0)
+                mouse.setAcceleration(device.id, state.mouse[device.name].accel or 0)
                 mouse.setMouseSpeed(device.id, state.mouse[device.name].speed or 1)
                 mouse.setNaturalScrolling(device.id, state.mouse[device.name].natural_scroll or false)
             end
@@ -118,7 +118,7 @@ end
 save_state = load()
 setup_state(save_state)
 
--- xinput id's are not persistant across reboots
+-- xinput id's are not persistent across reboots
 -- thus we map the xinput id to the device name, which is always the same
 -- in case our state doesn't have the id yet we create it
 local function get_mouse_state_id(id)
@@ -187,7 +187,7 @@ signals.connect_mouse_speed(
     end
 )
 
-signals.connect_mouse_accellaration(
+signals.connect_mouse_acceleration(
     function(tbl)
         print("Saving mouse id: " .. tbl.id .. " to accel value: " .. tbl.speed)
         local id = get_mouse_state_id(tbl.id)

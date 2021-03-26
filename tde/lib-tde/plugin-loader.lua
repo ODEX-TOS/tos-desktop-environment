@@ -70,7 +70,7 @@ local function handle_plugin(value, name)
             print("Disabled widget: '" .. value .. "' due to low network requirements")
         else
             -- only require plugin if it exists
-            -- otherwise the user entered a wrong pluging
+            -- otherwise the user entered a wrong plugin
             return true, require(value)
         end
     elseif dirExists(os.getenv("HOME") .. "/.config/tde/" .. value) then

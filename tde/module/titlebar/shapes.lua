@@ -67,7 +67,7 @@ local function circle_filled(color, size)
     return surface
 end
 
--- Returns a vertical gradient pattern going from cololr_1 -> color_2
+-- Returns a vertical gradient pattern going from color_1 -> color_2
 local function duotone_gradient_vertical(color_1, color_2, height, offset_1, offset_2)
     local fill_pattern = cairo.Pattern.create_linear(0, 0, 0, height)
     local r, g, b, a

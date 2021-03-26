@@ -23,19 +23,19 @@
 --SOFTWARE.
 ]]
 ---------------------------------------------------------------------------
--- This module contains usefull helper functions when working with batteries.
+-- This module contains useful helper functions when working with batteries.
 --
 -- To get the charging status of the battery you must do an asynchronous call to not block the main thread
 -- a function call must be wrapped in a `awful.spawn.easy_async_with_shell`
 --
 --     awful.spawn.easy_async_with_shell(lib-tde.function.battery.chargedScript, function(stdout)
---        lib-tde.function.battery.isBatteryCharging(stdout) -- returns is the battery is charging eg false
+--        lib-tde.function.battery.isBatteryCharging(stdout) -- returns is the battery is charging e.g. false
 --     end)
 --
 -- Another example is to check the current battery percentage
 --
 --     awful.spawn.easy_async_with_shell(lib-tde.function.battery.upowerBatteryScript, function(stdout)
---        lib-tde.function.battery.getBatteryInformationFromUpower(stdout) -- returns battery percentage eg 87
+--        lib-tde.function.battery.getBatteryInformationFromUpower(stdout) -- returns battery percentage e.g. 87
 --     end)
 --
 -- @author Tom Meyers

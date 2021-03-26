@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- This profile shoud run in O(n) times
+-- This profile should run in O(n) times
 
 require("lib-tde.luapath")
 local i18n = require("lib-tde.i18n")

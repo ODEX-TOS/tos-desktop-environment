@@ -26,9 +26,9 @@
 -- This module handles translation inside of TDE
 --
 -- You can use the default translations of TDE inside of our plugin.
--- Alternativly you can add more translations into tde, which is useful if your translations don't exist yet
+-- Alternatively you can add more translations into tde, which is useful if your translations don't exist yet
 --
---     -- i18n is exposed to the plugin authors without needing to redeclare it
+--     -- i18n is exposed to the plugin authors without needing to re-declare it
 --     -- They can already use default translations
 --     i18n.translate("Calculator")
 --     -- They can also add custom translations to the current language
@@ -37,7 +37,7 @@
 --         hello = "hallo",
 --         day = "dag",
 --          })
---     else if i18n.system_language() == "fr"
+--     else if i18n.system_language() == "fr"journée
 --         i18n.custom_translations({
 --          hello = "bonjour",
 --         day = "journée",
@@ -97,7 +97,7 @@ end
 --- Used to initialize i18n, (detect system language and load in translations)
 -- @tparam string default The default language to use in case no translations exist for the system language
 -- @staticfct init
--- @usage -- Initialize i18n if the system language is not found default to english
+-- @usage -- Initialize i18n if the system language is not found default to English
 -- i18n.init("en")
 local function init(default)
     if init_loaded then
@@ -116,14 +116,14 @@ end
 --- Used to translate the line into the user language
 -- @tparam string str The string to translate
 -- @staticfct translate
--- @usage -- translate the word hello to the native language of the user
+-- @usage -- The word hello gets translated to the native language of the user
 -- i18n.translate("hello") -- becomes hallo if the system language is dutch
 local function translate(str)
     if not init_loaded then
         print("I18N - Cannot translate before initializing i18n use i18n.init() ", warn)
     end
-    -- TDE treads all input strings into translation as english
-    -- We always translate from english to an unknown language
+    -- TDE treads all input strings into translation as English
+    -- We always translate from English to an unknown language
     -- This statement bypasses the overhead of translating (because we don't need to translate)
     if system_language == "en" then
         return str
@@ -141,13 +141,13 @@ local function translate(str)
 end
 
 --- Add custom translations into the translation lookup table
--- @tparam table table The table holding key value pairs containing the new translations
+-- @tparam table tbl The table holding key value pairs containing the new translations
 -- @staticfct custom_translations
 -- @usage -- add the translation hello -> hi
 -- i18n.custom_translations({hello="hi"})
 -- i18n.translate("hello") -- returns hi
-local function custom_translations(table)
-    for k, v in pairs(table) do
+local function custom_translations(tbl)
+    for k, v in pairs(tbl) do
         translations[k] = v
     end
 end
@@ -163,7 +163,7 @@ end
 --- Change the system language to a new value (reloading the translation table, all old custom translations become lost)
 -- @tparam string lang The new language to use
 -- @staticfct set_system_language
--- @usage -- Update the language to english
+-- @usage -- Update the language to English
 -- i18n.set_system_language("en")
 local function set_system_language(lang)
     print("I18N - setting system language to " .. lang)

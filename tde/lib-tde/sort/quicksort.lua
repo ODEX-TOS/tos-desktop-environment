@@ -25,10 +25,10 @@
 ---------------------------------------------------------------------------
 -- Lua implementation of quicksort
 --
--- Quicksort is a divide and concore approach to sorting
--- This is a crude implementation that provides decent sorting in most usecases
+-- Quicksort is a divide and concur approach to sorting
+-- This is a crude implementation that provides decent sorting in most use cases
 -- However, it might not be the most optimal sorting algorithm for your case.
--- This module can have the comparision replaced by the user, so that you can also sort tables, numbers, strings etc
+-- This module can have the comparison replaced by the user, so that you can also sort tables, numbers, strings etc
 --
 -- The default comparison function looks as followed:
 --
@@ -69,18 +69,18 @@
 --
 return function(list, func)
     -- set our comparison function to the internal one or to the one provided by the user
-    local comparision = function(smaller, bigger)
+    local comparison = function(smaller, bigger)
         return smaller < bigger
     end
     if type(func) == "function" then
-        comparision = func
+        comparison = func
     end
 
     local function partition(arr, low, high)
         local pivot = arr[high]
         local index = low
         for j = low, high do
-            if comparision(arr[j], pivot) then
+            if comparison(arr[j], pivot) then
                 local temp = arr[index]
                 arr[index] = arr[j]
                 arr[j] = temp

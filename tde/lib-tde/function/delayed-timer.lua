@@ -50,9 +50,9 @@
 local gears = require("gears")
 
 --- Async callback trigger, that starts after x seconds
--- @tparam number timeout Howlong to wait until we call the callback again
--- @tparam function callback The callback function to call when the timeout happend
--- @tparam number delay Howlong to wait until we start the async timer
+-- @tparam number timeout How long to wait until we call the callback again
+-- @tparam function callback The callback function to call when the timeout happened
+-- @tparam number delay How long to wait until we start the async timer
 -- @tparam[opt] bool only_delay By default we call the callback on creation, when true we don't call the callback
 -- @staticfct delayed-timer
 -- @usage -- lib-tde.function.delayed-timer(1, function()

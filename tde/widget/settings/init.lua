@@ -262,7 +262,7 @@ local function make_view(i, t, v, a)
   }
 
   -- weird hack in order to be able to use the setActiveView(-1, btn) line in the callback
-  -- aka making sure a refrence to the head pointer stays the same, even during construction
+  -- aka making sure a reference to the head pointer stays the same, even during construction
   local btn
   btn =
     button(

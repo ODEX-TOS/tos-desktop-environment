@@ -181,7 +181,7 @@ local function bydirection(dir, c, swap, max)
     float = (c.floating or alayout.get(c.screen) == alayout.suit.floating)
   end
 
-  -- Move the client if floating, swaping wont work anyway
+  -- Move the client if floating, swapping wont work anyway
   if swap and float then
     c:geometry((max and float_move_max or float_move)(dir, c))
     display_wiboxes(nil, nil, float, swap, c)
@@ -296,7 +296,7 @@ function module.display(_, _, _, _, is_swap, _)
     geomtbl[i] = cl:geometry()
   end
 
-  -- Sometime, there is no focussed clients
+  -- Sometime, there is no focused clients
   if not c then
     c = geomtbl[1] or cltbl[1]
   end

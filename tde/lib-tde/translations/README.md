@@ -5,7 +5,7 @@ These are used to specify the translation to use for `TDE`
 
 The translation file to be used depends on the `$LANG` env variable
 
-Thus english maps to -> 'en'
+Thus English maps to -> 'en'
 Dutch to 'nl'
 French to 'fr'
 etc

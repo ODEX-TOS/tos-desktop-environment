@@ -401,7 +401,7 @@ return function()
     -- check if it is a file
     if filesystem.exists(v) then
       local base = filehandle.basename(v)
-      -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+      -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
       local width = dpi(300)
       local height = (width / 16) * 9
       local scaledImage = tempDisplayDir .. "/" .. base
@@ -478,7 +478,7 @@ return function()
           end
           for k, v in pairs(screens) do
             local base = filehandle.basename(v)
-            -- TODO: 16/9 aspect ratio (we might want to calulate it form screen space)
+            -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
             local width = dpi(600)
             local height = (width / 16) * 9
             monitorScaledImage = tempDisplayDir .. "/monitor-" .. base

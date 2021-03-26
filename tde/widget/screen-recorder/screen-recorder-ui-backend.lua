@@ -216,7 +216,7 @@ local delete_key = function()
 end
 
 local apply_new_settings = function()
-	-- Get the text on texbox
+	-- Get the text on textbox
 	sr_user_resolution = sr_resolution_tbox:get_text()
 	sr_user_offset = sr_offset_tbox:get_text()
 	sr_user_fps = sr_fps_tbox:get_text()

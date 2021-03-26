@@ -23,11 +23,11 @@
 --SOFTWARE.
 ]]
 return {
-    -- returns time in seconds with a resolution of 10000 th of a second
+    -- returns time in seconds with a resolution of 10000th of a second
     gettime = function()
         return 89.19192
     end,
-    -- emulate udp behaviour
+    -- emulate udp behavior
     udp = function()
         return {
             setpeername = function(name, value)

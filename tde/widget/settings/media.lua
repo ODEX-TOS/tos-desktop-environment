@@ -221,8 +221,8 @@ return function()
     -- If we are currently listing for microphone input
     if mic_test_pid == -1 then
       source_children:add(wibox.container.margin(button(mic_test_start_message, function()
-        -- recrod audio using arecord and pipe it into aplay
-        -- we use a buffer size of 10ms for recording and playback as that has almost no delay, but still allows recording
+        -- record audio using arecord and pipe it into aplay
+        -- we use a buffer size of 10 ms for recording and playback as that has almost no delay, but still allows recording
         local cmd = "arecord -f cd - -B 10000 | aplay -B 10000"
         -- start the process and get the pid
         mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'")

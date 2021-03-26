@@ -24,7 +24,7 @@
 ]]
 files = require("tde.lib-tde.file")
 
--- get the script lcation
+-- get the script location
 local function script_path()
     local str = debug.getinfo(2, "S").source:sub(2)
     return str:match("(.*/)")
@@ -37,7 +37,7 @@ local function create_file(location, value)
     file:close()
 end
 
--- WARNING: Be carefull with this function
+-- WARNING: Be careful with this function
 -- It removes files for the filesystem
 local function rm_file(location)
     os.remove(location)
@@ -205,7 +205,7 @@ end
 
 -- TODO: check for hidden files
 -- TODO: check that . and .. are excluded
--- TODO: verify reqursion
+-- TODO: verify recursion
 
 function test_directory_list_works()
     assert(files.list_dir("/etc"), "/etc should have some files in it")

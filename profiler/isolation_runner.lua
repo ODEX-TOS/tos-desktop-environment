@@ -29,7 +29,7 @@ _G.DISPLAY_ID = 100
 -- Takes as parameter a string called config
 -- which is the rc.lua file that should be executed with awesomewm
 -- it returns a tuple of type, assertion and boolean and stdout
--- the assertion is of type boolean and tells use if no crash occured
+-- the assertion is of type boolean and tells use if no crash occurred
 -- the boolean tells us if we found IT-test-result:true in the output
 -- this string should tell us if we encountered what we expect from the Integration Test
 -- The last element is the stdout from awesomewm
@@ -39,12 +39,12 @@ local function run_rc_config_in_xephyr(config, _, _, _)
     if os.getenv("MULTIPLIER") then
         timeout = timeout * tonumber(os.getenv("MULTIPLIER"))
     end
-    -- make sure we have the correct dependencies before running the intergation test
+    -- make sure we have the correct dependencies before running the integration test
     assert(hardware.has_package_installed("xorg-server-xephyr"))
     assert(hardware.has_package_installed("awesome-tos"))
     assert(hardware.has_package_installed("bash"))
 
-    -- we generate display values high enough to prevent collision from occuring
+    -- we generate display values high enough to prevent collision from occurring
     _G.DISPLAY_ID = _G.DISPLAY_ID + 1
     -- we prevent collision between display that are not closed yet by always increasing the number for each Integration Test
     local DISPLAY = ":" .. _G.DISPLAY_ID
