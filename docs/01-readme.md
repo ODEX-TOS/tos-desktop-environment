@@ -6,35 +6,39 @@ Awesome is a highly configurable, next generation framework window manager for X
 
 ## Building and installation
 
-After extracting the dist tarball, run:
+After extracting the dist tarball or cloning the repository, run:
 
-    make
+```sh
+make
+sudo make install
+```
 
-This will create a build directory, run `cmake` in it and build Awesome.
+This will
 
-After building is finished, you can either install via `make install`:
+1. create a build directory at `./build`,
+2. run `cmake`,
+3. build Awesome and
+4. install it to the default prefix path `/usr/local`.
 
-    make install  # you might need root permissions
+Alternatively to the above, you can generate a `.deb` or `.rpm` package, for easy installation management:
 
-or by auto-generating a .deb or .rpm package, for easy removal later on:
+```sh
+make package
 
-    make package
+sudo dpkg -i awesome-x.y.z.deb
+# or
+sudo rpm -Uvh awesome-x.y.z.rpm
+```
 
-    sudo dpkg -i awesome-x.y.z.deb
-    # or
-    sudo rpm -Uvh awesome-x.y.z.rpm
+### Advanced options and testing
 
-NOTE: Awesome uses [`cmake`](https://cmake.org) to build. In case you want to
-pass arguments to `cmake`, please use the `CMAKE_ARGS` environment variable. For
-instance:
-
-    CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/opt/awesome" make
+A full list of dependencies, more advanced build options, as well as instructions on how to use the test suite can be found [here](https://tos.odex.be/docs/10-building-and-testing.md.html).
 
 ### Installing current git master as a package receipts
 
 #### Arch Linux AUR
 
-```
+```sh
 sudo pacman -S --needed base-devel git
 git clone https://aur.archlinux.org/awesome-git.git
 cd awesome-git
@@ -43,7 +47,7 @@ makepkg -fsri
 
 #### Debian-based
 
-```
+```sh
 sudo apt build-dep awesome
 git clone https://github.com/awesomewm/awesome
 cd awesome
@@ -51,6 +55,7 @@ make package
 sudo apt install *.deb
 ```
 
+<<<<<<< HEAD
 ### Build dependencies
 
 Awesome has the following dependencies (besides a more-or-less standard POSIX
@@ -108,18 +113,24 @@ Additionally, the following optional dependencies exist:
     with external actions
 -   [xterm](https://invisible-island.net/xterm/) for various test cases
 
+=======
+>>>>>>> 6ef3a8f059a1394a6dedee368dac7eb24a8e39bc
 ## Running Awesome
 
 You can directly select Awesome from your display manager. If not, you can
 add the following line to your `.xinitrc` to start Awesome using `startx`
 or to `.xsession` to start Awesome using your display manager:
 
-    exec awesome
+```sh
+exec awesome
+```
 
 In order to connect Awesome to a specific display, make sure that
 the `DISPLAY` environment variable is set correctly, e.g.:
 
-    DISPLAY=foo.bar:1 exec awesome
+```sh
+DISPLAY=foo.bar:1 exec awesome
+```
 
 (This will start Awesome on display `:1` of the host foo.bar.)
 
@@ -143,12 +154,16 @@ problem.
 
 You can call `awesome` with `gdb` like this:
 
-    DISPLAY=:2 gdb awesome
+```sh
+DISPLAY=:2 gdb awesome
+```
 
 Then in `gdb` set any arguments and run it:
 
-    (gdb) set args --replace
-    (gdb) run
+```
+(gdb) set args --replace
+(gdb) run
+```
 
 ## Asking questions
 
