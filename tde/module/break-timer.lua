@@ -133,6 +133,18 @@ _G.pause.show = function(time)
   print("Showing break timer")
 end
 
+-- this function returns tru if we should show the break timer.
+-- The timer should not show up if we are in a fullscreen application (because we are focused, watching a movie or something else)
+local function shouldShowTimer()
+  local c = client.focus
+  if c then
+    if c.fullscreen or c.maximized then
+      return false
+    end
+  end
+  return true
+end
+
 local breakTriggerTimer =
   gears.timer {
   timeout = tonumber(general["break_timeout"]) or (60 * 60 * 1),
@@ -140,7 +152,7 @@ local breakTriggerTimer =
   callback = function()
     local time_start = general["break_time_start"] or "00:00"
     local time_end = general["break_time_end"] or "23:59"
-    if breakTimerFunctions.current_time_inbetween(time_start, time_end) then
+    if breakTimerFunctions.current_time_inbetween(time_start, time_end) and shouldShowTimer() then
       _G.pause.show(tonumber(general["break_time"]) or (60 * 5))
     else
       print("Break triggered but outside of time contraints")
