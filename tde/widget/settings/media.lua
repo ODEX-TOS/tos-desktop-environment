@@ -312,10 +312,19 @@ return function()
     local sinks = volume.get_sinks()
     local sources = volume.get_sources()
 
-    vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. "</span>"
+    if not (sink.name == nil) then
+      vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. "</span>"
+    end
+    if not (source.name == nil) then
+      mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. "</span>"
+    end
 
-    mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. "</span>"
-
+    -- TODO: Find a nicer api for detecting if audio is not working
+    -- for example when no audio driver is found
+    if sinks == nil or sources == nil or sink == nil or source == nil then
+      scrollbox_body.reset()
+      return
+    end
     generate_sink_setting_body(sinks, sources, sink.sink, source.sink)
 
     populate_applications()
