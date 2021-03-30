@@ -194,8 +194,13 @@ function test_configuration_mod_key_settings()
     assert(type(mod.settings) == "string")
 end
 
+function test_configuration_mod_key_ontop()
+    assert(mod.ontop)
+    assert(type(mod.ontop) == "string")
+end
+
 function test_configuration_mod_key_api_unit_tested()
-    local amount = 34
+    local amount = 35
     local result = tablelength(mod)
     assert(
         result == amount,

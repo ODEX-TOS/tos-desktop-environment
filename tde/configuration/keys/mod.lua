@@ -32,6 +32,7 @@ return {
     kill = config["kill"] or "q",
     floating = config["floating"] or "c",
     fullscreen = config["fullscreen"] or "f",
+    ontop = config["ontop"] or "o",
     window = config["window_switch"] or "b",
     launcher = config["launcher"] or "d",
     browser = config["browser"] or "b",

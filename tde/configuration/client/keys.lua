@@ -39,6 +39,15 @@ local clientKeys =
   ),
   awful.key(
     {modkey},
+    config.ontop,
+    function(c)
+      c.ontop = not c.ontop
+      c:raise()
+    end,
+    {description = i18n.translate("toggle ontop mode"), group = i18n.translate("client")}
+  ),
+  awful.key(
+    {modkey},
     config.kill,
     function(c)
       c:kill()
