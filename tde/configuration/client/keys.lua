@@ -42,6 +42,7 @@ local clientKeys =
     config.ontop,
     function(c)
       c.ontop = not c.ontop
+      c.sticky = c.ontop
       c:raise()
     end,
     {description = i18n.translate("toggle ontop mode"), group = i18n.translate("client")}
