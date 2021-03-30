@@ -148,7 +148,8 @@ local function list_update(w, buttons, label, data, objects)
         tt:remove_from_object(tb)
       end
       if not tb:set_markup_silently(text) then
-        tb:set_markup("<i>&lt;Invalid text&gt;</i>")
+        -- invalid markup
+        tb:set_text(text)
       end
     end
     bgb:set_bg(bg)
