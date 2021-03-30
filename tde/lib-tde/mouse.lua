@@ -36,6 +36,48 @@ local execute = require("lib-tde.hardware-check").execute
 local split = require("lib-tde.function.common").split
 local signals = require("lib-tde.signals")
 
+
+local function _isValidInput(name, identifiers)
+    name = name:lower()
+    for _, match in ipairs(identifiers) do
+        -- if it is a mouse then add it to the list
+        if string.find(name, match) ~= nil then
+           return false
+        end
+    end
+    return true
+end
+
+local function _extractInfoFromXinputLine(line)
+    local splitted_line = split(line, "%s")
+    local i = 3
+    local name = ""
+    local id = ""
+
+    if #splitted_line < i then
+        return {
+            name="ERROR",
+            id=-1
+        }
+    end
+
+    for index, value in ipairs(splitted_line) do
+        if index > 2 then
+            if string.find(value, "id=") == nil then
+                name = name .. " " .. value
+            else
+                id = split(value, "=")[2]
+                break
+            end
+        end
+    end
+
+    return {
+        name = name,
+        id = tonumber(id) or 0
+    }
+end
+
 --- Returns a table of all mouse input devices ranging from trackpads, to mouses to trackpoints
 -- @treturn table The table containing a field with the id and canonical name
 -- @staticfct getInputDevices
@@ -44,34 +86,29 @@ local signals = require("lib-tde.signals")
 --    print("The first device is called: " .. devices[1].name .. " and has ID: " .. devices[1].id)
 local function getInputDevices()
     local identifier = {
-        "mouse",
-        "trackpad",
-        "trackpoint",
-        "touchpad",
-        -- 'logitech m' is their mouse division
-        "logitech m[0-9a-z]+ "
+        "virtual",
+        "keyboard",
+        "control",
+        "touch system",
+        "touchscreen",
+        "dp%-[0-9]+",
+        -- TODO: find other pointer that should not be in the list, find them using xinput --list
     }
 
-    local names = execute("xinput --list --name-only")
-    names = split(names, "\n")
+    local xinput = execute("xinput --list")
+    xinput = split(xinput, "\n")
 
-    local ids = execute("xinput --list --id-only")
-    ids = split(ids, "\n")
-
+    local bIsCorePointer = false
     local result = {}
-    -- loop over all identifiers
-    for index, id in ipairs(ids) do
-        -- get the corresponding name and check if it is a mouse
-        for _, match in ipairs(identifier) do
-            -- if it is a mouse then add it to the list
-            if string.find(names[index]:lower(), match) then
-                table.insert(
-                    result,
-                    {
-                        id = tonumber(id),
-                        name = names[index]
-                    }
-                )
+    for _, line in ipairs(xinput) do
+        if string.find(line, "Virtual core pointer") then
+            bIsCorePointer = true
+        elseif string.find(line, "Virtual core keyboard") then
+            bIsCorePointer = false
+        elseif bIsCorePointer then
+            local out = _extractInfoFromXinputLine(line)
+            if _isValidInput(out.name, identifier) then
+                table.insert(result, out)
             end
         end
     end

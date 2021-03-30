@@ -36,6 +36,6 @@ for _, device in ipairs(devices) do
     print("Found mouse: " .. device.name .. " -- ID: " .. device.id)
 end
 
-mouse.setMouseSpeed(devices[1].id, 1)
-mouse.setNaturalScrolling(devices[1].id, false)
-mouse.setAccellaration(devices[1].id, 0)
+--mouse.setMouseSpeed(devices[1].id, 1)
+--mouse.setNaturalScrolling(devices[1].id, false)
+--mouse.setAcceleration(devices[1].id, 0)
