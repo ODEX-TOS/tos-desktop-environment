@@ -59,7 +59,7 @@ awful.screen.connect_for_each_screen(
       function(removed)
         if s == removed then
           brightnessOverlay.visible = false
-          brightnessOverlay = nil
+          brightnessOverlay.screen = awful.screen.preferred
         end
       end
     )
@@ -79,6 +79,8 @@ awful.screen.connect_for_each_screen(
     )
   end
 )
+
+-- TODO: make this code run per screen, then the toggle function should loop over all screens and toggle each slider
 
 -- Put its items in a shaped container
 brightnessOverlay:setup {
@@ -110,6 +112,9 @@ local hideOSD =
 }
 
 local function toggleBriOSD(bool)
+  if brightnessOverlay == nil then
+    return
+  end
   -- don't perform the toggle off if it is already off
   if ((not bool) and (not brightnessOverlay.visible)) then
     return

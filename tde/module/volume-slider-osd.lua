@@ -56,7 +56,7 @@ awful.screen.connect_for_each_screen(
       function(removed)
         if s == removed then
           volumeOverlay.visible = false
-          volumeOverlay = nil
+          volumeOverlay = awful.screen.focused()
         end
       end
     )
@@ -106,6 +106,9 @@ awful.screen.connect_for_each_screen(
     }
 
     local function toggleVolOSD(bool)
+      if volumeOverlay == nil then
+        return
+      end
       if (not _G.menuopened) then
         -- don't perform the toggle off if it is already off
         if ((not bool) and (not volumeOverlay.visible)) then
@@ -122,7 +125,7 @@ awful.screen.connect_for_each_screen(
         end
       end
     end
-
+    -- TODO: make this code run per screen, then the toggle function should loop over all screens and toggle each slider
     _G.toggleVolOSD = toggleVolOSD
   end
 )
