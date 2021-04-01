@@ -31,11 +31,13 @@ local mouse = require("lib-tde.mouse")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
 local checkbox = require("lib-widget.checkbox")
+local scrollbox = require("lib-widget.scrollbox")
 
 local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
+local scrollbox_body
 
 return function()
   local view = wibox.container.margin()
@@ -159,10 +161,12 @@ return function()
 
   local layout = wibox.layout.flex.vertical()
   layout.spacing = m
+  scrollbox_body = scrollbox(layout)
 
   view.refresh = function()
     -- reset the layout of all mice
     layout:reset()
+    scrollbox_body.reset()
     local devices = mouse.getInputDevices()
     for _, device in ipairs(devices) do
       -- find the speed of the mouse
@@ -197,7 +201,7 @@ return function()
         ),
         close
       },
-      layout
+      scrollbox_body
     }
   }
 

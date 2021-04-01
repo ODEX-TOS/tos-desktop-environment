@@ -36,6 +36,7 @@ local card = require("lib-widget.card")
 local inputfield = require("lib-widget.inputfield")
 local tde_button = require("lib-widget.button")
 local signals = require("lib-tde.signals")
+local scrollbox = require("lib-widget.scrollbox")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -49,6 +50,8 @@ local active_text = ""
 
 local static_connections = {}
 local password_fields = {}
+
+local scrollbox_body
 
 local refresh = function()
 end
@@ -333,6 +336,8 @@ return function()
   connections:add(wired.widget)
   connections:add(network_settings)
 
+  scrollbox_body = scrollbox(connections)
+
   view:setup {
     layout = wibox.container.background,
     bg = beautiful.background.hue_800 .. "00",
@@ -355,7 +360,7 @@ return function()
         layout = wibox.container.place,
         valign = "top",
         halign = "center",
-        connections
+        scrollbox_body
       }
     }
   }
@@ -379,6 +384,11 @@ return function()
   refresh = function()
     password_fields = {}
     local interface = file.string("/tmp/interface.txt")
+
+    if scrollbox_body then
+      scrollbox_body.reset()
+    end
+
     if hardware.hasWifi() and not (interface == "") then
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface

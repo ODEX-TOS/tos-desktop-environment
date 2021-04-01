@@ -34,6 +34,7 @@ local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
 local naughty = require("naughty")
 local execute = require("lib-tde.hardware-check").execute
+local scrollbox = require("lib-widget.scrollbox")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -42,6 +43,8 @@ local settings_index = dpi(40)
 local settings_height = dpi(900)
 local settings_width = dpi(1100)
 local settings_nw = dpi(260)
+
+local scrollbox_body
 
 local refresh = function()
 end
@@ -280,6 +283,7 @@ return function()
       )
     )
   )
+  scrollbox_body = scrollbox(connections)
   view:setup {
     layout = wibox.container.background,
     bg = beautiful.background.hue_800 .. "00",
@@ -302,7 +306,7 @@ return function()
         layout = wibox.container.place,
         valign = "top",
         halign = "center",
-        connections
+        scrollbox_body
       }
     }
   }
@@ -321,9 +325,13 @@ return function()
     print("Stopping bluetooth advertisment")
     timer:stop()
     -- disable our discovery
-    awful.spawn("bluetoothctl scan off")
-    awful.spawn("bluetoothctl pairable off")
-    awful.spawn("bluetoothctl discoverable off")
+    awful.spawn([[sh -c '
+    killall bluetoothctl; 
+    bluetoothctl scan off;
+    bluetoothctl pairable off;
+    bluetoothctl discoverable off;
+    ']])
+
   end
 
   -- make sure we always gracefully shutdown
@@ -361,11 +369,12 @@ return function()
   end
 
   refresh = function(bIsTimer)
+    if scrollbox_body then
+      scrollbox_body.reset()
+    end
     if bIsTimer == nil then
       print("Starting bluetooth advertisment")
-      awful.spawn("bluetoothctl scan on")
-      awful.spawn("bluetoothctl pairable on")
-      awful.spawn("bluetoothctl discoverable on")
+      awful.spawn("sh -c 'bluetoothctl scan on; bluetoothctl pairable on; bluetoothctl discoverable on'")
     elseif timer.started == nil then
       timer:start()
     end

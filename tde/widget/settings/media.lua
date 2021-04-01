@@ -397,7 +397,17 @@ return function()
   dpi(20)
 )
 
-  scrollbox_body = scrollbox(applications_body)
+  scrollbox_body = scrollbox(wibox.widget {
+    layout = wibox.layout.fixed.vertical,
+    volume_card,
+    wibox.container.margin(button("Reset Audio Server", function()
+      volume.reset_server()
+    end),m, m, m*2),
+    audio_settings,
+    body,
+    application_settings,
+    applications_body
+  })
 
   view:setup {
     layout = wibox.container.background,
@@ -416,14 +426,7 @@ return function()
         ),
         close
       },
-      volume_card,
-      wibox.container.margin(button("Reset Audio Server", function()
-        volume.reset_server()
-      end),m, m, m*2),
-      audio_settings,
-      body,
-      application_settings,
-      scrollbox_body,
+      scrollbox_body
     }
   }
 
