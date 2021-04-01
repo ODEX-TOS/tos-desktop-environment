@@ -130,13 +130,23 @@ local function find_colliding_icons(computation)
 end
 
 local time_delay = 1 / hardware.getDisplayFrequency()
-
-local timer =
+local timer
+timer =
     gears.timer {
     timeout = time_delay,
     call_now = false,
     autostart = false,
     callback = function()
+
+        -- in this case we are in a client not on the root window, thus we need to disable dragging
+        if mouse.current_client ~= nil then
+            box.visible = false
+            if started and timer ~= nil then
+                timer:stop()
+                started = false
+            end
+        end
+
         local coords = mouse.coords()
         endx = coords.x
         endy = coords.y
@@ -169,6 +179,15 @@ timer:connect_signal(
         if not mouse.coords().buttons[1] then
             box.visible = false
             if started then
+                timer:stop()
+                started = false
+            end
+        end
+
+        -- in this case we are in a client not on the root window, thus we need to disable dragging
+        if mouse.current_client ~= nil then
+            box.visible = false
+            if started and timer ~= nil then
                 timer:stop()
                 started = false
             end
