@@ -54,7 +54,7 @@ local timer = nil
 local size = dpi(20)
 
 -- check if a number is 'close' to another number
--- e.g. 7 and 10 have a margin of error of 3
+-- eg 7 and 10 have a margin of error of 3
 -- 10 and 50 have a margin of error of 40
 -- this function returns true when the margin is smaller that <margin>
 local function margin_of_error(point1, point2, margin)

@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 -- This plugin is not designed to be used as a widget
--- It only contains business logic. This should mainly be used for management of resources and background tasks
+-- It only contains businness logic. This should mainly be used for management of resources and background tasks
 -- Much like daemons
 
 -- use the gears api to loop every x seconds and print hello world
