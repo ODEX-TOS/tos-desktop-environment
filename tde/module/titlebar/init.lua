@@ -38,7 +38,6 @@ Forked to fit TDE (transapancy support)
 -- local debug = ret and lib-tde.debug or function() end
 -- => Awesome WM
 -- ============================================================
-
 local gears = require("gears")
 
 local atooltip = awful.tooltip
@@ -107,7 +106,7 @@ local create_edge_top_middle = shapes.create_edge_top_middle
 local gradient = shapes.duotone_gradient_vertical
 -- ------------------------------------------------------------
 
-gdk.init({})
+--gdk.init({})
 
 -- => Local settings
 -- ============================================================
