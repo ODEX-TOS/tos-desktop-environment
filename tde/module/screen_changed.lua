@@ -26,6 +26,7 @@ local signals = require("lib-tde.signals")
 local gettime = require("socket").gettime
 
 local screen_geometry = {}
+local bIsInRemoveState = false
 
 local function update_screens()
     print("Screen layout changed")
@@ -40,13 +41,29 @@ local function update_screens()
 
     -- notify tde of screen changes
     signals.emit_refresh_screen()
+
+    bIsInRemoveState = false
 end
 
 -- listen for screen changes
 awesome.connect_signal(
     "screen::change",
     function()
-        update_screens()
+        print("screen::change")
+        if not bIsInRemoveState then
+            update_screens()
+        end
+    end
+)
+
+screen.connect_signal(
+    "removed",
+    function()
+        print("Removed a screen")
+        bIsInRemoveState = true
+        awful.spawn.easy_async("xrandr -s 0", function ()
+            update_screens()
+        end)
     end
 )
 
