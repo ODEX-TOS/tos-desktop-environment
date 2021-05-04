@@ -394,13 +394,15 @@ return function()
           if name == nil then
             name = mac
           end
-          table.insert(
-            devices,
-            {
-              mac = mac,
-              name = name
-            }
-          )
+          if mac ~= nil then
+            table.insert(
+              devices,
+              {
+                mac = mac,
+                name = name
+              }
+            )
+          end
         end
         check_data()
       end
