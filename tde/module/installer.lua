@@ -32,6 +32,7 @@ local show_installer = installed("installer")
 
 local icon = menubar.utils.lookup_icon("calamares") or icons.logo
 local tutorial_icon = menubar.utils.lookup_icon("preferences-desktop-theme") or icons.logo
+local settings_icon = menubar.utils.lookup_icon("preferences-desktop-theme") or icons.logo
 
 if show_installer then
     desktop_icon.create_icon(
@@ -50,6 +51,15 @@ if show_installer then
         function()
             print("Starting tos tutorial")
             awful.spawn(apps.default.terminal .. " -e tos tutorial")
+        end
+    )
+    desktop_icon.create_icon(
+        settings_icon,
+        i18n.translate("Settings"),
+        1,
+        function()
+            print("Opening settings application")
+            root.elements.settings.enable_view_by_index(-1, mouse.screen)
         end
     )
 end
