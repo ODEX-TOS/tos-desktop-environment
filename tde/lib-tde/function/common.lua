@@ -159,6 +159,9 @@ end
 -- @usage -- returns the focused screen, otherwise the first screen
 -- lib-tde.function.focused_screen()
 local function focused_screen()
+    if mouse ~= nil and mouse.screen ~= nil then
+        return mouse.screen
+    end
     return awful.screen.focused () or screen[1]
 end
 
