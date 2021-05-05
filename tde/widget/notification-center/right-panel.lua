@@ -40,6 +40,8 @@ local scrollbox = require("lib-widget.scrollbox")
 -- load the notification plugins
 local plugins = require("lib-tde.plugin-loader")("notification")
 
+local get_screen = require("lib-tde.function.common").focused_screen
+
 -- body gets populated with a scrollbox widget once generated
 local body = {}
 
@@ -70,8 +72,10 @@ local function notification_plugin()
   return table
 end
 
-local right_panel = function(s)
+local right_panel = function()
   local panel_width = dpi(350)
+
+  local s = get_screen()
 
   local backdrop =
     wibox {
@@ -84,13 +88,21 @@ local right_panel = function(s)
     width = s.geometry.width,
     height = s.geometry.height
   }
+
+  local function update_backdrop_location()
+    backdrop.x = s.geometry.x
+    backdrop.y = s.geometry.y
+    backdrop.width = s.geometry.width
+    backdrop.height = s.geometry.height
+  end
+
   local panel =
     wibox {
     ontop = true,
     screen = s,
     width = panel_width,
     height = s.geometry.height,
-    x = s.geometry.width - panel_width,
+    x = s.geometry.x + (s.geometry.width - panel_width),
     bg = beautiful.background.hue_800,
     fg = beautiful.fg_normal
   }
@@ -105,11 +117,7 @@ local right_panel = function(s)
     "removed",
     function(removed)
       if s == removed then
-        panel.visible = false
-        panel = nil
-
-        backdrop.visible = false
-        backdrop = nil
+        s = get_screen()
       end
     end
   )
@@ -123,16 +131,15 @@ local right_panel = function(s)
         return
       end
 
+      s = get_screen()
+
       -- the action center itself
-      panel.x = s.geometry.width - panel_width
+      panel.x = s.geometry.x + (s.geometry.width - panel_width)
       panel.width = panel_width
       panel.height = s.geometry.height
 
       -- the backdrop
-      backdrop.x = s.geometry.x
-      backdrop.y = s.geometry.y
-      backdrop.width = s.geometry.width
-      backdrop.height = s.geometry.height
+      update_backdrop_location()
     end
   )
 
@@ -213,22 +220,29 @@ local right_panel = function(s)
     end
     panel:emit_signal("opened")
 
+    s = get_screen()
+
     -- start the animations
-    panel.x = s.geometry.width
+    panel.x = s.geometry.x + s.geometry.width
     panel.opacity = 0
-    animate(_G.anim_speed, panel, {opacity = 1, x = s.geometry.width - panel_width}, "outCubic")
+    animate(_G.anim_speed, panel, {opacity = 1, x = s.geometry.x + (s.geometry.width - panel_width)}, "outCubic", function()
+      update_backdrop_location()
+    end)
   end
 
   local closePanel = function()
+
+    s = get_screen()
+
     -- start the animations
-    panel.x = s.geometry.width - panel_width
+    panel.x = s.geometry.x + (s.geometry.width - panel_width)
     panel.opacity = 1
     backdrop.visible = false
 
     animate(
       _G.anim_speed,
       panel,
-      {opacity = 0, x = s.geometry.width},
+      {opacity = 0, x = s.geometry.x + s.geometry.width},
       "outCubic",
       function()
         panel.visible = false
@@ -236,6 +250,8 @@ local right_panel = function(s)
           grabber:stop()
         end
         panel:emit_signal("closed")
+        update_backdrop_location()
+
         -- reset the scrollbox
         body:reset()
       end

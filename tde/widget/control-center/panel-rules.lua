@@ -29,7 +29,7 @@ awful.screen.connect_for_each_screen(
   function(s)
     if s.index == 1 then
       -- Create the left_panel
-      s.left_panel = left_panel(s)
+      s.left_panel = left_panel()
     end
   end
 )

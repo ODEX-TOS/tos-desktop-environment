@@ -38,6 +38,9 @@ local seperator_widget = require("lib-widget.separator")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
 
+local get_screen = require("lib-tde.function.common").focused_screen
+
+
 local keyconfig = require("configuration.keys.mod")
 local modKey = keyconfig.modKey
 
@@ -46,11 +49,13 @@ local body = {}
 
 local plugins = require("lib-tde.plugin-loader")("settings")
 
-local left_panel_func = function(s)
+local left_panel_func = function()
   -- set the panel width equal to the rofi settings
   -- the rofi width is defined in configuration/rofi/sidebar/rofi.rasi
   -- under the section window-> width
   local left_panel_width = dpi(450)
+
+  local s = get_screen()
 
   local backdrop =
     wibox {
@@ -63,6 +68,13 @@ local left_panel_func = function(s)
     width = s.geometry.width,
     height = s.geometry.height
   }
+
+  local function update_backdrop_location()
+    backdrop.x = s.geometry.x
+    backdrop.y = s.geometry.y
+    backdrop.width = s.geometry.width
+    backdrop.height = s.geometry.height
+  end
 
   local left_panel =
     wibox {
@@ -86,10 +98,7 @@ local left_panel_func = function(s)
     "removed",
     function(removed)
       if s == removed then
-        left_panel.visible = false
-        left_panel = nil
-        backdrop.visible = false
-        backdrop = nil
+        s = get_screen()
       end
     end
   )
@@ -103,16 +112,16 @@ local left_panel_func = function(s)
         return
       end
 
+      s = get_screen()
+
       -- the action center itself
-      left_panel.x = 0
+      left_panel.x = s.geometry.x
+      left_panel.y = s.geometry.y
       left_panel.width = left_panel_width
       left_panel.height = s.geometry.height
 
       -- the backdrop
-      backdrop.x = s.geometry.x
-      backdrop.y = s.geometry.y
-      backdrop.width = s.geometry.width
-      backdrop.height = s.geometry.height
+      update_backdrop_location()
     end
   )
 
@@ -127,13 +136,19 @@ local left_panel_func = function(s)
     end
     left_panel:emit_signal("opened")
 
+    s = get_screen()
+
     -- start the animations
     left_panel.x = s.geometry.x - left_panel_width
     left_panel.opacity = 0
-    animate(_G.anim_speed, left_panel, {opacity = 1, x = s.geometry.x}, "outCubic")
+    animate(_G.anim_speed, left_panel, {opacity = 1, x = s.geometry.x}, "outCubic", function()
+      update_backdrop_location()
+    end)
   end
 
   local closeleft_panel = function()
+    s = get_screen()
+
     -- start the animations
     left_panel.x = s.geometry.x
     left_panel.opacity = 1
@@ -151,6 +166,7 @@ local left_panel_func = function(s)
           grabber:stop()
         end
         left_panel:emit_signal("closed")
+        update_backdrop_location()
 
         -- reset the scrollbox
         body:reset()

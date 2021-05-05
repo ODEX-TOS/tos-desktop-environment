@@ -157,6 +157,10 @@ function test_function_num_to_str_wierd_inputs()
     assert(common.num_to_str(nil) == "nil", "Got: " .. common.num_to_str(nil))
 end
 
+function test_common_function_screen_exists()
+    assert(type(common.focused_screen) == "function", "the focussed screen api needs to exist and be a function")
+end
+
 function test_imagemagic_api_unit_tested()
     local amount = 4
     local result = tablelength(common)
