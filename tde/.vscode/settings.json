@@ -1,7 +1,20 @@
 {
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.workspace.ignoreSubmodules": false,
+    "Lua.workspace.library": [
+        "/usr/share/awesome/lib",
+        "/etc/xdg/awesome"
+    ],
     "Lua.diagnostics.disable": [
         "lowercase-global",
         "undefined-global",
-        "unused-local"
+    ],
+    "Lua.diagnostics.globals": [
+        "client",
+        "awesome",
+        "screen",
+        "root",
+        "awful",
+        "mouse"
     ]
 }
