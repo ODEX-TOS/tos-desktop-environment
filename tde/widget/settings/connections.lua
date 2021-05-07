@@ -29,7 +29,6 @@ local beautiful = require("beautiful")
 local hardware = require("lib-tde.hardware-check")
 local file = require("lib-tde.file")
 local icons = require("theme.icons")
-local split = require("lib-tde.function.common").split
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
@@ -37,6 +36,7 @@ local inputfield = require("lib-widget.inputfield")
 local tde_button = require("lib-widget.button")
 local signals = require("lib-tde.signals")
 local scrollbox = require("lib-widget.scrollbox")
+local network = require("lib-tde.network")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -77,7 +77,7 @@ signals.connect_exit(
 local function generate_qr_code(ssid, password)
   local qr_text = "WIFI:T:WPA;S:" .. ssid .. ";P:" .. password .. ";;"
   local output = "/tmp/qrcode" .. ssid .. ".png"
-  hardware.execute("qrencode -l L -v 1 -m 1 -s 9 -o " .. output .. " '" .. qr_text .. "'")
+  hardware.execute("qrencode -l L -v 1 -m 1 -s 9 -o '" .. output .. "' '" .. qr_text .. "'")
   qr_code_image = output
 end
 
@@ -162,7 +162,7 @@ local function make_network_widget(ssid, active)
         print("Generating qr code")
         local passwd =
           string.gsub(
-          hardware.execute("nmcli --show-secrets -g 802-11-wireless-security.psk connection show id " .. ssid),
+          hardware.execute("nmcli --show-secrets -g 802-11-wireless-security.psk connection show id '" .. ssid .. "'"),
           "\n",
           ""
         )
@@ -366,19 +366,11 @@ return function()
   }
 
   local function setup_network_connections()
-    awful.spawn.easy_async_with_shell(
-      'nmcli dev wifi list | awk \'NR != 1 {if ($1 == "*"){print $2, $1, $3}else{print $1, $3, $2}}\' | sort -k 2,2 | uniq -f2',
-      function(out)
-        for _, value in ipairs(split(out, "\n")) do
-          local line = split(value, " ")
-          if line[2] == "*" then
-            connections:add(make_network_widget(line[3], true))
-          else
-            connections:add(make_network_widget(line[3], false))
-          end
-        end
+    network.get_ssid_list(function (list)
+      for _, value in pairs(list) do
+        connections:add(make_network_widget(value["ssid"], value["active"]))
       end
-    )
+    end)
   end
 
   refresh = function()

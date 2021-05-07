@@ -22,22 +22,21 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- The init files hold a list of all test files to run
+local hardware = require("lib-tde.hardware-check")
+awful = {
+    spawn = {
+        easy_async_with_shell = function (command, callback)
+            local res, _ = hardware.execute(command)
+            callback(res)
+        end
+    }
+}
 
-require("tests.lib-tde.files")
-require("tests.lib-tde.logger")
-require("tests.lib-tde.luapath")
-require("tests.lib-tde.plugin-loader")
-require("tests.lib-tde.sound")
-require("tests.lib-tde.function")
-require("tests.lib-tde.hardware-check")
-require("tests.lib-tde.signals")
-require("tests.lib-tde.datastructure")
-require("tests.lib-tde.sorting")
-require("tests.lib-tde.mappers")
-require("tests.lib-tde.imagemagic")
-require("tests.lib-tde.i18n")
-require("tests.lib-tde.serialize")
-require("tests.lib-tde.mouse")
-require("tests.lib-tde.volume")
-require("tests.lib-tde.network")
+local network = require("lib-tde.network")
+
+
+network.get_ssid_list(function(result)
+    for key, value in pairs(result) do
+        print(key)
+    end
+end)
