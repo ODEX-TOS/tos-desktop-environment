@@ -88,10 +88,10 @@ end
 --- Check to see the hardware has a network card
 -- @treturn bool True if a network card exists, false otherwise
 -- @staticfct hasWifi
--- @usage -- This True if a network card exists
+-- @usage -- This True if a network card with wifi exists
 -- lib-tde.hardware-check.hasWifi()
 local function wifi()
-    return #(fileHandle.lines("/proc/net/wireless")) > 2
+    return fileHandle.exists("/proc/net/wireless")
 end
 
 --- Check to see the hardware has a network card with bluetooth support

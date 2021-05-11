@@ -385,19 +385,22 @@ return function()
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
       wireless.ip.text = hardware.getDefaultIP()
-      if bIsShowingNetworkTab then
-        -- remove all wifi connections
-        connections.children = static_connections
-        setup_network_connections()
-      else
-        -- remove all wifi connections
-        connections.children = static_connections
-        connections:add(make_qr_code_field())
-      end
     else
       wireless.icon:set_image(icons.wifi_off)
       wireless.name.text = i18n.translate("Disconnected")
       wireless.ip.text = ""
+    end
+
+    -- Always try to populate network list, even when it is not possible
+    -- This is to make networks more easily detectable in case your wifi card is not working properly, or when the pc never had a network before
+    if bIsShowingNetworkTab and hardware.hasWifi() then
+      -- remove all wifi connections
+      connections.children = static_connections
+      setup_network_connections()
+    elseif hardware.hasWifi() then
+      -- remove all wifi connections
+      connections.children = static_connections
+      connections:add(make_qr_code_field())
     end
 
     awful.spawn.easy_async_with_shell(
