@@ -25,7 +25,7 @@
 
 # normal updates
 updates="$(checkupdates-tos)"
-echo "$updates" | wc -l
+echo -n "$updates" | wc -l
 
 # of which x security updates
 if [[ "$(command arch-audit)" ]]; then
