@@ -15,6 +15,7 @@ local table = table
 local unpack = unpack or table.unpack -- luacheck: globals unpack (compatibility with Lua 5.1)
 local dbus = dbus
 local type = type
+local split = require('gears.string').split
 
 local function table_to_string(tbl, depth, indent)
     depth = depth or 3
@@ -54,7 +55,11 @@ if dbus then
         "org.awesomewm.awful.Remote",
         function(data, code)
             if data.member == "Eval" then
-                print("Loading code from dbus\n" .. code)
+                print("Loading code from dbus")
+                local splitted_code = split(code, '\n')
+                for _, code_line in ipairs(splitted_code) do
+                    print("\t\t\27[0;33m" .. code_line .. "\27[0m")
+                end
                 local f, e = load(code)
                 if not f then
                     return "s", e
