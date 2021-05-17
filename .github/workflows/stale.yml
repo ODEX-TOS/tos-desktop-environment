@@ -13,7 +13,7 @@ jobs:
     - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: "Your issue didn't have any activity, automatically closing it. If this was wrong please re-open it 😀"
-        stale-pr-message: "Your Pull Request didn't have any activity, automatically closing it. If this was wrong please re-open it 😀"
+        stale-issue-message: "Your issue didn't have any activity, automatically marking it as stale. If this was wrong please notify us 😀"
+        stale-pr-message: "Your Pull Request didn't have any activity, automatically marking it as stale. If this was wrong please re-open it 😀"
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
