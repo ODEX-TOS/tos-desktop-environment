@@ -64,11 +64,11 @@ local filename = args[1]
 local f = io.open(filename, "w")
 
 f:write[[
-# Change Awesome appearance
+# Change TDE appearance
 
 ## The beautiful themes
 
-Beautiful is where Awesome theme variables are stored.
+Beautiful is where TDE theme variables are stored.
 
 <br /><br />
 ]]

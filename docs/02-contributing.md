@@ -1,114 +1,111 @@
 # Contributing
 
-## Bugs
+When contributing to this repository, please first discuss the change you wish
+to make via issue, email, or any other method with the owners of this repository
+before making a change.
 
-Please look at [Github Issues](https://github.com/awesomeWM/awesome/issues).
+Please note we have a code of conduct, please follow it in all your interactions
+with the project.
 
-## Triage Issues [![Open Source Helpers](https://www.codetriage.com/AwesomeWM/awesome/badges/users.svg)](https://www.codetriage.com/AwesomeWM/awesome)
+## Pull Request Process
 
-You can triage issues which may include reproducing bug reports or asking for vital information, such as version numbers or reproduction instructions. If you would like to start triaging issues, one easy way to get started is to [subscribe to AwesomeWM on CodeTriage](https://www.codetriage.com/AwesomeWM/awesome).
+1. Ensure you have read the [wiki](https://wiki.odex.be) especially the [style guide](https://wiki.odex.be/Developer/style-guide)
+2. Ensure any install or build dependencies are removed before the end of the layer when doing a
+   build.
+3. Update the README.md with details of changes to the interface, this includes new environment
+   variables, exposed ports, useful file locations and container parameters.
+4. Increase the version numbers in the `version.txt` file and the README.md to the new version that this
+   Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
+5. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
+   do not have permission to do that, you may request the second reviewer to merge it for you.
 
-## Style
+## Code of Conduct
 
-If you intend to patch and contribute to Awesome, please respect the
-following guidelines.
+### Our Pledge
 
-Imitate the existing code style. For concrete rules:
+In the interest of fostering an open and welcoming environment, we as
+contributors and maintainers pledge to making participation in our project and
+our community a harassment-free experience for everyone, regardless of age, body
+size, disability, ethnicity, gender identity and expression, level of
+experience, nationality, personal appearance, race, religion, or sexual identity
+and orientation.
 
- - Use 4 spaces indentation, do not use tabulator characters;
+### Our Standards
 
- - Place braces alone on new lines, and do not place braces for single
-   line statement where it is not needed, i.e.:
+Examples of behavior that contributes to creating a positive environment
+include:
 
-        if(foo)
-            x = 1;
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
 
-        if(foo)
-        {
-            x = 1;
-            bar();
-        }
+Examples of unacceptable behavior by participants include:
 
- - Do not put a space after if, for, while or function call statements;
+- The use of sexualized language or imagery and unwelcome sexual attention or
+  advances
+- Trolling, insulting/derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or electronic
+  address, without explicit permission
+- Other conduct which could reasonably be considered inappropriate in a
+  professional setting
 
- - The preferred maximum line length is 80 characters;
+### Our Responsibilities
 
- - Use `/* */` for comments;
+Project maintainers are responsible for clarifying the standards of acceptable
+behavior and are expected to take appropriate and fair corrective action in
+response to any instances of unacceptable behavior.
 
- - Use the API: there is a list of `a_*()` functions you should use instead
-   of the standard libc ones. There is also a common API for linked lists,
-   tabulars, etc.;
+Project maintainers have the right and responsibility to remove, edit, or reject
+comments, commits, code, wiki edits, issues, and other contributions that are
+not aligned to this Code of Conduct, or to ban temporarily or permanently any
+contributor for other behaviors that they deem inappropriate, threatening,
+offensive, or harmful.
 
- - Be *clear* in what you do;
+### Scope
 
- - Prefix your function names with the module they are enhancing,
-   i.e. if you add a function to manipulate a tag, prefix it with `tag_`;
+This Code of Conduct applies both within project spaces and in public spaces
+when an individual is representing the project or its community. Examples of
+representing a project or community include using an official project e-mail
+address, posting via an official social media account, or acting as an appointed
+representative at an online or offline event. Representation of a project may be
+further defined and clarified by project maintainers.
 
- - Write documentation for any new functions, options, whatever.
+### Enforcement
 
-A vim modeline is set in each file to respect this.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported by contacting the project team at [tom@odex.be](mailto:tom@odex.be).
+All complaints will be reviewed and investigated and will result in a response
+that is deemed necessary and appropriate to the circumstances. The project team
+is obligated to maintain confidentiality with regard to the reporter of an
+incident. Further details of specific enforcement policies may be posted
+separately.
 
-### Documentation of Lua files
+Project maintainers who do not follow or enforce the Code of Conduct in good
+faith may face temporary or permanent repercussions as determined by other
+members of the project's leadership.
 
-For documentation purposes LDoc---see
-[here](https://stevedonovan.github.io/ldoc/manual/doc.md.html) for its
-documentation---is used. Comments that shall be parsed by LDoc have the
-following format:
+### Contact
 
-    --- summary.
-    -- Description; this can extend over
-    -- several lines
+[homepage](https://tos.odex.be)
 
-    -----------------
-    -- This will also do.
+[core developer website](https://www.odex.be)
 
-    --[[--
-     Summary. A description
-     ...;
-    ]]
+# Security Policy
 
-You can use the full power of
-[Markdown](http://daringfireball.net/projects/markdown) with the extensions of
-[Discount](http://www.pell.portland.or.us/~orc/Code/discount/) for markup in
-the comments.
+## Supported Versions
 
-Every module and class should have a short description at its beginning which
-should include `@author author`, `@copyright year author` and
-`@module module-name` or `@classmod class-name`.
+Currently the latest `beta` edition gets security updates, All previous version only get security updates on dependencies
+| Version | Supported          |
+| ------- | ------------------ |
+| 0.6.x   | :white_check_mark: |
+| < 0.5.x | :x:                |
 
-Parameters of functions should be documented using
-`@tparam <type> <parmname> <description>`, and return values via
-`@treturn <type> <description>`.
 
-For a more comprehensive description of the available tags see the [LDoc
-documentation](https://stevedonovan.github.io/ldoc/manual/doc.md.html).
+## Reporting a Vulnerability
 
-## Patches
+In case of major security vulnerabilities send an email to `tom@odex.be` this will be addressed as quickly as possible.
 
-If you plan to submit patches, you should follow the following guidelines.
-
-### Commits
-
-- make commits of logical units;
-- do not modify piece of code not related to your commit;
-- do not try to fix style of code you are not writing,
-  it's just adding noise for no gain;
-- check for unnecessary whitespace with `git diff --check` before committing;
-- do not check in commented out code or unneeded files;
-- provide a meaningful commit message;
-- the first line of the commit message should be a short;
-  description and should skip the full stop;
-- if you want your work included, add a
-  `Signed-off-by: Your Name <you@example.com>` line to the
-  commit message (or just use the option `-s` when committing);
-- make sure that you have tests for the bug you are fixing;
-- if possible, add a unit test to the test suite under spec/.
-
-### Patches
-
-Submitting patches via pull requests on the Github project is the preferred
-method.
-
-#### Pull request
-- create a [pull request](https://github.com/awesomeWM/awesome/pulls)
-
+For minor security vulnerabilities, create an issue here or create a new discussion in the [forums](https://forum.odex.be)

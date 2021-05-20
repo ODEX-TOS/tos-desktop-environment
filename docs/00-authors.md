@@ -1,5 +1,49 @@
 # Authors
 
+## TDE - TOS Desktop Environment
+**Maintainer**:
+
+* © 2019- [Tom Meyers](mailto:tom@odex.be)
+
+**Main contributors**:
+
+* © 2019- [Tom Meyers](mailto:tom@odex.be)
+* © 2019- [Tom Meyers](mailto:tom@odex.be)
+* © 2019- [Tom Meyers](mailto:tom@odex.be)
+
+**Original author**:
+
+* © 2019- [Tom Meyers](mailto:tom@odex.be)
+
+
+For a complete list of contributors, see our
+[GitHub page](https://github.com/ODEX-TOS/tos-desktop-environment/graphs/contributors).
+
+### License
+
+MIT License
+
+Copyright (c) 2020 Meyers Tom
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
 ## Awesome - awesome window manager
 
 **Maintainer**:
@@ -35,7 +79,7 @@
 For a complete list of contributors, see our
 [GitHub page](https://github.com/awesomeWM/awesome/graphs/contributors).
 
-## License
+### License
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,7 +95,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-## Originally based on dwm code
+### Originally based on dwm code
 
 MIT/X Consortium License
 

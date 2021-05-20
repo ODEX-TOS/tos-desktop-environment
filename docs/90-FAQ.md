@@ -2,348 +2,48 @@
 
 ## General
 
-### Why call it Awesome?
+### Why call it TDE?
 
-The name _Awesome_ comes from the English word _awesome_ often used by the
-character [Barney Stinson](http://en.wikipedia.org/wiki/Barney_Stinson)
-from the TV series HIMYM.
+`TDE` stands for `TOS Desktop Environment`, this is because `TDE` is mainly developed for the `TOS` distribution.
+More information can be found on their [website](https://tos.odex.be)
+
 
 ## Common issues
 
 ### My screens are not configured correctly
 
-Awesome is a window manager, not a desktop environment. To configure your
-screens, the `xrandr` tool or various GUI applications exist. For more
-information, refer to the
-[Arch Linux wiki](https://wiki.archlinux.org/index.php/xrandr).
+Underlying `TDE`makes use of `autorandr` to safe the screen state
 
-### There is a noticeable delay with inputs
+If your screen doesn't work or behaves incorrectly try to verify that your autorandr config is correct:
+```bash
+autorandr --config
+```
+If that isn't the case you can issue [xrandr](https://wiki.odex.be/en/Usage/Configuration/X/Xrandr) command, or use graphical interfaces such as `arandr` to fix these screens.
 
-There are two common causes for this:
-
-The first is a display driver issue where painting on the screen takes long
-time. All input events (keyboard and mouse) are processed in the main thread.
-The drawing is also locking the main thread to avoid artifacts and race
-ccontiditions. If there is a delay with the painting, it will delay the inputs.
-The solution to this problem is using a compositing manager such as
-[compton](https://github.com/chjj/compton) or the older `xcompmgr`. This will
-move painting to another process and fully mitigate the issue.
-
-The second one is when using `io.popen` or other blocking functions in `rc.lua`
-and most commonly manifests itself as occasional freezes instead of a generic delay.
-Do **not** use such functions and prefer `awful.spawn.easy_async`,
-`awful.widget.watch` or the GIO async API. Even if you _think_ a command is
-fast enough and won't impact the main event loop iteration time, you are wrong.
-_Every_ calls to `io.open` are impacted by the system `iowait` queue and can
-spend hundreds of milliseconds blocked _before_ being executed. Note that
-some common widget or probe libraries such as
-[Vicious](https://github.com/Mic92/vicious) do not follow this
-advice currently and are known to cause input lag on some systems (but not all).
-
-In both case, a warning like:
-
-    2018-01-23 09:58:48 W: awesome: a_glib_poll:432: Last main loop iteration took 14.416777 seconds! Increasing limit for this warning to that value
-
-will be printed to warn you about the issue.
-
-### The applications look ugly
-
-Awesome is a window manager, not a desktop environment. It does not
-provide a theme daemon. For more information about how to manage the
-look and feel of applications, refer to the
-[Arch Linux Wiki](https://wiki.archlinux.org/index.php/Category:Eye_candy).
+Turning of a weird artifact:
+```bash
+xrandr --output DP2 --off
+```
 
 ## Configuration
 
-### How to change the default window management layout?
-
-In the default configuration file one layout is set for all tags, it happens to
-be the `floating` layout. You can change that by editing your tag creation
-loop in the `rc.lua`:
-
-    -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
-
-Notice that all tags will use the 1st layout from your layouts table, which is
-defined right before tags are created. Just change the layout number in order to
-use another window management layout.
-
-#### How to change the name and layout per tag?
-
-You can modify your tag section, there are many possible implementations, here
-is a simple one:
-
-At the beginning of `rc.lua`:
-
-    layouts = awful.layout.layouts
-    tags = {
-      names  = { "www", "editor", "mail", "im", "rss", 6, 7, "rss", "media"},
-      layout = { layouts[2], layouts[1], layouts[1], layouts[4], layouts[1],
-                 layouts[6], layouts[6], layouts[5], layouts[6]
-    }}
-
-Then later to create tags:
-
-    tags[s] = awful.tag(tags.names, s, tags.layout)
-
-#### How to setup different tags and layouts per screen?
-
-Another demonstration for your tag section:
-
-At the beginning of `rc.lua`:
-
-    layouts = awful.layout.layouts
-    tags = {
-      settings = {
-        { names  = { "www", "editor", "mail", "im" },
-          layout = { layouts[2], layouts[1], layouts[1], layouts[4] }
-        },
-        { names  = { "rss",  6, 7,  "media" },
-          layout = { layouts[3], layouts[2], layouts[2], layouts[5] }
-    }}}
-
-Then later to create tags:
-
-    tags[s] = awful.tag(tags.settings[s.index].names, s, tags.settings[s.index].layout)
-
-#### How to show only non-empty tags?
-
-You can use a filter when creating taglist.
-
-Possible filters:
-
--   `awful.widget.taglist.filter.all` - default, show all tags in taglist
--   `awful.widget.taglist.filter.noempty` - show only non-empty tags in taglist (like dynamic tags)
--   `awful.widget.taglist.filter.selected` - show only selected tags in taglist
-
-To show only non-empty tags on taglist:
-
-    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.noempty, mytaglist.buttons)
 
 ### How to autostart applications?
 
-The traditional way is to use the `~/.xinitrc` file.
+All executable shell scripts and desktop files in `~/.config/tos/autostart` get ran on startup.
+If you want to launch an application put it there.
 
-### How to lock the screen when I am away?
-
-You can use any screen locking utility: `xlock`, `xscreensaver`, `slock`, `kscreenlocker`...
-
-Example key binding for your `globalkeys`:
-
-    awful.key({ modkey }, "F12", function () awful.spawn{ "xlock" } end)
-
-### How to execute a shell command?
-
-If you want to execute a shell command or need to execute a command that uses
-redirection, pipes and so on, do not use the `awful.spawn` function but
-`awful.spawn.with_shell`. Here is an example:
-
-    awful.key({ modkey }, "F10", function () awful.spawn.with_shell("cal -m | xmessage -timeout 10 -file -") end)
-
-On zsh, any changes to $PATH you do in `~/.zshrc` will not be picked up (because
-this is only run for interactive shells). Use `~/.zshenv` instead to make
-additions to the path you want to use in Awesome.
-
-### How to remove gaps between windows?
-
-You can add `size_hints_honor = false` to the `properties` section in your
-`ruled.client.rules` table in your `rc.lua`. It will match and apply this rule
-to all clients.
-
-See [the mailing list archive](http://www.mail-archive.com/awesome@naquadah.org/msg01767.html)
-for more info about what size hints are.
-
-This might cause flickering with some non-ICCCM conforming applications (e.g.
-Lilyterm) which try to override the size that the window manager assigned them.
-
-### How to add an application switcher?
-
-You can use the Clients Menu as an application switcher. By default it will open
-if you right-click on your taskbar, but you may also bind it to a key
-combination. Here is an example, toggled by "Alt + Esc", that you can add to
-your `globalkeys`:
-
-    awful.key({ "Mod1" }, "Escape", function ()
-        -- If you want to always position the menu on the same place set coordinates
-        awful.menu.menu_keys.down = { "Down", "Alt_L" }
-        awful.menu.clients({theme = { width = 250 }}, { keygrabber=true, coords={x=525, y=330} })
-    end),
-
-### How to control titlebars?
-
-To disable titlebars on all clients remove the `titlebars_enabled=true` from the
-`ruled.client.rules` table in your config. If you want a titlebar only on
-certain clients, you can use `ruled.client` to set this property only for certain
-clients.
-
-### How to toggle titlebar visibility?
-
-You can use a `clientkeys` binding.:
-
-    awful.key({ modkey, "Shift" }, "t", awful.titlebar.toggle),
-
-### How to toggle wibox visibility?
-
-Add the following key binding to your `globalkeys`:
-
-    awful.key({ modkey }, "b", function ()
-        mouse.screen.mywibox.visible = not mouse.screen.mywibox.visible
-    end),
-
-### How to toggle clients floating state?
-
-The default `rc.lua` already has a key binding for this, it is "Mod4 + Control +
-Space". You can easily change it to something easier like "Mod4 + f" or "Mod4 +
-Shift + f".
-
-    awful.key({ modkey, "Shift" }, "f",  awful.client.floating.toggle ),
-
-#### Why some floating clients can not be tiled?
-
-If some of your applications (i.e. Firefox, Opera...) are floating but you can't
-tile them, and they behave weird (can not be tagged, are always on top...) do
-not panic. They are merely maximized from your last window manager, or from
-their last invocation. The default key binding to toggle maximized state is
-"Mod4 + m".
-
-You can ensure no application ever starts maximized in the first rule of your
-`ruled.client.rules` table, which applies to all clients, by adding:
-
-    -- Search for this rule,
-    keys = clientkeys,
-
-    -- add the following two:
-    maximized_vertical   = false,
-    maximized_horizontal = false,
-
-### How to move and resize floaters with the keyboard?
-
-You can use the `client:relative_move` function. The following `clientkeys`
-example will move floaters with "Mod4 + Arrow keys" and resize them with "Mod4 +
-PgUP/DN" keys:
-
-    awful.key({ modkey }, "Next",  function (c) c:relative_move( 20,  20, -40, -40) end),
-    awful.key({ modkey }, "Prior", function (c) c:relative_move(-20, -20,  40,  40) end),
-    awful.key({ modkey }, "Down",  function (c) c:relative_move(  0,  20,   0,   0) end),
-    awful.key({ modkey }, "Up",    function (c) c:relative_move(  0, -20,   0,   0) end),
-    awful.key({ modkey }, "Left",  function (c) c:relative_move(-20,   0,   0,   0) end),
-    awful.key({ modkey }, "Right", function (c) c:relative_move( 20,   0,   0,   0) end),
-
-#### How to resize tiled clients?
-
-You can use the `awful.tag.incmwfact` function to resize master clients and
-`awful.client.incwfact` function to resize slave clients. The following
-`globalkeys` example demonstrates this:
-
-    awful.key({ modkey }, "l",          function () awful.tag.incmwfact( 0.05) end),
-    awful.key({ modkey }, "h",          function () awful.tag.incmwfact(-0.05) end),
-    awful.key({ modkey, "Shift" }, "l", function () awful.client.incwfact(-0.05) end),
-    awful.key({ modkey, "Shift" }, "h", function () awful.client.incwfact( 0.05) end),
-
-### How to change Awesome configuration while it's running?
-
-You can modify `rc.lua`, but you have to restart Awesome for changes to take
-effect. The default keybinding for restarting Awesome is "Mod4 + Control + r".
-
-### How to find window's class and other identifiers?
-
-You can use the `xprop` utility, you are interested in `WM_CLASS` and `WM_NAME`
-from its output:
-
-$ xprop WM_CLASS WM_NAME
-
-When the cursor changes to "+" click on the client of interest. From the
-terminal output you can use the following to match clients in Awesome:
-
-    WM_CLASS(STRING) = "smplayer", "Smplayer"
-                        |           |
-                        |           |--- class
-                        |
-                        |--- instance
-
-    WM_NAME(STRING) = "SMPlayer"
-                       |
-                       |--- name
-
-You can use the above identifiers (instance, class and name) in your
-`ruled.client.rules` table to do matching, tagging and other client manipulation.
-See the next FAQ answer for some examples.
-
-### How to start clients on specific tags and others as floating?
-
-You can add matching rules to your `ruled.client.rules` table. The default
-`rc.lua` already has several examples, but some more can be found in the
-@{ruled.client.rules|documentation}.
-
-### How to start clients as slave windows instead of master?
-
-You can set windows to open as slave windows by setting rule to match all
-clients:
-
-    -- Start windows as slave
-    { rule = { }, properties = { }, callback = awful.client.setslave }
-
-### How to use a keycode in a keybinding?
-
-You can use the format `#XYZ` for keycodes in your bindings. The following
-example shows a mapped multimedia/extra key, that's why the modifier is not
-present (but it could be):
-
-    awful.key({}, "#160", function () awful.spawn("kscreenlocker --forcelock") end),
-
-### How to add a keyboard layout switcher?
-
-The `wibox.widget.keyboardlayout` is a widget that shows the current keyboard
-layout and allows to change it by clicking on it.
-
-### How to make windows spawn under the mouse cursor?
-
-In the default `ruled.client`-rule, the following placement is specified:
-
-    placement = awful.placement.no_overlap+awful.placement.no_offscreen
-
-You can prepend `awful.placement.under_mouse` to this:
-
-    placement = awful.placement.under_mouse+awful.placement.no_overlap+awful.placement.no_offscreen
-
-### How to switch to a specific layout in a keybinding?
-
-You can call the `awful.layout.set()` function, here's an example:
-
-    awful.key({ modkey }, "q", function () awful.layout.set(awful.layout.suit.tile) end),
-
-### Why are new clients urgent by default?
-
-You can change this by redefining `awful.permissions.activate(c)` in your rc.lua. If
-you don't want new clients to be urgent by default put this in your rc.lua:
-
-    client.disconnect_signal("request::activate", awful.permissions.activate)
-    function awful.permissions.activate(c)
-        if c:isvisible() then
-            client.focus = c
-            c:raise()
-        end
-    end
-    client.connect_signal("request::activate", awful.permissions.activate)
+If the directory doesn't exist yet you can create it.
 
 ## Usage
-
-### How to use this thing?
-
-Default binding to open a terminal is "Mod4 + Enter" (where Mod4 is usually the
-"Windows" key). You can also click on the desktop background with the right
-button, to open the Awesome menu.
-
-From there you can proceed to open `man awesome` which has a good guide,
-including the list of default keybindings.
 
 ### Layouts
 
 With the default config, you can cycle through window layouts by pressing
 "mod4+space" ("mod4+shift+space" to go back) or clicking the layout button in
-the upper right corner of the screen.
+the lower left corner of the screen.
 
-### How to restart or quit Awesome?
+### How to restart or quit TDE?
 
 You can use the keybinding "Mod4+Ctrl+r" or by selecting restart in the menu.
 You could call `awesome.restart` either from the Lua prompt widget, or via
@@ -351,97 +51,30 @@ You could call `awesome.restart` either from the Lua prompt widget, or via
 
     $ tde-client 'awesome.restart()'
 
-You can also send the `SIGHUP` signal to the Awesome process. Find the PID using
+You can also send the `SIGHUP` signal to the TDE process. Find the PID using
 `ps`, `pgrep` or use `pkill`:
 
-$ pkill -HUP awesome
+$ pkill -HUP tde
 
-You can quit Awesome by using "Mod4+Shift+q" keybinding or by selecting quit in
+You can quit TDE by using "Mod4+Shift+q" keybinding or by selecting quit in
 the menu. You could call `awesome.quit` either from the Lua prompt widget,
 or by passing it to `tde-client`.
 
     $ echo 'awesome.quit()' | tde-client
 
-You can also send the `SIGINT` signal to the Awesome process. Find the PID using `ps`, `pgrep` or use `pkill`:
+You can also send the `SIGINT` signal to the TDE process. Find the PID using `ps`, `pgrep` or use `pkill`:
 
-    $ pkill -INT awesome
-
-### Why Awesome doesn't use my own brand new config?
-
-If Awesome cannot find `$XDG_CONFIG_HOME/awesome/rc.lua`, or fails to load it,
-it falls back to using `/etc/xdg/awesome/rc.lua` (you haven't edited it, I hope,
-have you?). Even if `awesome --check` hasn't reported any error, it only means
-that your `rc.lua` is syntactically correct, but absence of runtime errors is
-not guaranteed. Moreover, Awesome could apply half of your config then encounter
-an error and load stock one, and that could lead to bizarre result, like two
-sets of tags. See the next entry on how to find out where the problem lurks.
+    $ pkill -INT tde
 
 ### Where are logs, error messages or something?
 
-When hacking your own configuration, something inevitably would go wrong.
-Awesome prints error messages to its `stderr` stream. When run with usual `$ startx`, it'd be printed right in tty. If you use something more complicated
-(some kind of DM, like kdm or gdm), stderr is usually redirected somewhere else.
-To see where, run the following command:
-
-    $ ls -l /proc/$(pidof awesome)/fd/2
-
-There's handy way to run Awesome and redirect both its standard output and error streams to files:
-
-    exec /usr/bin/awesome >> ~/.cache/awesome/stdout 2>> ~/.cache/awesome/stderr
-
-If you put it into `.xinitrc` (for `startx`) or `~/.xsession`, you'll be able to
-watch (with `tail -f`) everything right from Awesome.
-
-### Why does Mod4 "swallow" succeeding key presses?
-
-On some systems xkb by default maps the left windows key to "Multi_key" (at
-least in `us` and `de` layouts). Multi_key is an xkb feature which may be used
-to access uncommon symbols by pressing Multi_key and then (consecutively) two
-"normal" keys. The solution is to remap your windows key to mod4 and remove the
-Multi_key mapping. This can be done by including "altwin(left_meta_win)" in the
-xkb keyboard description xkb_symbols line.
-
-    #!/bin/bash
-    xkbcomp - $DISPLAY<<EOF
-    xkb_keymap {
-    xkb_keycodes  { include "evdev+aliases(qwertz)"};
-    xkb_types     { include "complete"};
-    xkb_compat    { include "complete"};
-    xkb_symbols   { include "pc+de(nodeadkeys)+inet(evdev)+group(alt_shift_toggle)+level3(ralt_switch)+altwin(left_meta_win)+capslock(escape)"    };
-    xkb_geometry  { include "pc(pc104)"};
-    };
-    EOF
-
-### I upgraded from Awesome 3 to Awesome 4 and multiscreen broke. Why is that?
-
-Awesome 4.0+ support dynamic screen plugging and unplugging without restarting.
-
-This avoids losing your tags, layout and focus history. Olders `rc.lua` were not
-designed to support such changes and assumed Awesome would restart. To add
-multi-screen support to existing configs, see how
-`awful.screen.connect_for_each_screen` is used in the new `rc.lua` or rebuild
-your config on a newer revision of `rc.lua`.
+Logs can be found in the `~/.cache/tde/` directory.
+Currently we store 2 files `stdout.log` stores all debug messages on stdout
+and `error.log` stores all error messages (Both stderr and internal error messages)
 
 ### Can I have a client or the system tray on multiple screens at once?
 
 No. This is an X11 limitation and there is no sane way to work around it.
-
-### Can a client be tagged on different screens at once?
-
-While it is not impossible to partially implement support for this, many
-Awesome components frequently query the client's screen.
-Since a client can only be in one screen at once, this will cause side effects.
-So by default Awesome avoids, but does not prevent, having clients in multiple
-tags that are not on the same screen.
-
-### Can a tag be on multiple screens?
-
-No. See the previous two questions. However, it is possible to swap tags across
-screens using `t:swap(t2)` (assuming `t` and `t2` are valid `tag` objects).
-
-This can be used to emulate a tag being on multiple screens. Note that this will
-break support for multi-tagged clients. For this reason it isn't implemented by
-default.
 
 ## Development
 
@@ -454,11 +87,11 @@ bug is a segmentation fault, please include a full backtrace (use gdb).
 In any case, please try to explain how to reproduce it.
 
 Please report any issues you may find on [our
-bugtracker](https://github.com/awesomeWM/awesome/issues).
+bugtracker](https://github.com/ODEX-TOS/tos-desktop-environment/issues).
 
 ### Do you accept patches and enhancements?
 
 Yes, we do.
-You can submit pull requests on the [github repository](https://github.com/awesomeWM/awesome).
-Please read the [contributing guide](https://github.com/awesomeWM/awesome/blob/master/docs/02-contributing.md)
+You can submit pull requests on the [github repository](https://github.com/ODEX-TOS/tos-desktop-environment).
+Please read the [contributing guide](https://github.com/ODEX-TOS/tos-desktop-environment/CONTRIBUTING.md)
 for any coding, documentation or patch guidelines.

@@ -1,10 +1,10 @@
-# The AwesomeWM client layout system
+# The TDE client layout system
 
-This document explains how to use clients layouts and how awesome manage them.
+This document explains how to use clients layouts and how TDE manage them.
 
-**Client layout**  refers to the mechanism awesome uses to place client on the screen. The layout definition can be a basic system where clients are all *floating* like in a normal *DE* (eg GNOME, KDE, ...) or tiled on the screen like in *tilled window manager* (eg i3, BSPWM, ...). It is also possible to define complex client layout mixing both concepts and even implementing a *[stateful](https://en.wikipedia.org/wiki/State_(computer_science)) placement strategy*.
+**Client layout**  refers to the mechanism TDE uses to place client on the screen. The layout definition can be a basic system where clients are all *floating* like in a normal *DE* (eg GNOME, KDE, ...) or tiled on the screen like in *tilled window manager* (eg i3, BSPWM, ...). It is also possible to define complex client layout mixing both concepts and even implementing a *[stateful](https://en.wikipedia.org/wiki/State_(computer_science)) placement strategy*.
 
-Awesome WM manages client layouts per tag. It means each tag has its own layout selection and uses them independently from other tags. When multiple tags are selected at once, Awesome uses only client layouts from the first selected tag and apply it to all current clients.
+TDE manages client layouts per tag. It means each tag has its own layout selection and uses them independently from other tags. When multiple tags are selected at once, TDE uses only client layouts from the first selected tag and apply it to all current clients.
 
 ## Layouts configuration
 

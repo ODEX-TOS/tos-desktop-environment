@@ -24,6 +24,23 @@ Welcome to the documentation for TDE. Below you find an
 overview of the individual parts which links to the full documentation.
 
 If you area new user you should read our wiki https://wiki.odex.be for more introductory information
+
+### Guides
+
+<div class="index_guides">
+  <div>
+      <a href="../doc/documentation/07-my-first-awesome.md.html">Getting started</a>
+      <a href="../doc/documentation/90-FAQ.md.html">FAQ</a>
+      <a href="../doc/documentation/01-readme.md.html">Read me</a>
+      <a href="../doc/documentation/89-NEWS.md.html">NEWS</a>
+  </div>
+  <div>
+      <a href="../doc/documentation/00-authors.md.html">The widget system</a>
+      <a href="../doc/documentation/03-declarative-layout.md.html">The widget system</a>
+      <a href="../doc/documentation/09-options.md.html">Startup options</a>
+      <a href="../doc/documentation/08-client-layout-system.md.html">Window management</a>
+  </div>
+</div>
 ]]
 
 topics={
@@ -32,14 +49,12 @@ topics={
     '02-contributing.md',
     '03-declarative-layout.md',
     '04-new-widgets.md',
-    '05-awesomerc.md',
     '06-appearance.md',
     '07-my-first-awesome.md',
     '08-client-layout-system.md',
     '09-options.md',
     '10-building-and-testing.md',
     '16-using-cairo.md',
-    '17-porting-tips.md',
     '90-FAQ.md',
     '89-NEWS.md',
 }

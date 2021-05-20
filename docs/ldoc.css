@@ -625,18 +625,26 @@ pre .url {
 
 .index_guides div a {
     display: inline-block;
-    border: solid 1px #cccccc;
+    border: solid 1px #9000f244;
     width: 200px;
     margin-left: 10px;
     margin-right: 10px;
     text-align: center;
     padding-top: 20px;
     padding-bottom: 20px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px 0 #9000f244;
+    transition: 0.3s;
 }
 
 .index_guides div a:hover {
-    background-color: #99b3ec;
+    background-color: #9000f2;
+    box-shadow: 0 8px 16px 0 #9000f244;
+    color: #FFF;
+
 }
+
 
 /* Inheritance diagram */
 .inheritance .inheritance__level {
