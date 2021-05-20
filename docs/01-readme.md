@@ -4,16 +4,15 @@
 [![Issues][issues-shield]][issues-url]
 [![GPL License][license-shield]][license-url]
 
-<!-- PROJECT LOGO -->
 <br />
-<p align="center">
+<p>
   <a href="https://github.com/ODEX-TOS/tos-desktop-environment">
     <img src="https://tos.odex.be/images/logo.svg" alt="Logo" width="150" height="150">
   </a>
 
-  <h3 align="center">TOS Desktop Environment</h3>
+  <h3>TOS Desktop Environment</h3>
 
-  <p align="center">
+  <p>
     A desktop environment build ontop of awesome wm
     <br />
     <a href="https://tos.odex.be/docs/"><strong>Explore the docs »</strong></a>
@@ -26,29 +25,6 @@
     <a href="https://github.com/ODEX-TOS/tos-desktop-environment/issues">Request Feature</a>
   </p>
 </p>
-
-<!-- TABLE OF CONTENTS -->
-
-## Table of Contents
-
-- [About the Project](#about-the-project)
-  - [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-
-  - [Unit Testing](#unit-test)
-    - [Dockerized](#docker)
-  - [Profiling](#profiling)
-  - [Hot Reload Widgets](#hot-reload-widgets)
-  - [Commit Hooks](#commit-hooks)
-
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgments](#acknowledgements)
 
 <!-- ABOUT THE PROJECT -->
 
@@ -69,7 +45,7 @@ To get a local copy up and running follow these simple steps.
 > TDE depends on a lot of different tools and projects. A list can be found
 > [here](https://github.com/ODEX-TOS/tos-live/blob/master/repo/BUILD/PKGBUILD_AWESOME)
 
-![desktop](images/desktop.png)
+![desktop](https://github.com/ODEX-TOS/tos-desktop-environment/blob/master/images/desktop.png?raw=true)
 
 ### Installation
 

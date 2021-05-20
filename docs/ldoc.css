@@ -30,7 +30,7 @@ a {
 }
 
 h1 {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: normal;
 }
 h2 {
@@ -142,7 +142,7 @@ ol code {
 #content h1 {
   background-color: #9000f2;
   color: white;
-  padding: 15px;
+  padding: 20px;
   margin: 0px;
   border-radius: 15px;
   margin-right: 2em;
@@ -634,6 +634,7 @@ pre .url {
     padding-bottom: 20px;
     border-radius: 15px;
     margin-bottom: 10px;
+    background-color: #FFF;
     box-shadow: 0 4px 8px 0 #9000f244;
     transition: 0.3s;
 }
