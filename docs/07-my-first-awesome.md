@@ -5,7 +5,7 @@ First of all example plugins can be found in the `/etc/skel/.config/tde` directo
 
 For a fun example of what a plugin can do take a look at the snake game:
 
-```bash
+```sh
 cat /etc/skel/.config/tde/snake/init.lua | tde-client
 ```
 
@@ -18,7 +18,7 @@ Plugins are located in the `~/.config/tde` directory.
 
 If the directory doesn't exist yet then create one.
 
-```bash
+```sh
 mkdir -p "$HOME/.config/tde"
 ```
 
@@ -29,7 +29,7 @@ Each subdirectory in this directory is one plugin
 The configuration file to enable/disable plugins can be found in the following location `~/.config/tos/plugins.conf`
 
 By default it looks like this:
-```bash
+```sh
 # Notification widget plugins will be added in the notification center
 notification="widget.user-profile"
 notification="widget.social-media"
@@ -93,7 +93,7 @@ Here are the current widget locations.
 
 # My First Plugin
 
-This part is interactive, it will guide you to make both a `module` and a `widget`, how to debug, testing out etc.
+This part is interactive, it will guide you to make both a `Module` and a `Widget`, how to debug, testing out etc.
 
 Follow this tutorial if you have never build a plugin before.
 
@@ -107,7 +107,7 @@ It is highly recommended you use this and this tutorial will make great use of i
 
 To test if you installed wm-launch correctly execute the following command:
 
-```bash
+```sh
 wm-launch -r 1080x1080
 ```
 
@@ -126,7 +126,7 @@ Lets get started with your first module.
 
 Firstly create a new directory in `~/.config/tde/` called `my-first-module`
 
-```bash
+```sh
 mkdir -p "$HOME/.config/tde/my-first-module"
 ```
 
@@ -189,12 +189,12 @@ First of all open 2 terminal.
 2. The second starts/activates your plugin.
 
 Executed this command in the first terminal:
-```bash
+```sh
 tail -f "$HOME/.cache/tde/stdout.log"
 ```
 
 Executed this command in the seconds terminal:
-```bash
+```sh
 cat "$HOME/.config/tde/my-first-module/init.lua" | tde-client
 ```
 
@@ -248,8 +248,7 @@ local cmd = [[
 spawn.easy_async_with_shell(cmd, done_callback)
 ```
 
-The only build in module we use is called `awful.spawn` and is covered in the documentation
-you can find it [here](../libraries/awful.spawn.html)
+The only build in module we use is called `awful.spawn`
 
 Now execute your plugin as noted in the last section and see what happens.
 
@@ -259,7 +258,7 @@ This section will be explained in the future
 
 ## Docs
 
-Now that you have followed the tutorial and created both a basic `module` and `widget` you can explore the documentation.
+Now that you have followed the tutorial and created both a basic `Module` and `Widget` you can explore the documentation.
 Learn about the api and what `TDE` directly has to offer.
 
 Some useful resources:
@@ -268,4 +267,4 @@ Some useful resources:
 2. `Example plugins` [Official plugins](https://github.com/ODEX-TOS/tos-desktop-environment/tree/master/plugins)
 3. `This documentation` [site](../index.html)
 4. `Recommended patterns` [Plugin recommended patterns](https://wiki.odex.be/en/Usage/Plugin)
-5. `lib-widget` [contains usefull widgets](../tde-widget/lib-widget.button.html)
+5. `lib-widget` [contains useful widgets](../tde%20widget/lib-widget.button.html)
