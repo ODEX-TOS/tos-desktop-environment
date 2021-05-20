@@ -28,9 +28,7 @@ updates="$(checkupdates-tos)"
 echo -n "$updates" | wc -l
 
 # of which x security updates
-if [[ "$(command arch-audit)" ]]; then
-    #arch-audit -u -r -C never -f "%n"
-    
+if [[ "$(command -v arch-audit)" ]]; then    
     updateFile=$(mktemp)
     securityFile=$(mktemp)
 
