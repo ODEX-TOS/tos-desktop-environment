@@ -224,6 +224,7 @@ local right_panel = function()
 
     -- start the animations
     panel.x = s.geometry.x + s.geometry.width
+    panel.height = s.geometry.height
     panel.opacity = 0
     animate(_G.anim_speed, panel, {opacity = 1, x = s.geometry.x + (s.geometry.width - panel_width)}, "outCubic", function()
       update_backdrop_location()
@@ -236,6 +237,7 @@ local right_panel = function()
 
     -- start the animations
     panel.x = s.geometry.x + (s.geometry.width - panel_width)
+    panel.height = s.geometry.height
     panel.opacity = 1
     backdrop.visible = false
 

@@ -140,6 +140,8 @@ local left_panel_func = function()
 
     -- start the animations
     left_panel.x = s.geometry.x - left_panel_width
+    left_panel.y = s.geometry.y
+    left_panel.height = s.geometry.height
     left_panel.opacity = 0
     animate(_G.anim_speed, left_panel, {opacity = 1, x = s.geometry.x}, "outCubic", function()
       update_backdrop_location()
@@ -151,6 +153,8 @@ local left_panel_func = function()
 
     -- start the animations
     left_panel.x = s.geometry.x
+    left_panel.y = s.geometry.y
+    left_panel.height = s.geometry.height
     left_panel.opacity = 1
     backdrop.visible = false
     animate(
