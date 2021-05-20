@@ -4,27 +4,17 @@
 [![Issues][issues-shield]][issues-url]
 [![GPL License][license-shield]][license-url]
 
-<br />
-<p>
-  <a href="https://github.com/ODEX-TOS/tos-desktop-environment">
-    <img src="https://tos.odex.be/images/logo.svg" alt="Logo" width="150" height="150">
-  </a>
 
-  <h3>TOS Desktop Environment</h3>
+![tde](https://tos.odex.be/images/logo.svg)
 
-  <p>
-    A desktop environment build ontop of awesome wm
-    <br />
-    <a href="https://tos.odex.be/docs/"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://wiki.odex.be">View wiki</a>
-    ·
-    <a href="https://github.com/ODEX-TOS/tos-desktop-environment/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/ODEX-TOS/tos-desktop-environment/issues">Request Feature</a>
-  </p>
-</p>
+### TOS Desktop Environment
+A desktop environment build ontop of awesome wm
+
+**[Explore the docs »](https://tos.odex.be/docs/)**
+
+[View wiki](https://wiki.odex.be) -
+[Report Bug](https://github.com/ODEX-TOS/tos-desktop-environment/issues) -
+[Request Feature](https://github.com/ODEX-TOS/tos-desktop-environment/issues)
 
 <!-- ABOUT THE PROJECT -->
 
