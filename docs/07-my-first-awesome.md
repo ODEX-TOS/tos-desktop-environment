@@ -3,6 +3,14 @@
 ## Example plugins
 First of all example plugins can be found in the `/etc/skel/.config/tde` directory.
 
+For a fun example of what a plugin can do take a look at the snake game:
+
+```bash
+cat /etc/skel/.config/tde/snake/init.lua | tde-client
+```
+
+> Note: To stop the game press escape
+
 ## Plugin location
 
 Before writing your first plugin you need to understand where they need to be located.
@@ -11,7 +19,7 @@ Plugins are located in the `~/.config/tde` directory.
 If the directory doesn't exist yet then create one.
 
 ```bash
-mkdir -p "~/.config/tde"
+mkdir -p "$HOME/.config/tde"
 ```
 
 Each subdirectory in this directory is one plugin
@@ -21,7 +29,7 @@ Each subdirectory in this directory is one plugin
 The configuration file to enable/disable plugins can be found in the following location `~/.config/tos/plugins.conf`
 
 By default it looks like this:
-```conf
+```bash
 # Notification widget plugins will be added in the notification center
 notification="widget.user-profile"
 notification="widget.social-media"
@@ -85,7 +93,7 @@ Here are the current widget locations.
 
 # My First Plugin
 
-This part is interactive, it will guide you to make both a `module` and a `widget`, how to debug. testing out etc.
+This part is interactive, it will guide you to make both a `module` and a `widget`, how to debug, testing out etc.
 
 Follow this tutorial if you have never build a plugin before.
 
@@ -119,7 +127,7 @@ Lets get started with your first module.
 Firstly create a new directory in `~/.config/tde/` called `my-first-module`
 
 ```bash
-mkdir -p "~/.config/tde/my-first-module"
+mkdir -p "$HOME/.config/tde/my-first-module"
 ```
 
 This directory will house everything related to your project.
@@ -139,7 +147,7 @@ The above line will make `tde` use your module.
 
 Next we will create the `lua` file that is your plugins entrypoint
 
-The file is located in `~/config/tde/my-first-module/init.lua`
+The file is located in `~/.config/tde/my-first-module/init.lua`
 
 Write the following into that file
 
@@ -168,7 +176,7 @@ Now lets run your plugin!
 wm-launch is your best bet
 Since you created the plugin and enabled it can simply launch the `wm-launch` command.
 
-Look at your terminal and wait until you see the `Hello, World!` and the `This is executed from my plugin` lines appear somewhere in the output
+Look at your terminal and wait a few seconds until you see the `Hello, World!` and the `This is executed from my plugin` lines appear somewhere in the output
 
 #### In current session
 
@@ -182,12 +190,12 @@ First of all open 2 terminal.
 
 Executed this command in the first terminal:
 ```bash
-tail -f "~/.cache/tde/stdout.log"
+tail -f "$HOME/.cache/tde/stdout.log"
 ```
 
 Executed this command in the seconds terminal:
 ```bash
-cat ~/.config/tde/my-first-plugin/init.lua | tde-client
+cat "$HOME/.config/tde/my-first-module/init.lua" | tde-client
 ```
 
 Afterwards check the first terminal, you should see your `Hello, World!` and `This is executed from my plugin` messages appear in the output.
@@ -240,8 +248,24 @@ local cmd = [[
 spawn.easy_async_with_shell(cmd, done_callback)
 ```
 
-Now execute your plugin as noted in the last section and see what happens
+The only build in module we use is called `awful.spawn` and is covered in the documentation
+you can find it [here](../libraries/awful.spawn.html)
+
+Now execute your plugin as noted in the last section and see what happens.
 
 ## Widget
 
 This section will be explained in the future
+
+## Docs
+
+Now that you have followed the tutorial and created both a basic `module` and `widget` you can explore the documentation.
+Learn about the api and what `TDE` directly has to offer.
+
+Some useful resources:
+
+1. `Lua` [getting started](https://www.lua.org/pil/1.html)
+2. `Example plugins` [Official plugins](https://github.com/ODEX-TOS/tos-desktop-environment/tree/master/plugins)
+3. `This documentation` [site](../index.html)
+4. `Recommended patterns` [Plugin recommended patterns](https://wiki.odex.be/en/Usage/Plugin)
+5. `lib-widget` [contains usefull widgets](../tde-widget/lib-widget.button.html)
