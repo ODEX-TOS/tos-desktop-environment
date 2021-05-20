@@ -23,7 +23,7 @@ full_description = [[
 Welcome to the documentation for TDE. Below you find an
 overview of the individual parts which links to the full documentation.
 
-If you area new user you should read our wiki https://wiki.odex.be for more introductory information
+If you are a new user you should read our <a href="https://wiki.odex.be">wiki</a> for more introductory information
 
 ### Guides
 
