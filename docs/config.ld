@@ -29,16 +29,16 @@ If you are a new user you should read our <a href="https://wiki.odex.be">wiki</a
 
 <div class="index_guides">
   <div>
-      <a href="../docs/documentation/07-my-first-awesome.md.html">Getting started</a>
-      <a href="../docs/documentation/90-FAQ.md.html">FAQ</a>
-      <a href="../docs/documentation/01-readme.md.html">Read me</a>
-      <a href="../docs/documentation/89-NEWS.md.html">NEWS</a>
+      <a href="documentation/07-my-first-awesome.md.html">Getting started</a>
+      <a href="documentation/90-FAQ.md.html">FAQ</a>
+      <a href="documentation/01-readme.md.html">Read me</a>
+      <a href="documentation/89-NEWS.md.html">NEWS</a>
   </div>
   <div>
-      <a href="../docs/documentation/00-authors.md.html">Authors</a>
-      <a href="../docs/documentation/03-declarative-layout.md.html">The widget system</a>
-      <a href="../docs/documentation/09-options.md.html">Startup options</a>
-      <a href="../docs/documentation/08-client-layout-system.md.html">Window management</a>
+      <a href="documentation/00-authors.md.html">Authors</a>
+      <a href="documentation/03-declarative-layout.md.html">The widget system</a>
+      <a href="documentation/09-options.md.html">Startup options</a>
+      <a href="documentation/08-client-layout-system.md.html">Window management</a>
   </div>
 </div>
 ]]
