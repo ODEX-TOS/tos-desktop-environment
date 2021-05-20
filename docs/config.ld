@@ -35,7 +35,7 @@ If you area new user you should read our wiki https://wiki.odex.be for more intr
       <a href="../doc/documentation/89-NEWS.md.html">NEWS</a>
   </div>
   <div>
-      <a href="../doc/documentation/00-authors.md.html">The widget system</a>
+      <a href="../doc/documentation/00-authors.md.html">Authors</a>
       <a href="../doc/documentation/03-declarative-layout.md.html">The widget system</a>
       <a href="../doc/documentation/09-options.md.html">Startup options</a>
       <a href="../doc/documentation/08-client-layout-system.md.html">Window management</a>
