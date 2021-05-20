@@ -5,16 +5,15 @@
 [![GPL License][license-shield]][license-url]
 
 
-![tde](https://tos.odex.be/images/logo.svg)
+<center> <img src="../images/logo.png" /> </center>
 
 ### TOS Desktop Environment
 A desktop environment build ontop of awesome wm
 
 **[Explore the docs »](https://tos.odex.be/docs/)**
 
-[View wiki](https://wiki.odex.be) -
-[Report Bug](https://github.com/ODEX-TOS/tos-desktop-environment/issues) -
-[Request Feature](https://github.com/ODEX-TOS/tos-desktop-environment/issues)
+<center> <a href="https://wiki.odex.be">View wiki</a> - <a href="https://github.com/ODEX-TOS/tos-desktop-environment/issues">Report Bug</a> - <a href="https://github.com/ODEX-TOS/tos-desktop-environment/issues">Request Feature</a> </center>
+
 
 <!-- ABOUT THE PROJECT -->
 
