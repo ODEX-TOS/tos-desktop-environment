@@ -36,6 +36,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.inputfield
+-- @supermodule wibox.container.background
 ---------------------------------------------------------------------------
 -- TODO: implement this files
 -- TODO: refactor codebase to use this (network tab)

@@ -33,6 +33,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.button
+-- @supermodule wibox.container.background
 ---------------------------------------------------------------------------
 
 -- TODO: implement this files

@@ -36,6 +36,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.progress_bar
+-- @supermodule wibox.widget.progressbar
 ---------------------------------------------------------------------------
 -- Default widget requirements
 local base = require("wibox.widget.base")

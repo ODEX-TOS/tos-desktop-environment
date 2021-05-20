@@ -35,6 +35,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.checkbox
+-- @supermodule wibox.widget.checkbox
 ---------------------------------------------------------------------------
 -- TODO: implement this files
 -- TODO: refactor codebase to use this (settings app + left panel)

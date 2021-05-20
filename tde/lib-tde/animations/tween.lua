@@ -34,6 +34,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.animations.tween
+-- @supermodule lib-tde.animations
 ---------------------------------------------------------------------------
 local tween = {
     _VERSION = "tween 2.1.1",

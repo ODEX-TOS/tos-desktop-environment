@@ -35,6 +35,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.card
+-- @supermodule wibox.widget.base
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

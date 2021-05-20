@@ -47,6 +47,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdedatamod lib-tde.datastructure.stack
+-- @supermodule table
 ---------------------------------------------------------------------------
 
 --- Create a new Stack

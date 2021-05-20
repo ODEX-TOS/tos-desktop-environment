@@ -34,6 +34,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.scrollbox
+-- @supermodule wibox.container.margin
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

@@ -72,6 +72,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdedatamod lib-tde.datastructure.linkedList
+-- @supermodule table
 ---------------------------------------------------------------------------
 
 --- Create a new Double Linked List

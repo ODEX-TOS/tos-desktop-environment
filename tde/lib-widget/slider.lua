@@ -39,6 +39,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.slider
+-- @supermodule wibox.widget.slider
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

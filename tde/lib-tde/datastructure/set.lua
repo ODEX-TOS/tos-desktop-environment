@@ -48,6 +48,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdedatamod lib-tde.datastructure.set
+-- @supermodule table
 ---------------------------------------------------------------------------
 
 --- Create a new Set (List with only unique values)

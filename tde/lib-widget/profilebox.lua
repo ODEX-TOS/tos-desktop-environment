@@ -39,6 +39,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdewidget lib-widget.profilebox
+-- @supermodule wibox.widget.base
 ---------------------------------------------------------------------------
 
 local wibox = require("wibox")

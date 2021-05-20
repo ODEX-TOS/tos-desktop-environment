@@ -49,6 +49,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.logger
+-- @supermodule print
 ---------------------------------------------------------------------------
 
 local filehandle = require("lib-tde.file")

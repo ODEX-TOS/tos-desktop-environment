@@ -38,6 +38,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.widget.rounded
+-- @supermodule gears.object
 ---------------------------------------------------------------------------
 
 local gears = require("gears")
