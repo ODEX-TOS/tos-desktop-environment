@@ -9,7 +9,8 @@ body {
 #content ul {
   list-style: none;
 }
-#content li::before {
+
+#content li a, #content li strong::before {
   content: "•";
   color: #7036ff;
 }
