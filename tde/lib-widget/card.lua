@@ -88,7 +88,7 @@ local titled_card = function(title, height)
         bg = bg
     }
 
-    --- Update the title of the card
+    --- Update the title of the card (Build in translation)
     -- @tparam string title The title of the card
     -- @staticfct update_title
     -- @usage -- This will change the title to hello
