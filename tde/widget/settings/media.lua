@@ -47,6 +47,14 @@ local settings_nw = dpi(260)
 
 local scrollbox_body = {}
 
+local active_pallet = beautiful.primary
+
+signals.connect_primary_theme_changed(
+  function(pallete)
+    active_pallet = pallete
+  end
+)
+
 local refresh = function()
 end
 
@@ -216,7 +224,7 @@ return function()
     -- add buttons to test the audio
     sink_children:add(wibox.container.margin(button("Test speaker", function()
       sound()
-    end),m, m, m))
+    end, active_pallet),m, m, m))
 
     -- If we are currently listing for microphone input
     if mic_test_pid == -1 then
@@ -227,7 +235,7 @@ return function()
         -- start the process and get the pid
         mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'")
         refresh()
-      end),m, m, m))
+      end, active_pallet),m, m, m))
     else
       source_children:add(wibox.container.margin(button(mic_test_stop_message, kill_mic_pid),m, m, m))
     end
@@ -402,7 +410,7 @@ return function()
     volume_card,
     wibox.container.margin(button("Reset Audio Server", function()
       volume.reset_server()
-    end),m, m, m*2),
+    end, active_pallet),m, m, m*2),
     audio_settings,
     body,
     application_settings,
