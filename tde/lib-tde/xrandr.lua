@@ -27,7 +27,9 @@ local gtable = require("gears.table")
 
 local naughty = require("naughty")
 local apps = require("configuration.apps")
+local split = require("lib-tde.function.common").split
 
+local LOG_ERROR = "\27[0;31m[ ERROR "
 -- A path to a fancy icon
 local icon_path = "/etc/xdg/tde/theme/icons/laptop.svg"
 
@@ -177,9 +179,139 @@ local function xrandr()
    state.cid = noti.id
 end
 
+local function output_data()
+   -- get the current screen output
+   local xrandr_out = io.popen("xrandr -q --current")
+
+   local activeOutput = ""
+   local active = false
+   local data_tbl = {}
+
+   if xrandr_out then
+      for line in xrandr_out:lines() do
+         local output = line:match("^([%w-]+) connected ")
+         if output ~= nil  then
+            activeOutput = output
+            data_tbl[activeOutput] = {}
+            active = true
+         end
+
+         -- check for disconnected screens, don't scan/populate it
+         local isDisconnected = line:match("^([%w-]+) disconnected ")
+         if isDisconnected ~= nil then
+            data_tbl[isDisconnected] = {}
+            active = false
+         end
+
+         -- This is a resolution line for the active screen (1920x1080 60.00 + 59.95 45.00)
+         if (string.sub(line, 1, 1) == " " or string.sub(line, 1, 1) == "\t") and active then
+            local splitted = split(line, "%s")
+            data_tbl[activeOutput][splitted[1]] = {}
+            for i, v in ipairs(splitted) do
+               if i ~= 1 and v ~= '+' then
+                  table.insert(data_tbl[activeOutput][splitted[1]], v)
+               end
+            end
+         end
+      end
+   end
+
+   return data_tbl
+end
+
+local function highest_resolution(output)
+   if output == nil or (type(output) ~= "string" and type(output) ~= "table") then
+      return
+   end
+
+   local lookup_table = output
+   -- if the output is a string, then we fetch the lookup table
+   if type(lookup_table) == "string" then
+      lookup_table = output_data()
+      lookup_table = lookup_table[output]
+   end
+
+   -- invalid monitor has been supplied
+   if lookup_table == nil then
+      print(tostring(output) .. 'is an invalid monitor', LOG_ERROR)
+      return
+   end
+
+   local largest_res_key = '1x1'
+   local larget_res_pixels = 0
+
+   for key, _ in pairs(lookup_table) do
+      local splitted = split(key, 'x')
+      local value = (tonumber(splitted[1]) or 1) * (tonumber(splitted[2]) or 1)
+      if value > larget_res_pixels then
+         larget_res_pixels = value
+         largest_res_key = key
+      end
+   end
+   return largest_res_key, lookup_table[largest_res_key]
+end
+
+local function highest_refresh_rate(output)
+   if output == nil or (type(output) ~= "string" and type(output) ~= "table") then
+      return
+   end
+
+   local lookup_table = output
+   -- if the output is a string, then we fetch the lookup table
+   if type(lookup_table) == "string" then
+      lookup_table = output_data()
+      lookup_table = lookup_table[output]
+   end
+
+   -- invalid monitor has been supplied
+   if lookup_table == nil then
+      print(tostring(output) .. 'is an invalid monitor', LOG_ERROR)
+      return
+   end
+
+   local res_key = '1x1'
+   local largest_refresh_value = 0
+   local largest_refresh_index = 0
+
+   for res, value in pairs(lookup_table) do
+      for index, refresh_rate in ipairs(value) do
+         refresh_rate = tonumber(refresh_rate) or 0
+         if refresh_rate > largest_refresh_value then
+            largest_refresh_index = index
+            largest_refresh_value = refresh_rate
+            res_key = res
+         end
+      end
+   end
+   return largest_refresh_value, res_key, largest_refresh_index, lookup_table[res_key]
+end
+
+local function highest_refresh_rate_from_resolution(res_tbl)
+   if type(res_tbl) ~= "table" then
+      return
+   end
+
+   local largest_rate = 0
+   local largest_index = 0
+
+   for index, rate in ipairs(res_tbl) do
+      rate = tonumber(rate) or 0
+      if rate > largest_rate then
+         largest_rate = rate
+         largest_index = index
+      end
+   end
+
+   return largest_rate, largest_index
+end
+
 return {
    outputs = outputs,
    arrange = arrange,
    menu = menu,
-   xrandr = xrandr
+   xrandr = xrandr,
+   output_data = output_data,
+   highest_refresh_rate_from_resolution = highest_refresh_rate_from_resolution,
+   highest_refresh_rate = highest_refresh_rate,
+   highest_resolution = highest_resolution
 }
