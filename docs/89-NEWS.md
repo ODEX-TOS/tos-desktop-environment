@@ -26,6 +26,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### New Features
 * Desktop files in `~/.config/tos/autostart` get launched as well on startup
+* Set the monitor resolution in the settings application
+* Set the monitor refresh rate in the settings application
 
 ### Bug Fixes
 * Numerous bug fixes
