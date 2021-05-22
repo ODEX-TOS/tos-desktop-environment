@@ -53,6 +53,8 @@ return function(scrollable)
     local widget
     local size = 20
 
+    local bDisable = false
+
     for s in screen do
         if ((s.geometry.height / 50) > size) then
             size = (s.geometry.height / 50)
@@ -74,12 +76,35 @@ return function(scrollable)
         widget.top = 0
     end
 
+    --- Disable the scrollbox from scrolling at all
+    -- @staticfct disable
+    -- @usage -- This 'freeze' the scrollbox
+    -- -- No longer allow scrolling
+    -- scrollbox.disable()
+    widget.disable = function ()
+        bDisable = true
+        widget.reset()
+    end
+
+    --- Enable the scrollbox to scroll again
+    -- @staticfct enable
+    -- @usage -- This 'unfreeze' the scrollbox
+    -- -- Allow scrolling again
+    -- scrollbox.enable()
+    widget.enable = function ()
+        bDisable = false
+        widget.reset()
+    end
+
     widget:buttons(
         awful.util.table.join(
             awful.button(
                 {},
                 4,
                 function(_)
+                    if bDisable then
+                        return
+                    end
                     if ((offset + size) > 0) then
                         offset = 0
                     else
@@ -92,6 +117,9 @@ return function(scrollable)
                 {},
                 5,
                 function(_)
+                    if bDisable then
+                        return
+                    end
                     if (offset - 20 < -max_scroll) then
                         offset = -max_scroll
                     else

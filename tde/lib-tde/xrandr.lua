@@ -244,6 +244,7 @@ local function output_data()
             data_tbl[activeOutput][splitted[1]] = {}
             for i, v in ipairs(splitted) do
                if i ~= 1 and v ~= '+' then
+                  v = v:match('(%d+%.%d+).*')
                   table.insert(data_tbl[activeOutput][splitted[1]], v)
                end
             end

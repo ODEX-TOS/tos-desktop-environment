@@ -96,6 +96,15 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
         end
     end
 
+    --- Get the active theme pallet
+    -- @tparam table The pallet to supply, follows the material design format
+    -- @staticfct get_active_pallet
+    -- @usage -- Return the active theme pallet
+    -- button.get_active_pallet()
+    button.get_active_pallet = function ()
+        return color
+    end
+
     button:connect_signal(
         "mouse::enter",
         function()
@@ -123,6 +132,7 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
     button:buttons(gears.table.join(awful.button({}, 1, callback)))
 
     --- Manually update the color pallet used by the button, usually used when you want the button to not follow the theming
+    -- @tparam table The pallet to supply, follows the material design format
     -- @staticfct update_pallet
     -- @usage -- Update the color pallet of the button
     -- button.update_pallet(require("theme.mat-colors").yellow)

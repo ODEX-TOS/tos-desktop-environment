@@ -40,9 +40,17 @@ local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
+local sort = require('lib-tde.sort.quicksort')
+local split = require('lib-tde.function.common').split
+local xrandr = require('lib-tde.xrandr')
+
+-- The name in xephyr
+local _monitor = 'default'
 
 -- this will hold the scrollbox, used to reset it
 local body = nil
+local resolution_box = nil
+
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -52,6 +60,17 @@ local tempDisplayDir = filehandle.mktempdir()
 local monitorScaledImage = ""
 
 local active_pallet = beautiful.primary
+
+
+-- REFRESH MODE VARS
+local refresh_card = card('Refresh rate list')
+local resolution_card = card('Resolution list')
+
+local refresh_rate_cmd = ""
+local active_refresh_buttons = {}
+local active_resolution_buttons = {}
+-- END REFRESH MODE VARS
+
 
 signals.connect_primary_theme_changed(
   function(pallete)
@@ -73,11 +92,104 @@ local mon_size = {
 local refresh = function()
 end
 
+local function weighted_resolution(resolution)
+  local splitted = split(resolution, 'x')
+  return (tonumber(splitted[1]) or 1) * (tonumber(splitted[2]) or 1)
+end
+
+
 local NORMAL_MODE = 1
 local WALLPAPER_MODE = 2
 local XRANDR_MODE = 3
+local REFRESH_MODE = 4
 
 local Display_Mode = NORMAL_MODE
+
+-- Shift the value of the pallet by 1
+local function shift_pallet(pallet)
+  local new_pallet = {
+    hue_50 =   pallet["hue_300"],
+    hue_100 =  pallet["hue_400"],
+    hue_200 =  pallet["hue_500"],
+    hue_300 =  pallet["hue_600"],
+    hue_400 =  pallet["hue_700"],
+    hue_500 =  pallet["hue_800"],
+    hue_600 =  pallet["hue_900"],
+    hue_700 =  pallet["hue_900"],
+    hue_800 =  pallet["hue_900"],
+    hue_900 =  pallet["hue_A100"],
+    hue_A100 = pallet["hue_A200"],
+    hue_A200 = pallet["hue_A400"],
+    hue_A400 = pallet["hue_A700"],
+    hue_A700 = pallet["hue_A700"]
+  }
+  return new_pallet
+end
+
+local function make_refresh_list(refresh_tbl, resolution)
+  local refresh_list = wibox.layout.fixed.vertical()
+
+  active_refresh_buttons = {}
+
+  for index, value in ipairs(refresh_tbl) do
+      table.insert(active_refresh_buttons, button(value .. ' Hz', function ()
+        refresh_rate_cmd = 'xrandr --output ' .. _monitor .. ' --rate ' .. tostring(value) .. ' --mode ' .. resolution
+
+        -- Visually show the selected option
+        for i, btn in ipairs(active_refresh_buttons) do
+          if i == index then
+            btn.update_pallet(shift_pallet(active_pallet))
+          else
+            btn.update_pallet(active_pallet)
+          end
+        end
+      end, active_pallet))
+      refresh_list:add(wibox.container.margin(
+          active_refresh_buttons[#active_refresh_buttons],
+          dpi(5),dpi(5),dpi(5),dpi(5)
+      ))
+  end
+
+  return refresh_list
+end
+
+local function make_resolution_list(monitor_information)
+  local resolution_list = wibox.layout.fixed.vertical()
+
+  active_resolution_buttons = {}
+
+  local sorted_resolutions = {}
+  for key, _ in pairs(monitor_information) do
+      table.insert(sorted_resolutions, key)
+  end
+
+  sorted_resolutions = sort(sorted_resolutions, function (smaller, bigger)
+      return weighted_resolution(smaller) > weighted_resolution(bigger)
+  end)
+
+  for index, value in ipairs(sorted_resolutions) do
+      table.insert(active_resolution_buttons,  button(value, function ()
+            refresh_card.update_body(make_refresh_list(monitor_information[value], value))
+
+            -- Visually show the selected option
+            for i, btn in ipairs(active_resolution_buttons) do
+              if i == index then
+                btn.update_pallet(shift_pallet(active_pallet))
+              else
+                btn.update_pallet(active_pallet)
+              end
+            end
+        end, active_pallet)
+      )
+      resolution_list:add(wibox.container.margin(
+        active_resolution_buttons[#active_resolution_buttons],
+          dpi(5),dpi(5),dpi(5),dpi(5)
+      ))
+  end
+
+  resolution_box = scrollbox(resolution_list)
+  resolution_card.update_body(resolution_box)
+end
 
 local function make_screen_layout(wall, label)
   local size = dpi(20)
@@ -120,7 +232,7 @@ local function make_screen_layout(wall, label)
   )
 end
 
--- wall is the scaled wallpaper
+-- wall is the scaled wallpaper (To reduce render times and memory consumption)
 -- fullwall is a fullscreen (or original wallpaper)
 -- the disable_number argument tells use if we should show the number in the center of the monitor
 local function make_mon(wall, id, fullwall, disable_number)
@@ -135,6 +247,14 @@ local function make_mon(wall, id, fullwall, disable_number)
     forced_height = mon_size.h
   }
   monitor:set_image(wall)
+
+  if Display_Mode == NORMAL_MODE then
+    awful.tooltip {
+      objects        = { monitor },
+      text =  i18n.translate("Open the resolution and refresh rate editor")
+    }
+  end
+
   monitor:connect_signal(
     "button::press",
     function(_, _, _, btn)
@@ -162,6 +282,13 @@ local function make_mon(wall, id, fullwall, disable_number)
             collectgarbage("collect")
           end
         )
+      end
+
+      -- In this case someone wants to change a specific screen
+      if Display_Mode == NORMAL_MODE and btn == 1 then
+        print('Opening refresh rate and resolution editor')
+        Display_Mode = REFRESH_MODE
+        refresh()
       end
     end
   )
@@ -560,6 +687,65 @@ return function()
     end
   end
 
+  local function render_refresh_mode()
+    body.disable()
+    local x_out = xrandr.output_data()
+
+    local function tablelength(T)
+      local count = 0
+      for _ in pairs(T) do count = count + 1 end
+      return count
+    end
+
+    -- search for the correct monitor
+    -- TODO: Fix for multi monitor setups
+    for key, value in pairs(x_out) do
+      if tablelength(value) >= 1 then
+        _monitor = key
+      end
+    end
+
+
+    local monitor_information = x_out[_monitor]
+
+    layout.forced_num_cols = 1
+
+
+    if monitor_information == nil then
+      print('Invalid monitor aborting')
+      local widget = wibox.widget.textbox(_monitor .. ' ' .. i18n.translate("is invalid"))
+      layout:add(widget)
+      return
+    end
+
+    make_resolution_list(monitor_information)
+
+    local widget = wibox.widget {
+      resolution_card,
+      wibox.widget.base.empty_widget(),
+      refresh_card,
+      layout  = wibox.layout.ratio.horizontal
+    }
+
+    widget:adjust_ratio(2, 0.625, 0.05, 0.325)
+
+    layout:add(wibox.widget {
+      wibox.container.margin(button(
+      "Save", function ()
+        awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'")
+        body.enable()
+
+        Display_Mode = NORMAL_MODE
+        refresh()
+      end, active_pallet
+      ), 0, 0, 0, dpi(20)),
+      nil,
+      widget,
+      layout = wibox.layout.fixed.vertical
+    })
+
+  end
+
   refresh = function()
     screens = {}
     layout:reset()
@@ -577,6 +763,8 @@ return function()
       render_wallpaper_mode()
     elseif Display_Mode == XRANDR_MODE then
       render_xrandr_mode()
+    elseif Display_Mode == REFRESH_MODE then
+      render_refresh_mode()
     else
       render_normal_mode()
     end
