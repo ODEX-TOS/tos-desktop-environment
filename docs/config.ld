@@ -56,7 +56,7 @@ topics={
     '10-building-and-testing.md',
     '16-using-cairo.md',
     '90-FAQ.md',
-    '89-NEWS.md',
+    '89-NEWS.md', -- This comes from https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/master/NEWS.md
 }
 
 -- The first stereotype are the constructors.
