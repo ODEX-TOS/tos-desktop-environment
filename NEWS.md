@@ -8,16 +8,16 @@
 
 ## Short disclaimer
 
-This draft is not a final version of what will be introduced in the next patch, but merely a sugestion of what can be added
+This draft is not a final version of what will be introduced in the next patch, but merely a suggestion of what can be added
 
 ## Features
 
-* [ ] `Package manager agnostic` Allow the package updater to use other package managers that strictly `pacman`
+* [ ] `Package manager agnostic` Allow the package updater to use other package managers than strictly `pacman`
 * [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
 
 ## Packaging
 
-* `TDE` should support other packaging formats that only pacman's, eg debian and rpm
+* `TDE` should support other packaging formats than only pacman's, eg debian and rpm
 
 
 # Patch Notes
