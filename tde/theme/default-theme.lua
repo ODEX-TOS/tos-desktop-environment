@@ -37,7 +37,7 @@ local file_exists = filehandle.exists
 local theme = {}
 theme.icons = theme_dir .. "/icons/"
 theme.font = "Roboto medium 10"
-theme.monitor_font = "Roboto medium 50"
+theme.monitor_font = "Roboto medium 16"
 theme.gtk = gtk.get_theme_variables()
 theme.background_transparency = config["background_transparent"] or "66"
 

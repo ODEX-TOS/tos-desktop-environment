@@ -44,9 +44,6 @@ local sort = require('lib-tde.sort.quicksort')
 local split = require('lib-tde.function.common').split
 local xrandr = require('lib-tde.xrandr')
 
--- The name in xephyr
-local _monitor = 'default'
-
 -- this will hold the scrollbox, used to reset it
 local body = nil
 local resolution_box = nil
@@ -84,12 +81,13 @@ signals.connect_exit(
   end
 )
 
-local screens = {}
 local mon_size = {
   w = nil,
   h = nil
 }
-local refresh = function()
+
+-- The optional argument is for monitor_id when in REFRESH_MODE
+local refresh = function(_)
 end
 
 local function weighted_resolution(resolution)
@@ -126,14 +124,14 @@ local function shift_pallet(pallet)
   return new_pallet
 end
 
-local function make_refresh_list(refresh_tbl, resolution)
+local function make_refresh_list(refresh_tbl, resolution, monitor_id)
   local refresh_list = wibox.layout.fixed.vertical()
 
   active_refresh_buttons = {}
 
   for index, value in ipairs(refresh_tbl) do
       table.insert(active_refresh_buttons, button(value .. ' Hz', function ()
-        refresh_rate_cmd = 'xrandr --output ' .. _monitor .. ' --rate ' .. tostring(value) .. ' --mode ' .. resolution
+        refresh_rate_cmd = 'xrandr --output ' .. monitor_id .. ' --rate ' .. tostring(value) .. ' --mode ' .. resolution
 
         -- Visually show the selected option
         for i, btn in ipairs(active_refresh_buttons) do
@@ -153,7 +151,7 @@ local function make_refresh_list(refresh_tbl, resolution)
   return refresh_list
 end
 
-local function make_resolution_list(monitor_information)
+local function make_resolution_list(monitor_information, monitor_id)
   local resolution_list = wibox.layout.fixed.vertical()
 
   active_resolution_buttons = {}
@@ -169,7 +167,7 @@ local function make_resolution_list(monitor_information)
 
   for index, value in ipairs(sorted_resolutions) do
       table.insert(active_resolution_buttons,  button(value, function ()
-            refresh_card.update_body(make_refresh_list(monitor_information[value], value))
+            refresh_card.update_body(make_refresh_list(monitor_information[value], value, monitor_id))
 
             -- Visually show the selected option
             for i, btn in ipairs(active_resolution_buttons) do
@@ -288,7 +286,7 @@ local function make_mon(wall, id, fullwall, disable_number)
       if Display_Mode == NORMAL_MODE and btn == 1 then
         print('Opening refresh rate and resolution editor')
         Display_Mode = REFRESH_MODE
-        refresh()
+        refresh(id)
       end
     end
   )
@@ -589,6 +587,8 @@ return function()
     end
   end
 
+  local wallpaper_img = ''
+
   local function render_normal_mode()
     changewall.visible = true
     screenLayoutBtn.visible = true
@@ -596,32 +596,41 @@ return function()
       "tos theme active",
       {
         stdout = function(o)
-          table.insert(screens, o)
+          wallpaper_img = o
         end,
         output_done = function()
+          -- TODO: get all screens
+          local screens = xrandr.outputs ()
+
           monitors.forced_height = settings_height / 2
-          if #screen < 4 then
-            layout.forced_num_cols = #screen
+          if #screens < 4 then
+            layout.forced_num_cols = #screens
+          else
+            layout.forced_num_cols = 4
           end
-          for k, v in pairs(screens) do
-            local base = filehandle.basename(v)
-            -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
-            local width = dpi(600)
-            local height = (width / 16) * 9
-            monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+
+          -- generate the wallpaper (scaled)
+          local base = filehandle.basename(wallpaper_img)
+          -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
+          local width = dpi(600) / #screens
+          local height = (width / 16) * 9
+          monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+
+          for _, display_name in ipairs(screens) do
+
             if filesystem.exists(monitorScaledImage) then
-              layout:add(make_mon(monitorScaledImage, k, v))
+              layout:add(make_mon(monitorScaledImage, display_name, wallpaper_img))
             else
               -- We use imagemagick to generate a "thumbnail"
               -- This is done to save memory consumption
               -- However note that our cache (tempDisplayDir) is stored in ram
               imagemagic.scale(
-                v,
+                wallpaper_img,
                 width,
                 height,
                 monitorScaledImage,
                 function()
-                  layout:add(make_mon(monitorScaledImage, k, v))
+                  layout:add(make_mon(monitorScaledImage, display_name, wallpaper_img))
                 end
               )
             end
@@ -687,43 +696,40 @@ return function()
     end
   end
 
-  local function render_refresh_mode()
+  local function render_refresh_mode(monitor_id)
     body.disable()
+
     local x_out = xrandr.output_data()
-
-    local function tablelength(T)
-      local count = 0
-      for _ in pairs(T) do count = count + 1 end
-      return count
-    end
-
-    -- search for the correct monitor
-    -- TODO: Fix for multi monitor setups
-    for key, value in pairs(x_out) do
-      if tablelength(value) >= 1 then
-        _monitor = key
-      end
-    end
-
-
-    local monitor_information = x_out[_monitor]
+    local monitor_information = x_out[monitor_id]
 
     layout.forced_num_cols = 1
 
 
     if monitor_information == nil then
       print('Invalid monitor aborting')
-      local widget = wibox.widget.textbox(_monitor .. ' ' .. i18n.translate("is invalid"))
+      local widget = wibox.widget.textbox(monitor_id .. ' ' .. i18n.translate("is invalid"))
       layout:add(widget)
       return
     end
 
-    make_resolution_list(monitor_information)
+    make_resolution_list(monitor_information, monitor_id)
 
     local widget = wibox.widget {
       resolution_card,
       wibox.widget.base.empty_widget(),
-      refresh_card,
+      wibox.widget {
+        layout = wibox.layout.align.vertical,
+        wibox.widget.base.empty_widget(),
+        refresh_card,
+        wibox.container.margin(button(
+        "Back", function ()
+          body.enable()
+
+          Display_Mode = NORMAL_MODE
+          refresh()
+        end, active_pallet
+        ), 0, 0, dpi(20), 0),
+      },
       layout  = wibox.layout.ratio.horizontal
     }
 
@@ -744,12 +750,14 @@ return function()
       layout = wibox.layout.fixed.vertical
     })
 
+
   end
 
-  refresh = function()
-    screens = {}
+  refresh = function(monitor_id)
     layout:reset()
     body:reset()
+    body.enable()
+
     -- remove all images from memory (to save memory space)
     collectgarbage("collect")
 
@@ -763,9 +771,11 @@ return function()
       render_wallpaper_mode()
     elseif Display_Mode == XRANDR_MODE then
       render_xrandr_mode()
-    elseif Display_Mode == REFRESH_MODE then
-      render_refresh_mode()
+    elseif Display_Mode == REFRESH_MODE and monitor_id ~= nil then
+      render_refresh_mode(monitor_id)
     else
+      -- In case the Display_Mode contains an invalid state
+      Display_Mode = NORMAL_MODE
       render_normal_mode()
     end
   end
