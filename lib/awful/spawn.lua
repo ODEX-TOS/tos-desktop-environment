@@ -228,6 +228,7 @@ local GLib = lgi.GLib
 local util = require("awful.util")
 local gtable = require("gears.table")
 local gtimer = require("gears.timer")
+local gdebug = require("gears.debug")
 local aclient = require("awful.client")
 local protected_call = require("gears.protected_call")
 
@@ -364,6 +365,7 @@ function spawn.spawn(cmd, sn_rules, callback)
         end
         return pid, snid
     end
+    gdebug.print_warning("No command to execute in awful.spawn")
     -- For consistency
     return "Error: No command to execute"
 end
@@ -377,6 +379,7 @@ function spawn.with_shell(cmd)
         cmd = {util.shell, "-c", cmd}
         return capi.awesome.spawn(cmd, false)
     end
+    gdebug.print_warning("No command to execute in awful.spawn")
 end
 
 --- Spawn a program and asynchronously capture its output line by line.
@@ -456,6 +459,9 @@ function spawn.easy_async(cmd, callback)
         stderr = stderr .. str .. "\n"
     end
     local function done_callback()
+        if stderr ~= "" then
+            gdebug.print_error("Error in awful.spawn.easy_async:\n" .. stderr)
+        end
         return callback(stdout, stderr, exitreason, exitcode)
     end
     local exit_callback_fired = false
@@ -529,7 +535,7 @@ function spawn.read_lines(input_stream, line_callback, done_callback, close)
         local line, length = obj:read_line_finish(res)
         if type(length) ~= "number" then
             -- Error
-            print("Error in awful.spawn.read_lines:", tostring(length))
+            gdebug.print_error("Error in awful.spawn.read_lines:", tostring(length))
             done()
         elseif end_of_file(line, length) then
             -- End of file
