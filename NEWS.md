@@ -1,10 +1,8 @@
 # NEWS
 
-<a name="v10"></a>
-
 # DRAFT TDE framework version 1.0 changes DRAFT
 
-<center> <img src="../images/logo.png" /> </center>
+<center> <img src="https://tos.odex.be/docs/images/logo.png" /> </center>
 
 ## Short disclaimer
 
@@ -12,8 +10,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ## Features
 
-* [] `Package manager agnostic` Allow the package updater to use other package managers that strictly `pacman`
-* [] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
+* [ ] `Package manager agnostic` Allow the package updater to use other package managers that strictly `pacman`
+* [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
 
 ## Packaging
 
