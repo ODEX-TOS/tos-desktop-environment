@@ -1,5 +1,7 @@
 # NEWS
 
+<br />
+
 # DRAFT TDE framework version 1.0 changes DRAFT
 
 <center> <img src="https://tos.odex.be/docs/images/logo.png" /> </center>
@@ -23,19 +25,23 @@ This draft is not a final version of what will be introduced in the next patch, 
 ## Patch 0.7
 
 ### New Features
-* Desktop files in `~/.config/tos/autostart` get launched as well on startup
-* Set the monitor resolution in the settings application
-* Set the monitor refresh rate in the settings application
+
+- Desktop files in `~/.config/tos/autostart` get launched as well on startup
+- Set the monitor resolution in the settings application
+- Set the monitor refresh rate in the settings application
 
 ### Bug Fixes
+
 * Numerous bug fixes
 
 ### Dev Notes
+
 * `stderr` messages get written to `error.log`
 
 ## Patch 0.6
 
 ### New Features
+
 * Multi Monitor detection
 * Translations
 * Error logging
@@ -47,9 +53,11 @@ This draft is not a final version of what will be introduced in the next patch, 
 * Overhaul of the notification widgets
 
 ### Bug Fixes
+
 * Fixed numerous bugs
 
 ### Dev Notes
+
 * Unit Testing
 * Integration Testing
 * Widget hot reloader
