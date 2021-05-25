@@ -47,6 +47,7 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdedatamod lib-tde.datastructure.queue
+-- @supermodule lib-tde.datastructure.linkedList
 ---------------------------------------------------------------------------
 
 local linkedList = require("lib-tde.datastructure.linkedList")
