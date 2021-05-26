@@ -165,7 +165,7 @@ The Lua specific documentation: ${LBLUE}https://www.lua.org/manual/5.3/${NC}
 get_line() {
     if [[ $READ_ARGS == "" ]]; then
         [[ ! -f "$HOME/.tde-client_history" ]] && touch "$HOME/.tde-client_history"
-        line="$(cat "$HOME/.tde-client_history" | fzf --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="./$0 return {} | lua $root_dir/pretty_print.lua" )"
+        line="$(cat "$HOME/.tde-client_history" | fzf --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 return {} | lua $root_dir/pretty_print.lua" )"
     else
         echo -en "$line_feed"
         read $READ_ARGS
