@@ -46,6 +46,7 @@ require("tests.tutorial")
 require("tests.theme")
 require("tests.configuration")
 require("tests.lib-tde")
+require("tests.modules")
 
 -- END OF LIST OF TESTS TO RUN
 
