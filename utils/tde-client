@@ -179,11 +179,62 @@ get_line() {
         [[ ! -f "$HOME/.tde-client_history" ]] && touch "$HOME/.tde-client_history"
 
         # Our prompt
-        line="$(cat "$HOME/.tde-client_history" | fzf  $FZF_COLOR_SCHEME --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 return {} | lua $root_dir/pretty_print.lua" )"
+        line="$(cat "$HOME/.tde-client_history" | fzf  $FZF_COLOR_SCHEME --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 --preview {}" )"
     else
         echo -en "$line_feed"
         read $READ_ARGS
     fi
+}
+
+exec_loop() {
+    # gracefull shutdown
+        if [ "$line" == "exit" ] || [ "$line" == "exit()" ] || [ "$line" == "quit" ] || [ "$line" == "quit()" ]; then
+            exit 0
+        elif [ "$line" == "help" ] || [ "$line" == "help()" ]; then
+            print_help
+            return
+        elif [ "$line" == "example" ] || [ "$line" == "examples" ] || [ "$line" == "example()" ] || [ "$line" == "examples()" ]; then
+            print_example
+            return
+        elif [ "$line" == "logs" ]; then
+            tail "$HOME/.cache/tde/stdout.log"
+        elif [[ "$line" == "logs "* ]]; then
+            lines="$(echo "$line" | cut -d " " -f2- )"
+            tail -n "$lines" "$HOME/.cache/tde/stdout.log"
+        elif [[ "$line" == "cat "* ]]; then
+            file="$(echo "$line" | cut -d " " -f2- )"
+            content="$(/bin/cat "$file" 2>/dev/null || /bin/cat "$current_dir/$file")"
+            echo -e "$content" | lua "$root_dir"/pretty_print.lua
+            return
+        elif [ -f "$line" ] || [ -f "$current_dir/$line" ]; then
+            content="$(/bin/cat "$line" 2>/dev/null || /bin/cat "$current_dir/$line")"
+            res="$(a_dbus_send "$content")"
+            echo -e "$content" | lua "$root_dir"/pretty_print.lua
+            echo
+        elif [[ "$line" == "ls "* ]]; then
+            ls "$current_dir/$(echo "$line" | cut -d " " -f2- )"
+        elif [[ "$line" == "ls" ]]; then
+            ls "$current_dir/"
+        elif [[ "$line" == "cd" ]]; then
+            current_dir="$root_dir"
+            return
+        elif [[ "$line" == "cd "* ]]; then
+            new_dir="$current_dir/$(echo "$line" | cut -d " " -f2- )"
+            if [[ -d "$new_dir" ]]; then
+                current_dir="$(realpath $new_dir)"
+            fi
+            return
+        elif [[ "$line" == "pwd" ]]; then
+            echo "$current_dir"
+            return
+        # don't use the return keyword when '=' is used, when '==' is used, do use return
+        elif echo "$line" | grep -q "[^=]=[^=]"; then
+            res="$(a_dbus_send "$line")"
+        elif echo "$line" | grep -qE "^return"; then
+            res="$(a_dbus_send "$line")"
+        else
+            res="$(a_dbus_send "return $line")"
+        fi
 }
 
 if [ $# -ne 0 ]
@@ -208,6 +259,12 @@ then
                 cat "$HOME/.tde-client_history"
             fi
             exit 0
+        elif [[ "$1" == "--preview" ]]; then
+            shift
+            line="$1"
+            exec_loop
+            echo "$res"
+            exit 0
         else
             ARGS="$ARGS $1"
         fi
@@ -231,54 +288,8 @@ then
         if [ "$line" = "" ]; then
             continue
         fi
-        # gracefull shutdown
-        if [ "$line" == "exit" ] || [ "$line" == "exit()" ] || [ "$line" == "quit" ] || [ "$line" == "quit()" ]; then
-            exit 0
-        elif [ "$line" == "help" ] || [ "$line" == "help()" ]; then
-            print_help
-            continue
-        elif [ "$line" == "example" ] || [ "$line" == "examples" ] || [ "$line" == "example()" ] || [ "$line" == "examples()" ]; then
-            print_example
-            continue
-        elif [ "$line" == "logs" ]; then
-            tail "$HOME/.cache/tde/stdout.log"
-        elif [[ "$line" == "logs "* ]]; then
-            lines="$(echo "$line" | cut -d " " -f2- )"
-            tail -n "$lines" "$HOME/.cache/tde/stdout.log"
-        elif [[ "$line" == "cat "* ]]; then
-            file="$(echo "$line" | cut -d " " -f2- )"
-            content="$(/bin/cat "$file" 2>/dev/null || /bin/cat "$current_dir/$file")"
-            echo -e "$content" | lua "$root_dir"/pretty_print.lua
-            continue
-        elif [ -f "$line" ] || [ -f "$current_dir/$line" ]; then
-            content="$(/bin/cat "$line" 2>/dev/null || /bin/cat "$current_dir/$line")"
-            res="$(a_dbus_send "$content")"
-            echo -e "$content" | lua "$root_dir"/pretty_print.lua
-            echo
-        elif [[ "$line" == "ls "* ]]; then
-            ls "$current_dir/$(echo "$line" | cut -d " " -f2- )"
-        elif [[ "$line" == "ls" ]]; then
-            ls "$current_dir/"
-        elif [[ "$line" == "cd" ]]; then
-            current_dir="$root_dir"
-            continue
-        elif [[ "$line" == "cd "* ]]; then
-            new_dir="$current_dir/$(echo "$line" | cut -d " " -f2- )"
-            if [[ -d "$new_dir" ]]; then
-                current_dir="$(realpath $new_dir)"
-            fi
-            continue
-        elif [[ "$line" == "pwd" ]]; then
-            echo "$current_dir"
-            continue
-        # don't use the return keyword when '=' is used, when '==' is used, do use return
-        elif echo "$line" | grep -q "[^=]=[^=]"; then
-            res="$(a_dbus_send "$line")"
-        elif echo "$line" | grep -qE "^return"; then
-            res="$(a_dbus_send "$line")"
-        else
-            res="$(a_dbus_send "return $line")"
-        fi
+
+        exec_loop
 
 
         if echo -e "$res" | grep -q "Error during tde-client code execution: "; then
