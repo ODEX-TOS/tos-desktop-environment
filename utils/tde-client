@@ -18,6 +18,9 @@ current_dir="$root_dir"
 
 READ_ARGS=""
 
+FZF_COLOR_SCHEME_FAILED="--color=info:#9a19d1,prompt:#d60039,pointer:#af5fff"
+FZF_COLOR_SCHEME_SUCCESS="--color=info:#9a19d1,prompt:#00d639,pointer:#af5fff"
+
 awesome_rlwrap() {
     if [ "$A_RERUN" = "" ]
     then
@@ -163,9 +166,20 @@ The Lua specific documentation: ${LBLUE}https://www.lua.org/manual/5.3/${NC}
 }
 
 get_line() {
+
     if [[ $READ_ARGS == "" ]]; then
+
+        # Set the color scheme for fzf
+        local FZF_COLOR_SCHEME="$FZF_COLOR_SCHEME_SUCCESS"
+        if [[ "$line_feed" == "$line_feed_failed" ]]; then
+            FZF_COLOR_SCHEME="$FZF_COLOR_SCHEME_FAILED"
+        fi
+
+        # Create the history file if it doesn't yet exits
         [[ ! -f "$HOME/.tde-client_history" ]] && touch "$HOME/.tde-client_history"
-        line="$(cat "$HOME/.tde-client_history" | fzf --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 return {} | lua $root_dir/pretty_print.lua" )"
+
+        # Our prompt
+        line="$(cat "$HOME/.tde-client_history" | fzf  $FZF_COLOR_SCHEME --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 return {} | lua $root_dir/pretty_print.lua" )"
     else
         echo -en "$line_feed"
         read $READ_ARGS
@@ -208,7 +222,7 @@ then
     FATAL_ERRORS=0
     print_greetings
     line_feed_success="tde ${GREEN}➡${NC} "
-    line_feed_failed="$tde ${RED}➡${NC} "
+    line_feed_failed="tde ${RED}➡${NC} "
     line_feed="$line_feed_success"
     while { get_line; }
     do
@@ -260,12 +274,17 @@ then
         # don't use the return keyword when '=' is used, when '==' is used, do use return
         elif echo "$line" | grep -q "[^=]=[^=]"; then
             res="$(a_dbus_send "$line")"
+        elif echo "$line" | grep -qE "^return"; then
+            res="$(a_dbus_send "$line")"
         else
             res="$(a_dbus_send "return $line")"
         fi
 
 
-        if echo -e "$res" | grep -q "Error during execution: "; then
+        if echo -e "$res" | grep -q "Error during tde-client code execution: "; then
+            line_feed="$line_feed_failed"
+        fi
+        if echo -e "$res" | grep -qE "un.{1,100} near.{0,10}$"; then
             line_feed="$line_feed_failed"
         fi
         echo -e "$line" | lua "$root_dir"/pretty_print.lua
