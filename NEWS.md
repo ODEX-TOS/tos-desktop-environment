@@ -29,6 +29,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Desktop files in `~/.config/tos/autostart` get launched as well on startup
 - Set the monitor resolution in the settings application
 - Set the monitor refresh rate in the settings application
+- `tde-client` now has support for `fzf` with code completions and history
 
 ### Bug Fixes
 
