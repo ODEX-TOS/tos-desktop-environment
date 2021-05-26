@@ -24,6 +24,15 @@
 ]]
 require("tde.module.lua-completion")
 
+completion_table = {
+    a = 'hello',
+    b = 'world'
+}
+
+function __return_input(input)
+    return input
+end
+
 
 function test_lua_completion_api()
     assert(get_completion ~= nil, "The global get_completion function is needed to be exposed to the tde-client")
@@ -31,31 +40,22 @@ function test_lua_completion_api()
 end
 
 function test_lua_completion_string()
-    example_table = {
-        a = 'hello',
-        b = 'world'
-    }
-    local res = get_completion(example_table, 'example_table')
-    local res2 = get_completion('example_table')
+    local res = get_completion(completion_table, 'completion_table')
+    local res2 = get_completion('completion_table')
     assert(res == res2, "get_completion doesn't support string and table representation\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
 end
 
 function test_lua_completion_table()
-    example_table = {
-        a = 'hello',
-        b = 'world'
-    }
-
     -- depending on the hash function they can be flipped
-    local str=[[example_table.a
-example_table.b
+    local str=[[completion_table.a
+completion_table.b
 ]]
     -- depending on the hash function they can be flipped
-    local str2=[[example_table.b
-example_table.a
+    local str2=[[completion_table.b
+completion_table.a
 ]]
 
-    local res = get_completion('example_table')
+    local res = get_completion('completion_table')
     assert(res == str or res == str2, "get_completion Invalid generated completion\n Got: " .. tostring(res) .. '\nBut expected: ' .. str)
 end
 
@@ -75,5 +75,41 @@ function test_lua_completion_empty_is_prefix()
     local res = get_completion(_G, '_G')
     local res2 = get_completion()
     assert(res == res2, "get_completion global(_G) completion\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
+end
 
+function test_lua_completion_function_opening_brace()
+    local res = get_completion('__return_input(')
+    local res2 = get_completion('__return_input')
+    assert(res == res2, "Getting autocomplete for an unfinished function is not working\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
+end
+
+
+function test_lua_completion_function_opening_brace_with_half_string_param()
+    local res = get_completion('__return_input("string')
+    local res2 = get_completion('__return_input')
+    assert(res == res2, "Getting autocomplete for an unfinished function is not working\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
+end
+
+function test_lua_completion_function_opening_brace_with_a_full_string_param()
+    local res = get_completion('__return_input("string"')
+    local res2 = get_completion('__return_input')
+    assert(res == res2, "Getting autocomplete for an unfinished function is not working\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
+end
+
+function test_lua_completion_function_result()
+    local res = get_completion('__return_input("completion_table")')
+    local res2 = get_completion(__return_input(completion_table), 'completion_table')
+    assert(res == res2, "Getting autocomplete for an unfinished function is not working\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
+end
+
+function test_lua_completion_function_nested_calls()
+    local res = get_completion('__return_input(__return_input(completion_table)')
+    local res2 = get_completion(__return_input)
+    assert(res == res2, "Getting autocomplete for an unfinished function is not working\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
+end
+
+function test_lua_completion_ending_in_dot()
+    local res = get_completion(_G, '_G')
+    local res2 = get_completion(_G, '_G.')
+    assert(res == res2, "Ending in . doesn't autocomplete correctly\n Got: " .. tostring(res2) .. '\nBut expected: ' .. tostring(res))
 end
