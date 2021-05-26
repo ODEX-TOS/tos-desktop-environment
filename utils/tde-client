@@ -16,6 +16,16 @@ NC='\033[0m' # No Color
 root_dir="/etc/xdg/tde"
 current_dir="$root_dir"
 
+READ_ARGS=""
+
+awesome_rlwrap() {
+    if [ "$A_RERUN" = "" ]
+    then
+        A_RERUN="no" exec "$AWESOME_RLWRAP" "$0" "$@"
+    fi
+    READ_ARGS="-r line"
+}
+
 
 if [ -t 0 ]  # is a tty.
 then
@@ -25,16 +35,18 @@ then
     if [ -z "${AWESOME_RLWRAP+x}" ]; then
         AWESOME_RLWRAP="$(which rlwrap 2>/dev/null)"
     fi
-    if [ -n "$AWESOME_RLWRAP" ]
+    if command -v 'fzf' &>/dev/null
     then
-        if [ "$A_RERUN" = "" ]
-        then
-            A_RERUN="no" exec "$AWESOME_RLWRAP" "$0" "$@"
+        # TDE_FZF_DISABLED disables the fzf logic
+        if [[ -n "$TDE_FZF_DISABLED" ]]; then
+            awesome_rlwrap $@
         fi
-        READ_ARGS=""
+    elif [ -n "$AWESOME_RLWRAP" ]
+    then
+        awesome_rlwrap $@
     else
         # No rlwrap: use bash's readline.
-        READ_ARGS="-e"
+        READ_ARGS="-e -r line"
     fi
 fi
 
@@ -150,22 +162,47 @@ The Lua specific documentation: ${LBLUE}https://www.lua.org/manual/5.3/${NC}
 "
 }
 
+get_line() {
+    if [[ $READ_ARGS == "" ]]; then
+        [[ ! -f "$HOME/.tde-client_history" ]] && touch "$HOME/.tde-client_history"
+        line="$(cat "$HOME/.tde-client_history" | fzf --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="./$0 return {} | lua $root_dir/pretty_print.lua" )"
+    else
+        echo -en "$line_feed"
+        read $READ_ARGS
+    fi
+}
+
 if [ $# -ne 0 ]
 then
     # check for command-line arguments
-    ARGS=()
-    for arg in "$@"; do
-        if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    ARGS=""
+    while [[ $1 != "" ]]; do
+        if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
             print_help
             exit 0
+        elif [[ "$1" == "--complete" ]]; then
+            shift
+            quoted="${1//\'/\\\'}"
+            result=$(a_dbus_send "return get_completion($1, '$quoted')")
+            echo -en $result | wc -l
+            if [[ "$(echo -en $result | wc -l)" -le "1" && "$(echo -en $result | grep -E '<eof>|unexpected')" != "" ]]; then
+                echo "$1"
+                cat "$HOME/.tde-client_history"
+            else
+                echo "$1"
+                echo "$result"
+                cat "$HOME/.tde-client_history"
+            fi
+            exit 0
         else
-            ARGS+=("$arg")
+            ARGS="$ARGS $1"
         fi
+        shift
     done
+
+
     # run arguments
-    for arg in "${ARGS[@]}"; do
-        a_dbus_send "$arg"
-    done
+    a_dbus_send "$ARGS"
 elif [ -t 0 ]
 then
     FATAL_ERRORS=0
@@ -173,7 +210,7 @@ then
     line_feed_success="tde ${GREEN}➡${NC} "
     line_feed_failed="$tde ${RED}➡${NC} "
     line_feed="$line_feed_success"
-    while { echo -en "$line_feed" ; read $READ_ARGS -r line; }
+    while { get_line; }
     do
         clear
         line_feed="$line_feed_success"
