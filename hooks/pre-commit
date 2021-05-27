@@ -66,7 +66,7 @@ function run_linter_shell() {
   SHELL_LINTING_OUT=""
   SHELL_LINTING_EXIT_CODE=""
   # shellcheck disable=SC2044
-  for file in $(find . -type f -name "*.sh" ! -name "rofi-spotlight.sh"); do
+  for file in $(find . -type f -name "*.sh" ! -name "rofi-spotlight.sh" -not -path "./WM/*"); do
     out="$(shellcheck "$file")"
     code="$?"
     if [[ ! "$code" == "0" ]]; then
@@ -107,7 +107,7 @@ function run_license_linter_lua() {
 ]]"
   _LICENSE_LUA_OUT=""
   # shellcheck disable=SC2044
-  for file in $(find . -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*"); do
+  for file in $(find . -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*" -not -path "./WM/*"); do
     out="$(head -n24 "$file")"
     if [[ ! "$out" == "$_LICENSE" ]]; then
       _LICENSE_LUA_OUT="$_LICENSE_LUA_OUT\nMissing license header: $file"
@@ -150,7 +150,7 @@ function run_license_linter_bash() {
 # SOFTWARE."
   _LICENSE_BASH_OUT=""
   # shellcheck disable=SC2044
-  for file in $(find . -type f -name "*.sh"); do
+  for file in $(find . -type f -name "*.sh" -not -path "./WM/*" ); do
     out="$(head -n24 "$file")"
     if [[ ! "$out" == "$_LICENSE" ]]; then
       _LICENSE_BASH_OUT="$_LICENSE_BASH_OUT\nMissing license header: $file"
@@ -186,6 +186,21 @@ function run_correct_branch() {
     echo
     log "$WARNING" "Consider using a feature branch"
   fi
+
+  # check submodule branch
+  cd "WM"
+  _branch_submodule=$(git branch --show-current)
+  cd "../"
+
+  BRANCH_EXIT_CODE="0"
+  _res="Branch version TDE: '$_branch' matches WM version: '$_branch_submodule'"
+  if [[ "$_branch_submodule" != "$_branch" ]]; then
+    BRANCH_EXIT_CODE="1"
+    _res="Branch version TDE: '$_branch' doesn't match WM version: '$_branch_submodule', sync branches"
+  fi
+  
+  log "$BRANCH_EXIT_CODE" "$_res"
+
 }
 
 function print_errors() {
@@ -213,6 +228,11 @@ function print_errors() {
     exit 1
   }
 
+  [[ ! "$BRANCH_EXIT_CODE" -eq "0" ]] && {
+    log "1" "Status"
+    exit 1
+  }
+
   echo -e "\n"
   log "0" "Status"
 }
@@ -223,8 +243,8 @@ run_linter_shell
 run_license_linter_lua
 run_license_linter_bash
 
-run_test_suite
-
 run_correct_branch
+
+run_test_suite
 
 print_errors

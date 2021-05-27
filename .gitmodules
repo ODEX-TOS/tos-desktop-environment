@@ -1,0 +1,4 @@
+[submodule "WM"]
+	path = WM
+	url = git@github.com:ODEX-TOS/awesome.git
+	branch = v0.7

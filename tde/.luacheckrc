@@ -52,6 +52,8 @@ exclude_files = {
     "tde/lib-tde/lib-lua/ssl/https.lua",
     -- contains a lot of globals
     "tests/**",
+    "WM/awesomerc.lua",
+    "WM/docs/**"
     -- TODO: refactor plugins, then remove this
     --"plugins/**",
 }
