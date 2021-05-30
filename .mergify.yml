@@ -1,0 +1,13 @@
+pull_request_rules:
+  - name: automatic merge
+    conditions:
+      - label!=no-mergify
+      - '#approved-reviews-by>=2'
+      - status-success=Travis CI - Pull Request
+      - status-success=codecov/patch
+      - status-success=coverage/coveralls
+    actions:
+      merge:
+        method: merge
+      delete_head_branch: {}
+      dismiss_reviews: {}

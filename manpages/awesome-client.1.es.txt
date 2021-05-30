@@ -1,0 +1,73 @@
+tde-client(1)
+=================
+
+NOMBRE
+------
+
+tde-client - ejecución remota en el gestor de ventanas awesome
+
+SINOPSIS
+--------
+
+tde-client [-h|--help] [command [command...]]
+
+DESCRIPCIÓN
+-----------
+
+tde-client es una interfaz de línea de comandos remota para awesome.
+Se comunica con awesome utilizando D-Bus, y permite la ejecución remota
+de código en lenguaje Lua.
+
+USO
+---
+tde-client recibe los comandos desde la entrada estándar y los envía
+a awesome utilizando D-Bus. Si 'rlwrap' está instalado en el sistema, la
+interfaz de línea de comandos utilizará las facilidades proporcionadas por
+readline.
+
+El módulo 'awful.remote' tiene que estar cargado para que este comando
+funcione.
+
+EXAMPLES
+-------
+....
+$ tde-client 'return 1+1, "Hello, world"'
+   double 2
+   string "Hello, world"
+
+# The following does not return anything on the command line,
+# but will show a notification.
+$ tde-client '
+  naughty = require("naughty")
+  naughty.notify({
+  title="CLI Notification",
+  text="This is a notification sent from the command line!"})
+'
+
+# Entering read-eval-print-loop mode
+# This mode will send every line to awesome, exactly the same as passing
+# multiple commands on the command line.
+$ tde-client
+awesome# return 1+1
+   double 2
+awesome# return 1+1, "Hello, world"
+   double 2
+   string "Hello, world"
+awesome#
+....
+
+VÉASE TAMBIÉN
+-------------
+awesome(1) awesomerc(5)
+
+AUTOR
+-----
+Julien Danjou <julien@danjou.info>
+
+WWW
+---
+https://awesomewm.org
+
+TRADUCCIÓN
+----------
+Esta página de manual ha sido traducida por Diego Moreda.

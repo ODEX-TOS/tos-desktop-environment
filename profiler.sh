@@ -24,7 +24,7 @@
 # SOFTWARE.
 LUA="lua5.3"
 
-export LUA_PATH="$PWD/tests/mock/?.lua;$PWD/tests/mock/?.lua;"
+export LUA_PATH="$PWD/tests/tde/mock/?.lua;$PWD/tests/tde/mock/?.lua;"
 export LUA_PATH="$PWD/tde/?/?.lua;$PWD/tde/?.lua;$PWD/tde/?/init.lua;"
 export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
 export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
@@ -76,7 +76,7 @@ while true; do
       fi
       shift
       shift
-      export LUA_PATH="$LUA_PATH;$PWD/tests/mock/?.lua;$PWD/tests/mock/?/?.lua;"
+      export LUA_PATH="$LUA_PATH;$PWD/tests/tde/mock/?.lua;$PWD/tests/tde/mock/?/?.lua;"
       ;;
     "-F" | "--functions")
       FUNCTIONS_AMOUNT="$2"
