@@ -186,21 +186,6 @@ function run_correct_branch() {
     echo
     log "$WARNING" "Consider using a feature branch"
   fi
-
-  # check submodule branch
-  cd "WM"
-  _branch_submodule=$(git branch --show-current)
-  cd "../"
-
-  BRANCH_EXIT_CODE="0"
-  _res="Branch version TDE: '$_branch' matches WM version: '$_branch_submodule'"
-  if [[ "$_branch_submodule" != "$_branch" ]]; then
-    BRANCH_EXIT_CODE="1"
-    _res="Branch version TDE: '$_branch' doesn't match WM version: '$_branch_submodule', sync branches"
-  fi
-  
-  log "$BRANCH_EXIT_CODE" "$_res"
-
 }
 
 function print_errors() {
@@ -224,11 +209,6 @@ function print_errors() {
   }
 
   [[ ! "$UNIT_EXIT_CODE" -eq "0" ]] && {
-    log "1" "Status"
-    exit 1
-  }
-
-  [[ ! "$BRANCH_EXIT_CODE" -eq "0" ]] && {
     log "1" "Status"
     exit 1
   }
