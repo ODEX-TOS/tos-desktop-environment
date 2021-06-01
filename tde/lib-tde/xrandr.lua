@@ -46,7 +46,7 @@ local LOG_ERROR = "\27[0;31m[ ERROR "
 -- A path to a fancy icon
 local icon_path = "/etc/xdg/tde/theme/icons/laptop.svg"
 
---- Get the active screen outputs
+--- Get all connected screen outputs
 -- @treturn table A list containing the names of all screens
 -- @staticfct lib-tde.xrandr.outputs
 -- @usage -- Get all active screens
@@ -58,6 +58,29 @@ local function outputs()
    if xrandr then
       for line in xrandr:lines() do
          local output = line:match("^([%w-]+) connected ")
+         if output then
+            output_tbl[#output_tbl + 1] = output
+         end
+      end
+      xrandr:close()
+   end
+
+   return output_tbl
+end
+
+--- Get the inactive screen outputs
+-- @treturn table A list containing the names of all inactive screens
+-- @staticfct lib-tde.xrandr.inactive
+-- @usage -- Get all the inactive screens
+-- lib-tde.xrandr.inactive() -- Returns (For example) {'eDP1', 'DP1', 'DP2'}
+local function inactive()
+   local output_tbl = {}
+   local xrandr = io.popen("xrandr -q --current")
+
+   if xrandr then
+      for line in xrandr:lines() do
+         -- active screens have text between connected and (...) that note the location and size of the screen
+         local output = line:match("^([%w-]+) connected %(")
          if output then
             output_tbl[#output_tbl + 1] = output
          end
@@ -361,6 +384,7 @@ end
 
 return {
    outputs = outputs,
+   inactive = inactive,
    arrange = arrange,
    menu = menu,
    xrandr = xrandr,
