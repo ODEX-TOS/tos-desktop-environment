@@ -184,6 +184,6 @@ _G.tag.connect_signal(
     else
       t.gap = awful.tag.getproperty(t, "gap") or 4
     end
-    t.master_count = 2
+    t.master_count = 1
   end
 )
