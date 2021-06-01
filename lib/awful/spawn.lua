@@ -459,7 +459,7 @@ function spawn.easy_async(cmd, callback)
         stderr = stderr .. str .. "\n"
     end
     local function done_callback()
-        if stderr ~= "" then
+        if exitcode ~= 0 then
             gdebug.print_error("Error in awful.spawn.easy_async:\n" .. stderr)
         end
         return callback(stdout, stderr, exitreason, exitcode)
