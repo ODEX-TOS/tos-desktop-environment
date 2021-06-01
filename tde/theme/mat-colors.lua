@@ -306,7 +306,11 @@ return {
     hue_600 = "#6D4C41",
     hue_700 = "#5D4037",
     hue_800 = "#4E342E",
-    hue_900 = "#3E2723"
+    hue_900 = "#3E2723",
+    hue_A100 = "#3E2723",
+    hue_A200 = "#3E2723",
+    hue_A400 = "#3E2723",
+    hue_A700 = "#3E2723"
   },
   -- Grey
   grey = {
@@ -319,7 +323,11 @@ return {
     hue_600 = "#757575",
     hue_700 = "#616161",
     hue_800 = "#000000",
-    hue_900 = "#000000"
+    hue_900 = "#000000",
+    hue_A100 = "#000000",
+    hue_A200 = "#000000",
+    hue_A400 = "#000000",
+    hue_A700 = "#000000"
   },
   -- Blue Grey
   blue_grey = {
@@ -332,7 +340,11 @@ return {
     hue_600 = "#546E7A",
     hue_700 = "#455A64",
     hue_800 = "#000000",
-    hue_900 = "#000000"
+    hue_900 = "#000000",
+    hue_A100 = "#000000",
+    hue_A200 = "#000000",
+    hue_A400 = "#000000",
+    hue_A700 = "#000000"
   },
   -- Black
   black = {
@@ -345,7 +357,11 @@ return {
     hue_600 = "#000000",
     hue_700 = "#000000",
     hue_800 = "#000000",
-    hue_900 = "#000000"
+    hue_900 = "#000000",
+    hue_A100 = "#000000",
+    hue_A200 = "#000000",
+    hue_A400 = "#000000",
+    hue_A700 = "#000000"
   },
   -- White
   white = {
@@ -358,7 +374,11 @@ return {
     hue_600 = "#FFFFFF",
     hue_700 = "#FFFFFF",
     hue_800 = "#FFFFFF",
-    hue_900 = "#FFFFFF"
+    hue_900 = "#FFFFFF",
+    hue_A100 = "#FFFFFF",
+    hue_A200 = "#FFFFFF",
+    hue_A400 = "#FFFFFF",
+    hue_A700 = "#FFFFFF"
   },
   light = {
     hue_50 = "#FFFFFF",
@@ -370,6 +390,10 @@ return {
     hue_600 = "#FFFFFF",
     hue_700 = "#CCCCCC",
     hue_800 = "#CCCCCC",
-    hue_900 = "#FFFFFF"
+    hue_900 = "#FFFFFF",
+    hue_A100 = "#FFFFFF",
+    hue_A200 = "#FFFFFF",
+    hue_A400 = "#FFFFFF",
+    hue_A700 = "#FFFFFF"
   }
 }
