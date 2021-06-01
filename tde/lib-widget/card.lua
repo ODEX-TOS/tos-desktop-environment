@@ -94,6 +94,10 @@ local titled_card = function(title, height)
     -- @usage -- This will change the title to hello
     -- card.update_title("hello")
     widget.update_title = function(updated_title)
+        --filter out trailing whitespace in the title
+        if type(updated_title) == "string" then
+            updated_title = string.gsub(updated_title, '\n$', '')
+        end
         header.text = i18n.translate(updated_title)
     end
 
