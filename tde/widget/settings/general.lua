@@ -224,12 +224,6 @@ return function()
       "audio_change_sound"
     ),
     create_checkbox(
-      i18n.translate("Error data opt out"),
-      i18n.translate("Send error messages to the developers, this is useful for debugging and reducing errors/bugs"),
-      general["tde_opt_out"] == "1",
-      "tde_opt_out"
-    ),
-    create_checkbox(
       i18n.translate("Titlebar drawing"),
       i18n.translate("Draw the titlebar above every application"),
       general["draw_mode"] == "fast",

@@ -36,6 +36,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### Bug Fixes
 
 - Fixed theme picker life updating for the tag-list view
+- Taking screenshots now uses the theme color that is active (When changing the theme color life the screenshot tool uses that color scheme)
 - Numerous bug fixes
 
 ### Dev Notes
