@@ -4,7 +4,7 @@ set(PROJECT_AWE_NAME tde)
 # `git describe` later.
 set(VERSION devel)
 
-set(CODENAME "testing")
+set(CODENAME "Beta")
 
 include(AutoOption.cmake)
 
