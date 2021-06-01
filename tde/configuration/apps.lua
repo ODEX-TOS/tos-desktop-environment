@@ -83,8 +83,6 @@ return {
   -- List of apps to start once on start-up
   run_on_start_up = {
     picom,
-    "blueman-applet", -- Bluetooth tray icon
-    "xfce4-power-manager", -- Power manager
     'sh -c "/etc/xdg/tde/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
     "xrdb $HOME/.Xresources"
   },

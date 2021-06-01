@@ -50,7 +50,7 @@ local extract_cover = function()
     [[
     url=$(playerctl -p spotify metadata mpris:artUrl | sed "s/open\.spotify\.com/i.scdn.co/")
     if [ "$url" ]; then
-      curl -fL "$url" -o /tmp/cover.jpg
+      curl -fL "$url" -o /tmp/cover.jpg 2>/dev/null
     fi
   ]]
 

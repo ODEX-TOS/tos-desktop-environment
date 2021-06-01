@@ -31,5 +31,6 @@ return {
     primary = {
         hue_500 = "#FFF",
         hue_700 = "#FFF"
-    }
+    },
+    gtk = require('beautiful.gtk')
 }

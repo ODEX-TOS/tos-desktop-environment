@@ -109,7 +109,7 @@ function test_apps_api_unit_tested()
         "You didn't test all app api endpoints, please add them then update the amount to: " .. result_default
     )
 
-    local amount_startup = 5
+    local amount_startup = 3
     local result_startup = tablelength(apps.run_on_start_up)
     assert(
         result_startup == amount_startup,
