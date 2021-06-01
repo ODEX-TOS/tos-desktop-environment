@@ -671,3 +671,37 @@ pre .url {
 .extra-header__section {
     flex-grow: 1;
 }
+
+/* For mobile phones */
+@media only screen and (max-width: 600px) {
+  /* Make the content consume the entire screen */
+  #content {
+    margin-left: 0px;
+  }
+
+  /* Make the navigation bar take up the entire screen */
+  #navigation {
+    background-color: white;
+    border-right: 1px solid #d3dbec;
+    border-bottom: 1px solid #d3dbec;
+    vertical-align: top;
+    overflow: visible;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+    transition: 0.3s;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    font-size: 2rem;
+  }
+
+  /* Center the about page */
+  #about {
+    padding: 15px;
+    margin: 4em;
+    background-color: white;
+    border: 1px solid #d3dbec;
+    border-radius: 15px;
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 20%);
+    transition: 0.3s;
+    text-align: center;
+}
+}
