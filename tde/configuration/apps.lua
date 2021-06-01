@@ -25,6 +25,7 @@
 local filesystem = require("gears.filesystem")
 local config = require("config")
 local hardware = require("lib-tde.hardware-check")
+local signals = require('lib-tde.signals')
 
 local function addHash(input)
   if input == nil then
@@ -36,10 +37,28 @@ end
 -- lib-tde to retrieve current theme
 local themefile = require("theme.config")
 local beautiful = require("beautiful")
-local color = beautiful.primary.hue_500
-local colorBG = beautiful.primary.hue_700
-color = addHash(themefile["primary_hue_500"]) or color
-colorBG = addHash(themefile["primary_hue_700"]) or colorBG
+
+local function update_color()
+  local color = beautiful.primary.hue_500
+  local colorBG = beautiful.primary.hue_700
+  color = addHash(themefile["primary_hue_500"]) or color
+  colorBG = addHash(themefile["primary_hue_700"]) or colorBG
+
+  return color, colorBG
+end
+
+local color, colorBG = update_color()
+
+signals.connect_primary_theme_changed(function (pallet)
+  beautiful.primary = pallet
+  beautiful.accent = pallet
+  color, colorBG = update_color()
+end)
+
+signals.connect_background_theme_changed(function (pallet)
+  beautiful.background = pallet
+  color, colorBG = update_color()
+end)
 
 local picom = "picom -b --dbus --experimental-backends --config " .. config.getComptonFile()
 -- if the user has weak hardware then don't use picom with it's blur effects
@@ -86,13 +105,16 @@ return {
     'sh -c "/etc/xdg/tde/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
     "xrdb $HOME/.Xresources"
   },
-  bins = {
-    coverUpdate = require("lib-tde.extractcover").extractalbum,
-    full_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" full "' .. color .. '"',
-    full_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" full_blank',
-    area_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" area "' .. color .. '"',
-    area_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" area_blank',
-    window_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" window "' .. color .. '"',
-    window_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" window_blank'
-  }
+  bins = function ()
+    -- we wrap this in a function since the 'color variable changes in real time'
+    return {
+      coverUpdate = require("lib-tde.extractcover").extractalbum,
+      full_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" full "' .. color .. '"',
+      full_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" full_blank',
+      area_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" area "' .. color .. '"',
+      area_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" area_blank',
+      window_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" window "' .. color .. '"',
+      window_blank_screenshot = 'sh "/etc/xdg/tde/snapshot.sh" window_blank'
+    }
+  end
 }

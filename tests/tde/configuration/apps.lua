@@ -91,14 +91,16 @@ function test_configuration_app_run_on_start_up()
 end
 
 function test_configuration_app_bins()
-    assert(type(apps.bins) == "table", "apps.bins should be a string")
-    assert(apps.bins.coverUpdate, "Make sure apps.bins.coverUpdate exists")
-    assert(apps.bins.full_screenshot, "Make sure apps.bins.full_screenshot exists")
-    assert(apps.bins.full_blank_screenshot, "Make sure apps.bins.full_blank_screenshot exists")
-    assert(apps.bins.area_screenshot, "Make sure apps.bins.area_screenshot exists")
-    assert(apps.bins.area_blank_screenshot, "Make sure apps.bins.area_blank_screenshot exists")
-    assert(apps.bins.window_screenshot, "Make sure apps.bins.window_screenshot exists")
-    assert(apps.bins.window_blank_screenshot, "Make sure apps.bins.window_blank_screenshot exists")
+    assert(type(apps.bins) == "function", "apps.bins should be a function")
+    assert(type(apps.bins()) == "table", "apps.bins() should be a return a table")
+
+    assert(apps.bins().coverUpdate, "Make sure apps.bins.coverUpdate exists")
+    assert(apps.bins().full_screenshot, "Make sure apps.bins.full_screenshot exists")
+    assert(apps.bins().full_blank_screenshot, "Make sure apps.bins.full_blank_screenshot exists")
+    assert(apps.bins().area_screenshot, "Make sure apps.bins.area_screenshot exists")
+    assert(apps.bins().area_blank_screenshot, "Make sure apps.bins.area_blank_screenshot exists")
+    assert(apps.bins().window_screenshot, "Make sure apps.bins.window_screenshot exists")
+    assert(apps.bins().window_blank_screenshot, "Make sure apps.bins.window_blank_screenshot exists")
 end
 
 function test_apps_api_unit_tested()
@@ -117,7 +119,7 @@ function test_apps_api_unit_tested()
     )
 
     local amount_bin = 7
-    local result_bin = tablelength(apps.bins)
+    local result_bin = tablelength(apps.bins())
     assert(
         result_bin == amount_bin,
         "You didn't test all app api endpoints, please add them then update the amount to: " .. result_bin
