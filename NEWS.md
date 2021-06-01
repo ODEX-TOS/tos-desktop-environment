@@ -14,6 +14,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 - [ ] `Package manager agnostic` Allow the package updater to use other package managers than strictly `pacman`
 - [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
+- [ ] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
+
 
 ## Packaging
 
