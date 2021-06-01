@@ -140,7 +140,6 @@ ol code {
   padding: 20px;
   margin: 0px;
   border-radius: 15px;
-  margin-right: 2em;
   box-shadow: 0 4px 8px 0 #9000f244;
 }
 
@@ -152,7 +151,6 @@ ol code {
   padding-bottom: 15px;
   margin-top: 0px;
   border-radius: 15px;
-  margin-right: 2em;
   box-shadow: 0 4px 8px 0 #9000f244;
   transition: 0.3s;
 }
@@ -691,6 +689,8 @@ pre .url {
     border-radius: 20px;
     margin-bottom: 50px;
     font-size: 2rem;
+    width: 100vw;
+    float: none;
   }
 
   /* Center the about page */
