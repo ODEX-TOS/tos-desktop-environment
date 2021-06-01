@@ -12,12 +12,12 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ## Features
 
-* [ ] `Package manager agnostic` Allow the package updater to use other package managers than strictly `pacman`
-* [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
+- [ ] `Package manager agnostic` Allow the package updater to use other package managers than strictly `pacman`
+- [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
 
 ## Packaging
 
-* `TDE` should support other packaging formats than only pacman's, eg debian and rpm
+- `TDE` should support other packaging formats than only pacman's, eg debian and rpm
 
 
 # Patch Notes
@@ -33,34 +33,35 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### Bug Fixes
 
-* Numerous bug fixes
+- Fixed theme picker life updating for the tag-list view
+- Numerous bug fixes
 
 ### Dev Notes
 
-* `stderr` messages get written to `error.log`
+- `stderr` messages get written to `error.log`
 
 ## Patch 0.6
 
 ### New Features
 
-* Multi Monitor detection
-* Translations
-* Error logging
-* Settings application
-* Bluetooth connectivity settings
-* Network connectivity settings
-* Wallpaper picker
-* User pictures
-* Overhaul of the notification widgets
+- Multi Monitor detection
+- Translations
+- Error logging
+- Settings application
+- Bluetooth connectivity settings
+- Network connectivity settings
+- Wallpaper picker
+- User pictures
+- Overhaul of the notification widgets
 
 ### Bug Fixes
 
-* Fixed numerous bugs
+- Fixed numerous bugs
 
 ### Dev Notes
 
-* Unit Testing
-* Integration Testing
-* Widget hot reloader
-* lib-widget
-* Improved lib-tde
+- Unit Testing
+- Integration Testing
+- Widget hot reloader
+- lib-widget
+- Improved lib-tde

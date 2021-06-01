@@ -26,13 +26,15 @@ local filesystem = require("gears.filesystem")
 local mat_colors = require("theme.mat-colors")
 local theme_dir = filesystem.get_configuration_dir() .. "/theme"
 local gears = require("gears")
-local dpi = require("beautiful").xresources.apply_dpi
+local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
 
-local gtk = require("beautiful.gtk")
+local gtk = beautiful.gtk
 local config = require("theme.config")
 local darklight = require("theme.icons.dark-light")
 local filehandle = require("lib-tde.file")
 local file_exists = filehandle.exists
+local signals = require('lib-tde.signals')
 
 local theme = {}
 theme.icons = theme_dir .. "/icons/"
@@ -84,6 +86,36 @@ local function darkLightSwitcher(dark, light)
     return light
   end
   return dark
+end
+
+local function add_taglist(awesome_theme)
+  taglist_occupied = color(config["taglist_occupied"]) or "#ffffff"
+  awesome_theme.taglist_bg_empty = awesome_theme.background.hue_800 .. "99"
+  awesome_theme.taglist_bg_occupied =
+    "linear:0," ..
+    dpi(48) ..
+      ":0,0:0," ..
+        taglist_occupied ..
+          ":0.11," ..
+            taglist_occupied .. ":0.11," .. awesome_theme.background.hue_800 .. "99" .. awesome_theme.background.hue_800
+  awesome_theme.taglist_bg_urgent =
+    "linear:0," ..
+    dpi(48) ..
+      ":0,0:0," ..
+        awesome_theme.accent.hue_500 ..
+          ":0.11," ..
+            awesome_theme.accent.hue_500 ..
+              ":0.11," .. awesome_theme.background.hue_800 .. ":1," .. awesome_theme.background.hue_800
+  awesome_theme.taglist_bg_focus =
+    "linear:0," ..
+    dpi(48) ..
+      ":0,0:0," ..
+        awesome_theme.primary.hue_500 ..
+          ":0.11," ..
+            awesome_theme.primary.hue_500 ..
+              ":0.11," .. awesome_theme.background.hue_800 .. ":1," --[[':1,']] .. awesome_theme.background.hue_800
+
+  return awesome_theme
 end
 -- Colors Pallets
 
@@ -185,31 +217,21 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.layout_magnifier = darklight(awesome_theme.icons .. "layouts/magnifier.png")
 
   -- Taglist
-  taglist_occupied = color(config["taglist_occupied"]) or "#ffffff"
-  awesome_theme.taglist_bg_empty = awesome_theme.background.hue_800 .. "99"
-  awesome_theme.taglist_bg_occupied =
-    "linear:0," ..
-    dpi(48) ..
-      ":0,0:0," ..
-        taglist_occupied ..
-          ":0.11," ..
-            taglist_occupied .. ":0.11," .. awesome_theme.background.hue_800 .. "99" .. awesome_theme.background.hue_800
-  awesome_theme.taglist_bg_urgent =
-    "linear:0," ..
-    dpi(48) ..
-      ":0,0:0," ..
-        awesome_theme.accent.hue_500 ..
-          ":0.11," ..
-            awesome_theme.accent.hue_500 ..
-              ":0.11," .. awesome_theme.background.hue_800 .. ":1," .. awesome_theme.background.hue_800
-  awesome_theme.taglist_bg_focus =
-    "linear:0," ..
-    dpi(48) ..
-      ":0,0:0," ..
-        awesome_theme.primary.hue_500 ..
-          ":0.11," ..
-            awesome_theme.primary.hue_500 ..
-              ":0.11," .. awesome_theme.background.hue_800 .. ":1," --[[':1,']] .. awesome_theme.background.hue_800
+  signals.connect_background_theme_changed(function (pallet)
+    beautiful.background = pallet
+    awesome_theme.background = pallet
+    awesome_theme = add_taglist(awesome_theme)
+  end)
+
+  signals.connect_primary_theme_changed(function (pallet)
+    beautiful.primary = pallet
+    beautiful.accent = pallet
+    awesome_theme.primary = pallet
+    awesome_theme.accent = pallet
+    awesome_theme = add_taglist(awesome_theme)
+  end)
+
+  awesome_theme = add_taglist(awesome_theme)
 
   -- Tasklist
 
