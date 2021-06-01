@@ -703,5 +703,28 @@ pre .url {
     box-shadow: 0 3px 6px 0 rgb(0 0 0 / 20%);
     transition: 0.3s;
     text-align: center;
-}
+  }
+
+  /* Make pre block code work better on mobile*/
+  table td {
+    display: block;
+  }
+
+  table.module_list td.summary, table.function_list td.summary {
+    width: auto;
+  }
+
+  td.name {
+    background-color: #b861ff !important;
+    color: #FFFFFF;
+    width: 90vw;
+  }
+
+  td.name a {
+    color: #FFFFFF;
+  }
+
+  pre {
+    max-width: 70vw;
+  }
 }
