@@ -43,7 +43,7 @@ local file_handle = require("lib-tde.file")
 -- @treturn bool if the write was successful
 -- @staticfct update_entry
 -- @usage -- This will create the content in hallo.txt to var=value
--- lib-tde.file.update_entry("hallo.txt", "var", "value")
+-- lib-tde.config-writer.update_entry("hallo.txt", "var", "value")
 local function update_entry(file, field, value)
     if not file_handle.exists(file) then
         return false

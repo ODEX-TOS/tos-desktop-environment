@@ -225,6 +225,7 @@ translations["Tab between applications"] = "Tab tussen verschillende applicaties
 translations["Tagbar anchor location"] = "Labelbar anker locatie"
 translations["Tagbar bar draw location"] = "Labelbar bar teken locatie"
 translations["tag"] = "label"
+translations["Tag"] = "Label"
 translations["TDE Version"] = "TDE Versie"
 translations["Terminal"] = "Terminal"
 translations["test"] = "test"
