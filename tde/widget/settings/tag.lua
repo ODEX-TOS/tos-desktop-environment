@@ -83,7 +83,7 @@ local function gen_master_width(tags)
     wibox.container.place(text),
     inc
   }
-  w:adjust_ratio(2, 0.44, 0.12, 0.44)
+  w:adjust_ratio(2, 0.35, 0.30, 0.35)
   return wibox.container.margin(w, 0, 0, 0, m)
 end
 
@@ -92,7 +92,7 @@ local function generate_tag(tags, t_card)
     return wibox.widget.textbox('')
   end
 
-  local max = tags[1].screen.geometry.width / 10
+  local max = tags[1].screen.geometry.width / 20
   local default_gap = tags[1].gap
   local _slider = slider(0, max, 1, default_gap, function (value)
     for _, tag in ipairs(tags) do
