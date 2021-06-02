@@ -86,7 +86,7 @@ local function setup_state(state)
         "startup",
         function()
             awful.spawn.easy_async(
-                "sh -c 'which autorandr && autorandr --load tde'",
+                "sh -c 'which autorandr && ( autorandr --load tde || true )'",
                 function()
                 end
             )
@@ -94,7 +94,6 @@ local function setup_state(state)
                 function()
                     -- update our wallpaper
                     awful.spawn("sh -c 'tos theme set $(tos theme active)'")
-                    --awful.spawn("sh -c 'which autorandr && autorandr --load tde'")
                 end
             )
         end
