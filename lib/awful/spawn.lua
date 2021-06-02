@@ -460,7 +460,14 @@ function spawn.easy_async(cmd, callback)
     end
     local function done_callback()
         if exitcode ~= 0 then
-            gdebug.print_error("Error in awful.spawn.easy_async: " .. cmd .. "\n" .. stderr)
+            local cmd_txt = cmd
+            if type(cmd) == "table" then
+                cmd_txt = ""
+                for _, v in ipairs(cmd) do
+                    cmd_txt = cmd_txt .. "'" .. tostring(v) .. "' "
+                end
+            end
+            gdebug.print_error("Error in awful.spawn.easy_async: " .. cmd_txt .. "\n" .. stderr)
         end
         return callback(stdout, stderr, exitreason, exitcode)
     end
