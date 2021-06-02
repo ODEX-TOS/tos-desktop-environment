@@ -221,8 +221,12 @@ function test_theme_icon_bios()
     assert(file_exists(icons.bios), "Check that the bios icon exists")
 end
 
+function test_theme_icon_dwindle()
+    assert(file_exists(icons.dwindle), "Check that the dwindle icon exists")
+end
+
 function test_that_all_icons_are_tested()
-    local amount = 49
+    local amount = 50
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..
