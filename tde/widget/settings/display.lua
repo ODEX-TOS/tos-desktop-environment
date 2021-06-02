@@ -722,13 +722,14 @@ return function()
         wibox.widget.base.empty_widget(),
         refresh_card,
         wibox.container.margin(button(
-        "Back", function ()
-          body.enable()
+          "Save", function ()
+            awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'")
+            body.enable()
 
-          Display_Mode = NORMAL_MODE
-          refresh()
-        end, active_pallet
-        ), 0, 0, dpi(20), 0),
+            Display_Mode = NORMAL_MODE
+            refresh()
+          end, active_pallet
+          ), 0, 0, dpi(20), 0),
       },
       layout  = wibox.layout.ratio.horizontal
     }
@@ -737,14 +738,13 @@ return function()
 
     layout:add(wibox.widget {
       wibox.container.margin(button(
-      "Save", function ()
-        awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'")
-        body.enable()
+        "Back", function ()
+          body.enable()
 
-        Display_Mode = NORMAL_MODE
-        refresh()
-      end, active_pallet
-      ), 0, 0, 0, dpi(20)),
+          Display_Mode = NORMAL_MODE
+          refresh()
+        end, active_pallet
+        ), 0, 0, 0, dpi(20)),
       nil,
       widget,
       layout = wibox.layout.fixed.vertical
