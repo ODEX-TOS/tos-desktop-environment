@@ -376,6 +376,10 @@ local function make_nav()
   )
   table.insert(
     root.elements.settings_views,
+    make_view(icons.dwindle, i18n.translate("Tag"), require("widget.settings.tag")())
+  )
+  table.insert(
+    root.elements.settings_views,
     make_view(icons.about, i18n.translate("About"), require("widget.settings.about")())
   )
 
