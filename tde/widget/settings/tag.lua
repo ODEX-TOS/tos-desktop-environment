@@ -40,7 +40,21 @@ local dpi = beautiful.xresources.apply_dpi
 local m = dpi(10)
 local settings_index = dpi(40)
 
+local active_tags = {}
 local body
+
+local function highlight_tags(tags)
+  print('Highlighting tag ' .. tostring(tags[1].index))
+  for _, tag in ipairs(tags) do
+    tag:view_only()
+  end
+end
+
+local function unhighlight_tags()
+  for _, tag in ipairs(active_tags) do
+    tag:view_only()
+  end
+end
 
 local function get_linked_tags(tag)
   local index = tag.index
@@ -152,6 +166,14 @@ local function generate_tag(tags, t_card)
     gap_line,
   }, m, m, m, m))
   t_card.update_title(i18n.translate('Tag') .. ' ' .. tags[1].name)
+
+  t_card:connect_signal('mouse::enter', function ()
+    highlight_tags(tags)
+  end)
+
+  t_card:connect_signal('mouse::leave', function ()
+    unhighlight_tags()
+  end)
 end
 
 return function()
@@ -206,6 +228,11 @@ return function()
   view.refresh = function()
     body.reset()
     layout:reset()
+
+    active_tags = {}
+    for s in screen do
+      table.insert(active_tags, s.selected_tag)
+    end
 
     for _, tag in ipairs(awful.screen.focused().tags) do
       local tag_c = card('Tag', dpi(150))
