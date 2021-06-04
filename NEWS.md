@@ -33,6 +33,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Set the monitor refresh rate in the settings application
 - `tde-client` now has support for `fzf` with code completions and history
 - Support for configuring tags in the settings application
+- Config options for tag `master width` and `master count`
 
 ### Bug Fixes
 
