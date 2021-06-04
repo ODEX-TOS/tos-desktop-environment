@@ -80,7 +80,7 @@ export TEST_PAUSE_ON_ERRORS  # Used in tests/_runner.lua.
 
 XEPHYR=Xephyr
 XVFB=Xvfb
-AWESOME=$build_dir/awesome
+AWESOME=$build_dir/tde
 if ! $AWESOME --version; then
     echo "$AWESOME cannot be run." >&2
     exit 1

@@ -87,8 +87,8 @@ Then you can make the script executable with `chmod +x` and run it.
 
 The typical output will look like:
 
-    tde v4.3 (testing)
-      • Compiled against Lua 5.1.5 (running with Lua 5.1)
+    tde v0.7.10979 (Beta)
+      • Compiled against Lua 5.3.6 (running with Lua 5.3)
       • API level: 4
       • D-Bus support: yes
       • xcb-errors support: no

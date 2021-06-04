@@ -66,7 +66,7 @@ function run_linter_shell() {
   SHELL_LINTING_OUT=""
   SHELL_LINTING_EXIT_CODE=""
   # shellcheck disable=SC2044
-  for file in $(find tde *.sh -type f -name "*.sh" ! -name "rofi-spotlight.sh" -not -path "./WM/*"); do
+  for file in $(find tde *.sh -type f -name "*.sh" ! -name "rofi-spotlight.sh" -not -path "./WM/*" -not -path "./BUILD/*" ); do
     out="$(shellcheck "$file")"
     code="$?"
     if [[ ! "$code" == "0" ]]; then
@@ -107,7 +107,7 @@ function run_license_linter_lua() {
 ]]"
   _LICENSE_LUA_OUT=""
   # shellcheck disable=SC2044
-  for file in $(find tde plugins tests/tde -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*"); do
+  for file in $(find tde plugins tests/tde -type f -name "*.lua" ! -name "release.lua" -not -path "*lib-lua*" -not -path "./BUILD/*" ); do
     out="$(head -n24 "$file")"
     if [[ ! "$out" == "$_LICENSE" ]]; then
       _LICENSE_LUA_OUT="$_LICENSE_LUA_OUT\nMissing license header: $file"
@@ -150,7 +150,7 @@ function run_license_linter_bash() {
 # SOFTWARE."
   _LICENSE_BASH_OUT=""
   # shellcheck disable=SC2044
-  for file in $(find tde plugins *.sh -type f -name "*.sh" -not -path "./WM/*" ); do
+  for file in $(find tde plugins *.sh -type f -name "*.sh" -not -path "./WM/*" -not -path "./BUILD/*" ); do
     out="$(head -n24 "$file")"
     if [[ ! "$out" == "$_LICENSE" ]]; then
       _LICENSE_BASH_OUT="$_LICENSE_BASH_OUT\nMissing license header: $file"
