@@ -167,7 +167,7 @@ local tags = {
     screen = 1,
     layout = getLayoutPerTag(8),
     master_count = getMasterCountPerTag(8),
-    master_width_factor =  getMasterWidthPerTag(8)
+    master_width_factor = getMasterWidthPerTag(8)
   }
 }
 tag.connect_signal(
@@ -225,5 +225,6 @@ _G.tag.connect_signal(
       t.gap = awful.tag.getproperty(t, "gap") or 4
     end
     t.master_count = getMasterCountPerTag(t.index)
+    t.master_width_factor = getMasterWidthPerTag(t.index)
   end
 )

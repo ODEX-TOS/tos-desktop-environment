@@ -55,26 +55,26 @@ local function get_linked_tags(tag)
   return tags
 end
 
-local function gen_master_width(tags)
+local function gen_master_count(tags)
 
   local text = wibox.widget.textbox(tostring(tags[1].master_count))
 
-  local dec = button("-", function()
+  local function update(amount)
     for _, tag in ipairs(tags) do
-      awful.tag.incnmaster(-1, tag)
+      awful.tag.incnmaster(amount, tag)
     end
     text.text = tostring(tags[1].master_count)
 
     -- TODO: persist these changes
+    configWriter.update_entry(configFile, "tag_master_count_" .. tostring(tags[1].index), tostring(tags[1].master_count))
+  end
+
+  local dec = button("-", function()
+    update(-1)
   end)
 
   local inc = button("+", function()
-    for _, tag in ipairs(tags) do
-      awful.tag.incnmaster(1, tag)
-    end
-    text.text = tostring(tags[1].master_count)
-
-    -- TODO: persist these changes
+    update(1)
   end)
 
   local w =  wibox.widget {
@@ -94,7 +94,9 @@ local function generate_tag(tags, t_card)
 
   local max = tags[1].screen.geometry.width / 20
   local default_gap = tags[1].gap
-  local _slider = slider(0, max, 1, default_gap, function (value)
+  local default_factor = tags[1].master_width_factor
+
+  local _slider_gap = slider(0, max, 1, default_gap, function (value)
     for _, tag in ipairs(tags) do
       tag.gap = value
     end
@@ -105,13 +107,49 @@ local function generate_tag(tags, t_card)
     configWriter.update_entry(configFile, "tag_gap_" .. tostring(tags[1].index), tostring(tags[1].gap))
   end)
 
-  local btn = gen_master_width(tags)
+  local _slider_factor = slider(0, 1, 0.01, default_factor, function (value)
+    for _, tag in ipairs(tags) do
+      tag.master_width_factor = value
+    end
+  end, function()
+    return tostring(tags[1].master_width_factor * 100) .. '%'
+  end, function (_)
+    print('Updating master width factor')
+    configWriter.update_entry(configFile, "tag_master_width_" .. tostring(tags[1].index), tostring(tags[1].master_width_factor))
+  end)
+
+  local btn = gen_master_count(tags)
+
+  local factor_line = wibox.widget {
+    {
+      layout = wibox.container.margin,
+      right = m,
+      wibox.widget.textbox(i18n.translate("Master Width Factor") .. ":")
+    },
+    wibox.widget.base.empty_widget(),
+    _slider_factor,
+    layout = wibox.layout.ratio.horizontal
+  }
+
+  local gap_line = wibox.widget {
+    {
+      layout = wibox.container.margin,
+      right = m,
+      wibox.widget.textbox(i18n.translate("Gap") .. ":")
+    },
+    wibox.widget.base.empty_widget(),
+    _slider_gap,
+    layout = wibox.layout.ratio.horizontal
+  }
+
+  factor_line:adjust_ratio(2, 0.19, 0.01, 0.80)
+  gap_line:adjust_ratio(2, 0.19, 0.01, 0.80)
 
   t_card.update_body(wibox.container.margin(wibox.widget {
-    layout = wibox.layout.fixed.vertical,
+    layout = wibox.layout.flex.vertical,
     btn,
-    nil,
-    _slider,
+    factor_line,
+    gap_line,
   }, m, m, m, m))
   t_card.update_title(i18n.translate('Tag') .. ' ' .. tags[1].name)
 end
@@ -170,7 +208,7 @@ return function()
     layout:reset()
 
     for _, tag in ipairs(awful.screen.focused().tags) do
-      local tag_c = card('Tag', dpi(100))
+      local tag_c = card('Tag', dpi(150))
       generate_tag(get_linked_tags(tag), tag_c)
       layout:add(wibox.container.margin(tag_c, 0, 0, m, m))
     end
