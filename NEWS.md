@@ -34,9 +34,12 @@ This draft is not a final version of what will be introduced in the next patch, 
 - `tde-client` now has support for `fzf` with code completions and history
 - Support for configuring tags in the settings application
 - Config options for tag `master width` and `master count`
+- Added support for changing the port settings of your sources and sinks
+- Persist bluetooth status on reboot
 
 ### Bug Fixes
 
+- Audio profiles now get detected more robustly
 - Fixed theme picker life updating for the tag-list view
 - Taking screenshots now uses the theme color that is active (When changing the theme color life the screenshot tool uses that color scheme)
 - Fixed rendering issue of `lib-widget` card titles with newlines
@@ -45,6 +48,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### Dev Notes
 
 - `stderr` messages get written to `error.log`
+- `card` has support for highlighting
 
 ## Patch 0.6
 
