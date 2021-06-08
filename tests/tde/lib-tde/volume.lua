@@ -105,13 +105,13 @@ function test_api_lib_tde_volume_toggle_master()
 end
 
 function test_api_lib_tde_volume_set_sink_port()
-    assert(volume.set_default_sink_port, "Make sure the volume.set_default_sink_port api exists")
-    assert(type(volume.set_default_sink_port) == "function", "Volume api is wrong, volume.set_default_sink_port should be a function")
+    assert(volume.set_sink_port, "Make sure the volume.set_sink_port api exists")
+    assert(type(volume.set_sink_port) == "function", "Volume api is wrong, volume.set_sink_port should be a function")
 end
 
 function test_api_lib_tde_volume_set_source_port()
-    assert(volume.set_default_source_port, "Make sure the volume.set_default_source_port api exists")
-    assert(type(volume.set_default_source_port) == "function", "Volume api is wrong, volume.set_default_source_port should be a function")
+    assert(volume.set_source_port, "Make sure the volume.set_source_port api exists")
+    assert(type(volume.set_source_port) == "function", "Volume api is wrong, volume.set_source_port should be a function")
 end
 
 

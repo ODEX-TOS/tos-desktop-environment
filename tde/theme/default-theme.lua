@@ -38,6 +38,7 @@ local signals = require('lib-tde.signals')
 
 local theme = {}
 theme.icons = theme_dir .. "/icons/"
+theme.smallfont = "Roboto medium 7"
 theme.font = "Roboto medium 10"
 theme.monitor_font = "Roboto medium 16"
 theme.gtk = gtk.get_theme_variables()

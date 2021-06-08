@@ -24,27 +24,13 @@
 ]]
 
 local volume = require("lib-tde.volume")
-local common = require("lib-tde.function.common")
+require("lib-tde.logger")
 
 
 local res = volume.get_default_sink()
 local res2 = volume.get_default_source()
 
-print(res.port)
-print(res2.port)
+print(res)
+print(res2)
 
-local applications = volume.get_applications()
-
-if #applications == 0 then
-    print("No application playing sound")
-    return
-end
-
-local app = applications[1]
-
-
-common.sleep(1)
-volume.set_application_volume(app.sink, 100)
-common.sleep(1)
-volume.set_application_volume(app.sink, 10)
 

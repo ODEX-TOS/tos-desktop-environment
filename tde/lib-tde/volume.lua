@@ -71,7 +71,7 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
             --- The active port in the sink/source
             -- @property port
             -- @param string
-            port = lastPort,
+            port = lastPort or "",
             --- The list of all ports this sink/source supports
             -- @property available_ports
             -- @param table
@@ -100,7 +100,7 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
                 break
             end
 
-            local _port = line:match("%S*(.*): .* %(.*%)$")
+            local _port = line:match("%s*(.*): .* %(.*%)$")
             if _port ~= nil then
                 table.insert(a_ports, _port)
             else
@@ -146,7 +146,7 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
             table.insert(result, {
                 name = lastDescription,
                 sink = tonumber(lastSink) or 0,
-                port = lastPort,
+                port = lastPort or "",
                 available_ports = a_ports
             })
             lastDescription = nil
@@ -338,20 +338,20 @@ local function get_default_sink()
     return {}
 end
 
---- Change the default sink (change the audio playback device) port
+--- Change the sink (change the audio playback device) port
 -- @tparam number sink The sink property of our audio device
 -- @tparam string port The Specific port to enable in the sink
--- @staticfct set_default_sink_port
--- @usage -- Set our default sink to match the first device and the first port of the device
---    set_default_sink_port(get_sinks()[1].sink, get_sinks()[1].ports[1])
-local function set_default_sink_port(sink, port)
+-- @staticfct set_sink_port
+-- @usage -- Set our sink to match the first device and the first port of the device
+--    set_sink_port(get_sinks()[1].sink, get_sinks()[1].ports[1])
+local function set_sink_port(sink, port)
     if not (type(sink) == "number") then
         print("set_default_sink_port expects a sink number", err)
     end
     if not (type(port) == "string") then
         print("set_default_sink_port expects a port string", err)
     end
-    execute("pactl set-default-sink-port " .. sink .. ' ' .. port)
+    execute("pactl set-sink-port " .. sink .. ' ' .. port)
 end
 
 --- Get a list of all audio sources back (A source is an audio recording device such as microphones)
@@ -403,20 +403,20 @@ local function get_default_source()
     return {}
 end
 
---- Change the default source (change the audio input device) port
+--- Change the source (change the audio input device) port
 -- @tparam number source The source property of our audio device
 -- @tparam string port The Specific port to enable in the source
--- @staticfct set_default_source_port
--- @usage -- Set our default source to match the first device and the first port of the device
---    set_default_sink_port(get_sources()[1].sink, get_sources()[1].ports[1])
-local function set_default_source_port(source, port)
+-- @staticfct set_source_port
+-- @usage -- Set our source to match the first device and the first port of the device
+--    set_source_port(get_sources()[1].sink, get_sources()[1].ports[1])
+local function set_source_port(source, port)
     if not (type(source) == "number") then
         print("set_default_source_port expects a source number", err)
     end
     if not (type(port) == "string") then
         print("set_default_source_port expects a port string", err)
     end
-    execute("pactl set-default-source-port " .. source .. ' ' .. port)
+    execute("pactl set-source-port " .. source .. ' ' .. port)
 end
 
 
@@ -458,9 +458,9 @@ return {
     get_applications = get_applications,
     set_default_sink = set_default_sink,
     get_default_sink = get_default_sink,
-    set_default_sink_port = set_default_sink_port,
     set_default_source = set_default_source,
     get_default_source = get_default_source,
-    set_default_source_port = set_default_source_port,
+    set_sink_port = set_sink_port,
+    set_source_port = set_source_port,
     reset_server = reset_server
 }
