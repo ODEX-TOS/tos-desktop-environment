@@ -40,7 +40,8 @@ local function load()
         brightness = 100,
         mouse = {},
         do_not_disturb = false,
-        oled_mode = false
+        oled_mode = false,
+        bluetooth = false
     }
     if not filehandle.exists(file) then
         return table
@@ -53,6 +54,7 @@ local function load()
     result.mouse = result.mouse or table.mouse
     result.do_not_disturb = result.do_not_disturb or table.do_not_disturb
     result.oled_mode = result.oled_mode or table.oled_mode
+    result.bluetooth = result.bluetooth or table.bluetooth
     return result
 end
 
@@ -98,6 +100,21 @@ local function setup_state(state)
             )
         end
     )
+
+    -- update bluetooth status
+    if state.bluetooth then
+        awful.spawn.with_shell([[
+            rfkill unblock bluetooth
+            echo 'power on' | bluetoothctl
+        ]])
+    else
+        awful.spawn.with_shell([[
+            echo 'power off' | bluetoothctl
+            rfkill block bluetooth
+        ]])
+    end
+
+
     -- find all mouse peripheral that are currently attached to the machine
     if state.mouse then
         local devices = mouse.getInputDevices()
@@ -223,3 +240,8 @@ signals.connect_mouse_natural_scrolling(
         end
     end
 )
+
+signals.connect_bluetooth_status(function (bIsEnabled)
+    save_state.bluetooth = bIsEnabled
+    save(save_state)
+end)
