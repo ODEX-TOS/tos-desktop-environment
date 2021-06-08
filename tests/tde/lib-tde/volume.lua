@@ -104,9 +104,19 @@ function test_api_lib_tde_volume_toggle_master()
     assert(type(volume.toggle_master) == "function", "Volume api is wrong, volume.toggle_master should be a function")
 end
 
+function test_api_lib_tde_volume_set_sink_port()
+    assert(volume.set_default_sink_port, "Make sure the volume.set_default_sink_port api exists")
+    assert(type(volume.set_default_sink_port) == "function", "Volume api is wrong, volume.set_default_sink_port should be a function")
+end
+
+function test_api_lib_tde_volume_set_source_port()
+    assert(volume.set_default_source_port, "Make sure the volume.set_default_source_port api exists")
+    assert(type(volume.set_default_source_port) == "function", "Volume api is wrong, volume.set_default_source_port should be a function")
+end
+
 
 function test_api_lib_tde_volume_all_functions_tested()
-    local amount = 16
+    local amount = 18
     local length = tablelength(volume)
     assert(length == amount, "You didn't write unit tests for all api functions, tested: " .. tostring(amount) .. " but there are: " .. tostring(length) .. " api functions")
 end
