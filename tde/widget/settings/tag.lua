@@ -169,10 +169,14 @@ local function generate_tag(tags, t_card)
 
   t_card:connect_signal('mouse::enter', function ()
     highlight_tags(tags)
+    -- change card background to the primary color
+    t_card.highlight()
   end)
 
   t_card:connect_signal('mouse::leave', function ()
     unhighlight_tags()
+    -- revert card background back
+    t_card.unhighlight()
   end)
 end
 
