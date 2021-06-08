@@ -1,0 +1,96 @@
+# Maintainer: Tom Meyers < tom [at] odex [dot] be>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Sébastien Luttringer
+# Contributor: xduugu
+# Contributor: Ronald van Haren <ronald.archlinux.org>
+# Contributor: Vesa Kaihlavirta
+
+pkgname=tde
+
+# the window manager git repo name
+_name=tos-desktop-environment
+# the version of lua for this build
+_LUA_VER="5.3"
+
+# The branch to build
+# TODO: Change this branch to release once it support this build
+BRANCH="v0.7"
+
+# This is an force rebuild number in case the pkgbuild changed slightly (similar to pkgrel
+_TVER=41
+pkgver=10989
+pkgrel=1
+
+pkgdesc='TDE (TOS Desktop Environment)'
+url='https://tos.odex.be/'
+arch=('x86_64')
+license=('GPL2')
+depends=('cairo' 'dbus' 'gdk-pixbuf2' 'imlib2' 'libxdg-basedir' 'lua53' 'lua53-lgi' 'pango'
+         'startup-notification' 'xcb-util-cursor' 'xcb-util-keysyms' 'xcb-util-wm'
+         'xorg-xmessage' 'libxkbcommon-x11' 'libxkbcommon' 'xcb-util-xrm' 'tos-tools' 'pacman-contrib' 'xcb-util-errors' 'light-locker' 'awesome-freedesktop-git' 'lxsession-gtk3' 'rofi-tos' 'python-gobject' 'python-dbus' 'picom-tryone-tos' 'upower' 'rlwrap' 'imagemagick' 'libqalculate' 'autorandr' 'udiskie' 'librsvg' 'tde-touchegg' 'qrencode')
+makedepends=('asciidoc' 'pkgconf' 'cmake' 'docbook-xsl' 'doxygen' 'imagemagick' 'ldoc' 'xmlto')
+optdepends=('dex: autostart your desktop files'
+            'kdeconnect: Link your phone with TDE')
+provides=('notification-daemon' 'awesome-tos' 'tde')
+conflicts=('awesome' 'awesome-git' 'awesome-tos' 'tde')
+backup=('etc/xdg/tde/rc.lua')
+
+source=("git://github.com/ODEX-TOS/tos-desktop-environment.git#branch=$BRANCH")
+sha512sums=('SKIP') 
+validpgpkeys=('SKIP')
+
+pkgver() {
+    cd "$_name"
+    local wm_commit="$(git rev-list --count HEAD)"
+    printf "${wm_commit}"
+}
+
+prepare() {
+  cd "$srcdir/$_name"
+  cp "NEWS.md" "docs/89-NEWS.md"
+
+  mkdir -p "$srcdir/$_name/"build
+
+  # TDE Lua settings
+  echo "return '$(git rev-parse HEAD)'" > "$srcdir/$_name/"release.lua
+
+  cp -r "$srcdir/$_name/tde/" "$srcdir/$_name/build/tde-src"
+  mkdir -p "$srcdir/$_name/build/"
+  [[ -d "$srcdir/$_name/build/tde-src/" ]] && rm -rf "$srcdir/$_name/build/tde-src"
+  cp -r "$srcdir/$_name/tde/" "$srcdir/$_name/build/tde-src"
+}
+
+build() {
+  cd "$srcdir/$_name/"build
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSYSCONFDIR=/etc \
+    -DLUA_INCLUDE_DIR=/usr/include/lua${_LUA_VER} \
+    -DLUA_LIBRARY=/usr/lib/liblua.so.${_LUA_VER} \
+    -DLUA_EXECUTABLE=/usr/bin/lua${_LUA_VER} \
+    -D OVERRIDE_VERSION="$BRANCH.$(git rev-list --count HEAD)"
+  make
+}
+
+package() {
+  cd "$srcdir/$_name/"build
+  make -C .  DESTDIR="${pkgdir}" install
+
+  install -Dm 644 "$srcdir/$_name/tde.desktop" -t "${pkgdir}/usr/share/xsessions/"
+  install -Dm 644 "$srcdir/$_name/tde-settings.desktop" -t "${pkgdir}/usr/share/applications/"
+  
+  cp -r "$srcdir/$_name/"/tde/* "${pkgdir}/etc/xdg/tde"
+  mkdir -p "${pkgdir}/etc/xdg/awesome/theme"
+  cp -r "${pkgdir}/etc/xdg/tde/theme" "${pkgdir}/etc/xdg/awesome/"
+
+  # setup images
+  mkdir -p "$pkgdir"/usr/share/backgrounds/
+  git clone https://github.com/ODEX-TOS/Pictures "$pkgdir"/usr/share/backgrounds/tos
+  # remove the git directory from the final build
+  rm -rf "$pkgdir"/usr/share/backgrounds/tos/{.git,.gitignore,.github}
+  # remove the readme, only show the png/jpg files
+  rm "$pkgdir"/usr/share/backgrounds/tos/README.md
+  chmod -R 755 "$pkgdir"/usr/share/backgrounds/tos
+}
