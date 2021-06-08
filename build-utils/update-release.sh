@@ -4,10 +4,8 @@ VERSION="$(git rev-list --count HEAD)"
 BRANCH="$(git branch | grep '*' | cut -d' ' -f2)"
 
 
-MESSAGE="Releasing new version $BRANCH-$VERSION\nNews Link: https://github.com/ODEX-TOS/tos-desktop-environment/blob/$BRANCH/NEWS.md"
-
 # get repo name and owner
-REPO_NAME="tos-desktop-enviroment"
+REPO_NAME="tos-desktop-environment"
 REPO_OWNER="ODEX-TOS"
 
 if [[ "$(command -v gh)" == "" ]]; then
@@ -37,4 +35,4 @@ rm -rf tos-desktop-enviroment src pkg || true
 cd ../ || exit 1
 
 file="$(find . -type f -iname 'tde-*.pkg.*' | head -n1)"
-gh release create "$BRANCH-$VERSION" -F NEWS.md $file -R "$REPO_OWNER/$REPO_NAME"
+gh release create "$BRANCH-$VERSION" -F NEWS.md $file -t "$BRANCH-$VERSION: Pre-release package" -R "$REPO_OWNER/$REPO_NAME"
