@@ -36,6 +36,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Config options for tag `master width` and `master count`
 - Added support for changing the port settings of your sources and sinks
 - Persist bluetooth status on reboot
+- Allow changing dpi from the settings (Scaling)
 
 ### Bug Fixes
 
@@ -43,6 +44,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Fixed theme picker life updating for the tag-list view
 - Taking screenshots now uses the theme color that is active (When changing the theme color life the screenshot tool uses that color scheme)
 - Fixed rendering issue of `lib-widget` card titles with newlines
+- Only show system usage with a precision of 2 characters after the decimal point instead of 8 (Too noisy)
+- Now we show a meaningful `tde version` in the about page
 - Numerous bug fixes
 
 ### Dev Notes
