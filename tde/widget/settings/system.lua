@@ -38,6 +38,12 @@ local settings_index = dpi(40)
 local settings_width = dpi(800)
 local settings_nw = dpi(260)
 
+local function todecimal(value, precision)
+  return string.format(
+    "%." .. tostring(precision) .. "f",
+    value)
+end
+
 return function()
   local view = wibox.container.margin()
   view.left = m
@@ -338,7 +344,7 @@ return function()
   signals.connect_ram_usage(
     function(value)
       ram_progress:set_value(value)
-      ram_value.text = value .. "%"
+      ram_value.text = todecimal(value, 2) .. "%"
     end
   )
 
@@ -351,14 +357,14 @@ return function()
   signals.connect_cpu_usage(
     function(value)
       cpu_progress:set_value(value)
-      cpu_value.text = value .. "%"
+      cpu_value.text = todecimal(value, 2) .. "%"
     end
   )
 
   signals.connect_disk_usage(
     function(value)
       disk_progress:set_value(value)
-      disk_value.text = value .. "%"
+      disk_value.text = todecimal(value, 2) .. "%"
     end
   )
 
