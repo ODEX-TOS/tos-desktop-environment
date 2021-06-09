@@ -183,8 +183,10 @@ return function()
 
       volume.set_default_sink(_id)
 
-      DISPLAY_MODE = PORT_MODE
-      refresh()
+      if #sink.available_ports > 1 then
+        DISPLAY_MODE = PORT_MODE
+        refresh()
+      end
     end)
   end
 
@@ -194,9 +196,10 @@ return function()
       bIsSink = false
 
       volume.set_default_source(_id)
-
-      DISPLAY_MODE = PORT_MODE
-      refresh()
+      if #source.available_ports > 1 then
+        DISPLAY_MODE = PORT_MODE
+        refresh()
+      end
     end)
   end
 
