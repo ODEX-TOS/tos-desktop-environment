@@ -159,7 +159,7 @@ return function()
   os_type_text.text = out
 
   local tde_version_name, tde_version_text = generate_setting_panel(i18n.translate("TDE Version"))
-  tde_version_text.text = require("release")
+  tde_version_text.text = awesome.version .. " (" .. awesome.release .. ")"
 
   local windowing_system_name, windowing_system_text = generate_setting_panel(i18n.translate("Windowing system"))
   -- TDE currently only supports X11

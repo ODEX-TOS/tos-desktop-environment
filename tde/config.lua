@@ -59,8 +59,8 @@ local config = {
         end
         return filesystem.get_configuration_dir() .. "/configuration/picom.conf "
     end,
-    aboutText = "TOS Linux Alpha Edition\nMIT License\n© Meyers Tom 2019 - " ..
-        os.date("%Y") .. "\n\n" .. i18n.translate("Thanks for using our product") .. " ♥"
+    aboutText = "TDE " .. awesome.version .. "\n" .. awesome.release .. " Edition\nMIT License (TDE)\n© Meyers Tom 2019 - " ..
+        os.date("%Y") .. "\n\n" .. "Based on awesomeWM GPLv2" .. "\n\n" .. i18n.translate("Thanks for using our product") .. " ♥"
 }
 
 return config
