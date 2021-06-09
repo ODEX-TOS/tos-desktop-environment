@@ -19,7 +19,7 @@ BRANCH="v0.7"
 
 # This is an force rebuild number in case the pkgbuild changed slightly (similar to pkgrel
 _TVER=41
-pkgver=10998
+pkgver=10999
 pkgrel=1
 
 pkgdesc='TDE (TOS Desktop Environment)'
@@ -81,8 +81,10 @@ package() {
   install -Dm 644 "$srcdir/$_name/tde.desktop" -t "${pkgdir}/usr/share/xsessions/"
   install -Dm 644 "$srcdir/$_name/tde-settings.desktop" -t "${pkgdir}/usr/share/applications/"
   
-  cp -r "$srcdir/$_name/"/tde/* "${pkgdir}/etc/xdg/tde"
   mkdir -p "${pkgdir}/etc/xdg/awesome/theme"
+  mkdir -p "${pkgdir}/etc/xdg/tde"
+
+  cp -r "$srcdir/$_name/"/tde/* "${pkgdir}/etc/xdg/tde"
   cp -r "${pkgdir}/etc/xdg/tde/theme" "${pkgdir}/etc/xdg/awesome/"
 
   # setup images
