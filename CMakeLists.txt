@@ -433,7 +433,7 @@ add_custom_target(check-requires
     USES_TERMINAL
     VERBATIM)
 list(APPEND CHECK_QA_TARGETS check-requires)
-a_find_program(BUSTED_EXECUTABLE busted FALSE)
+a_find_program(BUSTED_EXECUTABLE busted53 FALSE)
 if(BUSTED_EXECUTABLE)
     if(DO_COVERAGE)
         set(BUSTED_ARGS "--coverage")
@@ -455,7 +455,7 @@ add_dependencies(check check-unit)
 a_find_program(LUACHECK_EXECUTABLE luacheck FALSE)
 if(LUACHECK_EXECUTABLE)
     add_custom_target(luacheck
-        ${LUACHECK_EXECUTABLE} lib spec tests themes awesomerc.lua
+        ${LUACHECK_EXECUTABLE} lib spec tests themes tde
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running Luacheck"
         VERBATIM)

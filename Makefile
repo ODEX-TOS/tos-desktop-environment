@@ -5,6 +5,10 @@ else
     ECHO=@:
 endif
 
+CMAKE_ARGS += "-DLUA_EXECUTABLE=/usr/bin/lua5.3" 
+CMAKE_ARGS += "-DLUA_LIBRARY=/usr/lib/liblua.so.5.3" 
+CMAKE_ARGS += "-DLUA_INCLUDE_DIR=/usr/include/lua5.3"
+
 BUILDDIR=build
 
 # Run "make" in $(BUILDDIR) by default.

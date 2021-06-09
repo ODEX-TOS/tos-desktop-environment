@@ -400,6 +400,19 @@ return function()
     end
   )
 
+  local dpi_slider =
+  slider(
+  1,
+  300,
+  1,
+  beautiful.xresources.dpi,
+  function(value)
+    print("Updated dpi: " .. tostring(value))
+    beautiful.xresources.set_dpi(value)
+    signals.emit_refresh_screen()
+  end
+  )
+
   local changewall =
     button(
     "Change wallpaper",
@@ -441,6 +454,7 @@ return function()
 
   local brightness_card = card()
   local screen_time_card = card()
+  local dpi_card = card()
 
   brightness_card.update_body(
     wibox.widget {
@@ -485,8 +499,31 @@ return function()
     }
   )
 
+  dpi_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Change Application Scaling"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        dpi_slider
+      }
+    }
+  )
+
   brightness_card.forced_height = (m * 6) + dpi(30)
   screen_time_card.forced_height = (m * 6) + dpi(30)
+  dpi_card.forced_height = (m * 6) + dpi(30)
 
   view:setup {
     layout = wibox.container.background,
@@ -511,6 +548,11 @@ return function()
           layout = wibox.container.margin,
           top = m,
           screen_time_card
+        },
+        {
+          layout = wibox.container.margin,
+          top = m,
+          dpi_card
         },
         {layout = wibox.container.margin, top = m, monitors},
         {layout = wibox.container.margin, top = m, changewall},

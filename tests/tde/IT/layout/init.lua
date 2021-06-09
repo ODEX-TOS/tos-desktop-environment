@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 local hardware = require("tde.lib-tde.hardware-check")
-local run_rc_config_in_xephyr = require("tests.IT.functions").run_rc_config_in_xephyr
+local run_rc_config_in_xephyr = require("tests.tde.IT.functions").run_rc_config_in_xephyr
 
 function Test_IT_run_application_startup()
     local config = os.getenv("PWD") .. "/tde/rc.lua"
@@ -39,7 +39,7 @@ function Test_IT_application_valid_syntax()
 end
 
 function Test_IT_topbar_exists()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/toppanel.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/toppanel.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config)
     assert(assertion)
     print(stdout)
@@ -48,7 +48,7 @@ function Test_IT_topbar_exists()
 end
 
 function Test_IT_action_menu_exists()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/action-menu.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/action-menu.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config)
     assert(assertion)
     print(stdout)
@@ -57,7 +57,7 @@ function Test_IT_action_menu_exists()
 end
 
 function Test_IT_notification_center_exists()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/notification-center.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/notification-center.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config)
     assert(assertion)
     print(stdout)
@@ -66,7 +66,7 @@ function Test_IT_notification_center_exists()
 end
 
 function Test_IT_bottom_panel_exists()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/bottom-bar.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/bottom-bar.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config)
     assert(assertion)
     print(stdout)
@@ -75,7 +75,7 @@ function Test_IT_bottom_panel_exists()
 end
 
 function Test_IT_tag_switching_works()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/tags-switch.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/tags-switch.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config)
     assert(assertion)
     print(stdout)
@@ -84,7 +84,7 @@ function Test_IT_tag_switching_works()
 end
 
 function Test_IT_compositor_exists()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/compositor.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/compositor.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config)
     assert(assertion)
     print(stdout)
@@ -94,7 +94,7 @@ end
 
 -- TODO: test tiling modes
 function Test_IT_tiling_mode_working()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/tiling.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/tiling.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config, 5)
     assert(assertion)
     print(stdout)
@@ -104,7 +104,7 @@ end
 
 -- TODO: test floating mode
 function Test_IT_floating_mode_working()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/floating.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/floating.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config, 5)
     assert(assertion)
     print(stdout)
@@ -113,7 +113,7 @@ function Test_IT_floating_mode_working()
 end
 
 function Test_IT_notification_working()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/notifications.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/notifications.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config, 7)
     assert(assertion)
     print(stdout)
@@ -122,7 +122,7 @@ function Test_IT_notification_working()
 end
 
 function Test_IT_settings_app_exists_working()
-    local config = os.getenv("PWD") .. "/tests/IT/layout/rc/settings-app.lua"
+    local config = os.getenv("PWD") .. "/tests/tde/IT/layout/rc/settings-app.lua"
     local assertion, match, stdout = run_rc_config_in_xephyr(config, 5)
     assert(assertion)
     print(stdout)

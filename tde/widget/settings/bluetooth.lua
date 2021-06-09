@@ -325,12 +325,14 @@ return function()
     print("Stopping bluetooth advertisment")
     timer:stop()
     -- disable our discovery
-    awful.spawn([[sh -c '
-    killall bluetoothctl; 
-    bluetoothctl scan off;
-    bluetoothctl pairable off;
-    bluetoothctl discoverable off;
-    ']])
+    if IsreleaseMode then
+      awful.spawn([[sh -c '
+      killall bluetoothctl; 
+      bluetoothctl scan off;
+      bluetoothctl pairable off;
+      bluetoothctl discoverable off;
+      ']])
+    end
 
   end
 
@@ -371,6 +373,9 @@ return function()
   refresh = function(bIsTimer)
     if scrollbox_body then
       scrollbox_body.reset()
+    end
+    if not IsreleaseMode then
+      return
     end
     if bIsTimer == nil then
       print("Starting bluetooth advertisment")

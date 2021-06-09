@@ -159,23 +159,25 @@ local check_trash_list = function()
 	)
 end
 
--- Check trash on awesome (re)-start
-check_trash_list()
+if IsreleaseMode then
+	-- Check trash on awesome (re)-start
+	check_trash_list()
 
--- Kill the old process of gio monitor trash:///
-awful.spawn.easy_async_with_shell(
-	"ps x | grep 'gio monitor trash:///' | grep -v grep | awk '{print  $1}' | xargs kill",
-	function()
-		awful.spawn.with_line_callback(
-			"gio monitor trash:///",
-			{
-				stdout = function(_)
-					check_trash_list()
-				end
-			}
-		)
-	end,
-	false
-)
+	-- Kill the old process of gio monitor trash:///
+	awful.spawn.easy_async_with_shell(
+		"ps x | grep 'gio monitor trash:///' | grep -v grep | awk '{print  $1}' | xargs kill",
+		function()
+			awful.spawn.with_line_callback(
+				"gio monitor trash:///",
+				{
+					stdout = function(_)
+						check_trash_list()
+					end
+				}
+			)
+		end,
+		false
+	)
+end
 
 return trash_button

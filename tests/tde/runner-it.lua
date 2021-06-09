@@ -28,9 +28,9 @@
 --local realPrint = print
 
 EXPORT_ASSERT_TO_GLOBALS = true
-require("tests.luaunit")
+require("tests.tde.luaunit")
 
-require("tests.IT")
+require("tests.tde.IT")
 
 -- So we have to manually put it back in our test runner
 --print = realPrint

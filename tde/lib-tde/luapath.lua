@@ -24,41 +24,63 @@
 ]]
 local exists = require("lib-tde.file").dir_exists
 
+local home = os.getenv("HOME")
+local pwd = os.getenv("PWD")
+
+-- the home env is /tmp/tde when running integration tests
+local bIsIntegrationTest = home == "/tmp/tde"
+local bIsreleaseMode = not bIsIntegrationTest and not exists(home .. "/.config/awesome")
+
+-- in release mode we use /etc/xdg
+if bIsreleaseMode then
+    pwd = "/etc/xdg"
+end
+
+if bIsIntegrationTest then
+    pwd = os.getenv("PWD") .. "/tos-tde"
+end
+
 -- Used to enable custom widgets as a plugin mechanism for TDE
-package.path = os.getenv("HOME") .. "/.config/tde/?/init.lua;" .. package.path
-package.path = os.getenv("HOME") .. "/.config/tde/?.lua;" .. package.path
+package.path = home .. "/.config/tde/?/init.lua;" .. package.path
+package.path = home .. "/.config/tde/?.lua;" .. package.path
+
+-- TODO: Correctly load path in when developing or when running integration tests
+-- In that case don't use the /etc/xdg/ paths
 
 -- Setup custom lua scripts (libraries)
 -- If the user dir exists then use that
 -- Otherwise use the system files
-if exists(os.getenv("HOME") .. "/.config/awesome") then
+if exists(home .. "/.config/awesome") then
     package.path =
-        os.getenv("HOME") ..
-        "/.config/awesome/?.lua;" .. os.getenv("HOME") .. "/.config/awesome/?/?.lua;" .. package.path
+        home ..
+        "/.config/awesome/?.lua;" .. home .. "/.config/awesome/?/?.lua;" .. package.path
 end
 
-if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-lua") then
+if exists(home .. "/.config/awesome/lib-tde/lib-lua") then
     package.path =
         package.path ..
         ";" ..
-            os.getenv("HOME") ..
+            home ..
                 "/.config/awesome/lib-tde/lib-lua/?/?.lua;" ..
-                    os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-lua/?.lua"
+                    home .. "/.config/awesome/lib-tde/lib-lua/?.lua"
 end
 
-if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/translations") then
-    package.path = package.path .. ";" .. os.getenv("HOME") .. "/.config/awesome/lib-tde/translations/?.lua"
+if exists(home .. "/.config/awesome/lib-tde/translations") then
+    package.path = package.path .. ";" .. home .. "/.config/awesome/lib-tde/translations/?.lua"
 end
 
-package.path = package.path .. ";" .. "/etc/xdg/tde/lib-tde/lib-lua/?/?.lua;" .. "/etc/xdg/tde/lib-tde/lib-lua/?.lua"
-package.path = package.path .. ";" .. "/etc/xdg/tde/lib-tde/translations/?.lua"
+package.path = package.path .. ";" .. pwd .. "/tde/lib-tde/lib-lua/?/?.lua;" .. pwd .. "/tde/lib-tde/lib-lua/?.lua"
+package.path = package.path .. ";" .. pwd .. "/tde/lib-tde/translations/?.lua"
+
 
 -- same applies for the c libraries
-if exists(os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so") then
+if exists(home .. "/.config/awesome/lib-tde/lib-so") then
     package.cpath =
         package.cpath ..
         ";" ..
-            os.getenv("HOME") ..
-                "/.config/awesome/lib-tde/lib-so/?/?.so;" .. os.getenv("HOME") .. "/.config/awesome/lib-tde/lib-so/?.so"
+            home ..
+                "/.config/awesome/lib-tde/lib-so/?/?.so;" .. home .. "/.config/awesome/lib-tde/lib-so/?.so"
 end
-package.cpath = package.cpath .. ";" .. "/etc/xdg/tde/lib-tde/lib-so/?/?.so;" .. "/etc/xdg/tde/lib-tde/lib-so/?.so"
+
+package.cpath = package.cpath .. ";" .. pwd .. "/tde/lib-tde/lib-so/?/?.so;" .. pwd .. "/tde/lib-tde/lib-so/?.so"
+

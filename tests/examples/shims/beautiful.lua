@@ -39,7 +39,10 @@ local module = {
     -- Fake resources handling
     xresources = require("beautiful.xresources"),
 
-    awesome_icon = logo()
+    awesome_icon = logo(),
+    primary = {},
+    accent = {},
+    background = {}
 }
 
 module.graph_bg = module.bg_normal

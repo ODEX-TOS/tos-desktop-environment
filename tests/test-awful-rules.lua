@@ -294,7 +294,7 @@ gears.debug.print_warning = temp
 -- Test tag and switch_to_tags
 test_rule {
     properties = {
-        tag            = "9",
+        tag            = "8",
         switch_to_tags = true
     },
     test = function(class)
@@ -302,8 +302,8 @@ test_rule {
         -- Make sure C-API properties are applied
 
         assert(#c:tags() == 1)
-        assert(c:tags()[1].name == "9")
-        assert(c.screen.selected_tag.name == "9")
+        assert(c:tags()[1].name == "8")
+        assert(c.screen.selected_tag.name == "8")
 
         return true
     end
@@ -320,7 +320,7 @@ test_rule {
         assert(#c:tags() == 1)
         assert(c:tags()[1].name == "8")
 
-        assert(c.screen.selected_tag.name ~= "8")
+        assert(c.screen.selected_tag.name == "8")
 
         -- Test the custom sources
         assert(c.random1)

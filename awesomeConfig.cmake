@@ -412,13 +412,13 @@ foreach(RULE_TYPE client tag screen notification)
 endforeach()
 
 add_custom_command(
-        OUTPUT ${BUILD_DIR}/awesomerc.lua ${BUILD_DIR}/docs/05-awesomerc.md
+        OUTPUT ${BUILD_DIR}/tos-tde/tde/rc.lua ${BUILD_DIR}/docs/05-awesomerc.md
             ${BUILD_DIR}/script_files/rc.lua
         COMMAND ${LUA_EXECUTABLE} ${SOURCE_DIR}/docs/05-awesomerc.md.lua
-        ${BUILD_DIR}/docs/05-awesomerc.md ${SOURCE_DIR}/awesomerc.lua
-        ${BUILD_DIR}/awesomerc.lua
+        ${BUILD_DIR}/docs/05-awesomerc.md ${SOURCE_DIR}/tde/rc.lua
+        ${BUILD_DIR}/tos-tde/tde/rc.lua
         ${BUILD_DIR}/script_files/rc.lua
-        DEPENDS ${SOURCE_DIR}/awesomerc.lua ${SOURCE_DIR}/docs/05-awesomerc.md.lua
+        DEPENDS ${SOURCE_DIR}/tde/rc.lua ${SOURCE_DIR}/docs/05-awesomerc.md.lua
 )
 
 add_custom_command(
@@ -429,10 +429,10 @@ add_custom_command(
 # Create a target for the auto-generated awesomerc.lua and other files
 add_custom_target(generate_awesomerc DEPENDS
     setup_directories
-    ${BUILD_DIR}/awesomerc.lua
+    ${BUILD_DIR}/tos-tde/tde/rc.lua
     ${BUILD_DIR}/script_files/theme.lua
     ${BUILD_DIR}/script_files/rc.lua
-    ${SOURCE_DIR}/awesomerc.lua
+    ${SOURCE_DIR}/tde/rc.lua
     ${BUILD_DIR}/docs/06-appearance.md
     ${SOURCE_DIR}/docs/05-awesomerc.md.lua
     ${SOURCE_DIR}/docs/build_rules_index.lua
@@ -442,7 +442,7 @@ add_custom_target(generate_awesomerc DEPENDS
     ${BUILD_DIR}/docs/common/notification_rules_index.ldoc
     ${SOURCE_DIR}/docs/sample_theme.lua
     ${SOURCE_DIR}/docs/sample_files.lua
-    ${SOURCE_DIR}/awesomerc.lua
+    ${SOURCE_DIR}/tde/rc.lua
     ${awesome_c_configure_files}
     ${awesome_lua_configure_files}
 )
@@ -453,14 +453,19 @@ add_custom_target(generate_awesomerc DEPENDS
 # {{{ Copy additional files
 file(GLOB awesome_md_docs RELATIVE ${SOURCE_DIR}
     ${SOURCE_DIR}/docs/*.md)
-set(AWESOME_ADDITIONAL_FILES
-    ${awesome_md_docs})
 
 foreach(file ${AWESOME_ADDITIONAL_FILES})
     configure_file(${SOURCE_DIR}/${file}
                    ${BUILD_DIR}/${file}
                    @ONLY)
 endforeach()
+
+set(AWESOME_TDE
+    ${awesome_tde_lib})
+
+file(COPY ${SOURCE_DIR}/tde/ DESTINATION ${BUILD_DIR}/tos-tde/tde)
+
+
 #}}}
 
 # vim: filetype=cmake:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80:foldmethod=marker

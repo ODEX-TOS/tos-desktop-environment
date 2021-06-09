@@ -22,5 +22,5 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("tests.IT.layout")
-require("tests.IT.widgets")
+require("tests.tde.IT.layout")
+require("tests.tde.IT.widgets")

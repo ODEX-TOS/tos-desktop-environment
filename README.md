@@ -76,7 +76,9 @@ To get a local copy up and running follow these simple steps.
 1. Install dependencies
 
 ```sh
-sudo tos -S tde xorg-server-xephyr
+tos -S tde xorg-server-xephyr
+# For unit tests
+tos -S lua53-busted
 ```
 
 if you are using an arch based distro that is not tos add the following repo to `/etc/pacman.conf`

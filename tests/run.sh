@@ -13,7 +13,8 @@
 set -e
 
 export SHELL=/bin/sh
-export HOME=/dev/null
+[[ ! -d /tmp/tde ]] && mkdir -p /tmp/tde
+export HOME=/tmp/tde
 
 # Parse options.
 usage() {
@@ -115,7 +116,7 @@ fi
 # shellcheck disable=SC2206
 awesome_options=($AWESOME_OPTIONS $manual_screens --search lib --search "$this_dir")
 
-awesome_options+=(--screen off --force)
+awesome_options+=( --force)
 
 # Cleanup on errors / aborting.
 cleanup() {
@@ -133,7 +134,7 @@ echo "awesome_log: $awesome_log"
 
 wait_until_success() {
     if (( verbose )); then set +x; fi
-    wait_count=60  # 60*0.05s => 3s.
+    wait_count=180  # 180*0.05s => 9s.
     while true; do
         set +e
         eval reply="\$($2)"
@@ -164,7 +165,7 @@ wait_until_success "X resources are ready" "DISPLAY='$D' xrdb -q >/dev/null 2>&1
 # Use a separate D-Bus session; sets $DBUS_SESSION_BUS_PID.
 eval "$(DISPLAY="$D" dbus-launch --sh-syntax --exit-with-session)"
 
-RC_FILE=${AWESOME_RC_FILE:-${source_dir}/awesomerc.lua}
+RC_FILE=${AWESOME_RC_FILE:-${source_dir}/tde/rc.lua}
 AWESOME_THEMES_PATH="${AWESOME_THEMES_PATH:-${source_dir}/themes}"
 AWESOME_ICON_PATH="${AWESOME_ICON_PATH:-${source_dir}/icons}"
 
@@ -175,8 +176,8 @@ if [ -n "$DO_COVERAGE" ] && [ "$DO_COVERAGE" != 0 ]; then
         RC_FILE="${RC_FILE}.in"
     fi
     sed "1 s~^~require('luacov.runner')('$source_dir/.luacov'); \0~" \
-        "$RC_FILE" > "$tmp_files/awesomerc.lua"
-    RC_FILE=$tmp_files/awesomerc.lua
+        "$RC_FILE" > "$tmp_files/rc.lua"
+    RC_FILE=$tmp_files/rc.lua
 fi
 
 # Start awesome.

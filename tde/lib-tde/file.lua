@@ -186,6 +186,11 @@ local function overwrite(file, data)
   end
   dir_create(file)
   local fd = io.open(file, "w")
+
+  if fd == nil then
+    return false
+  end
+
   fd:write(data .. "\n")
   fd:close()
   return true
@@ -204,6 +209,11 @@ local function write(file, data)
   end
   dir_create(file)
   local fd = io.open(file, "a")
+
+  if fd == nil then
+    return false
+  end
+
   fd:write(data .. "\n")
   fd:close()
   return true
