@@ -41,6 +41,7 @@ theme.icons = theme_dir .. "/icons/"
 theme.smallfont = "Roboto medium 7"
 theme.font = "Roboto medium 10"
 theme.monitor_font = "Roboto medium 16"
+theme.font_type = "Roboto medium"
 theme.gtk = gtk.get_theme_variables()
 theme.background_transparency = config["background_transparent"] or "66"
 

@@ -33,7 +33,6 @@ local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
-local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
 local xrandr_menu = require("lib-tde.xrandr").menu
 local scrollbox = require("lib-widget.scrollbox")
@@ -43,6 +42,9 @@ local button = require("lib-widget.button")
 local sort = require('lib-tde.sort.quicksort')
 local split = require('lib-tde.function.common').split
 local xrandr = require('lib-tde.xrandr')
+local mat_icon_button = require("widget.material.icon-button")
+local mat_icon = require("widget.material.icon")
+
 
 -- this will hold the scrollbox, used to reset it
 local body = nil
@@ -53,7 +55,7 @@ local m = dpi(10)
 local settings_index = dpi(40)
 local settings_height = dpi(900)
 
-local tempDisplayDir = filehandle.mktempdir()
+local tempDisplayDir = filesystem.mktempdir()
 local monitorScaledImage = ""
 
 local active_pallet = beautiful.primary
@@ -77,7 +79,7 @@ signals.connect_primary_theme_changed(
 
 signals.connect_exit(
   function()
-    filehandle.rm(tempDisplayDir)
+    filesystem.rm(tempDisplayDir)
   end
 )
 
@@ -100,6 +102,7 @@ local NORMAL_MODE = 1
 local WALLPAPER_MODE = 2
 local XRANDR_MODE = 3
 local REFRESH_MODE = 4
+local DPI_MODE = 5
 
 local Display_Mode = NORMAL_MODE
 
@@ -400,18 +403,69 @@ return function()
     end
   )
 
+  local function gen_dpi_body()
+    local v_layout = wibox.layout.fixed.vertical()
+    local h_layout = wibox.layout.fixed.horizontal()
+
+    h_layout:add(mat_icon_button(mat_icon(icons.settings, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.network, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.package, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.about, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.search, dpi(25))))
+
+    h_layout.forced_height = dpi(40)
+
+    v_layout:add(h_layout)
+    v_layout:add(wibox.container.margin(button('Spooky...', function() end), dpi(10), dpi(10), dpi(10), dpi(10)))
+    v_layout:add(wibox.container.margin(
+      wibox.widget {
+        text = i18n.translate('Spooky...'),
+        font = beautiful.font_type .. ' ' .. dpi(10),
+        widget = wibox.widget.textbox
+      },
+      dpi(10), dpi(10), dpi(10), dpi(10)))
+
+    return v_layout
+  end
+
+  local dpi_examples = card("Example")
+
   local dpi_slider =
   slider(
-  1,
+  5,
   300,
   1,
   beautiful.xresources.dpi,
   function(value)
     print("Updated dpi: " .. tostring(value))
+
+    local default = beautiful.xresources.dpi
     beautiful.xresources.set_dpi(value)
-    signals.emit_refresh_screen()
+
+    dpi_examples.update_body(gen_dpi_body())
+
+    beautiful.xresources.set_dpi(default)
   end
   )
+
+  local dpi_save_button = button("Save", function()
+    local value = tostring(math.floor(dpi_slider.get_number()))
+    print("Saving dpi value: " .. value)
+    local xresource_file = os.getenv("HOME") .. '/.Xresources'
+
+    -- make the changes persistant
+    filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
+    awful.spawn({'xrdb', xresource_file})
+
+    awesome.restart()
+  end)
+
+  dpi_examples.update_body(
+    gen_dpi_body()
+  )
+
+  dpi_save_button.forced_height = dpi(20)
+  dpi_slider.forced_height = dpi(20)
 
   local changewall =
     button(
@@ -456,6 +510,16 @@ return function()
   local screen_time_card = card()
   local dpi_card = card()
 
+  local dpi_button_to = button("Change Application Scaling", function ()
+    Display_Mode = DPI_MODE
+    refresh()
+  end)
+
+  local dpi_button_back = button("Back", function ()
+    Display_Mode = NORMAL_MODE
+    refresh()
+  end)
+
   brightness_card.update_body(
     wibox.widget {
       layout = wibox.layout.fixed.vertical,
@@ -499,27 +563,57 @@ return function()
     }
   )
 
-  dpi_card.update_body(
-    wibox.widget {
-      layout = wibox.layout.fixed.vertical,
-      {
-        layout = wibox.container.margin,
-        margins = m,
+  local function go_to_dpi_widget()
+    dpi_card.update_body(
+      wibox.widget {
+        layout = wibox.layout.fixed.vertical,
         {
-          font = beautiful.font,
-          text = i18n.translate("Change Application Scaling"),
-          widget = wibox.widget.textbox
+          layout = wibox.container.margin,
+          margins = m,
+          {
+            font = beautiful.font,
+            text = i18n.translate("Change Application Scaling"),
+            widget = wibox.widget.textbox
+          }
+        },
+        {
+          layout = wibox.container.margin,
+          left = m,
+          right = m,
+          bottom = m,
+          dpi_button_to
         }
-      },
-      {
-        layout = wibox.container.margin,
-        left = m,
-        right = m,
-        bottom = m,
-        dpi_slider
       }
-    }
-  )
+    )
+  end
+
+  local function return_from_dpi_widget()
+    dpi_card.update_body(
+      wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        {
+          layout = wibox.container.margin,
+          margins = m,
+          {
+            font = beautiful.font,
+            text = i18n.translate("Change Application Scaling"),
+            widget = wibox.widget.textbox
+          }
+        },
+        {
+          layout = wibox.container.margin,
+          left = m,
+          right = m,
+          bottom = m,
+          dpi_button_back
+        }
+      }
+    )
+  end
+
+  go_to_dpi_widget()
+
+
 
   brightness_card.forced_height = (m * 6) + dpi(30)
   screen_time_card.forced_height = (m * 6) + dpi(30)
@@ -567,7 +661,7 @@ return function()
     local v = table[k]
     -- check if it is a file
     if filesystem.exists(v) then
-      local base = filehandle.basename(v)
+      local base = filesystem.basename(v)
       -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
       local width = dpi(300)
       local height = (width / 16) * 9
@@ -652,7 +746,7 @@ return function()
           end
 
           -- generate the wallpaper (scaled)
-          local base = filehandle.basename(wallpaper_img)
+          local base = filesystem.basename(wallpaper_img)
           -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
           local width = dpi(600) / #screens
           local height = (width / 16) * 9
@@ -738,6 +832,20 @@ return function()
     end
   end
 
+  local function render_dpi_mode()
+    body.enable()
+    layout.forced_num_cols = 1
+    layout.min_rows_size = dpi(30)
+
+    layout.homogeneous = false
+
+    layout:add(
+      dpi_save_button,
+      dpi_slider,
+      dpi_examples
+    )
+  end
+
   local function render_refresh_mode(monitor_id)
     body.disable()
 
@@ -797,6 +905,8 @@ return function()
 
   refresh = function(monitor_id)
     layout:reset()
+    layout.homogeneous = true
+    layout.min_rows_size = dpi(100)
     body:reset()
     body.enable()
 
@@ -809,12 +919,21 @@ return function()
         brightness:set_value(math.floor(tonumber(o)))
       end
     )
+
+    if Display_Mode ~= DPI_MODE then
+      go_to_dpi_widget()
+    else
+      return_from_dpi_widget()
+    end
+
     if Display_Mode == WALLPAPER_MODE then
       render_wallpaper_mode()
     elseif Display_Mode == XRANDR_MODE then
       render_xrandr_mode()
     elseif Display_Mode == REFRESH_MODE and monitor_id ~= nil then
       render_refresh_mode(monitor_id)
+    elseif Display_Mode == DPI_MODE then
+      render_dpi_mode()
     else
       -- In case the Display_Mode contains an invalid state
       Display_Mode = NORMAL_MODE

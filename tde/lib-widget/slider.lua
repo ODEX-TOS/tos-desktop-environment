@@ -116,6 +116,16 @@ return function(min, max, increment, default_value, callback, tooltip_callback, 
         widget:set_value(value * step_size)
     end
 
+    --- Get the value of the slider
+    -- @staticfct slider.get_number
+    -- @treturn number The current value of the slider
+    -- @usage -- Get the current value of the slider
+    -- slider.get_number()
+    widget.get_number = function()
+        return widget.value * step_size
+    end
+
+
     if tooltip_callback ~= nil and type(tooltip_callback) == "function" then
         awful.tooltip {
             objects = {widget},
