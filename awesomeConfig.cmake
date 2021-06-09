@@ -451,14 +451,7 @@ add_custom_target(generate_awesomerc DEPENDS
 #}}}
 
 # {{{ Copy additional files
-file(GLOB awesome_md_docs RELATIVE ${SOURCE_DIR}
-    ${SOURCE_DIR}/docs/*.md)
-
-foreach(file ${AWESOME_ADDITIONAL_FILES})
-    configure_file(${SOURCE_DIR}/${file}
-                   ${BUILD_DIR}/${file}
-                   @ONLY)
-endforeach()
+file(COPY ${SOURCE_DIR}/docs/ DESTINATION ${BUILD_DIR}/docs)
 
 set(AWESOME_TDE
     ${awesome_tde_lib})

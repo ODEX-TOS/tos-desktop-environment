@@ -53,6 +53,7 @@ exclude_files = {
     -- contains a lot of globals
     "tests/**",
     "build/**",
+    "build-utils/**",
     -- TODO: refactor plugins, then remove this
     --"plugins/**",
 }

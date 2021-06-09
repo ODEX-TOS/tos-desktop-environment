@@ -19,7 +19,7 @@ BRANCH="v0.7"
 
 # This is an force rebuild number in case the pkgbuild changed slightly (similar to pkgrel
 _TVER=41
-pkgver=10989
+pkgver=10997
 pkgrel=1
 
 pkgdesc='TDE (TOS Desktop Environment)'
