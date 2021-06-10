@@ -28,10 +28,10 @@ local common = require("lib-tde.function.common")
 
 
 local res = volume.get_default_sink()
-local res2 = volume.get_default_source()
+local res2 = volume.get_sinks()
 
-print(res.port)
-print(res2.port)
+print(res)
+print(res2)
 
 local applications = volume.get_applications()
 

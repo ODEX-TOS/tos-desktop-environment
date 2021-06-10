@@ -54,7 +54,62 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
         hasID = true
     end
 
-    for _, value in ipairs(res) do
+    local function addTable()
+        if lastSink == nil then
+            return
+        end
+        table.insert(result, {
+            --- The canonical name of the audio device
+            -- @property name
+            -- @param string
+            name = lastDescription,
+            --- the current sink/source number (used to set sink/source)
+            -- @property sink
+            -- @param number
+            sink = tonumber(lastSink) or 0,
+            --- The active port in the sink/source
+            -- @property port
+            -- @param string
+            port = lastPort or "",
+            --- The list of all ports this sink/source supports
+            -- @property available_ports
+            -- @param table
+            available_ports = a_ports,
+            --- The unique identifier for the sink
+            -- @property id
+            -- @param string
+            id = lastSinkId
+        })
+        lastDescription = nil
+        lastSink = nil
+        lastPort = nil
+        lastSinkId = nil
+        a_ports = {}
+    end
+
+    -- we found the ports section
+    -- now we loop until we found the next set_actions
+    -- arr is the line delimited output of pactl list
+    -- i is the index that the 'Ports:' section is found
+    local function populate_ports(arr, i)
+        i = i + 1
+        while true do
+            local line = arr[i]
+            if line == nil then
+                break
+            end
+
+            local _port = line:match("%s*(.*): .* %(.*%)$")
+            if _port ~= nil then
+                table.insert(a_ports, _port)
+            else
+                break
+            end
+            i = i + 1
+        end
+    end
+
+    for index, value in ipairs(res) do
         local descriptionMatch = value:match(description)
         if descriptionMatch ~= nil then
             lastDescription = descriptionMatch
@@ -68,11 +123,14 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
 
         local sinkMatch = value:match(id)
         if sinkMatch ~= nil then
+            -- add the previous source/sink
+            addTable()
             lastSink = sinkMatch
 
         end
         local sinkId = value:match("Name: (.*)$")
         if sinkId ~= nil and hasID then
+            -- update to the new source/sink
             lastSinkId = sinkId
         end
 
