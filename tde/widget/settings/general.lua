@@ -52,7 +52,7 @@ signals.connect_primary_theme_changed(
   end
 )
 
-local function create_multi_option_array(name, tooltip, options, default, configOption)
+local function create_multi_option_array(name, tooltip, options, default, configOption, changed_callback, update_selection)
   local name_widget =
     wibox.widget {
     text = name,
@@ -93,6 +93,10 @@ local function create_multi_option_array(name, tooltip, options, default, config
         option_widget.bg = primary_theme.hue_800
         option_widget.active = true
         configWriter.update_entry(configFile, configOption, option)
+
+        if type(changed_callback) == "function" then
+          changed_callback(option)
+        end
       end,
       nil,
       nil,
@@ -110,6 +114,22 @@ local function create_multi_option_array(name, tooltip, options, default, config
 
     button_widgets[name][option] = option_widget
     layout:add(wibox.container.margin(option_widget, m, m, m, m))
+
+    if type(update_selection) == "function" then
+      update_selection(function (value)
+        -- validate the user input
+        for _name, widget in pairs(button_widgets[name]) do
+          if _name == value then
+            widget.bg = primary_theme.hue_800
+            widget.active = true
+          else
+            widget.bg = beautiful.bg_modal
+            widget.active = false
+          end
+        end
+
+      end)
+    end
   end
   return layout
 end
@@ -270,7 +290,15 @@ return function()
       i18n.translate("The location where you want the tagbar to appear (default bottom)"),
       {"bottom", "right", "left"},
       general["tag_bar_anchor"] or "bottom",
-      "tag_bar_anchor"
+      "tag_bar_anchor",
+      function (value)
+        signals.emit_anchor_changed(value)
+      end,
+      function (update_selection)
+        signals.connect_anchor_changed(function(value)
+          update_selection(value)
+        end)
+      end
     ),
     create_multi_option_array(
       i18n.translate("Tagbar bar draw location"),

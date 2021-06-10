@@ -39,7 +39,8 @@ local bottom_panel = function(s)
     y = (s.geometry.y + s.geometry.height) - action_bar_height,
     ontop = true,
     bg = beautiful.background.hue_800,
-    fg = beautiful.fg_normal
+    fg = beautiful.fg_normal,
+    visible = true
   }
 
   signals.connect_background_theme_changed(
@@ -70,6 +71,9 @@ local bottom_panel = function(s)
       panel.y = (s.geometry.y + s.geometry.height) - action_bar_height
       panel.width = s.geometry.width
       panel.height = action_bar_height
+
+      panel.visible = false
+      panel.visible = true
     end
   )
 

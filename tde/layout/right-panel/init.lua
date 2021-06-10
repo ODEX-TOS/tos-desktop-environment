@@ -27,20 +27,21 @@ local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local signals = require("lib-tde.signals")
 
-local bottom_panel = function(screen)
+local bottom_panel = function(s)
   local action_bar_width = dpi(45) -- 48
 
   local panel =
     wibox {
-    screen = screen,
-    height = screen.geometry.height,
+    screen = s,
+    height = s.geometry.height,
     width = action_bar_width,
     type = "dock",
-    x = screen.geometry.x + screen.geometry.width - action_bar_width,
-    y = screen.geometry.y + dpi(26),
+    x = s.geometry.x + s.geometry.width - action_bar_width,
+    y = s.geometry.y + dpi(26),
     ontop = true,
     bg = beautiful.background.hue_800,
-    fg = beautiful.fg_normal
+    fg = beautiful.fg_normal,
+    visible = true
   }
 
   signals.connect_background_theme_changed(
@@ -66,11 +67,13 @@ local bottom_panel = function(screen)
       if panel == nil or panel == nil then
         return
       end
-      local scrn = panel.screen
-      panel.x = scrn.geometry.x + scrn.geometry.width - action_bar_width
-      panel.y = scrn.geometry.y + dpi(26)
+      panel.x = s.geometry.x + s.geometry.width - action_bar_width
+      panel.y = s.geometry.y + dpi(26)
       panel.width = action_bar_width
-      panel.height = scrn.geometry.height
+      panel.height = s.geometry.height
+
+      panel.visible = false
+      panel.visible = true
     end
   )
 
@@ -82,7 +85,7 @@ local bottom_panel = function(screen)
 
   panel:setup {
     layout = wibox.layout.align.vertical,
-    require("layout.left-panel.action-bar")(screen, action_bar_width)
+    require("layout.left-panel.action-bar")(s, action_bar_width)
   }
   return panel
 end

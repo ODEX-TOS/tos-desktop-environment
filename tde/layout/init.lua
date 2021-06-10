@@ -26,6 +26,9 @@ local bottom_panel = require("layout.bottom-panel")
 local left_panel = require("layout.left-panel")
 local right_panel = require("layout.right-panel")
 local top_panel = require("layout.top-panel")
+
+local signals = require("lib-tde.signals")
+
 local topBarDraw = general["top_bar_draw"] or "all"
 local tagBarDraw = general["tag_bar_draw"] or "main"
 local anchorTag = general["tag_bar_anchor"] or "bottom"
@@ -62,6 +65,29 @@ awful.screen.connect_for_each_screen(
     end
   end
 )
+
+signals.connect_anchor_changed(function (new_anchor)
+  if type(new_anchor) ~= "string" then
+    return
+  end
+  general["tag_bar_anchor"] = new_anchor
+  anchorTag = new_anchor
+
+  for s in screen do
+    -- disable the old widgets
+    if s.bottom_panel ~= nil then
+      s.bottom_panel.visible = false
+      s.bottom_panel = nil
+    end
+
+    if tagBarDraw == "all" then
+      anchor(s)
+    elseif tagBarDraw == "main" and s.index == 1 then
+      anchor(s)
+    end
+
+  end
+end)
 
 -- Hide bars when app go fullscreen
 local function updateBarsVisibility()

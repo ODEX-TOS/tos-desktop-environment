@@ -687,4 +687,26 @@ connections.connect_oled_mode = function(func)
     awesome.connect_signal("TDE::oled::mode::changed", func)
 end
 
+
+--- Notify when the anchor type changed of the panels (Bottom, left, right)
+-- @tparam string anchor The new anchor location Can either be (bottom, left or right)
+-- @staticfct emit_anchor_changed
+-- @usage -- Notify other TDE components that the screen panel should change
+-- lib-tde.signals.emit_anchor_changed("bottom")
+connections.emit_anchor_changed = function(anchor)
+    awesome.emit_signal("TDE::tag::anchor::changed", anchor)
+end
+
+--- Trigger a callback function when the anchor type changed of the panels (Bottom, left, right)
+-- @tparam function func The callback function that will be called when the anchor changes
+-- @staticfct connect_anchor_changed
+-- @usage --
+-- lib-tde.signals.connect_anchor_changed(
+--    function (value)
+--      print("Changing anchor to: " .. value)
+--    end)
+connections.connect_anchor_changed = function(func)
+    awesome.connect_signal("TDE::tag::anchor::changed", func)
+end
+
 return connections
