@@ -197,6 +197,15 @@ return function(box, auto_hide_time)
         box.screen:disconnect_signal('tag::history::update', detect_box_value)
     end
 
+    widget.remove = function()
+        disconnect_signals()
+        box.opacity = 1
+        box.visible = true
+        widget.visible = false
+        widget = nil
+        enabled = false
+    end
+
     box.auto_hider = widget
 
     if enabled then

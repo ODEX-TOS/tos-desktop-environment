@@ -77,6 +77,9 @@ signals.connect_anchor_changed(function (new_anchor)
 
   for s in screen do
     -- disable the old widgets
+    if s.bottom_panel.auto_hider ~= nil then
+      s.bottom_panel.auto_hider.remove()
+    end
     if s.bottom_panel ~= nil then
       s.bottom_panel.visible = false
       s.bottom_panel = nil
