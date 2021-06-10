@@ -88,7 +88,7 @@ return function(box, auto_hide_time)
         box.opacity = 0
         box.visible = true
         animate(
-            _G.anim_speed,
+            _G.anim_speed * 2,
             box,
             {opacity = 1},
             "outCubic",
@@ -114,7 +114,7 @@ return function(box, auto_hide_time)
         box.visible = true
         isFading = true
         animate(
-            _G.anim_speed * 3,
+            _G.anim_speed * 2,
             box,
             {opacity = 0},
             "outCubic",
