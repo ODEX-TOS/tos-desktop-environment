@@ -77,9 +77,8 @@ return function(box, auto_hide_time)
     end
 
     local function _enter()
-        -- when entering the box we want to make the box visible
-        if box.visible or isFading then
-            return
+        if isFading then
+            box.stop_animation(true)
         end
 
         print("Entered auto_hide")
@@ -106,9 +105,10 @@ return function(box, auto_hide_time)
     end
 
     local function _leave()
-        if not box.visible or isFading then
-            return
+        if isFading then
+            box.stop_animation()
         end
+
         print("Exited auto_hide")
         box.opacity = 1
         box.visible = true
