@@ -14,7 +14,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 - [ ] `Package manager agnostic` Allow the package updater to use other package managers than strictly `pacman`
 - [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
-- [ ] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
+- [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
 
 
 ## Packaging
@@ -37,6 +37,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Added support for changing the port settings of your sources and sinks
 - Persist bluetooth status on reboot
 - Allow changing dpi from the settings (Scaling)
+- You can now Auto-Hide Panels on hover (Auto Hide option in general settings)
+- OLED mode automatically enables 'fading' to reduce screen burn
 
 ### Bug Fixes
 

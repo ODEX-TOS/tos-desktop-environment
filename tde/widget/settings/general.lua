@@ -241,8 +241,8 @@ return function()
     wibox.widget {
     layout = wibox.layout.flex.vertical,
     create_checkbox(
-      i18n.translate("Fade bars"),
-      i18n.translate("Fade the application and topbar when hovering"),
+      i18n.translate("Auto Hide"),
+      i18n.translate("Automatically hide the application and topbar when hovering"),
       general["fade"] == "on",
       "fade",
       "on",
