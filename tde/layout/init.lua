@@ -29,6 +29,8 @@ local top_panel = require("layout.top-panel")
 
 local signals = require("lib-tde.signals")
 
+local fade = require("lib-widget.fade")
+
 local topBarDraw = general["top_bar_draw"] or "all"
 local tagBarDraw = general["tag_bar_draw"] or "main"
 local anchorTag = general["tag_bar_anchor"] or "bottom"
@@ -36,11 +38,11 @@ local anchorTag = general["tag_bar_anchor"] or "bottom"
 local function anchor(s)
   if anchorTag == "bottom" then
     -- Create the bottom bar
-    s.bottom_panel = bottom_panel(s)
+    s.bottom_panel = fade(bottom_panel(s))
   elseif anchorTag == "right" then
-    s.bottom_panel = right_panel(s)
+    s.bottom_panel = fade(right_panel(s))
   else
-    s.bottom_panel = left_panel(s, topBarDraw == "none")
+    s.bottom_panel = fade(left_panel(s, topBarDraw == "none"))
   end
 end
 
@@ -49,13 +51,13 @@ awful.screen.connect_for_each_screen(
   function(s)
     if topBarDraw == "all" then
       -- Create the Top bar
-      s.top_panel = top_panel(s, false, false)
+      s.top_panel = fade(top_panel(s, false, false))
     elseif topBarDraw == "main" and s.index == 1 then
       -- Create the Top bar
-      s.top_panel = top_panel(s, false, false)
+      s.top_panel = fade(top_panel(s, false, false))
     else
       -- don't draw anything but render the left_panel
-      s.top_panel = top_panel(s, false, true)
+      s.top_panel = fade(top_panel(s, false, true))
     end
 
     if tagBarDraw == "all" then

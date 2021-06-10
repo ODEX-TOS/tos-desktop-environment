@@ -134,7 +134,7 @@ local function create_multi_option_array(name, tooltip, options, default, config
   return layout
 end
 
-local function create_checkbox(name, tooltip, checked, configOption, on, off)
+local function create_checkbox(name, tooltip, checked, configOption, on, off, onChange)
   local name_widget =
     wibox.widget {
     text = name,
@@ -150,6 +150,9 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
         value = on or "1"
       end
       configWriter.update_entry(configFile, configOption, value)
+      if type(onChange) == "function" then
+        onChange(box_checked)
+      end
     end,
     settings_index * 0.7
   )
@@ -237,6 +240,17 @@ return function()
   local checkbox_widget =
     wibox.widget {
     layout = wibox.layout.flex.vertical,
+    create_checkbox(
+      i18n.translate("Fade bars"),
+      i18n.translate("Fade the application and topbar when hovering"),
+      general["fade"] == "on",
+      "fade",
+      "on",
+      "off",
+      function(value)
+        signals.emit_fade(value)
+      end
+    ),
     create_checkbox(
       i18n.translate("Audio popup"),
       i18n.translate("Enable the 'pop' sound when changing the audio"),

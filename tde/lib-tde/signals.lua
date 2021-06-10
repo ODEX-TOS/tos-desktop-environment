@@ -709,4 +709,26 @@ connections.connect_anchor_changed = function(func)
     awesome.connect_signal("TDE::tag::anchor::changed", func)
 end
 
+--- Notify when the fade property has changed of the wiboxes
+-- @tparam boolean bIsEnabled If the fading is enabled
+-- @staticfct emit_fade
+-- @usage -- Notify other TDE components that the fading property of the wiboxes has changed
+-- lib-tde.signals.emit_fade("bottom")
+connections.emit_fade = function(bIsEnabled)
+    awesome.emit_signal("TDE::fade::changed", bIsEnabled)
+end
+
+--- Trigger a callback function when the fade property has changed of the wiboxes
+-- @tparam function func The callback function that will be called when the fade changes
+-- @staticfct connect_fade
+-- @usage --
+-- lib-tde.signals.connect_fade(
+--    function (value)
+--      print("Current fading status: " .. tostring(value))
+--    end)
+connections.connect_fade = function(func)
+    awesome.connect_signal("TDE::fade::changed", func)
+end
+
+
 return connections

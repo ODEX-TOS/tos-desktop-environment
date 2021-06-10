@@ -1,0 +1,212 @@
+--[[
+--MIT License
+--
+--Copyright (c) 2019 manilarome
+--Copyright (c) 2020 Tom Meyers
+--
+--Permission is hereby granted, free of charge, to any person obtaining a copy
+--of this software and associated documentation files (the "Software"), to deal
+--in the Software without restriction, including without limitation the rights
+--to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+--copies of the Software, and to permit persons to whom the Software is
+--furnished to do so, subject to the following conditions:
+--
+--The above copyright notice and this permission notice shall be included in all
+--copies or substantial portions of the Software.
+--
+--THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+--IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+--FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+--AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+--LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+--OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+--SOFTWARE.
+]]
+---------------------------------------------------------------------------
+-- Create a new fading widget
+--
+-- Useful when you want to hide widgets
+--
+--    -- Fade the wibox out when not hovering over it after 1 second
+--    local fader = lib-widget.fade(wibox, 1)
+--
+--
+-- @author Tom Meyers
+-- @copyright 2020 Tom Meyers
+-- @tdewidget lib-widget.fade
+-- @supermodule wibox.widget.base
+---------------------------------------------------------------------------
+
+local wibox = require("wibox")
+local animate = require("lib-tde.animations").createAnimObject
+local gears = require("gears")
+local signals = require('lib-tde.signals')
+
+--- Create a new fade widget
+-- @tparam wibox box The wibox that should fade when hovering
+-- @tparam[opt] number fade_time After x seconds of not being in the wibox when should the fading start
+-- @staticfct fade
+-- @usage -- This will create a fading wibox
+-- local separate = lib-widget.fade(wibox, 1)
+return function(box, fade_time)
+
+    fade_time = fade_time or 0.5
+    local enabled = general["fade"] == "on"
+
+    local widget = wibox {
+        screen = box.screen,
+        height = box.height,
+        width = box.width,
+        x = box.x,
+        y = box.y,
+        type = 'utility',
+        visible = false,
+        bg = "#FFFFFF00",
+        ontop = true
+    }
+
+    widget:setup {
+        layout = wibox.layout.align.vertical,
+        wibox.widget.textbox('')
+    }
+
+    local isFading = false
+
+    local function is_in_box()
+        return mouse.current_wibox == box
+    end
+
+    local function _enter()
+        -- when entering the box we want to make the box visible
+        if box.visible or isFading then
+            return
+        end
+
+        print("Entered fade")
+        isFading = true
+
+        box.opacity = 0
+        box.visible = true
+        animate(
+            _G.anim_speed,
+            box,
+            {opacity = 1},
+            "outCubic",
+            function ()
+                widget.visible = false
+                isFading = false
+            end
+        )
+    end
+
+    local function _leave()
+        if not box.visible or isFading then
+            return
+        end
+        print("Exited fade")
+        box.opacity = 1
+        box.visible = true
+        isFading = true
+        animate(
+            _G.anim_speed * 3,
+            box,
+            {opacity = 0},
+            "outCubic",
+            function ()
+                widget.visible = true
+                box.visible = false
+                box.opacity = 1
+                isFading = false
+            end
+        )
+    end
+
+    -- debouncing the inputs by fade_time seconds
+    local function enter()
+        _enter()
+    end
+
+    local function leave()
+        gears.timer {
+            timeout = fade_time,
+            autostart = true,
+            single_shot = true,
+            callback = function()
+                -- if it is still in the wibox then trigger enter
+                if not is_in_box() then
+                    _leave()
+                end
+            end
+        }
+    end
+
+    -- When changing the tag the taglist refreshes and sets box.visible to true
+    -- This can cause incorrect behaviour when changing tags
+    -- This function checks to see if the box should be visible or not
+    -- based on the mouse cursor
+    local function detect_box_value()
+        -- don't do anything
+        if isFading then
+            return
+        end
+
+        if is_in_box() then
+            box.visible = true
+            box.opacity = 1
+            widget.visible = false
+        else
+            box.visible = false
+            box.opacity = 0
+            widget.visible = true
+        end
+    end
+
+    local function connect_signals()
+        -- connect the signals of both wiboxes
+        widget.widget:connect_signal('mouse::enter', enter)
+        box.widget:connect_signal('mouse::enter', enter)
+        widget.widget:connect_signal('mouse::leave', leave)
+        box.widget:connect_signal('mouse::leave', leave)
+
+        -- connect signal for tag_list changed
+        box.screen:connect_signal('tag::history::update', detect_box_value)
+    end
+
+    local function disconnect_signals()
+        -- connect the signals of both wiboxes
+        widget.widget:disconnect_signal('mouse::enter', enter)
+        box.widget:disconnect_signal('mouse::enter', enter)
+        widget.widget:disconnect_signal('mouse::leave', leave)
+        box.widget:disconnect_signal('mouse::leave', leave)
+
+        -- connect signal for tag_list changed
+        box.screen:disconnect_signal('tag::history::update', detect_box_value)
+    end
+
+    box.fader = widget
+
+    if enabled then
+        connect_signals()
+        box.visible = false
+        widget.visible = true
+    end
+
+    signals.connect_fade(function (bIsEnabled)
+        print("Connected fade")
+        if bIsEnabled and not enabled then
+            connect_signals()
+            enabled = true
+            detect_box_value()
+        else
+            widget.visible = false
+            box.opacity = 1
+            box.visible = true
+        end
+        if not bIsEnabled and enabled then
+            disconnect_signals()
+            enabled = false
+        end
+    end)
+
+    return box
+end
