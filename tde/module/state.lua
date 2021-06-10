@@ -57,6 +57,12 @@ local function load()
     result.oled_mode = result.oled_mode or table.oled_mode
     result.bluetooth = result.bluetooth or table.bluetooth
     result.auto_hide = result.auto_hide or table.auto_hide
+
+    -- always set the auto_hide true when using oled (To reduce burn in)
+    if result.oled_mode then
+        result.auto_hide = true
+    end
+
     return result
 end
 
@@ -234,7 +240,7 @@ signals.connect_oled_mode(
     function(bIsOledMode)
         print("Changed oled mode to: " .. tostring(bIsOledMode))
         save_state.oled_mode = bIsOledMode
-        if bIsOledMode then
+        if bIsOledMode and not save_state.auto_hide then
             -- special edge case
             -- when oled mode is turned on we also want to enable auto hide mode
             signals.emit_auto_hide(true)

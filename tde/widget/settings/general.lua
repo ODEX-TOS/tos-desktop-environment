@@ -134,7 +134,7 @@ local function create_multi_option_array(name, tooltip, options, default, config
   return layout
 end
 
-local function create_checkbox(name, tooltip, checked, configOption, on, off, onChange)
+local function create_checkbox(name, tooltip, checked, configOption, on, off, onChange, change_callback)
   local name_widget =
     wibox.widget {
     text = name,
@@ -165,6 +165,12 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off, on
       return tooltip
     end
   }
+
+  if type(change_callback) == "function" then
+    change_callback(function(value)
+      box.update(value or false)
+    end)
+  end
 
   return wibox.container.margin(
     wibox.widget {
@@ -251,6 +257,11 @@ return function()
       nil,
       function(value)
         signals.emit_auto_hide(value)
+      end,
+      function(update)
+        signals.connect_auto_hide(function(bIsEnabled)
+          update(bIsEnabled)
+        end)
       end
     ),
     create_checkbox(
