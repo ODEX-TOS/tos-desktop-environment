@@ -71,9 +71,6 @@ local bottom_panel = function(s)
       panel.y = s.geometry.y + dpi(26)
       panel.width = action_bar_width
       panel.height = s.geometry.height
-
-      panel.visible = false
-      panel.visible = true
     end
   )
 

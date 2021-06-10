@@ -71,9 +71,6 @@ local bottom_panel = function(s)
       panel.y = (s.geometry.y + s.geometry.height) - action_bar_height
       panel.width = s.geometry.width
       panel.height = action_bar_height
-
-      panel.visible = false
-      panel.visible = true
     end
   )
 
