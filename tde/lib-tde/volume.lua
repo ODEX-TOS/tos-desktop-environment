@@ -56,7 +56,7 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
     end
 
     local function addTable()
-        if lastSinkId == nil then
+        if lastSink == nil then
             return
         end
         table.insert(result, {
@@ -124,13 +124,13 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
 
         local sinkMatch = value:match(id)
         if sinkMatch ~= nil then
+            -- add the previous source/sink
+            addTable()
             lastSink = sinkMatch
         end
 
         local sinkId = value:match("Name: (.*)$")
         if sinkId ~= nil and hasID then
-            -- add the previous source/sink
-            addTable()
             -- update to the new source/sink
             lastSinkId = sinkId
         end

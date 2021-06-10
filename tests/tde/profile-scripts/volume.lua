@@ -28,9 +28,9 @@ require("lib-tde.logger")
 
 
 local res = volume.get_default_sink()
-local res2 = volume.get_default_source()
+local res2 = volume.get_sinks()
 
-print(res)
+--print(res)
 print(res2)
 
 
