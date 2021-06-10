@@ -149,9 +149,11 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off, on
       if box_checked then
         value = on or "1"
       end
-      configWriter.update_entry(configFile, configOption, value)
+
       if type(onChange) == "function" then
         onChange(box_checked)
+      else
+        configWriter.update_entry(configFile, configOption, value)
       end
     end,
     settings_index * 0.7
@@ -243,12 +245,12 @@ return function()
     create_checkbox(
       i18n.translate("Auto Hide"),
       i18n.translate("Automatically hide the application and topbar when hovering"),
-      general["fade"] == "on",
-      "fade",
-      "on",
-      "off",
+      _G.save_state.auto_hide,
+      nil,
+      nil,
+      nil,
       function(value)
-        signals.emit_fade(value)
+        signals.emit_auto_hide(value)
       end
     ),
     create_checkbox(

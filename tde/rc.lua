@@ -38,6 +38,9 @@ require("module.titlebar")()
 
 require("module.backdrop")
 
+-- restore the last state
+require("module.state")
+
 -- Layout
 require("layout")
 

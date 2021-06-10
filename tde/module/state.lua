@@ -41,7 +41,8 @@ local function load()
         mouse = {},
         do_not_disturb = false,
         oled_mode = false,
-        bluetooth = false
+        bluetooth = false,
+        auto_hide = false
     }
     if not filehandle.exists(file) then
         return table
@@ -55,11 +56,15 @@ local function load()
     result.do_not_disturb = result.do_not_disturb or table.do_not_disturb
     result.oled_mode = result.oled_mode or table.oled_mode
     result.bluetooth = result.bluetooth or table.bluetooth
+    result.auto_hide = result.auto_hide or table.auto_hide
     return result
 end
 
 local function save(table)
     print("Updating state into: " .. file)
+    if not IsreleaseMode then
+        return
+    end
     serialize.serialize_to_file(file, table)
 end
 
@@ -132,7 +137,10 @@ end
 -- load the initial state
 -- luacheck: ignore 121
 save_state = load()
-setup_state(save_state)
+
+if IsreleaseMode then
+    setup_state(save_state)
+end
 
 -- xinput id's are not persistent across reboots
 -- thus we map the xinput id to the device name, which is always the same
@@ -226,6 +234,11 @@ signals.connect_oled_mode(
     function(bIsOledMode)
         print("Changed oled mode to: " .. tostring(bIsOledMode))
         save_state.oled_mode = bIsOledMode
+        if bIsOledMode then
+            -- special edge case
+            -- when oled mode is turned on we also want to enable auto hide mode
+            signals.emit_auto_hide(true)
+        end
         save(save_state)
     end
 )
@@ -243,5 +256,10 @@ signals.connect_mouse_natural_scrolling(
 
 signals.connect_bluetooth_status(function (bIsEnabled)
     save_state.bluetooth = bIsEnabled
+    save(save_state)
+end)
+
+signals.connect_auto_hide(function (bIsEnabled)
+    save_state.auto_hide = bIsEnabled
     save(save_state)
 end)

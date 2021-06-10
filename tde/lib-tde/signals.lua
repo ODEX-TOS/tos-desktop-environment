@@ -709,25 +709,25 @@ connections.connect_anchor_changed = function(func)
     awesome.connect_signal("TDE::tag::anchor::changed", func)
 end
 
---- Notify when the fade property has changed of the wiboxes
--- @tparam boolean bIsEnabled If the fading is enabled
--- @staticfct emit_fade
--- @usage -- Notify other TDE components that the fading property of the wiboxes has changed
--- lib-tde.signals.emit_fade("bottom")
-connections.emit_fade = function(bIsEnabled)
-    awesome.emit_signal("TDE::fade::changed", bIsEnabled)
+--- Notify when the auto_hide property has changed of the wiboxes
+-- @tparam boolean bIsEnabled If the auto hiding is enabled
+-- @staticfct emit_auto_hide
+-- @usage -- Notify other TDE components that the auto hiding property of the wiboxes has changed
+-- lib-tde.signals.emit_auto_hide("bottom")
+connections.emit_auto_hide = function(bIsEnabled)
+    awesome.emit_signal("TDE::auto_hide::changed", bIsEnabled)
 end
 
---- Trigger a callback function when the fade property has changed of the wiboxes
--- @tparam function func The callback function that will be called when the fade changes
--- @staticfct connect_fade
+--- Trigger a callback function when the auto_hide property has changed of the wiboxes
+-- @tparam function func The callback function that will be called when the auto_hide changes
+-- @staticfct connect_auto_hide
 -- @usage --
--- lib-tde.signals.connect_fade(
+-- lib-tde.signals.connect_auto_hide(
 --    function (value)
---      print("Current fading status: " .. tostring(value))
+--      print("Current auto hiding status: " .. tostring(value))
 --    end)
-connections.connect_fade = function(func)
-    awesome.connect_signal("TDE::fade::changed", func)
+connections.connect_auto_hide = function(func)
+    awesome.connect_signal("TDE::auto_hide::changed", func)
 end
 
 

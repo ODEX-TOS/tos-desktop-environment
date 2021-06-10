@@ -27,13 +27,13 @@
 --
 -- Useful when you want to hide widgets
 --
---    -- Fade the wibox out when not hovering over it after 1 second
---    local fader = lib-widget.fade(wibox, 1)
+--    -- auto_hide the wibox out when not hovering over it after 1 second
+--    local auto_hider = lib-widget.auto_hide(wibox, 1)
 --
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
--- @tdewidget lib-widget.fade
+-- @tdewidget lib-widget.auto_hide
 -- @supermodule wibox.widget.base
 ---------------------------------------------------------------------------
 
@@ -42,16 +42,16 @@ local animate = require("lib-tde.animations").createAnimObject
 local gears = require("gears")
 local signals = require('lib-tde.signals')
 
---- Create a new fade widget
--- @tparam wibox box The wibox that should fade when hovering
--- @tparam[opt] number fade_time After x seconds of not being in the wibox when should the fading start
--- @staticfct fade
+--- Create a new auto_hide widget
+-- @tparam wibox box The wibox that should auto_hide when hovering
+-- @tparam[opt] number auto_hide_time After x seconds of not being in the wibox when should the fading start
+-- @staticfct auto_hide
 -- @usage -- This will create a fading wibox
--- local separate = lib-widget.fade(wibox, 1)
-return function(box, fade_time)
+-- local separate = lib-widget.auto_hide(wibox, 1)
+return function(box, auto_hide_time)
 
-    fade_time = fade_time or 0.5
-    local enabled = general["fade"] == "on"
+    auto_hide_time = auto_hide_time or 0.5
+    local enabled = _G.save_state.auto_hide
 
     local widget = wibox {
         screen = box.screen,
@@ -82,7 +82,7 @@ return function(box, fade_time)
             return
         end
 
-        print("Entered fade")
+        print("Entered auto_hide")
         isFading = true
 
         box.opacity = 0
@@ -93,7 +93,13 @@ return function(box, fade_time)
             {opacity = 1},
             "outCubic",
             function ()
-                widget.visible = false
+                -- There is an edge case when disabling auto_hide that the animation is still playing
+                -- In that case don't hide the widget, instead show it
+                if enabled then
+                    widget.visible = false
+                else
+                    box.opacity = 1
+                end
                 isFading = false
             end
         )
@@ -103,7 +109,7 @@ return function(box, fade_time)
         if not box.visible or isFading then
             return
         end
-        print("Exited fade")
+        print("Exited auto_hide")
         box.opacity = 1
         box.visible = true
         isFading = true
@@ -113,22 +119,30 @@ return function(box, fade_time)
             {opacity = 0},
             "outCubic",
             function ()
-                widget.visible = true
-                box.visible = false
-                box.opacity = 1
+                -- There is an edge case when disabling auto_hide that the animation is still playing
+                -- In that case don't hide the widget, instead show it
+                if enabled then
+                    widget.visible = true
+                    box.visible = false
+                    box.opacity = 1
+                else
+                    widget.visible = false
+                    box.visible = true
+                    box.opacity = 1
+                end
                 isFading = false
             end
         )
     end
 
-    -- debouncing the inputs by fade_time seconds
+    -- debouncing the inputs by auto_hide_time seconds
     local function enter()
         _enter()
     end
 
     local function leave()
         gears.timer {
-            timeout = fade_time,
+            timeout = auto_hide_time,
             autostart = true,
             single_shot = true,
             callback = function()
@@ -183,7 +197,7 @@ return function(box, fade_time)
         box.screen:disconnect_signal('tag::history::update', detect_box_value)
     end
 
-    box.fader = widget
+    box.auto_hider = widget
 
     if enabled then
         connect_signals()
@@ -191,8 +205,8 @@ return function(box, fade_time)
         widget.visible = true
     end
 
-    signals.connect_fade(function (bIsEnabled)
-        print("Connected fade")
+    signals.connect_auto_hide(function (bIsEnabled)
+        print("Connected auto_hide")
         if bIsEnabled and not enabled then
             connect_signals()
             enabled = true

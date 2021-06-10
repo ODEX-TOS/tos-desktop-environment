@@ -35,10 +35,7 @@ if not (general["disable_desktop"] == "1") then
     require("module.desktop")
 end
 
--- restore the last state
 if IsreleaseMode then
-    require("module.state")
-
     require("tutorial")
 
     require("module.dev-widget-update")
