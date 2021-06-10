@@ -215,6 +215,9 @@ return function(box, auto_hide_time)
     end
 
     signals.connect_auto_hide(function (bIsEnabled)
+        if widget == nil then
+            return
+        end
         print("Connected auto_hide")
         if bIsEnabled and not enabled then
             connect_signals()
