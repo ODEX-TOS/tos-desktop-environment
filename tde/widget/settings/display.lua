@@ -53,7 +53,6 @@ local resolution_box = nil
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_height = dpi(900)
 
 local tempDisplayDir = filesystem.mktempdir()
 local monitorScaledImage = ""
@@ -618,6 +617,7 @@ return function()
   brightness_card.forced_height = (m * 6) + dpi(30)
   screen_time_card.forced_height = (m * 6) + dpi(30)
   dpi_card.forced_height = (m * 6) + dpi(30)
+  monitors.forced_height = dpi(400)
 
   view:setup {
     layout = wibox.container.background,
@@ -738,7 +738,6 @@ return function()
           -- TODO: get all screens
           local screens = xrandr.outputs ()
 
-          monitors.forced_height = settings_height / 2
           if #screens < 4 then
             layout.forced_num_cols = #screens
           else
