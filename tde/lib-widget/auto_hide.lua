@@ -53,6 +53,8 @@ return function(box, auto_hide_time)
     auto_hide_time = auto_hide_time or 0.5
     local enabled = _G.save_state.auto_hide
 
+    local _struts = box:struts()
+
     local widget = wibox {
         screen = box.screen,
         height = box.height,
@@ -72,8 +74,9 @@ return function(box, auto_hide_time)
 
     local isFading = false
 
-    local function is_in_box()
-        return mouse.current_wibox == box
+    local function is_in_box(x)
+        x = x or box
+        return mouse.current_wibox == x
     end
 
     local function _enter()
@@ -212,25 +215,42 @@ return function(box, auto_hide_time)
         connect_signals()
         box.visible = false
         widget.visible = true
+
+        box:struts {
+            right = 0,
+            left = 0,
+            top = 0,
+            bottom = 0
+        }
     end
 
     signals.connect_auto_hide(function (bIsEnabled)
         if widget == nil then
             return
         end
+
         print("Connected auto_hide")
+
         if bIsEnabled and not enabled then
             connect_signals()
             enabled = true
             detect_box_value()
+            box:struts {
+                right = 0,
+                left = 0,
+                top = 0,
+                bottom = 0
+            }
         else
             widget.visible = false
             box.opacity = 1
             box.visible = true
         end
+
         if not bIsEnabled and enabled then
             disconnect_signals()
             enabled = false
+            box:struts(_struts)
         end
     end)
 
