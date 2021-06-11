@@ -486,7 +486,9 @@ return function()
         {},
         3,
         function()
-          hub.visible = false
+          if hub.close then
+            hub.close()
+          end
         end
       )
     )
