@@ -177,6 +177,9 @@ end
 
 signals.connect_volume(
     function(value)
+        if save_state.volume_muted == value then
+            return
+        end
         save_state.volume = value
         save(save_state)
     end
@@ -184,6 +187,9 @@ signals.connect_volume(
 
 signals.connect_volume_is_muted(
     function(is_muted)
+        if save_state.volume_muted == is_muted then
+            return
+        end
         save_state.volume_muted = is_muted
         save(save_state)
     end
@@ -191,6 +197,10 @@ signals.connect_volume_is_muted(
 
 signals.connect_brightness(
     function(value)
+        if save_state.brightness == value then
+            return
+        end
+
         print("Brightness value: " .. value)
         save_state.brightness = value
         save(save_state)
@@ -230,6 +240,9 @@ signals.connect_mouse_acceleration(
 
 signals.connect_do_not_disturb(
     function(bDoNotDisturb)
+        if save_state.do_not_disturb == bDoNotDisturb then
+            return
+        end
         print("Changed do not disturb: " .. tostring(bDoNotDisturb))
         save_state.do_not_disturb = bDoNotDisturb
         save(save_state)
@@ -238,6 +251,9 @@ signals.connect_do_not_disturb(
 
 signals.connect_oled_mode(
     function(bIsOledMode)
+        if save_state.oled_mode == bIsOledMode then
+            return
+        end
         print("Changed oled mode to: " .. tostring(bIsOledMode))
         save_state.oled_mode = bIsOledMode
         if bIsOledMode and not save_state.auto_hide then
@@ -261,11 +277,17 @@ signals.connect_mouse_natural_scrolling(
 )
 
 signals.connect_bluetooth_status(function (bIsEnabled)
+    if save_state.bluetooth == bIsEnabled then
+        return
+    end
     save_state.bluetooth = bIsEnabled
     save(save_state)
 end)
 
 signals.connect_auto_hide(function (bIsEnabled)
+    if save_state.auto_hide == bIsEnabled then
+        return
+    end
     save_state.auto_hide = bIsEnabled
     save(save_state)
 end)
