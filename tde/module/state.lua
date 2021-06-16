@@ -177,7 +177,7 @@ end
 
 signals.connect_volume(
     function(value)
-        if save_state.volume_muted == value then
+        if save_state.volume == value then
             return
         end
         save_state.volume = value
