@@ -47,10 +47,11 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
     local lastSink
     local lastDescription
     local lastSinkId
+    local a_ports = {}
 
     local result = {}
 
-    if(hasID == nil) then
+    if (hasID == nil) then
         hasID = true
     end
 
@@ -111,6 +112,7 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
 
     for index, value in ipairs(res) do
         local descriptionMatch = value:match(description)
+
         if descriptionMatch ~= nil then
             lastDescription = descriptionMatch
         end
@@ -118,7 +120,6 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
         local portMatch = value:match(port)
         if portMatch ~= nil then
             lastPort = portMatch
-
         end
 
         local sinkMatch = value:match(id)
@@ -126,52 +127,37 @@ local function _extract_pa_ctl_state(command, id, port, description, hasID)
             -- add the previous source/sink
             addTable()
             lastSink = sinkMatch
-
         end
+
         local sinkId = value:match("Name: (.*)$")
         if sinkId ~= nil and hasID then
             -- update to the new source/sink
             lastSinkId = sinkId
         end
 
-
-        if lastSink ~= nil and lastDescription ~= nil and lastSinkId ~= nil then
-            table.insert(result, {
-                --- The canonical name of the audio device
-                -- @property name
-                -- @param string
-                name = lastDescription,
-                --- the current sink/source number (used to set sink/source)
-                -- @property sink
-                -- @param number
-                sink = tonumber(lastSink) or 0,
-                --- The active port in the sink/source
-                -- @property port
-                -- @param string
-                port = lastPort,
-                --- The unique identifier for the sink
-                -- @property id
-                -- @param string
-                id = lastSinkId
-            })
-            lastDescription = nil
-            lastSink = nil
-            lastPort = nil
-            lastSinkId = nil
+        -- find all ports assigned to this source/sink
+        local ports = value:match("Ports:$")
+        if ports ~= nil then
+            populate_ports(res, index)
         end
+
 
         if lastPort ~= nil and lastSink ~= nil and lastDescription ~= nil and not hasID then
             table.insert(result, {
                 name = lastDescription,
                 sink = tonumber(lastSink) or 0,
-                port = lastPort,
+                port = lastPort or "",
+                available_ports = a_ports
             })
             lastDescription = nil
             lastSink = nil
             lastPort = nil
             lastSinkId = nil
+            a_ports = {}
         end
     end
+    -- just in case we didn't update the last element
+    addTable()
     return result
 end
 
@@ -352,6 +338,22 @@ local function get_default_sink()
     return {}
 end
 
+--- Change the sink (change the audio playback device) port
+-- @tparam number sink The sink property of our audio device
+-- @tparam string port The Specific port to enable in the sink
+-- @staticfct set_sink_port
+-- @usage -- Set our sink to match the first device and the first port of the device
+--    set_sink_port(get_sinks()[1].sink, get_sinks()[1].ports[1])
+local function set_sink_port(sink, port)
+    if not (type(sink) == "number") then
+        print("set_default_sink_port expects a sink number", err)
+    end
+    if not (type(port) == "string") then
+        print("set_default_sink_port expects a port string", err)
+    end
+    execute("pactl set-sink-port " .. sink .. ' ' .. port)
+end
+
 --- Get a list of all audio sources back (A source is an audio recording device such as microphones)
 -- @staticfct get_sources
 -- @usage -- Returns an iterable table containing all sources
@@ -401,6 +403,22 @@ local function get_default_source()
     return {}
 end
 
+--- Change the source (change the audio input device) port
+-- @tparam number source The source property of our audio device
+-- @tparam string port The Specific port to enable in the source
+-- @staticfct set_source_port
+-- @usage -- Set our source to match the first device and the first port of the device
+--    set_source_port(get_sources()[1].sink, get_sources()[1].ports[1])
+local function set_source_port(source, port)
+    if not (type(source) == "number") then
+        print("set_default_source_port expects a source number", err)
+    end
+    if not (type(port) == "string") then
+        print("set_default_source_port expects a port string", err)
+    end
+    execute("pactl set-source-port " .. source .. ' ' .. port)
+end
+
 
 -- reset the pipewire server
 local function _reset_pipewire()
@@ -442,5 +460,7 @@ return {
     get_default_sink = get_default_sink,
     set_default_source = set_default_source,
     get_default_source = get_default_source,
+    set_sink_port = set_sink_port,
+    set_source_port = set_source_port,
     reset_server = reset_server
 }

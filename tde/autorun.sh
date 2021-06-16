@@ -84,5 +84,8 @@ if [[ -d "$userlocation" ]]; then
         for script in "$userlocation"/*.sh; do
             "$script" & # launch all user scripts in the background
         done
+        for desktop_file in "$userlocation"/*.desktop; do
+            gtk-launch "$desktop_file" & # launch desktop files
+        done
 fi
 

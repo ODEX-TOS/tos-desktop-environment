@@ -196,7 +196,7 @@ _G.checkCover = checkCover
 local function updateInfo()
   _G.getTitle()
   _G.getArtist()
-  apps.bins.coverUpdate()
+  apps.bins().coverUpdate()
   print("Song changed")
   awesome.emit_signal("song_changed")
 end
@@ -283,7 +283,7 @@ widget.icon:set_image(theme(PATH_TO_ICONS .. "music" .. ".svg"))
 local function initMusicInfo()
   -- set the cover to vinyl until the right image is loaded
   cover.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
-  apps.bins.coverUpdate()
+  apps.bins().coverUpdate()
   checkCover()
   _G.getTitle()
   _G.getArtist()

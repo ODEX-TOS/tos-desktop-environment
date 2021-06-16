@@ -43,7 +43,8 @@ local bottom_panel = function(s, offset)
     y = s.geometry.y + offsetY,
     ontop = true,
     bg = beautiful.background.hue_800,
-    fg = beautiful.fg_normal
+    fg = beautiful.fg_normal,
+    visible = true
   }
 
   signals.connect_background_theme_changed(

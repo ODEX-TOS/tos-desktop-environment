@@ -52,7 +52,7 @@ signals.connect_primary_theme_changed(
   end
 )
 
-local function create_multi_option_array(name, tooltip, options, default, configOption)
+local function create_multi_option_array(name, tooltip, options, default, configOption, changed_callback, update_selection)
   local name_widget =
     wibox.widget {
     text = name,
@@ -93,6 +93,10 @@ local function create_multi_option_array(name, tooltip, options, default, config
         option_widget.bg = primary_theme.hue_800
         option_widget.active = true
         configWriter.update_entry(configFile, configOption, option)
+
+        if type(changed_callback) == "function" then
+          changed_callback(option)
+        end
       end,
       nil,
       nil,
@@ -110,11 +114,27 @@ local function create_multi_option_array(name, tooltip, options, default, config
 
     button_widgets[name][option] = option_widget
     layout:add(wibox.container.margin(option_widget, m, m, m, m))
+
+    if type(update_selection) == "function" then
+      update_selection(function (value)
+        -- validate the user input
+        for _name, widget in pairs(button_widgets[name]) do
+          if _name == value then
+            widget.bg = primary_theme.hue_800
+            widget.active = true
+          else
+            widget.bg = beautiful.bg_modal
+            widget.active = false
+          end
+        end
+
+      end)
+    end
   end
   return layout
 end
 
-local function create_checkbox(name, tooltip, checked, configOption, on, off)
+local function create_checkbox(name, tooltip, checked, configOption, on, off, onChange, change_callback)
   local name_widget =
     wibox.widget {
     text = name,
@@ -129,7 +149,12 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
       if box_checked then
         value = on or "1"
       end
-      configWriter.update_entry(configFile, configOption, value)
+
+      if type(onChange) == "function" then
+        onChange(box_checked)
+      else
+        configWriter.update_entry(configFile, configOption, value)
+      end
     end,
     settings_index * 0.7
   )
@@ -140,6 +165,12 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off)
       return tooltip
     end
   }
+
+  if type(change_callback) == "function" then
+    change_callback(function(value)
+      box.update(value or false)
+    end)
+  end
 
   return wibox.container.margin(
     wibox.widget {
@@ -218,16 +249,26 @@ return function()
     wibox.widget {
     layout = wibox.layout.flex.vertical,
     create_checkbox(
+      i18n.translate("Auto Hide"),
+      i18n.translate("Automatically hide the application and topbar when hovering"),
+      _G.save_state.auto_hide,
+      nil,
+      nil,
+      nil,
+      function(value)
+        signals.emit_auto_hide(value)
+      end,
+      function(update)
+        signals.connect_auto_hide(function(bIsEnabled)
+          update(bIsEnabled)
+        end)
+      end
+    ),
+    create_checkbox(
       i18n.translate("Audio popup"),
       i18n.translate("Enable the 'pop' sound when changing the audio"),
       general["audio_change_sound"] == "1",
       "audio_change_sound"
-    ),
-    create_checkbox(
-      i18n.translate("Error data opt out"),
-      i18n.translate("Send error messages to the developers, this is useful for debugging and reducing errors/bugs"),
-      general["tde_opt_out"] == "1",
-      "tde_opt_out"
     ),
     create_checkbox(
       i18n.translate("Titlebar drawing"),
@@ -276,7 +317,15 @@ return function()
       i18n.translate("The location where you want the tagbar to appear (default bottom)"),
       {"bottom", "right", "left"},
       general["tag_bar_anchor"] or "bottom",
-      "tag_bar_anchor"
+      "tag_bar_anchor",
+      function (value)
+        signals.emit_anchor_changed(value)
+      end,
+      function (update_selection)
+        signals.connect_anchor_changed(function(value)
+          update_selection(value)
+        end)
+      end
     ),
     create_multi_option_array(
       i18n.translate("Tagbar bar draw location"),

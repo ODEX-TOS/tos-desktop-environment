@@ -26,6 +26,11 @@ local bottom_panel = require("layout.bottom-panel")
 local left_panel = require("layout.left-panel")
 local right_panel = require("layout.right-panel")
 local top_panel = require("layout.top-panel")
+
+local signals = require("lib-tde.signals")
+
+local hide = require("lib-widget.auto_hide")
+
 local topBarDraw = general["top_bar_draw"] or "all"
 local tagBarDraw = general["tag_bar_draw"] or "main"
 local anchorTag = general["tag_bar_anchor"] or "bottom"
@@ -33,11 +38,11 @@ local anchorTag = general["tag_bar_anchor"] or "bottom"
 local function anchor(s)
   if anchorTag == "bottom" then
     -- Create the bottom bar
-    s.bottom_panel = bottom_panel(s)
+    s.bottom_panel = hide(bottom_panel(s))
   elseif anchorTag == "right" then
-    s.bottom_panel = right_panel(s)
+    s.bottom_panel = hide(right_panel(s))
   else
-    s.bottom_panel = left_panel(s, topBarDraw == "none")
+    s.bottom_panel = hide(left_panel(s, topBarDraw == "none"))
   end
 end
 
@@ -46,13 +51,13 @@ awful.screen.connect_for_each_screen(
   function(s)
     if topBarDraw == "all" then
       -- Create the Top bar
-      s.top_panel = top_panel(s, false, false)
+      s.top_panel = hide(top_panel(s, false, false))
     elseif topBarDraw == "main" and s.index == 1 then
       -- Create the Top bar
-      s.top_panel = top_panel(s, false, false)
+      s.top_panel = hide(top_panel(s, false, false))
     else
       -- don't draw anything but render the left_panel
-      s.top_panel = top_panel(s, false, true)
+      s.top_panel = hide(top_panel(s, false, true))
     end
 
     if tagBarDraw == "all" then
@@ -62,6 +67,32 @@ awful.screen.connect_for_each_screen(
     end
   end
 )
+
+signals.connect_anchor_changed(function (new_anchor)
+  if type(new_anchor) ~= "string" then
+    return
+  end
+  general["tag_bar_anchor"] = new_anchor
+  anchorTag = new_anchor
+
+  for s in screen do
+    -- disable the old widgets
+    if s.bottom_panel.auto_hider ~= nil then
+      s.bottom_panel.auto_hider.remove()
+    end
+    if s.bottom_panel ~= nil then
+      s.bottom_panel.visible = false
+      s.bottom_panel = nil
+    end
+
+    if tagBarDraw == "all" then
+      anchor(s)
+    elseif tagBarDraw == "main" and s.index == 1 then
+      anchor(s)
+    end
+
+  end
+end)
 
 -- Hide bars when app go fullscreen
 local function updateBarsVisibility()

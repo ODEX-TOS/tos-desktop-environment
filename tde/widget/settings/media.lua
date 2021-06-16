@@ -46,6 +46,21 @@ local settings_width = dpi(1100)
 local settings_nw = dpi(260)
 
 local scrollbox_body = {}
+local active_sr
+local bIsSink = false
+
+local NORMAL_MODE = 1
+local PORT_MODE = 2
+
+local DISPLAY_MODE = NORMAL_MODE
+
+local active_pallet = beautiful.primary
+
+signals.connect_primary_theme_changed(
+  function(pallete)
+    active_pallet = pallete
+  end
+)
 
 local refresh = function()
 end
@@ -162,31 +177,81 @@ return function()
   end
 
   local function create_sink_widget(sink)
-    return create_volume_widget(icons.volume, sink.name, sink, volume.set_default_sink)
+    return create_volume_widget(icons.volume, sink.name, sink, function(_id)
+      active_sr = sink
+      bIsSink = true
+
+      volume.set_default_sink(_id)
+
+      if #sink.available_ports > 1 then
+        DISPLAY_MODE = PORT_MODE
+        refresh()
+      end
+    end)
   end
 
   local function create_source_widget(source)
-    return create_volume_widget(icons.microphone, source.name, source, volume.set_default_source)
+    return create_volume_widget(icons.microphone, source.name, source, function(_id)
+      active_sr = source
+      bIsSink = false
+
+      volume.set_default_source(_id)
+      if #source.available_ports > 1 then
+        DISPLAY_MODE = PORT_MODE
+        refresh()
+      end
+    end)
   end
 
   local body = wibox.layout.flex.horizontal()
 
-  local function generate_sink_setting_body(sinks, sources, sink_sink, source_sink)
+  local function generate_port_options(source, isSink)
+    body.children = {}
+
+    local p_card = card(source.name)
+    local _body = wibox.layout.fixed.vertical()
+    local vertical = wibox.layout.fixed.vertical()
+
+
+    for _, _port in ipairs(source.available_ports) do
+      _body:add(wibox.container.margin(button(
+        _port, function ()
+
+          if isSink then
+            volume.set_sink_port(source.id, _port)
+          else
+            volume.set_source_port(source.id, _port)
+          end
+
+          DISPLAY_MODE = NORMAL_MODE
+          refresh()
+        end
+      ), m,m,m,m))
+    end
+
+    p_card.update_body(_body)
+
+    vertical:add(button('Back', function ()
+      DISPLAY_MODE = NORMAL_MODE
+      refresh()
+    end))
+    vertical:add(wibox.container.margin(p_card, 0, 0, m, 0))
+
+    body:add(vertical)
+  end
+
+  local function generate_sink_setting_body(sinks, sources, _, _)
     body.children = {}
 
     local sink_children = wibox.layout.fixed.vertical()
     local source_children = wibox.layout.fixed.vertical()
 
     for _, sink in ipairs(sinks) do
-      if not (sink.sink == sink_sink) then
-        sink_children:add(create_sink_widget(sink))
-      end
+      sink_children:add(create_sink_widget(sink))
     end
 
     for _, source in ipairs(sources) do
-      if not (source.sink == source_sink) then
         source_children:add(create_source_widget(source))
-      end
     end
 
     if #sink_children.children == 0 then
@@ -216,7 +281,7 @@ return function()
     -- add buttons to test the audio
     sink_children:add(wibox.container.margin(button("Test speaker", function()
       sound()
-    end),m, m, m))
+    end, active_pallet),m, m, m))
 
     -- If we are currently listing for microphone input
     if mic_test_pid == -1 then
@@ -227,7 +292,7 @@ return function()
         -- start the process and get the pid
         mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'")
         refresh()
-      end),m, m, m))
+      end, active_pallet),m, m, m))
     else
       source_children:add(wibox.container.margin(button(mic_test_stop_message, kill_mic_pid),m, m, m))
     end
@@ -306,6 +371,16 @@ return function()
     end
   end
 
+  local function normal_mode(sinks, sources, sink, source)
+    generate_sink_setting_body(sinks, sources, sink, source)
+    populate_applications()
+  end
+
+  local function port_mode(_, _, _, _)
+    generate_port_options(active_sr, bIsSink)
+    populate_applications()
+  end
+
   refresh = function()
     local sink = volume.get_default_sink()
     local source = volume.get_default_source()
@@ -313,10 +388,10 @@ return function()
     local sources = volume.get_sources()
 
     if not (sink.name == nil) then
-      vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. "</span>"
+      vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. ' - ' .. sink.port .. "</span>"
     end
     if not (source.name == nil) then
-      mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. "</span>"
+      mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. ' - ' .. source.port .. "</span>"
     end
 
     -- TODO: Find a nicer api for detecting if audio is not working
@@ -325,9 +400,16 @@ return function()
       scrollbox_body.reset()
       return
     end
-    generate_sink_setting_body(sinks, sources, sink.sink, source.sink)
 
-    populate_applications()
+    if DISPLAY_MODE == NORMAL_MODE then
+      normal_mode(sinks, sources, sink, source)
+    elseif DISPLAY_MODE == PORT_MODE then
+      port_mode(sinks, sources, sink, source)
+    else
+      DISPLAY_MODE = NORMAL_MODE
+      normal_mode(sinks, sources, sink, source)
+    end
+
     scrollbox_body.reset()
   end
 
@@ -402,7 +484,7 @@ return function()
     volume_card,
     wibox.container.margin(button("Reset Audio Server", function()
       volume.reset_server()
-    end),m, m, m*2),
+    end, active_pallet),m, m, m*2),
     audio_settings,
     body,
     application_settings,

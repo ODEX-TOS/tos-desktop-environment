@@ -687,4 +687,48 @@ connections.connect_oled_mode = function(func)
     awesome.connect_signal("TDE::oled::mode::changed", func)
 end
 
+
+--- Notify when the anchor type changed of the panels (Bottom, left, right)
+-- @tparam string anchor The new anchor location Can either be (bottom, left or right)
+-- @staticfct emit_anchor_changed
+-- @usage -- Notify other TDE components that the screen panel should change
+-- lib-tde.signals.emit_anchor_changed("bottom")
+connections.emit_anchor_changed = function(anchor)
+    awesome.emit_signal("TDE::tag::anchor::changed", anchor)
+end
+
+--- Trigger a callback function when the anchor type changed of the panels (Bottom, left, right)
+-- @tparam function func The callback function that will be called when the anchor changes
+-- @staticfct connect_anchor_changed
+-- @usage --
+-- lib-tde.signals.connect_anchor_changed(
+--    function (value)
+--      print("Changing anchor to: " .. value)
+--    end)
+connections.connect_anchor_changed = function(func)
+    awesome.connect_signal("TDE::tag::anchor::changed", func)
+end
+
+--- Notify when the auto_hide property has changed of the wiboxes
+-- @tparam boolean bIsEnabled If the auto hiding is enabled
+-- @staticfct emit_auto_hide
+-- @usage -- Notify other TDE components that the auto hiding property of the wiboxes has changed
+-- lib-tde.signals.emit_auto_hide("bottom")
+connections.emit_auto_hide = function(bIsEnabled)
+    awesome.emit_signal("TDE::auto_hide::changed", bIsEnabled)
+end
+
+--- Trigger a callback function when the auto_hide property has changed of the wiboxes
+-- @tparam function func The callback function that will be called when the auto_hide changes
+-- @staticfct connect_auto_hide
+-- @usage --
+-- lib-tde.signals.connect_auto_hide(
+--    function (value)
+--      print("Current auto hiding status: " .. tostring(value))
+--    end)
+connections.connect_auto_hide = function(func)
+    awesome.connect_signal("TDE::auto_hide::changed", func)
+end
+
+
 return connections

@@ -43,7 +43,7 @@ local pluginsleft = require("lib-tde.plugin-loader")("topbar-left")
 -- Clock / Calendar 12 h format
 local textclock = wibox.widget.textclock('<span font="Roboto bold 10">%l:%M %p</span>')
 
-local weak_hardware = general["weak_hardware"] == "0" or general["weak_hardware"] == nil
+local weak_hardware = general["weak_hardware"] == "0" or general["weak_hardware"] ~= nil
 
 -- Clock / Calendar 12 AM/PM format
 -- local textclock = wibox.widget.textclock('<span font="Roboto Mono bold 11">%I\n%M</span>\n<span font="Roboto Mono bold 9">%p</span>')
@@ -184,7 +184,7 @@ local function topbar_right_plugin(s)
   table_widget:add(
     show_widget_or_default(
       "widget.music",
-      (hardware.hasSound() and hardware.has_package_installed("playerctl")) or weak_hardware
+      (hardware.hasSound() and hardware.has_package_installed("playerctl") and IsreleaseMode) or weak_hardware
     )
   ) --only add this when the data can be extracted from spotify
   table_widget:add(require("widget.about"))

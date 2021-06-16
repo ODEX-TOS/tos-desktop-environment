@@ -42,9 +42,6 @@ if not (general["weak_hardware"] == "1") and (os.getenv("TDE_ENV") == "productio
       if not awesome.composite_manager_running then
         awful.spawn(apps.run_on_start_up[1])
       end
-      -- check the status of touchegg
-      -- TODO: find a better solution for this
-      awful.spawn([[sh -c 'test "$(pgrep touchegg | wc -l)" -lt 2 && touchegg']])
     end,
     5
   )

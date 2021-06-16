@@ -29,7 +29,7 @@ local checkbox = require("lib-widget.checkbox")
 local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
 
-local mode
+local mode = _G.save_state.oled_mode or false
 
 local function update_oled()
   if (mode == true) then

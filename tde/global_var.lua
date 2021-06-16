@@ -22,6 +22,8 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+os.start_time = os.time()
+
 local hardware = require("lib-tde.hardware-check")
 local is_weak = hardware.isWeakHardware()
 local beautiful = require("beautiful")
@@ -47,6 +49,11 @@ plugins = require("parser")(os.getenv("HOME") .. "/.config/tos/plugins.conf")
 tags = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")
 keys = require("parser")(os.getenv("HOME") .. "/.config/tos/keys.conf")
 floating = require("parser")(os.getenv("HOME") .. "/.config/tos/floating.conf")
+
+local bIsIntegrationTest = os.getenv("HOME") == "/tmp/tde"
+IsreleaseMode = not bIsIntegrationTest
+
+print("Release mode: " .. tostring(IsreleaseMode))
 
 -- dynamic variables are defined here
 -- update the value through this setter, making sure that the animation speed is disabled on weak hardware

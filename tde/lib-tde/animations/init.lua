@@ -106,6 +106,15 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
     end
     -- create tween
     local twob = tween.new(duration, subject, target, easing)
+
+    widget.stop_animation = function (bNoCallback)
+        widget.timer:stop()
+        widget.cback(widget)
+        widget.anim = false
+        if end_callback and not bNoCallback then
+            end_callback()
+        end
+    end
     -- create timeout signal
     widget.timer:connect_signal(
         "timeout",
@@ -117,12 +126,7 @@ local function createAnimObject(duration, subject, target, easing, end_callback,
                 tween_callback()
             end
             if complete then
-                widget.timer:stop()
-                widget.cback(widget)
-                widget.anim = false
-                if end_callback then
-                    end_callback()
-                end
+                widget.stop_animation()
             end
         end
     )

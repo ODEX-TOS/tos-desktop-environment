@@ -33,25 +33,42 @@ local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
-local filehandle = require("lib-tde.file")
 local imagemagic = require("lib-tde.imagemagic")
 local xrandr_menu = require("lib-tde.xrandr").menu
 local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
+local sort = require('lib-tde.sort.quicksort')
+local split = require('lib-tde.function.common').split
+local xrandr = require('lib-tde.xrandr')
+local mat_icon_button = require("widget.material.icon-button")
+local mat_icon = require("widget.material.icon")
+
 
 -- this will hold the scrollbox, used to reset it
 local body = nil
+local resolution_box = nil
+
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_height = dpi(900)
 
-local tempDisplayDir = filehandle.mktempdir()
+local tempDisplayDir = filesystem.mktempdir()
 local monitorScaledImage = ""
 
 local active_pallet = beautiful.primary
+
+
+-- REFRESH MODE VARS
+local refresh_card = card('Refresh rate list')
+local resolution_card = card('Resolution list')
+
+local refresh_rate_cmd = ""
+local active_refresh_buttons = {}
+local active_resolution_buttons = {}
+-- END REFRESH MODE VARS
+
 
 signals.connect_primary_theme_changed(
   function(pallete)
@@ -61,23 +78,118 @@ signals.connect_primary_theme_changed(
 
 signals.connect_exit(
   function()
-    filehandle.rm(tempDisplayDir)
+    filesystem.rm(tempDisplayDir)
   end
 )
 
-local screens = {}
 local mon_size = {
   w = nil,
   h = nil
 }
-local refresh = function()
+
+-- The optional argument is for monitor_id when in REFRESH_MODE
+local refresh = function(_)
 end
+
+local function weighted_resolution(resolution)
+  local splitted = split(resolution, 'x')
+  return (tonumber(splitted[1]) or 1) * (tonumber(splitted[2]) or 1)
+end
+
 
 local NORMAL_MODE = 1
 local WALLPAPER_MODE = 2
 local XRANDR_MODE = 3
+local REFRESH_MODE = 4
+local DPI_MODE = 5
 
 local Display_Mode = NORMAL_MODE
+
+-- Shift the value of the pallet by 1
+local function shift_pallet(pallet)
+  local new_pallet = {
+    hue_50 =   pallet["hue_300"],
+    hue_100 =  pallet["hue_400"],
+    hue_200 =  pallet["hue_500"],
+    hue_300 =  pallet["hue_600"],
+    hue_400 =  pallet["hue_700"],
+    hue_500 =  pallet["hue_800"],
+    hue_600 =  pallet["hue_900"],
+    hue_700 =  pallet["hue_900"],
+    hue_800 =  pallet["hue_900"],
+    hue_900 =  pallet["hue_A100"],
+    hue_A100 = pallet["hue_A200"],
+    hue_A200 = pallet["hue_A400"],
+    hue_A400 = pallet["hue_A700"],
+    hue_A700 = pallet["hue_A700"]
+  }
+  return new_pallet
+end
+
+local function make_refresh_list(refresh_tbl, resolution, monitor_id)
+  local refresh_list = wibox.layout.fixed.vertical()
+
+  active_refresh_buttons = {}
+
+  for index, value in ipairs(refresh_tbl) do
+      table.insert(active_refresh_buttons, button(value .. ' Hz', function ()
+        refresh_rate_cmd = 'xrandr --output ' .. monitor_id .. ' --rate ' .. tostring(value) .. ' --mode ' .. resolution
+
+        -- Visually show the selected option
+        for i, btn in ipairs(active_refresh_buttons) do
+          if i == index then
+            btn.update_pallet(shift_pallet(active_pallet))
+          else
+            btn.update_pallet(active_pallet)
+          end
+        end
+      end, active_pallet))
+      refresh_list:add(wibox.container.margin(
+          active_refresh_buttons[#active_refresh_buttons],
+          dpi(5),dpi(5),dpi(5),dpi(5)
+      ))
+  end
+
+  return refresh_list
+end
+
+local function make_resolution_list(monitor_information, monitor_id)
+  local resolution_list = wibox.layout.fixed.vertical()
+
+  active_resolution_buttons = {}
+
+  local sorted_resolutions = {}
+  for key, _ in pairs(monitor_information) do
+      table.insert(sorted_resolutions, key)
+  end
+
+  sorted_resolutions = sort(sorted_resolutions, function (smaller, bigger)
+      return weighted_resolution(smaller) > weighted_resolution(bigger)
+  end)
+
+  for index, value in ipairs(sorted_resolutions) do
+      table.insert(active_resolution_buttons,  button(value, function ()
+            refresh_card.update_body(make_refresh_list(monitor_information[value], value, monitor_id))
+
+            -- Visually show the selected option
+            for i, btn in ipairs(active_resolution_buttons) do
+              if i == index then
+                btn.update_pallet(shift_pallet(active_pallet))
+              else
+                btn.update_pallet(active_pallet)
+              end
+            end
+        end, active_pallet)
+      )
+      resolution_list:add(wibox.container.margin(
+        active_resolution_buttons[#active_resolution_buttons],
+          dpi(5),dpi(5),dpi(5),dpi(5)
+      ))
+  end
+
+  resolution_box = scrollbox(resolution_list)
+  resolution_card.update_body(resolution_box)
+end
 
 local function make_screen_layout(wall, label)
   local size = dpi(20)
@@ -120,7 +232,7 @@ local function make_screen_layout(wall, label)
   )
 end
 
--- wall is the scaled wallpaper
+-- wall is the scaled wallpaper (To reduce render times and memory consumption)
 -- fullwall is a fullscreen (or original wallpaper)
 -- the disable_number argument tells use if we should show the number in the center of the monitor
 local function make_mon(wall, id, fullwall, disable_number)
@@ -135,6 +247,14 @@ local function make_mon(wall, id, fullwall, disable_number)
     forced_height = mon_size.h
   }
   monitor:set_image(wall)
+
+  if Display_Mode == NORMAL_MODE then
+    awful.tooltip {
+      objects        = { monitor },
+      text =  i18n.translate("Open the resolution and refresh rate editor")
+    }
+  end
+
   monitor:connect_signal(
     "button::press",
     function(_, _, _, btn)
@@ -162,6 +282,13 @@ local function make_mon(wall, id, fullwall, disable_number)
             collectgarbage("collect")
           end
         )
+      end
+
+      -- In this case someone wants to change a specific screen
+      if Display_Mode == NORMAL_MODE and btn == 1 then
+        print('Opening refresh rate and resolution editor')
+        Display_Mode = REFRESH_MODE
+        refresh(id)
       end
     end
   )
@@ -275,6 +402,70 @@ return function()
     end
   )
 
+  local function gen_dpi_body()
+    local v_layout = wibox.layout.fixed.vertical()
+    local h_layout = wibox.layout.fixed.horizontal()
+
+    h_layout:add(mat_icon_button(mat_icon(icons.settings, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.network, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.package, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.about, dpi(25))))
+    h_layout:add(mat_icon_button(mat_icon(icons.search, dpi(25))))
+
+    h_layout.forced_height = dpi(40)
+
+    v_layout:add(h_layout)
+    v_layout:add(wibox.container.margin(button('Spooky...', function() end), dpi(10), dpi(10), dpi(10), dpi(10)))
+    v_layout:add(wibox.container.margin(
+      wibox.widget {
+        text = i18n.translate('Spooky...'),
+        font = beautiful.font_type .. ' ' .. dpi(10),
+        widget = wibox.widget.textbox
+      },
+      dpi(10), dpi(10), dpi(10), dpi(10)))
+
+    return v_layout
+  end
+
+  local dpi_examples = card("Example")
+
+  local dpi_slider =
+  slider(
+  5,
+  300,
+  1,
+  beautiful.xresources.dpi,
+  function(value)
+    print("Updated dpi: " .. tostring(value))
+
+    local default = beautiful.xresources.dpi
+    beautiful.xresources.set_dpi(value)
+
+    dpi_examples.update_body(gen_dpi_body())
+
+    beautiful.xresources.set_dpi(default)
+  end
+  )
+
+  local dpi_save_button = button("Save", function()
+    local value = tostring(math.floor(dpi_slider.get_number()))
+    print("Saving dpi value: " .. value)
+    local xresource_file = os.getenv("HOME") .. '/.Xresources'
+
+    -- make the changes persistant
+    filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
+    awful.spawn({'xrdb', xresource_file})
+
+    awesome.restart()
+  end)
+
+  dpi_examples.update_body(
+    gen_dpi_body()
+  )
+
+  dpi_save_button.forced_height = dpi(20)
+  dpi_slider.forced_height = dpi(20)
+
   local changewall =
     button(
     "Change wallpaper",
@@ -316,6 +507,17 @@ return function()
 
   local brightness_card = card()
   local screen_time_card = card()
+  local dpi_card = card()
+
+  local dpi_button_to = button("Change Application Scaling", function ()
+    Display_Mode = DPI_MODE
+    refresh()
+  end)
+
+  local dpi_button_back = button("Back", function ()
+    Display_Mode = NORMAL_MODE
+    refresh()
+  end)
 
   brightness_card.update_body(
     wibox.widget {
@@ -360,8 +562,62 @@ return function()
     }
   )
 
+  local function go_to_dpi_widget()
+    dpi_card.update_body(
+      wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        {
+          layout = wibox.container.margin,
+          margins = m,
+          {
+            font = beautiful.font,
+            text = i18n.translate("Change Application Scaling"),
+            widget = wibox.widget.textbox
+          }
+        },
+        {
+          layout = wibox.container.margin,
+          left = m,
+          right = m,
+          bottom = m,
+          dpi_button_to
+        }
+      }
+    )
+  end
+
+  local function return_from_dpi_widget()
+    dpi_card.update_body(
+      wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        {
+          layout = wibox.container.margin,
+          margins = m,
+          {
+            font = beautiful.font,
+            text = i18n.translate("Change Application Scaling"),
+            widget = wibox.widget.textbox
+          }
+        },
+        {
+          layout = wibox.container.margin,
+          left = m,
+          right = m,
+          bottom = m,
+          dpi_button_back
+        }
+      }
+    )
+  end
+
+  go_to_dpi_widget()
+
+
+
   brightness_card.forced_height = (m * 6) + dpi(30)
   screen_time_card.forced_height = (m * 6) + dpi(30)
+  dpi_card.forced_height = (m * 6) + dpi(30)
+  monitors.forced_height = dpi(400)
 
   view:setup {
     layout = wibox.container.background,
@@ -387,6 +643,11 @@ return function()
           top = m,
           screen_time_card
         },
+        {
+          layout = wibox.container.margin,
+          top = m,
+          dpi_card
+        },
         {layout = wibox.container.margin, top = m, monitors},
         {layout = wibox.container.margin, top = m, changewall},
         {layout = wibox.container.margin, top = m, screenLayoutBtn}
@@ -400,7 +661,7 @@ return function()
     local v = table[k]
     -- check if it is a file
     if filesystem.exists(v) then
-      local base = filehandle.basename(v)
+      local base = filesystem.basename(v)
       -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
       local width = dpi(300)
       local height = (width / 16) * 9
@@ -462,6 +723,8 @@ return function()
     end
   end
 
+  local wallpaper_img = ''
+
   local function render_normal_mode()
     changewall.visible = true
     screenLayoutBtn.visible = true
@@ -469,32 +732,40 @@ return function()
       "tos theme active",
       {
         stdout = function(o)
-          table.insert(screens, o)
+          wallpaper_img = o
         end,
         output_done = function()
-          monitors.forced_height = settings_height / 2
-          if #screen < 4 then
-            layout.forced_num_cols = #screen
+          -- TODO: get all screens
+          local screens = xrandr.outputs ()
+
+          if #screens < 4 then
+            layout.forced_num_cols = #screens
+          else
+            layout.forced_num_cols = 4
           end
-          for k, v in pairs(screens) do
-            local base = filehandle.basename(v)
-            -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
-            local width = dpi(600)
-            local height = (width / 16) * 9
-            monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+
+          -- generate the wallpaper (scaled)
+          local base = filesystem.basename(wallpaper_img)
+          -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
+          local width = dpi(600) / #screens
+          local height = (width / 16) * 9
+          monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+
+          for _, display_name in ipairs(screens) do
+
             if filesystem.exists(monitorScaledImage) then
-              layout:add(make_mon(monitorScaledImage, k, v))
+              layout:add(make_mon(monitorScaledImage, display_name, wallpaper_img))
             else
               -- We use imagemagick to generate a "thumbnail"
               -- This is done to save memory consumption
               -- However note that our cache (tempDisplayDir) is stored in ram
               imagemagic.scale(
-                v,
+                wallpaper_img,
                 width,
                 height,
                 monitorScaledImage,
                 function()
-                  layout:add(make_mon(monitorScaledImage, k, v))
+                  layout:add(make_mon(monitorScaledImage, display_name, wallpaper_img))
                 end
               )
             end
@@ -560,10 +831,84 @@ return function()
     end
   end
 
-  refresh = function()
-    screens = {}
+  local function render_dpi_mode()
+    body.enable()
+    layout.forced_num_cols = 1
+    layout.min_rows_size = dpi(30)
+
+    layout.homogeneous = false
+
+    layout:add(
+      dpi_save_button,
+      dpi_slider,
+      dpi_examples
+    )
+  end
+
+  local function render_refresh_mode(monitor_id)
+    body.disable()
+
+    local x_out = xrandr.output_data()
+    local monitor_information = x_out[monitor_id]
+
+    layout.forced_num_cols = 1
+
+
+    if monitor_information == nil then
+      print('Invalid monitor aborting')
+      local widget = wibox.widget.textbox(monitor_id .. ' ' .. i18n.translate("is invalid"))
+      layout:add(widget)
+      return
+    end
+
+    make_resolution_list(monitor_information, monitor_id)
+
+    local widget = wibox.widget {
+      resolution_card,
+      wibox.widget.base.empty_widget(),
+      wibox.widget {
+        layout = wibox.layout.align.vertical,
+        wibox.widget.base.empty_widget(),
+        refresh_card,
+        wibox.container.margin(button(
+          "Save", function ()
+            awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'")
+            body.enable()
+
+            Display_Mode = NORMAL_MODE
+            refresh()
+          end, active_pallet
+          ), 0, 0, dpi(20), 0),
+      },
+      layout  = wibox.layout.ratio.horizontal
+    }
+
+    widget:adjust_ratio(2, 0.625, 0.05, 0.325)
+
+    layout:add(wibox.widget {
+      wibox.container.margin(button(
+        "Back", function ()
+          body.enable()
+
+          Display_Mode = NORMAL_MODE
+          refresh()
+        end, active_pallet
+        ), 0, 0, 0, dpi(20)),
+      nil,
+      widget,
+      layout = wibox.layout.fixed.vertical
+    })
+
+
+  end
+
+  refresh = function(monitor_id)
     layout:reset()
+    layout.homogeneous = true
+    layout.min_rows_size = dpi(100)
     body:reset()
+    body.enable()
+
     -- remove all images from memory (to save memory space)
     collectgarbage("collect")
 
@@ -573,11 +918,24 @@ return function()
         brightness:set_value(math.floor(tonumber(o)))
       end
     )
+
+    if Display_Mode ~= DPI_MODE then
+      go_to_dpi_widget()
+    else
+      return_from_dpi_widget()
+    end
+
     if Display_Mode == WALLPAPER_MODE then
       render_wallpaper_mode()
     elseif Display_Mode == XRANDR_MODE then
       render_xrandr_mode()
+    elseif Display_Mode == REFRESH_MODE and monitor_id ~= nil then
+      render_refresh_mode(monitor_id)
+    elseif Display_Mode == DPI_MODE then
+      render_dpi_mode()
     else
+      -- In case the Display_Mode contains an invalid state
+      Display_Mode = NORMAL_MODE
       render_normal_mode()
     end
   end

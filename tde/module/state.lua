@@ -40,7 +40,9 @@ local function load()
         brightness = 100,
         mouse = {},
         do_not_disturb = false,
-        oled_mode = false
+        oled_mode = false,
+        bluetooth = false,
+        auto_hide = false
     }
     if not filehandle.exists(file) then
         return table
@@ -53,11 +55,22 @@ local function load()
     result.mouse = result.mouse or table.mouse
     result.do_not_disturb = result.do_not_disturb or table.do_not_disturb
     result.oled_mode = result.oled_mode or table.oled_mode
+    result.bluetooth = result.bluetooth or table.bluetooth
+    result.auto_hide = result.auto_hide or table.auto_hide
+
+    -- always set the auto_hide true when using oled (To reduce burn in)
+    if result.oled_mode then
+        result.auto_hide = true
+    end
+
     return result
 end
 
 local function save(table)
     print("Updating state into: " .. file)
+    if not IsreleaseMode then
+        return
+    end
     serialize.serialize_to_file(file, table)
 end
 
@@ -68,7 +81,6 @@ local function setup_state(state)
     -- set the volume
     print("Setting volume: " .. state.volume)
     volume.set_volume(state.volume or 0)
-    signals.emit_volume_update()
 
     -- set the brightness
     if (_G.oled) then
@@ -86,7 +98,7 @@ local function setup_state(state)
         "startup",
         function()
             awful.spawn.easy_async(
-                "sh -c 'which autorandr && autorandr --load tde'",
+                "sh -c 'which autorandr && ( autorandr --load tde || true )'",
                 function()
                 end
             )
@@ -94,11 +106,25 @@ local function setup_state(state)
                 function()
                     -- update our wallpaper
                     awful.spawn("sh -c 'tos theme set $(tos theme active)'")
-                    --awful.spawn("sh -c 'which autorandr && autorandr --load tde'")
                 end
             )
         end
     )
+
+    -- update bluetooth status
+    if state.bluetooth then
+        awful.spawn.with_shell([[
+            rfkill unblock bluetooth
+            echo 'power on' | bluetoothctl
+        ]])
+    else
+        awful.spawn.with_shell([[
+            echo 'power off' | bluetoothctl
+            rfkill block bluetooth
+        ]])
+    end
+
+
     -- find all mouse peripheral that are currently attached to the machine
     if state.mouse then
         local devices = mouse.getInputDevices()
@@ -116,7 +142,10 @@ end
 -- load the initial state
 -- luacheck: ignore 121
 save_state = load()
-setup_state(save_state)
+
+if IsreleaseMode then
+    setup_state(save_state)
+end
 
 -- xinput id's are not persistent across reboots
 -- thus we map the xinput id to the device name, which is always the same
@@ -147,6 +176,9 @@ end
 
 signals.connect_volume(
     function(value)
+        if save_state.volume == value then
+            return
+        end
         save_state.volume = value
         save(save_state)
     end
@@ -154,6 +186,9 @@ signals.connect_volume(
 
 signals.connect_volume_is_muted(
     function(is_muted)
+        if save_state.volume_muted == is_muted then
+            return
+        end
         save_state.volume_muted = is_muted
         save(save_state)
     end
@@ -161,6 +196,10 @@ signals.connect_volume_is_muted(
 
 signals.connect_brightness(
     function(value)
+        if save_state.brightness == value then
+            return
+        end
+
         print("Brightness value: " .. value)
         save_state.brightness = value
         save(save_state)
@@ -200,6 +239,9 @@ signals.connect_mouse_acceleration(
 
 signals.connect_do_not_disturb(
     function(bDoNotDisturb)
+        if save_state.do_not_disturb == bDoNotDisturb then
+            return
+        end
         print("Changed do not disturb: " .. tostring(bDoNotDisturb))
         save_state.do_not_disturb = bDoNotDisturb
         save(save_state)
@@ -208,8 +250,16 @@ signals.connect_do_not_disturb(
 
 signals.connect_oled_mode(
     function(bIsOledMode)
+        if save_state.oled_mode == bIsOledMode then
+            return
+        end
         print("Changed oled mode to: " .. tostring(bIsOledMode))
         save_state.oled_mode = bIsOledMode
+        if bIsOledMode and not save_state.auto_hide then
+            -- special edge case
+            -- when oled mode is turned on we also want to enable auto hide mode
+            signals.emit_auto_hide(true)
+        end
         save(save_state)
     end
 )
@@ -224,3 +274,19 @@ signals.connect_mouse_natural_scrolling(
         end
     end
 )
+
+signals.connect_bluetooth_status(function (bIsEnabled)
+    if save_state.bluetooth == bIsEnabled then
+        return
+    end
+    save_state.bluetooth = bIsEnabled
+    save(save_state)
+end)
+
+signals.connect_auto_hide(function (bIsEnabled)
+    if save_state.auto_hide == bIsEnabled then
+        return
+    end
+    save_state.auto_hide = bIsEnabled
+    save(save_state)
+end)

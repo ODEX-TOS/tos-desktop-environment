@@ -69,27 +69,54 @@ local function getGapPerTag(number)
   return tonumber(getItem(gap)) or 4
 end
 
+local function getMasterCountPerTag(number)
+  local master = "tag_master_count_" .. number
+  return tonumber(getItem(master)) or 1
+end
+
+local function getMasterWidthPerTag(number)
+  local master = "tag_master_width_" .. number
+  local width_factor = tonumber(getItem(master)) or 0.5
+
+  -- clamp the number between 0 and 1
+  -- 0 in this context means that the master consumes 0 pixels
+  -- 1 means that the master consumes the entire screen
+  if width_factor < 0 then
+    width_factor = 0
+  elseif width_factor > 1 then
+    width_factor = 1
+  end
+
+  return width_factor
+end
+
 local tags = {
   {
     icon = icon("webbrowser-app") or icons.chrome,
     type = "chrome",
     defaultApp = "chrome",
     screen = 1,
-    layout = getLayoutPerTag(1)
+    layout = getLayoutPerTag(1),
+    master_count = getMasterCountPerTag(1),
+    master_width_factor =  getMasterWidthPerTag(1)
   },
   {
     icon = icon("utilities-terminal") or icons.terminal,
     type = "terminal",
     defaultApp = "st",
     screen = 1,
-    layout = getLayoutPerTag(2)
+    layout = getLayoutPerTag(2),
+    master_count = getMasterCountPerTag(2),
+    master_width_factor =  getMasterWidthPerTag(2)
   },
   {
     icon = icon("visual-studio-code-insiders") or icons.code,
     type = "code",
     defaultApp = "code-insiders",
     screen = 1,
-    layout = getLayoutPerTag(3)
+    layout = getLayoutPerTag(3),
+    master_count = getMasterCountPerTag(3),
+    master_width_factor =  getMasterWidthPerTag(3)
   },
   --
   --[[ {
@@ -102,35 +129,45 @@ local tags = {
     type = "files",
     defaultApp = "thunar",
     screen = 1,
-    layout = getLayoutPerTag(4)
+    layout = getLayoutPerTag(4),
+    master_count = getMasterCountPerTag(4),
+    master_width_factor =  getMasterWidthPerTag(4)
   },
   {
     icon = icon("deepin-music") or icons.music,
     type = "music",
     defaultApp = "spotify",
     screen = 1,
-    layout = getLayoutPerTag(5)
+    layout = getLayoutPerTag(5),
+    master_count = getMasterCountPerTag(5),
+    master_width_factor =  getMasterWidthPerTag(5)
   },
   {
     icon = icon("applications-games") or icons.game,
     type = "game",
     defaultApp = "",
     screen = 1,
-    layout = getLayoutPerTag(6)
+    layout = getLayoutPerTag(6),
+    master_count = getMasterCountPerTag(6),
+    master_width_factor =  getMasterWidthPerTag(6)
   },
   {
     icon = icon("gimp") or icons.art,
     type = "art",
     defaultApp = "gimp",
     screen = 1,
-    layout = getLayoutPerTag(7)
+    layout = getLayoutPerTag(7),
+    master_count = getMasterCountPerTag(7),
+    master_width_factor =  getMasterWidthPerTag(7)
   },
   {
     icon = icon("utilities-system-monitor") or icons.lab,
     type = "any",
     defaultApp = "",
     screen = 1,
-    layout = getLayoutPerTag(8)
+    layout = getLayoutPerTag(8),
+    master_count = getMasterCountPerTag(8),
+    master_width_factor = getMasterWidthPerTag(8)
   }
 }
 tag.connect_signal(
@@ -156,14 +193,17 @@ awful.screen.connect_for_each_screen(
       -- the last tag is reserved for the desktop
       tag.layout = getLayoutPerTag(i)
       tag.gap = getGapPerTag(i)
+      tag.master_count = getMasterCountPerTag(i)
+      tag.master_width_factor = getMasterWidthPerTag(i)
+
       awful.tag.add(
         i,
         {
           icon = tag.icon,
           icon_only = true,
           layout = tag.layout,
-          master_width_factor = 0.5,
-          master_count = 1,
+          master_width_factor = tag.master_width_factor,
+          master_count = tag.master_count,
           gap_single_client = false,
           gap = tag.gap,
           screen = s,
@@ -184,6 +224,7 @@ _G.tag.connect_signal(
     else
       t.gap = awful.tag.getproperty(t, "gap") or 4
     end
-    t.master_count = 2
+    t.master_count = getMasterCountPerTag(t.index)
+    t.master_width_factor = getMasterWidthPerTag(t.index)
   end
 )

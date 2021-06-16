@@ -87,10 +87,10 @@ delayed_timer(
   config.bluetooth_poll,
   function()
     awful.spawn.easy_async_with_shell(
-      "bluetoothctl --monitor list",
+      "bluetoothctl --monitor show",
       function(stdout)
         -- Check if there  bluetooth
-        checker = stdout:match("Controller") -- If 'Controller' string is detected on stdout
+        checker = stdout:match("Powered: yes")
         local widgetIconName
 
         local status = (checker ~= nil)
@@ -102,7 +102,7 @@ delayed_timer(
           widgetIconName = "bluetooth-off"
         end
         widget.icon:set_image(icons[widgetIconName])
-        print("Polling bluetooth status")
+        print("Polling bluetooth status: " .. tostring(status))
       end
     )
   end,

@@ -84,12 +84,12 @@ function check_state(){
         exit 1
     fi
     if [[ ! "$(command -v inotifywait)" ]]; then
-        if [[ ! "$(command -v tos)" ]]; then
+        if [[ ! "$(command -v pacman)" ]]; then
          notify_user "Can't provide hot reload support, please install inotify-tools"
          exit 1  
         fi
-        notify_user "Queing inotify-tools using <span  weight='bold'>tos -S inotify-tools</span>\n this is to support hot-reloading"
-        tos -S inotify-tools --noconfirm
+        notify_user "Queing inotify-tools using <span  weight='bold'>pacman -S inotify-tools</span>\n this is to support hot-reloading"
+        pacman -S inotify-tools --noconfirm
     fi
     # start dev-widget-hot-reload tde daemon if it doesn't exist yet
     if [[ "$FAST" == "1" ]]; then

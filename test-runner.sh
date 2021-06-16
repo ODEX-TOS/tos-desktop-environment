@@ -35,15 +35,21 @@ if [[ -n "$TDE_IT_TEST_RUN" ]]; then
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
   export LUA_PATH="$LUA_PATH;./?.lua;./?/init.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/tde/lib-tde/translations/?.lua;"
+  export LUA_PATH="$LUA_PATH;$PWD/tde/lib-tde/lib-lua/?/?.lua;$PWD/tde/lib-tde/lib-lua/?.lua;"
   export LUA_PATH="$LUA_PATH;"
+  
+  export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"
+
   if [[ -n "$1" ]]; then
-    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner-it.lua
+    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner-it.lua
   else
-    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner-it.lua
+    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner-it.lua
   fi
+  make clean check-integration
 else
   # run the unit tests
-  export LUA_PATH="$PWD/tests/mock/?.lua;$PWD/tests/mock/?.lua;"
+  export LUA_PATH="$PWD/tests/tde/mock/?.lua;$PWD/tests/tde/mock/?.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/tde/?/?.lua;$PWD/tde/?.lua;$PWD/tde/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?/init.lua;"
   export LUA_PATH="$LUA_PATH;$PWD/plugins/?.lua;"
@@ -54,9 +60,18 @@ else
   export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"
 
   if [[ -n "$1" && -f "$1" ]]; then
-    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua
+    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner.lua
   else
     # shellcheck disable=SC2068
-    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/runner.lua $@
+    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner.lua $@
   fi
+
+  # check if busted is installed
+  if [[ "$(command -v busted53)" == "" ]]; then
+    echo "Not running the full test suite, busted is not installed"
+    echo "Install it using tos -S lua53-busted"
+    exit 0
+  fi
+
+  make clean check-unit
 fi

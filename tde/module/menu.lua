@@ -74,7 +74,7 @@ local screenshot = {
 		i18n.translate("Full"),
 		function()
 			awful.spawn.easy_async_with_shell(
-				apps.bins.full_screenshot,
+				apps.bins().full_screenshot,
 				function(out)
 					print("Full screenshot\n" .. out)
 				end
@@ -85,7 +85,7 @@ local screenshot = {
 		i18n.translate("Area"),
 		function()
 			awful.spawn.easy_async_with_shell(
-				apps.bins.area_screenshot,
+				apps.bins().area_screenshot,
 				function(out)
 					print("Area screenshot\n" .. out)
 				end

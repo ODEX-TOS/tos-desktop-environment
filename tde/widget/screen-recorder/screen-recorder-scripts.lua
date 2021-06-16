@@ -74,7 +74,7 @@ local kill_existing_recording_ffmpeg = function()
 	-- Let's killall ffmpeg instance first after awesome (re)-starts if there's any
 	awful.spawn.easy_async_with_shell(
 		[[
-		ps x | grep "ffmpeg -video_size" | grep -v grep | awk '{print $1}' | xargs kill
+		ps x | grep "ffmpeg -video_size" | grep -v grep | awk '{print $1}' | xargs -r kill
 		]],
 		function(_)
 		end

@@ -58,6 +58,7 @@ local background_theme = beautiful.background
 -- @tparam number default_value To what value do we need to set the slider to initially
 -- @tparam function callback A callback that gets triggered every time the value change_focus
 -- @tparam[opt] function tooltip_callback A function that gets called each time a you want to show some information
+-- @tparam[opt] function done_callback A function that gets called when the user finished using the slider
 -- @treturn widget The slider widget
 -- @staticfct slider
 -- @usage -- This will create the content in hallo.txt to var=value
@@ -65,7 +66,7 @@ local background_theme = beautiful.background
 -- local slider = lib-widget.slider(0, 10, 0.05, 5, function(value)
 --      print("Updated slider value to: " .. value)
 -- end)
-return function(min, max, increment, default_value, callback, tooltip_callback)
+return function(min, max, increment, default_value, callback, tooltip_callback, done_callback)
     local step_size = 1 / increment
 
     local widget = wibox.widget.slider()
@@ -90,7 +91,19 @@ return function(min, max, increment, default_value, callback, tooltip_callback)
         "property::value",
         function()
             local value = widget.value / step_size
-            callback(value)
+            if callback then
+                callback(value)
+            end
+        end
+    )
+
+    widget:connect_signal(
+        "mouse::leave",
+        function()
+            local value = widget.value / step_size
+            if done_callback then
+                done_callback(value)
+            end
         end
     )
 
@@ -102,6 +115,16 @@ return function(min, max, increment, default_value, callback, tooltip_callback)
     widget.update = function(value)
         widget:set_value(value * step_size)
     end
+
+    --- Get the value of the slider
+    -- @staticfct slider.get_number
+    -- @treturn number The current value of the slider
+    -- @usage -- Get the current value of the slider
+    -- slider.get_number()
+    widget.get_number = function()
+        return widget.value * step_size
+    end
+
 
     if tooltip_callback ~= nil and type(tooltip_callback) == "function" then
         awful.tooltip {

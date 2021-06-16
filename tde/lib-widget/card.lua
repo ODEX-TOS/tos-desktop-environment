@@ -88,12 +88,16 @@ local titled_card = function(title, height)
         bg = bg
     }
 
-    --- Update the title of the card
+    --- Update the title of the card (Build in translation)
     -- @tparam string title The title of the card
     -- @staticfct update_title
     -- @usage -- This will change the title to hello
     -- card.update_title("hello")
     widget.update_title = function(updated_title)
+        --filter out trailing whitespace in the title
+        if type(updated_title) == "string" then
+            updated_title = string.gsub(updated_title, '\n$', '')
+        end
         header.text = i18n.translate(updated_title)
     end
 
@@ -116,6 +120,26 @@ local titled_card = function(title, height)
         widget.update_title(updated_title)
         widget.update_body(update_body)
     end
+
+    --- Highlight the card, used when to show focus
+    -- @staticfct highlight
+    -- @usage -- This will highlight the background of the card, simulating a 'hover'
+    -- card.highlight()
+    widget.highlight = function()
+        local color = beautiful.primary.hue_600  .. '66'
+        widget.bg = color
+        body_widget.bg =  color
+    end
+
+    --- Remove the highlight of the card
+    -- @staticfct unhighlight
+    -- @usage -- This will unhighlight the background of the card, simulating a 'hover'
+    -- card.unhighlight()
+    widget.unhighlight = function()
+        widget.bg = bg
+        body_widget.bg =  bg
+    end
+
     return widget
 end
 
@@ -148,6 +172,25 @@ local bare_card = function()
     body_widget.update = function(_, update_body)
         body_widget.update_body(update_body)
     end
+
+
+    --- Highlight the card, used when to show focus
+    -- @staticfct highlight
+    -- @usage -- This will highlight the background of the card, simulating a 'hover'
+    -- card.highlight()
+    body_widget.highlight = function()
+        local color = beautiful.primary.hue_600  .. '66'
+        body_widget.bg = color
+    end
+
+    --- Remove the highlight of the card
+    -- @staticfct unhighlight
+    -- @usage -- This will unhighlight the background of the card, simulating a 'hover'
+    -- card.unhighlight()
+    body_widget.unhighlight = function()
+        body_widget.bg =  bg
+    end
+
     return body_widget
 end
 

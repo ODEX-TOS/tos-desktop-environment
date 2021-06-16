@@ -70,6 +70,13 @@ local function send(msg)
     print("Caught Error", loglevel)
     local message = removeStackTraceFromMSG(tostring(msg))
     print(message, loglevel)
+
+    -- only use blocking calls in staging or special environments, not in production
+    -- this is because blocking calls can degrade the overal experience
+    if sentry.environment == "production" then
+        return
+    end
+
     local exception = {
         {
             ["type"] = "Error",
@@ -95,7 +102,12 @@ local function send_error(msg)
     end
     in_error = true
     if general["minimize_network_usage"] ~= "1" then
-        send(msg)
+        -- make sure the error message doesn't block the draw thread
+        local co = coroutine.create(function ()
+            send(msg)
+        end)
+
+        coroutine.resume(co)
     end
     in_error = false
 end

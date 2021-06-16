@@ -31,7 +31,7 @@ local common = require("lib-tde.function.common")
 
 local desktopLocation = os.getenv("HOME") .. "/Desktop"
 local offset = -1
-if installed("installer") then
+if IsreleaseMode and installed("installer") then
     offset = 1
 end
 

@@ -47,7 +47,7 @@ local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 
 --- Create a new button widget
--- @tparam widget body The widget to put in the center (usually an icon or text)
+-- @tparam wibox.widget body The widget to put in the center (usually an icon or text)
 -- @tparam function callback The callback function to call when the button is pressed
 -- @tparam[opt] table pallet A colorpallet from the theme.mat-colors file
 -- @tparam[opt] bool bNo_center Don't center the content
@@ -57,7 +57,7 @@ local dpi = beautiful.xresources.apply_dpi
 -- @treturn widget The button widget
 -- @staticfct button
 -- @usage -- This will create a button that is red
--- local button = lib-widget.button(function()
+-- local button = lib-widget.button('Click me', function()
 --    print("Clicked")
 -- end, require("theme.mat-colors").red)
 return function(body, callback, pallet, bNo_center, enter_callback, leave_callback, no_update)
@@ -96,6 +96,15 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
         end
     end
 
+    --- Get the active theme pallet
+    -- @tparam table The pallet to supply, follows the material design format
+    -- @staticfct get_active_pallet
+    -- @usage -- Return the active theme pallet
+    -- button.get_active_pallet()
+    button.get_active_pallet = function ()
+        return color
+    end
+
     button:connect_signal(
         "mouse::enter",
         function()
@@ -123,6 +132,7 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
     button:buttons(gears.table.join(awful.button({}, 1, callback)))
 
     --- Manually update the color pallet used by the button, usually used when you want the button to not follow the theming
+    -- @tparam table The pallet to supply, follows the material design format
     -- @staticfct update_pallet
     -- @usage -- Update the color pallet of the button
     -- button.update_pallet(require("theme.mat-colors").yellow)

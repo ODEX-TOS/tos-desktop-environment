@@ -186,6 +186,11 @@ local function overwrite(file, data)
   end
   dir_create(file)
   local fd = io.open(file, "w")
+
+  if fd == nil then
+    return false
+  end
+
   fd:write(data .. "\n")
   fd:close()
   return true
@@ -204,6 +209,11 @@ local function write(file, data)
   end
   dir_create(file)
   local fd = io.open(file, "a")
+
+  if fd == nil then
+    return false
+  end
+
   fd:write(data .. "\n")
   fd:close()
   return true
@@ -255,6 +265,29 @@ local function getString(file, match, head)
   end
   return table.concat(res, "\n")
 end
+
+--- Replace a given regex in a file
+-- @tparam string file The path to the file, can be both absolute or relative.
+-- @tparam string regex The data to match in the file
+-- @tparam string replacement What to replace in match regex with
+-- @treturn bool if the write was successful
+-- @staticfct replace
+-- @usage -- Replace all occurences of 'a' to 'b' in the file "hallo.txt"
+-- lib-tde.file.replace("hallo.txt", "a", "b")
+local function replace(file, regex, replacement)
+  if type(file) ~= "string" then
+    return false
+  end
+
+  if not file_exists(file) then
+    return false
+  end
+
+  local data = getString(file):gsub(regex, replacement)
+
+  return overwrite(file, data)
+end
+
 
 --- Return a table of filename found in a directory
 -- @tparam string dir The path to the directory, can be both absolute or relative.
@@ -358,6 +391,7 @@ return {
   list_dir_full = list_dir_full,
   write = write,
   overwrite = overwrite,
+  replace = replace,
   basename = basename,
   dirname = dirname,
   dir_create = dir_create,

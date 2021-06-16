@@ -52,6 +52,8 @@ exclude_files = {
     "tde/lib-tde/lib-lua/ssl/https.lua",
     -- contains a lot of globals
     "tests/**",
+    "build/**",
+    "build-utils/**",
     -- TODO: refactor plugins, then remove this
     --"plugins/**",
 }
@@ -78,7 +80,8 @@ read_globals = {
     "dont_disturb",
     "clear_desktop_selection",
     "wibox",
-    "rawlen"
+    "rawlen",
+    "get_completion"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about
@@ -106,6 +109,8 @@ globals = {
     "print",
     "echo",
     "desktop_icons",
+    "IsreleaseMode",
+    "os.start_time"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).

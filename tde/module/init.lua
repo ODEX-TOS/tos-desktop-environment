@@ -24,7 +24,11 @@
 ]]
 -- Init all modules
 require("module.settings")
-require("module.auto-start")
+
+if IsreleaseMode then
+    require("module.auto-start")
+end
+
 require("module.exit-screen")
 require("module.quake-terminal")
 require("module.brightness-slider-osd")
