@@ -22,6 +22,8 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+os.start_time = os.time()
+
 local hardware = require("lib-tde.hardware-check")
 local is_weak = hardware.isWeakHardware()
 local beautiful = require("beautiful")

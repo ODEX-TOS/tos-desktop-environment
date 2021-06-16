@@ -68,7 +68,16 @@ local function generate_setting_panel(title)
       {layout = wibox.container.margin, right = m, name}
     }
   )
-  return wibox.container.margin(container, dpi(10), dpi(10), dpi(10), dpi(10)), name
+  return wibox.container.margin(container, dpi(5), dpi(5), dpi(5), dpi(5)), name
+end
+
+local function get_uptime()
+  local diff = os.time() - os.start_time
+  local days = math.floor(diff / 86400)
+  local hours = math.floor((diff % 86400) / 3600)
+  local minutes = math.floor((diff % 3600) / 60)
+  local seconds = math.floor(diff % 60)
+  return string.format("%d:%02d:%02d:%02d",days,hours,minutes,seconds)
 end
 
 return function()
@@ -161,6 +170,9 @@ return function()
   local tde_version_name, tde_version_text = generate_setting_panel(i18n.translate("TDE Version"))
   tde_version_text.text = awesome.version .. " (" .. awesome.release .. ")"
 
+  local tde_uptime_name, tde_uptime_text = generate_setting_panel("TDE " .. i18n.translate("Uptime: "):gsub(':',''))
+  tde_uptime_text.text = get_uptime()
+
   local windowing_system_name, windowing_system_text = generate_setting_panel(i18n.translate("Windowing system"))
   -- TDE currently only supports X11
   windowing_system_text.text = "X11"
@@ -183,6 +195,7 @@ return function()
   container:add(os_name_name)
   container:add(os_type_name)
   container:add(tde_version_name)
+  container:add(tde_uptime_name)
   container:add(windowing_system_name)
 
   view:setup {
@@ -215,6 +228,10 @@ return function()
       }
     }
   }
+
+  view.refresh = function ()
+    tde_uptime_text.text = get_uptime()
+  end
 
   return view
 end

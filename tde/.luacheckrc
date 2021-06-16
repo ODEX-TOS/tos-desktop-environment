@@ -109,7 +109,8 @@ globals = {
     "print",
     "echo",
     "desktop_icons",
-    "IsreleaseMode"
+    "IsreleaseMode",
+    "os.start_time"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).
