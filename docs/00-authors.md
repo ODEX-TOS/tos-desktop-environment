@@ -8,8 +8,6 @@
 **Main contributors**:
 
 * © 2019- [Tom Meyers](mailto:tom@odex.be)
-* © 2019- [Tom Meyers](mailto:tom@odex.be)
-* © 2019- [Tom Meyers](mailto:tom@odex.be)
 
 **Original author**:
 
