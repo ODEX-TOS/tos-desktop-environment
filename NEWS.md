@@ -26,6 +26,17 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 # Patch Notes
 
+## Patch 0.8
+
+### New Features
+
+
+### Bug Fixes
+
+
+### Dev Notes
+
+
 ## Patch 0.7
 
 ### New Features
