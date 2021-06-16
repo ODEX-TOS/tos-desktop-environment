@@ -16,6 +16,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
 - [ ] `accessibility Visual` Accessability settings for color impaired people (High contrast)
 - [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
+- [ ] `Default Applications` Allow setting the default application from the settings
 
 
 ## Packaging
