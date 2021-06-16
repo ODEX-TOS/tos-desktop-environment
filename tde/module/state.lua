@@ -81,7 +81,6 @@ local function setup_state(state)
     -- set the volume
     print("Setting volume: " .. state.volume)
     volume.set_volume(state.volume or 0)
-    signals.emit_volume_update()
 
     -- set the brightness
     if (_G.oled) then

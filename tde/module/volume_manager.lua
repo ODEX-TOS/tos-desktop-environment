@@ -52,7 +52,7 @@ signals.connect_volume_update(
             function(volume_level, muted)
 
                 -- if the sound system is down then default to a volume of 0
-                signals.emit_volume(volume_level)
+                signals.emit_volume(volume_level or 0)
                 signals.emit_volume_is_muted(muted)
                 if not startup and time() > (boot_time + 5) then
                     if _G.toggleVolOSD ~= nil then
