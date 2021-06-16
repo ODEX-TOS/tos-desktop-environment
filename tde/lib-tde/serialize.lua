@@ -83,6 +83,9 @@ end
 -- @usage -- Deserializes the content found in the file to lua tables
 -- local object = lib-tde.serialize.deserialize_from_file("file.json")
 local function deserialize_from_file(file)
+    if not filehandle.exists(file) then
+        return {}
+    end
     local str = filehandle.string(file)
     return deserialize(str)
 end
