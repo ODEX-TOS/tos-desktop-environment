@@ -893,8 +893,6 @@ function nice.initialize(args)
     _G.client.connect_signal(
         "request::titlebars",
         function(c)
-            -- TODO: this check should never happen in the request::titlebars callback
-
             -- Callback
             c._cb_add_window_decorations = function()
                 gtimer_weak_start_new(
