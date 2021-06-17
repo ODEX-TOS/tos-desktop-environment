@@ -333,7 +333,7 @@ awful.rules.rules = {
       }
     },
     properties = {
-      skip_decoration = true,
+      skip_decoration = false,
       floating = true,
       placement = awful.placement.centered,
       ontop = true,
@@ -371,7 +371,7 @@ awful.rules.rules = {
       type = "utility"
     },
     properties = {
-      skip_decoration = true,
+      skip_decoration = false,
       ontop = true,
       floating = true,
       drawBackdrop = false,
