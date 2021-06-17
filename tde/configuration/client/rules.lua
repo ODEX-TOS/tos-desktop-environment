@@ -22,7 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local gears = require("gears")
 local client_keys = require("configuration.client.keys")
 local client_buttons = require("configuration.client.buttons")
 local config = tags
@@ -90,9 +89,13 @@ awful.rules.rules = {
     except_any = {
       instance = {
         "nm-connection-editor",
-        "file_progress"
+        "file_progress",
+        "Pinentry",
+        "pinentry"
       },
-      class = "Xfdesktop"
+      class = {
+
+      }
     },
     properties = {
       focus = awful.client.focus.filter,
@@ -189,31 +192,20 @@ awful.rules.rules = {
       ontop = true
     }
   },
-  {
-    rule_any = {
-      class = {
-        "xlunch-fullscreen"
-      }
-    },
-    properties = {
-      skip_decoration = true,
-      fullscreen = true,
-      ontop = true
-    }
-  },
   -- Dialogs
   {
     rule_any = {type = {"dialog"}, class = {"Wicd-client.py", "calendar.google.com"}},
+    except_any = {
+      class = {
+        "Pinentry-gtk-2",
+        "pinentry-gtk-2",
+      }
+    },
     properties = {
       placement = awful.placement.centered,
       ontop = true,
       floating = true,
       drawBackdrop = false, -- TRUE if you want to add blur backdrop
-      shape = function()
-        return function(cr, w, h)
-          gears.shape.rounded_rect(cr, w, h, 12)
-        end
-      end,
       skip_decoration = true
     }
   },
@@ -315,7 +307,7 @@ awful.rules.rules = {
     rule_any = {class = {"lxpolkit", "Lxpolkit"}},
     except_any = {type = {"dialog"}},
     properties = {
-      skip_decoration = true,
+      skip_decoration = false,
       floating = true,
       placement = awful.placement.centered,
       ontop = true,
@@ -326,18 +318,31 @@ awful.rules.rules = {
   {
     rule_any = {
       class = {
-        "Pinentry-gtk-2",
-        "pinentry-gtk-2",
         "Pinentry-gtk",
-        "pinentry-gtk"
+        "pinentry-gtk",
+        "pinentry-qt",
+        "Pinentry-qt"
       }
     },
     properties = {
-      skip_decoration = false,
       floating = true,
-      placement = awful.placement.centered,
       ontop = true,
       drawBackdrop = true
+    }
+  },
+  {
+    rule_any = {
+      class = {
+        "Pinentry-gtk-2",
+        "pinentry-gtk-2",
+      }
+    },
+    properties = {
+      placement = awful.placement.centered,
+      ontop = true,
+      floating = true,
+      drawBackdrop = true, -- TRUE if you want to add blur backdrop
+      skip_decoration = false
     }
   },
   {
