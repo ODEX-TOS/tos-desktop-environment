@@ -46,7 +46,6 @@ local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 
 local mode = ""
-local draw_mode = general["draw_mode"]
 
 local beautiful = require("beautiful")
 local get_font_height = beautiful.get_font_height
@@ -891,93 +890,11 @@ function nice.initialize(args)
 
     validate_mb_bindings()
 
-    local function full(s)
-        for _, c in pairs(s.clients) do
-            if #s.tiled_clients >= 0 and (c.floating or c.first_tag.layout.name == "floating") then
-                awful.titlebar.show(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif #s.tiled_clients == 1 and c.fullscreen == true then
-                awful.titlebar.show(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif #s.tiled_clients >= 1 and c.fullscreen == true then
-                awful.titlebar.show(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif #s.tiled_clients >= 1 and c.maximized == true then
-                if c.maximized then
-                    awful.titlebar.show(c, "top")
-                    c.shape = function(cr, w, h)
-                        gears.shape.rectangle(cr, w, h)
-                    end
-                end
-            elseif #s.tiled_clients == 1 and c.first_tag.layout.name == "dwindle" then
-                awful.titlebar.hide(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif #s.tiled_clients > 1 and c.first_tag.layout.name == "dwindle" then
-                awful.titlebar.show(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif #s.tiled_clients == 1 and c.first_tag.layout.name == "tile" then
-                awful.titlebar.hide(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif #s.tiled_clients > 1 and c.first_tag.layout.name == "tile" then
-                awful.titlebar.show(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            end
-        end
-    end
-
-    local function fast(s)
-        for _, c in pairs(s.clients) do
-            c.titlebars_enabled = c.titlebars_enabled or true
-            if (not c.titlebars_enabled) or c.requests_no_titlebar then
-                awful.titlebar.hide(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            elseif (c.floating or c.first_tag.layout.name == "floating") then
-                awful.titlebar.show(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            else
-                awful.titlebar.hide(c, "top")
-                c.shape = function(cr, w, h)
-                    gears.shape.rectangle(cr, w, h)
-                end
-            end
-        end
-    end
-
-    local function none(s)
-        for _, c in pairs(s.clients) do
-            awful.titlebar.hide(c, "top")
-            c.shape = function(cr, w, h)
-                gears.shape.rectangle(cr, w, h)
-            end
-        end
-    end
-
     _G.client.connect_signal(
         "request::titlebars",
         function(c)
             -- TODO: this check should never happen in the request::titlebars callback
-            if c.requests_no_titlebar then
-                awful.titlebar.hide(c, "top")
-                return
-            end
+
             -- Callback
             c._cb_add_window_decorations = function()
                 gtimer_weak_start_new(
@@ -1015,31 +932,26 @@ function nice.initialize(args)
         end
     )
 
-    _G.screen.connect_signal(
-        "arrange",
-        function(s)
-            if draw_mode == "full" then
-                full(s)
-            elseif draw_mode == "none" then
-                none(s)
-            else
-                fast(s)
-            end
-        end
-    )
+end
+
+local function set_client_titlebar(c)
+    if c.floating then
+        awful.placement.centered(c)
+    end
+
+    if c.floating or c.titlebars_enabled then
+        awful.titlebar.show(c, "top")
+    else
+        awful.titlebar.hide(c, "top")
+        c.shape = nil
+    end
 end
 
 _G.client.connect_signal(
     "property::floating",
     function(c)
-        if c.floating then
-            awful.placement.centered(c)
-        end
-        if c.titlebars_enabled and not c.requests_no_titlebar then
-            awful.titlebar.show(c, "top")
-        else
-            awful.titlebar.hide(c, "top")
-        end
+        print("Floating")
+        set_client_titlebar(c)
     end
 )
 
@@ -1049,14 +961,7 @@ _G.tag.connect_signal(
     function(tag)
         local clients = tag:clients()
         for _, c in pairs(clients) do
-            if
-                (c.first_tag.layout.name ~= "max" and c.first_tag.layout.name ~= "floating") and
-                    not c.requests_no_titlebar
-             then
-                awful.titlebar.show(c, "top")
-            else
-                awful.titlebar.hide(c, "top")
-            end
+            set_client_titlebar(c)
         end
     end
 )

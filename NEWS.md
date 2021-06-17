@@ -35,6 +35,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### Bug Fixes
 
 - Todo list prompt now works after aborting it
+- Reduced repaint event when arranging tiled windows, causing faster repaints
 
 ### Dev Notes
 
