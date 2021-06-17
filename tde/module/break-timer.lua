@@ -89,7 +89,7 @@ awful.screen.connect_for_each_screen(
         layout = wibox.layout.fixed.vertical
       },
       -- The real background color
-      bg = beautiful.background.hue_800,
+      bg = beautiful.background.hue_800 .. beautiful.background_transparency,
       valign = "center",
       halign = "center",
       widget = wibox.container.place()

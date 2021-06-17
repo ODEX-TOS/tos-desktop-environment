@@ -719,6 +719,7 @@ function tooltip.new(args)
     -- backgroundbox
     local bg = args.bg or beautiful.tooltip_bg
         or beautiful.bg_focus or "#ffcb60"
+
     local border_width = args.border_width or beautiful.tooltip_border_width or 0
     local border_color = args.border_color or beautiful.tooltip_border_color
         or beautiful.border_color_normal or "#ffcb60"
@@ -758,6 +759,12 @@ function tooltip.new(args)
     self.textbox = self.widget:get_children_by_id('text_role')[1]
     self.marginbox = self.widget:get_children_by_id('margin_role')[1]
     self.backgroundbox = self.widget:get_children_by_id('background_role')[1]
+
+    awesome.connect_signal("TDE::background::theme::changed", function(_)
+        bg = args.bg or beautiful.tooltip_bg
+        or beautiful.bg_focus or "#ffcb60"
+        self.widget.bg = bg
+    end)
 
     -- Add tooltip to objects
     if args.objects then

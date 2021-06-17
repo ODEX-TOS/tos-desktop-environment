@@ -362,7 +362,7 @@ screen.connect_signal(
 				width = s.geometry.width,
 				x = s.geometry.x,
 				y = s.geometry.y,
-				bg = beautiful.background.hue_800,
+				bg = beautiful.background.hue_800 .. beautiful.background_transparency,
 				fg = beautiful.fg_normal
 			}
 		)

@@ -39,7 +39,7 @@ local bottom_panel = function(s)
     x = s.geometry.x + s.geometry.width - action_bar_width,
     y = s.geometry.y + dpi(26),
     ontop = true,
-    bg = beautiful.background.hue_800,
+    bg = beautiful.background.hue_800 .. beautiful.background_transparency,
     fg = beautiful.fg_normal,
     visible = true
   }

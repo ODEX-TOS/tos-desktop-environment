@@ -329,7 +329,7 @@ local function make_nav()
 
   local rule = wibox.container.background()
   rule.forced_height = 1
-  rule.bg = beautiful.background.hue_800
+  rule.bg = beautiful.background.hue_800 .. beautiful.background_transparency
   rule.widget = wibox.widget.base.empty_widget()
 
   signals.connect_background_theme_changed(
@@ -462,7 +462,7 @@ return function()
       ontop = true,
       visible = false,
       type = "toolbar",
-      bg = beautiful.background.hue_800,
+      bg = beautiful.background.hue_800 .. beautiful.background_transparency,
       width = settings_width,
       height = settings_height,
       screen = scrn

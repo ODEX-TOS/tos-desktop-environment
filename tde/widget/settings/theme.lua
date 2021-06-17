@@ -40,10 +40,10 @@ local settings_nw = dpi(260)
 -- We need to expose these variables in a more "global" scope
 -- This way we can update the colors on the fly
 -- The active color pallet
-local activePrimary = beautiful.accent
-local activePrimaryName = "purple"
+local activePrimary = beautiful.primary
+local activePrimaryName = color_config["primary"] or "cyan"
 local activeBackground = beautiful.background
-local activeBackgroundName = "blue_grey"
+local activeBackgroundName = color_config["background"] or "grey"
 
 -- the 2 big buttons that decide where the color pallet will be applied
 local primaryButton = nil
@@ -103,6 +103,7 @@ local function create_background_button()
       colorModeIsPrimary = false
       primaryButton.bg = activePrimary.hue_600
       backgroundButton.bg = activeBackground.hue_800
+      print(activeBackground)
       signals.emit_background_theme_changed(activeBackground)
     end,
     activeBackground,
@@ -117,7 +118,7 @@ end
 
 -- the font_black option is always optional and tells use if the font color must be black (because the background color is otherwise unreadable)
 local function make_color_entry(name, slide, font_black)
-  local pallet = mat_colors[name] or mat_colors["purple"]
+  local pallet = mat_colors[name] or mat_colors["cyan"]
 
   local color = beautiful.fg_white
   if font_black then
@@ -142,6 +143,7 @@ local function make_color_entry(name, slide, font_black)
       else
         activeBackground = pallet
         activeBackgroundName = name
+        print(activeBackground)
         signals.emit_background_theme_changed(activeBackground)
       end
       refresh()
@@ -161,7 +163,7 @@ local function make_color_entry(name, slide, font_black)
     wibox.widget {
     bar_shape = gears.shape.rounded_rect,
     bar_height = dpi(25),
-    bar_color = beautiful.background.hue_700 .. beautiful.background_transparency,
+    bar_color = activeBackground.hue_700 .. beautiful.background_transparency,
     handle_color = pallet.hue_500,
     bar_active_color = pallet.hue_500,
     handle_shape = gears.shape.circle,

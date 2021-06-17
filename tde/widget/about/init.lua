@@ -54,7 +54,7 @@ screen.connect_signal(
 
     aboutPage =
       wibox {
-      bg = beautiful.background.hue_800,
+      bg = beautiful.background.hue_800 .. beautiful.background_transparency,
       visible = false,
       ontop = true,
       type = "normal",
@@ -242,7 +242,7 @@ aboutPage:setup {
     layout = wibox.layout.fixed.horizontal
   },
   -- The real background color
-  bg = beautiful.background.hue_800,
+  bg = beautiful.background.hue_800 .. beautiful.background_transparency,
   -- The real, anti-aliased shape
   shape = function(cr, shapeWidth, shapeHeight)
     gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, 12)

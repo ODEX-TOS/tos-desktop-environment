@@ -103,7 +103,7 @@ local right_panel = function()
     width = panel_width,
     height = s.geometry.height,
     x = s.geometry.x + (s.geometry.width - panel_width),
-    bg = beautiful.background.hue_800,
+    bg = beautiful.background.hue_800 .. beautiful.background_transparency,
     fg = beautiful.fg_normal
   }
 

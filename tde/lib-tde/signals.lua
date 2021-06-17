@@ -629,8 +629,8 @@ end
 -- @staticfct emit_primary_theme_changed
 -- @usage -- Notify other TDE components that the primary theme changed
 -- lib-tde.signals.emit_primary_theme_changed()
-connections.emit_primary_theme_changed = function(bDoNotDisturb)
-    awesome.emit_signal("TDE::primary::theme::changed", bDoNotDisturb)
+connections.emit_primary_theme_changed = function(pallet)
+    awesome.emit_signal("TDE::primary::theme::changed", pallet)
 end
 
 --- Trigger a callback function when the primary theme changed
@@ -650,8 +650,8 @@ end
 -- @staticfct emit_background_theme_changed
 -- @usage -- Notify other TDE components that the background theme changed
 -- lib-tde.signals.emit_background_theme_changed()
-connections.emit_background_theme_changed = function(bDoNotDisturb)
-    awesome.emit_signal("TDE::background::theme::changed", bDoNotDisturb)
+connections.emit_background_theme_changed = function(pallet)
+    awesome.emit_signal("TDE::background::theme::changed", pallet)
 end
 
 --- Trigger a callback function when the background theme changed

@@ -51,7 +51,7 @@ screen.connect_signal(
                 ontop = true,
                 visible = false,
                 type = "toolbar",
-                bg = beautiful.background.hue_800,
+                bg = beautiful.background.hue_800 .. beautiful.background_transparency,
                 width = (scr.workarea.width / 2) - divercence,
                 height = scr.workarea.height,
                 x = scr.workarea.x + (scr.workarea.width / 2) + divercence,

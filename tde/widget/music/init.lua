@@ -51,7 +51,7 @@ screen.connect_signal(
 
     musicPlayer =
       wibox {
-      bg = beautiful.background.hue_800,
+      bg = beautiful.background.hue_800 .. beautiful.background_transparency,
       visible = false,
       ontop = true,
       type = "normal",
@@ -220,7 +220,7 @@ musicPlayer:setup {
     layout = wibox.layout.fixed.vertical
   },
   -- The real background color
-  bg = beautiful.background.hue_800,
+  bg = beautiful.background.hue_800 .. beautiful.background_transparency,
   -- The real, anti-aliased shape
   shape = function(cr, width, height)
     gears.shape.rounded_rect(cr, width, height, 12)
