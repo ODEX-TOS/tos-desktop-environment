@@ -30,9 +30,11 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### New Features
 
+- Todo list allows editing existing entries
 
 ### Bug Fixes
 
+- Todo list prompt now works after aborting it
 
 ### Dev Notes
 
