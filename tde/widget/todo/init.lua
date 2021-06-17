@@ -148,7 +148,7 @@ local function add_prompt(text, active, index)
             margins = dpi(8),
             layout = wibox.container.margin
         },
-        bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+        bg = beautiful.bg_modal,
         widget = wibox.container.background
     })
 
@@ -156,7 +156,7 @@ local function add_prompt(text, active, index)
 
     awful.prompt.run{
         prompt = "<b>" .. i18n.translate("New Item") .. "</b>: ",
-        bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+        bg = beautiful.bg_modal,
         bg_cursor = beautiful.primary.hue_700,
         textbox = pr.widget,
         text = text or "",
@@ -180,7 +180,7 @@ add_button:connect_signal("button::press", function()
     add_prompt("")
 end)
 add_button:connect_signal("mouse::enter", function(c) c:set_bg(beautiful.primary.hue_800) end)
-add_button:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.background.hue_800 .. beautiful.background_transparency) end)
+add_button:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.bg_modal) end)
 
 local function worker(user_args)
 
@@ -193,6 +193,8 @@ local function worker(user_args)
     function update_widget()
         if data == nil or data == '' then data = {} end
         todo_widget:update_counter(data.todo_items)
+
+        popup.bg = beautiful.background.hue_800 .. beautiful.background_transparency
 
         for i = 0, #rows do rows[i]=nil end
 
@@ -210,7 +212,7 @@ local function worker(user_args)
                 spacing = dpi(8),
                 layout = wibox.layout.fixed.horizontal
             },
-            bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+            bg = beautiful.bg_modal,
             widget = wibox.container.background
         }
 
@@ -347,12 +349,12 @@ local function worker(user_args)
                     margins = dpi(8),
                     layout = wibox.container.margin
                 },
-                bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+                bg = beautiful.bg_modal,
                 widget = wibox.container.background
             }
 
             row:connect_signal("mouse::enter", function(c) c:set_bg(beautiful.primary.hue_800 .. '66') end)
-            row:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.background.hue_800 .. beautiful.background_transparency) end)
+            row:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.bg_modal) end)
 
             table.insert(rows, row)
         end
