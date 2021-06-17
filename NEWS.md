@@ -36,6 +36,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 - Todo list prompt now works after aborting it
 - Reduced repaint event when arranging tiled windows, causing faster repaints
+- Pinentry-gtk-2 now renders properly
+- Todo widget is now readable over a white background
 
 ### Dev Notes
 
