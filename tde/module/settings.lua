@@ -23,4 +23,16 @@
 --SOFTWARE.
 ]]
 -- generate the settings menu
-require("widget.settings")()
+
+root.elements = {}
+
+-- only load in the settings once needed
+-- we don't need to load it in during boot
+-- on the first call to open the settings we will load it into memory
+root.elements.settings = {
+    enable_view_by_index = function (i, s)
+        require("widget.settings")()
+        root.elements.settings.enable_view_by_index(i,s)
+    end
+}
+
