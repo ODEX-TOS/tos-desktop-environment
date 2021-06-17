@@ -24,9 +24,7 @@
 ]]
 local awful = require("awful")
 local wibox = require("wibox")
-local gears = require("gears")
 local beautiful = require("beautiful")
-local icons = require("theme.icons")
 local card = require("lib-widget.card")
 local slider = require("lib-widget.slider")
 local scrollbox = require("lib-widget.scrollbox")
@@ -189,22 +187,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   local layout = wibox.layout.fixed.vertical()
   body = scrollbox(layout)
 
@@ -213,18 +195,6 @@ return function()
     layout = wibox.container.background,
     {
       layout = wibox.layout.fixed.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       {layout = wibox.container.margin, top = m, bottom = m, body}
     }
   }

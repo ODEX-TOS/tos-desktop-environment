@@ -429,18 +429,6 @@ return function()
     layout = wibox.container.background,
     {
       layout = wibox.layout.fixed.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       separator,
       wibox.container.margin(checkbox_card, dpi(10), dpi(10)),
       separator,

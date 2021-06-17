@@ -22,11 +22,8 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
 local wibox = require("wibox")
-local gears = require("gears")
 local beautiful = require("beautiful")
-local icons = require("theme.icons")
 local mouse = require("lib-tde.mouse")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
@@ -47,22 +44,6 @@ return function()
   local title = wibox.widget.textbox(i18n.translate("Mouse Settings"))
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
-
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = dpi(30)
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
 
   local function make_mouse(id, name, default_value, default_accel_value, natural_scrolling)
     local mouse_card = card()
@@ -189,18 +170,6 @@ return function()
     {
       layout = wibox.layout.fixed.vertical,
       spacing = m,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       scrollbox_body
     }
   }

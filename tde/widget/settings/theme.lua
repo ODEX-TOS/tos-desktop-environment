@@ -22,12 +22,10 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
-local icons = require("theme.icons")
 local mat_colors = require("theme.mat-colors")
 local configWriter = require("lib-tde.config-writer")
 local card = require("lib-widget.card")
@@ -202,22 +200,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   save =
     button(
     "Save",
@@ -286,18 +268,6 @@ return function()
     layout = wibox.container.background,
     {
       layout = wibox.layout.fixed.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       wibox.widget {
         layout = wibox.layout.flex.horizontal,
         wibox.container.margin(primaryButton, 0, settings_index, 0, 0),

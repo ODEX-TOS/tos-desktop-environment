@@ -291,26 +291,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          -- stop grabbing password input
-          for _, widget in ipairs(password_fields) do
-            widget.stop_grabbing()
-          end
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   local connections = wibox.layout.fixed.vertical()
 
   local wireless = make_connection("wireless")
@@ -344,18 +324,6 @@ return function()
     --fg = config.colors.xf,
     {
       layout = wibox.layout.align.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       {
         layout = wibox.container.place,
         valign = "top",

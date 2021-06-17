@@ -31,6 +31,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### New Features
 
 - Todo list allows editing existing entries
+- The settings application can now be moved using the mouse
 
 ### Bug Fixes
 

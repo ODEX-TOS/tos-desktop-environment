@@ -92,22 +92,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = dpi(30)
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   local vol_heading = wibox.widget.textbox(i18n.translate("Volume"))
   vol_heading.font = beautiful.font
 
@@ -496,18 +480,6 @@ return function()
     {
       layout = wibox.layout.fixed.vertical,
       spacing = m,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       scrollbox_body
     }
   }
