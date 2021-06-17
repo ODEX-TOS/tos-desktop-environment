@@ -109,7 +109,7 @@ awful.rules.rules = {
       sticky = false,
       maximized_horizontal = false,
       maximized_vertical = false,
-      titlebars_enabled = true
+      titlebars_enabled = false
     }
   },
   {
@@ -124,8 +124,6 @@ awful.rules.rules = {
     properties = {
       screen = 1,
       tag = "2",
-      switchtotag = true,
-      titlebars_enabled = true
     }
   },
   -- Browsers
@@ -166,9 +164,6 @@ awful.rules.rules = {
     properties = {
       screen = 1,
       tag = "6",
-      switchtotag = true,
-      floating = true,
-      titlebars_enabled = true
     }
   },
   -- Multimedia Editing
@@ -265,7 +260,8 @@ awful.rules.rules = {
       skip_decoration = true,
       floating = true,
       placement = awful.placement.centered,
-      ontop = false
+      ontop = false,
+      titlebars_enabled = true
     }
   },
   {
