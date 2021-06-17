@@ -82,4 +82,6 @@ local volume_setting =
   widget = mat_list_item
 }
 
+signals.emit_volume_update()
+
 return volume_setting

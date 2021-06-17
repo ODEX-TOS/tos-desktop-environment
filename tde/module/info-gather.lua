@@ -37,20 +37,34 @@ local function get_username()
     -- make the first letter capital
     local name = username:sub(1, 1):upper() .. username:sub(2)
     signals.emit_username(name)
+    delayed_timer(
+        10,
+        function()
+            signals.emit_username(name)
+        end,
+        0
+    )
 end
 
 local function get_distro_name()
+    local name = ""
     -- get the distro
     if filehandle.exists("/etc/os-release") then
         local lines = filehandle.lines("/etc/os-release")
         for _, line in ipairs(lines) do
             if string.find(line, "NAME") then
-                local distroname = line:match('"(.*)"')
-                signals.emit_distro(distroname)
+                name = line:match('"(.*)"')
                 break
             end
         end
     end
+    delayed_timer(
+        10,
+        function()
+            signals.emit_distro(name)
+        end,
+        0
+    )
 end
 
 local function get_uptime()
@@ -99,6 +113,20 @@ local function get_disk_info()
     )
 end
 
+local function get_profile_pic()
+    delayed_timer(
+        60,
+        function()
+            local picture = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
+            if filehandle.exists(os.getenv("HOME") .. "/.face") then
+              picture = os.getenv("HOME") .. "/.face"
+            end
+            signals.emit_profile_picture_changed(picture)
+        end,
+        0
+    )
+end
+
 local function init()
     get_username()
     get_distro_name()
@@ -106,8 +134,7 @@ local function init()
     get_ram_info()
     get_disk_info()
 
-    -- TODO: don't create a dependency to the left panel
-    -- extract that info here
+    get_profile_pic()
 end
 
 init()

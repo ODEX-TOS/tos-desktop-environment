@@ -160,8 +160,6 @@ return function()
   -- TDE currently only supports X11
   windowing_system_text.text = "X11"
 
-  require("widget.settings.info-gather")
-
   container:add(device_name)
 
   container:add(separator)

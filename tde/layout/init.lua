@@ -22,9 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local bottom_panel = require("layout.bottom-panel")
-local left_panel = require("layout.left-panel")
-local right_panel = require("layout.right-panel")
 local top_panel = require("layout.top-panel")
 
 local signals = require("lib-tde.signals")
@@ -38,11 +35,11 @@ local anchorTag = general["tag_bar_anchor"] or "bottom"
 local function anchor(s)
   if anchorTag == "bottom" then
     -- Create the bottom bar
-    s.bottom_panel = hide(bottom_panel(s))
+    s.bottom_panel = hide(require("layout.bottom-panel")(s))
   elseif anchorTag == "right" then
-    s.bottom_panel = hide(right_panel(s))
+    s.bottom_panel = hide(require("layout.right-panel")(s))
   else
-    s.bottom_panel = hide(left_panel(s, topBarDraw == "none"))
+    s.bottom_panel = hide(require("layout.left-panel")(s, topBarDraw == "none"))
   end
 end
 

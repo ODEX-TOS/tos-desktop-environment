@@ -42,6 +42,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### Dev Notes
 
+- We lazily load modules that are by default not loaded in. This decreases the initial load time
+
 
 ## Patch 0.7
 
