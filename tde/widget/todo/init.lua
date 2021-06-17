@@ -372,10 +372,10 @@ local function worker(user_args)
                         data = serialize.deserialize_from_file(STORAGE) or data
                         update_widget()
                         if popup.visible then
-                            todo_widget.widget:set_bg('#00000000')
+                            todo_widget.widget.bg = beautiful.transparent
                             popup.visible = not popup.visible
                         else
-                            todo_widget.widget:set_bg(beautiful.bg_focus)
+                            todo_widget.widget.bg = beautiful.groups_bg
                             local geometry = {
                                 x = mouse.coords().x,
                                 y = mouse.screen.geometry.y + dpi(20),
@@ -387,6 +387,9 @@ local function worker(user_args)
                     end)
             )
     )
+
+    todo_widget.widget:connect_signal("mouse::enter", function() todo_widget.widget.bg = beautiful.groups_bg end)
+    todo_widget.widget:connect_signal("mouse::leave", function() if popup.visible then return end todo_widget.widget.bg = beautiful.transparent end)
 
     update_widget()
 
