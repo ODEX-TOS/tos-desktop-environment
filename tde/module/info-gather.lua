@@ -113,6 +113,8 @@ local function get_disk_info()
     )
 end
 
+
+local prev_profile_pic = ""
 local function get_profile_pic()
     delayed_timer(
         60,
@@ -121,7 +123,12 @@ local function get_profile_pic()
             if filehandle.exists(os.getenv("HOME") .. "/.face") then
               picture = os.getenv("HOME") .. "/.face"
             end
-            signals.emit_profile_picture_changed(picture)
+
+            if prev_profile_pic ~= picture then
+                print("Loading profile picture")
+                signals.emit_profile_picture_changed(picture)
+                prev_profile_pic = picture
+            end
         end,
         0
     )

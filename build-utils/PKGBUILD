@@ -16,6 +16,7 @@ _LUA_VER="5.3"
 # The branch to build
 # TODO: Change this branch to release once it support this build
 BRANCH="v0.8"
+VERSION="v0.8"
 
 # This is an force rebuild number in case the pkgbuild changed slightly (similar to pkgrel
 _TVER=41
@@ -70,7 +71,7 @@ build() {
     -DLUA_INCLUDE_DIR=/usr/include/lua${_LUA_VER} \
     -DLUA_LIBRARY=/usr/lib/liblua.so.${_LUA_VER} \
     -DLUA_EXECUTABLE=/usr/bin/lua${_LUA_VER} \
-    -DOVERRIDE_VERSION="$BRANCH.$(git rev-list --count HEAD)"
+    -DOVERRIDE_VERSION="$VERSION.$(git rev-list --count HEAD)"
   make
 }
 

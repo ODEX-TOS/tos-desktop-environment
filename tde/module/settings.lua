@@ -31,6 +31,7 @@ root.elements = {}
 -- on the first call to open the settings we will load it into memory
 root.elements.settings = {
     enable_view_by_index = function (i, s)
+        print("Loading settings into memory")
         require("widget.settings")()
         root.elements.settings.enable_view_by_index(i,s)
     end
