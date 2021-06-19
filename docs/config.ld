@@ -5,7 +5,7 @@ local args = ...
 
 project='TDE'
 title='TDE API documentation'
-description='API documentation for TDE version @AWESOME_VERSION@.'
+description='API documentation for TDE version v0.8.'
 
 -- More on it: https://github.com/stevedonovan/LDoc/blob/master/doc/doc.md#markdown-support
 format='discount'
