@@ -211,6 +211,27 @@ connections.connect_volume_is_muted = function(func)
     awesome.connect_signal("volume::update::muted", func)
 end
 
+--- Notify other TDE components that the volume should only be controlled from the hardware
+-- @tparam bool bIsControlledInSoftware True if the volume is controlled in software
+-- @staticfct emit_volume_is_controlled_in_software
+-- @usage -- notify other components that software is allowed to control the volume
+-- lib-tde.signals.emit_volume_is_controlled_in_software(true)
+connections.emit_volume_is_controlled_in_software = function(bIsControlledInSoftware)
+    awesome.emit_signal("volume::controlled::software", bIsControlledInSoftware)
+end
+
+--- Trigger a callback function when the volume is controlled in software or not
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_volume_is_controlled_in_software
+-- @usage -- notify other components when the volume software control state changed
+-- lib-tde.signals.connect_volume_is_controlled_in_software(
+--    function (bIsControlledInSoftware)
+--      print("Is volume controlled in software? " .. tostring(bIsControlledInSoftware))
+--    end)
+connections.connect_volume_is_controlled_in_software = function(func)
+    awesome.connect_signal("volume::controlled::software", func)
+end
+
 --- Notify other TDE components that the weather updated
 -- @tparam temp string The temperature in string representation
 -- @tparam desc string A short description about the weather

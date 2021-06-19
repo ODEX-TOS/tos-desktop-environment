@@ -42,7 +42,8 @@ local function load()
         do_not_disturb = false,
         oled_mode = false,
         bluetooth = false,
-        auto_hide = false
+        auto_hide = false,
+        hardware_only_volume = false
     }
     if not filehandle.exists(file) then
         return table
@@ -57,6 +58,7 @@ local function load()
     result.oled_mode = result.oled_mode or table.oled_mode
     result.bluetooth = result.bluetooth or table.bluetooth
     result.auto_hide = result.auto_hide or table.auto_hide
+    result.hardware_only_volume = result.hardware_only_volume or table.hardware_only_volume
 
     -- always set the auto_hide true when using oled (To reduce burn in)
     if result.oled_mode then
@@ -190,6 +192,16 @@ signals.connect_volume_is_muted(
             return
         end
         save_state.volume_muted = is_muted
+        save(save_state)
+    end
+)
+
+signals.connect_volume_is_controlled_in_software(
+    function(bIsControlledInSoftware)
+        if save_state.hardware_only_volume == (not bIsControlledInSoftware) then
+            return
+        end
+        save_state.hardware_only_volume = not bIsControlledInSoftware
         save(save_state)
     end
 )

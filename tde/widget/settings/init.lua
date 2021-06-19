@@ -579,6 +579,7 @@ return function()
 
 
   hub.close = function()
+    bIsDragging = false
     if root.elements.settings_views[INDEX].view.stop_view then
       root.elements.settings_views[INDEX].view.stop_view()
     end

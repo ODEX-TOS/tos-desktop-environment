@@ -38,7 +38,7 @@ local split = require("lib-tde.function.common").split
 local err = "\27[0;31m[ ERROR "
 
 local function _should_control_via_software()
-    return not (general["disable_software_volume_control"] == "1")
+    return not _G.save_state.hardware_only_volume
 end
 
 local function _extract_pa_ctl_state(command, id, port, description, hasID)

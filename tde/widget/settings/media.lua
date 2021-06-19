@@ -29,6 +29,7 @@ local beautiful = require("beautiful")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local slider = require("lib-widget.slider")
+local checkbox = require("lib-widget.checkbox")
 local card = require("lib-widget.card")
 local volume = require("lib-tde.volume")
 local button = require("lib-widget.button")
@@ -93,7 +94,7 @@ return function()
   title.forced_height = settings_index + m + m
 
   local vol_heading = wibox.widget.textbox(i18n.translate("Volume"))
-  vol_heading.font = beautiful.font
+  vol_heading.font = beautiful.title_font
 
   local vol_footer = wibox.widget.textbox(i18n.translate("test"))
   vol_footer.font = beautiful.font
@@ -108,11 +109,15 @@ return function()
     0,
     100,
     1,
-    0,
+    _G.save_state.volume,
     function(value)
       signals.emit_volume(value)
     end
   )
+
+  local hardware_only_volume_checbox = checkbox(_G.save_state.hardware_only_volume, function (checked)
+    signals.emit_volume_is_controlled_in_software(not checked)
+  end)
 
   signals.connect_volume(
     function(value)
@@ -420,6 +425,23 @@ return function()
         bottom = m,
         forced_height = dpi(30) + (m * 2),
         vol_slider
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        forced_height = dpi(30) + (m * 2),
+        wibox.widget {
+          wibox.widget {
+            widget = wibox.widget.textbox,
+            text = i18n.translate("Hardware controlled volume"),
+            font = beautiful.font
+          },
+          nil,
+          hardware_only_volume_checbox,
+          layout = wibox.layout.align.horizontal
+        }
       },
       {
         layout = wibox.container.margin,
