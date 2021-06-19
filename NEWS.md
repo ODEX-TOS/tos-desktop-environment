@@ -39,6 +39,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Reduced repaint event when arranging tiled windows, causing faster repaints
 - Pinentry-gtk-2 now renders properly
 - Todo widget is now readable over a white background
+- Users with the default shell as fish won't break specific shell scripts
 
 ### Dev Notes
 
