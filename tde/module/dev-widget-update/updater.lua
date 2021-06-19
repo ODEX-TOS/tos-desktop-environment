@@ -74,7 +74,7 @@ screen.connect_signal(
                 ontop = true,
                 visible = false,
                 type = "toolbar",
-                bg = beautiful.background.hue_800,
+                bg = beautiful.background.hue_800 .. beautiful.background_transparency,
                 width = dev_widget_update_width,
                 height = dev_widget_update_height,
                 x = scr.workarea.x + get_x_offset(),

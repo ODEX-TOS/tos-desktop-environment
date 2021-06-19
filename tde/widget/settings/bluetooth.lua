@@ -268,21 +268,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
   scrollbox_body = scrollbox(connections)
   view:setup {
     layout = wibox.container.background,
@@ -290,18 +275,6 @@ return function()
     --fg = config.colors.xf,
     {
       layout = wibox.layout.align.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       {
         layout = wibox.container.place,
         valign = "top",

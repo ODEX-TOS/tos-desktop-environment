@@ -62,11 +62,11 @@ theme.titlebar_size = dpi(54)
 -- Colors Pallets
 
 -- Primary
-theme.primary = mat_colors[config["primary"]] or mat_colors.purple
+theme.primary = mat_colors[config["primary"]] or mat_colors.cyan
 --theme.primary.hue_500 = '#8AB4F8' --#003f6b
 
 -- Accent
-theme.accent = mat_colors[config["accent"]] or mat_colors.hue_purple
+theme.accent = mat_colors[config["accent"]] or mat_colors.cyan
 
 -- Background
 theme.background = mat_colors[config["background"]] or mat_colors.blue_grey
@@ -75,16 +75,13 @@ theme.primary = loadtheme(theme.primary, config, "primary_")
 theme.accent = loadtheme(theme.accent, config, "accent_")
 theme.background = loadtheme(theme.background, config, "background_")
 
-theme.background.hue_800 = theme.background.hue_800 .. (config["background_transparent"] or "66") --99
-
 if config["background_800"] ~= nil then
-  theme.background.hue_800 = "#" .. config["background_800"] .. (config["background_transparent"] or "66")
+  theme.background.hue_800 = "#" .. config["background_800"]
 end
 
-theme.background.hue_900 = theme.background.hue_900 .. (config["background_transparent"] or "66") -- 121e25
 
 if config["background_900"] ~= nil then
-  theme.background.hue_900 = "#" .. config["background_900"] .. (config["background_transparent"] or "66")
+  theme.background.hue_900 = "#" .. config["background_900"]
 end
 
 local awesome_overrides = function(_)

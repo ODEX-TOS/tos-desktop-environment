@@ -130,10 +130,12 @@ local add_button = wibox.widget {
 
 local bIsInPrompt = false
 
-add_button:connect_signal("button::press", function()
+local function add_prompt(text, active, index)
     if bIsInPrompt then
         return
     end
+    active = active or false
+    index = index or #data.todo_items
     local pr = awful.widget.prompt()
 
     table.insert(rows, wibox.widget {
@@ -146,29 +148,39 @@ add_button:connect_signal("button::press", function()
             margins = dpi(8),
             layout = wibox.container.margin
         },
-        bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+        bg = beautiful.bg_modal,
         widget = wibox.container.background
     })
+
     bIsInPrompt = true
+
     awful.prompt.run{
         prompt = "<b>" .. i18n.translate("New Item") .. "</b>: ",
-        bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+        bg = beautiful.bg_modal,
         bg_cursor = beautiful.primary.hue_700,
         textbox = pr.widget,
+        text = text or "",
         exe_callback = function(input_text)
             if not input_text or #input_text == 0 then return end
-            table.insert(data.todo_items, {todo_item = input_text, status = false})
+            table.insert(data.todo_items, index, {todo_item = input_text, status = active})
 
             serialize.serialize_to_file(STORAGE, data)
-
+        end,
+        -- make sure that cancelling the prompt also cleanly stops
+        done_callback = function()
             update_widget()
             bIsInPrompt = false
         end
     }
+
     popup:setup(rows)
+end
+
+add_button:connect_signal("button::press", function()
+    add_prompt("")
 end)
 add_button:connect_signal("mouse::enter", function(c) c:set_bg(beautiful.primary.hue_800) end)
-add_button:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.background.hue_800 .. beautiful.background_transparency) end)
+add_button:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.bg_modal) end)
 
 local function worker(user_args)
 
@@ -181,6 +193,8 @@ local function worker(user_args)
     function update_widget()
         if data == nil or data == '' then data = {} end
         todo_widget:update_counter(data.todo_items)
+
+        popup.bg = beautiful.background.hue_800 .. beautiful.background_transparency
 
         for i = 0, #rows do rows[i]=nil end
 
@@ -198,7 +212,7 @@ local function worker(user_args)
                 spacing = dpi(8),
                 layout = wibox.layout.fixed.horizontal
             },
-            bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+            bg = beautiful.bg_modal,
             widget = wibox.container.background
         }
 
@@ -229,6 +243,25 @@ local function worker(user_args)
                 table.remove(data.todo_items, i)
                 serialize.serialize_to_file(STORAGE, data)
                 update_widget()
+            end)
+
+            local edit_button = wibox.widget {
+                {
+                    image = icons.brush,
+                    resize = true,
+                    forced_height = dpi(20),
+                    forced_width = dpi(20),
+                    widget = wibox.widget.imagebox,
+                },
+                margins = dpi(5),
+                layout = wibox.container.margin
+            }
+
+            edit_button:connect_signal("button::press", function()
+                local item = data.todo_items[i]
+                table.remove(data.todo_items, i)
+                update_widget()
+                add_prompt(item.todo_item, item.status, i)
             end)
 
 
@@ -298,6 +331,11 @@ local function worker(user_args)
                                 layout = wibox.container.place,
                             },
                             {
+                                edit_button,
+                                valign = 'center',
+                                layout = wibox.container.place,
+                            },
+                            {
                                 trash_button,
                                 valign = 'center',
                                 layout = wibox.container.place,
@@ -311,12 +349,12 @@ local function worker(user_args)
                     margins = dpi(8),
                     layout = wibox.container.margin
                 },
-                bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+                bg = beautiful.bg_modal,
                 widget = wibox.container.background
             }
 
             row:connect_signal("mouse::enter", function(c) c:set_bg(beautiful.primary.hue_800 .. '66') end)
-            row:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.background.hue_800 .. beautiful.background_transparency) end)
+            row:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.bg_modal) end)
 
             table.insert(rows, row)
         end
@@ -336,10 +374,10 @@ local function worker(user_args)
                         data = serialize.deserialize_from_file(STORAGE) or data
                         update_widget()
                         if popup.visible then
-                            todo_widget.widget:set_bg('#00000000')
+                            todo_widget.widget.bg = beautiful.transparent
                             popup.visible = not popup.visible
                         else
-                            todo_widget.widget:set_bg(beautiful.bg_focus)
+                            todo_widget.widget.bg = beautiful.groups_bg
                             local geometry = {
                                 x = mouse.coords().x,
                                 y = mouse.screen.geometry.y + dpi(20),
@@ -351,6 +389,9 @@ local function worker(user_args)
                     end)
             )
     )
+
+    todo_widget.widget:connect_signal("mouse::enter", function() todo_widget.widget.bg = beautiful.groups_bg end)
+    todo_widget.widget:connect_signal("mouse::leave", function() if popup.visible then return end todo_widget.widget.bg = beautiful.transparent end)
 
     update_widget()
 

@@ -192,8 +192,9 @@ end
 --- Move the wibox under the cursor.
 -- @staticfct awful.mouse.wibox.move
 -- @tparam wibox w The wibox to move, or none to use that under the pointer
+-- @tparam[opt] function leave_callback The callback when the moving is done
 -- @request wibox geometry mouse.move granted Requests to move the wibox.
-function mouse.wibox.move(w)
+function mouse.wibox.move(w, leave_callback)
     w = w or mouse.current_wibox
     if not w then return end
 
@@ -215,7 +216,8 @@ function mouse.wibox.move(w)
 
     mouse.resize(w, "mouse.move", {
         placement = aplace.under_mouse,
-        offset    = offset
+        offset    = offset,
+        leave_callback = leave_callback
     })
 end
 

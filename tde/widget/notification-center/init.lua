@@ -31,7 +31,16 @@ local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
 local theme = require("theme.icons.dark-light")
 
 -- Load panel rules, it will create panel for each screen
-require("widget.notification-center.panel-rules")
+-- The panel get's loaded in on the first time it is needed
+_G.screen.primary.right_panel = {
+  toggle = function ()
+    -- load in the real panel
+    require("widget.notification-center.panel-rules")
+
+    _G.screen.primary.right_panel:toggle()
+  end
+}
+
 
 local widget =
   wibox.widget {

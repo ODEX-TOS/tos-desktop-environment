@@ -29,6 +29,7 @@ local beautiful = require("beautiful")
 local icons = require("theme.icons")
 local signals = require("lib-tde.signals")
 local slider = require("lib-widget.slider")
+local checkbox = require("lib-widget.checkbox")
 local card = require("lib-widget.card")
 local volume = require("lib-tde.volume")
 local button = require("lib-widget.button")
@@ -92,24 +93,8 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = dpi(30)
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   local vol_heading = wibox.widget.textbox(i18n.translate("Volume"))
-  vol_heading.font = beautiful.font
+  vol_heading.font = beautiful.title_font
 
   local vol_footer = wibox.widget.textbox(i18n.translate("test"))
   vol_footer.font = beautiful.font
@@ -124,11 +109,15 @@ return function()
     0,
     100,
     1,
-    0,
+    _G.save_state.volume,
     function(value)
       signals.emit_volume(value)
     end
   )
+
+  local hardware_only_volume_checbox = checkbox(_G.save_state.hardware_only_volume, function (checked)
+    signals.emit_volume_is_controlled_in_software(not checked)
+  end)
 
   signals.connect_volume(
     function(value)
@@ -441,6 +430,23 @@ return function()
         layout = wibox.container.margin,
         left = m,
         right = m,
+        bottom = m,
+        forced_height = dpi(30) + (m * 2),
+        wibox.widget {
+          wibox.widget {
+            widget = wibox.widget.textbox,
+            text = i18n.translate("Hardware controlled volume"),
+            font = beautiful.font
+          },
+          nil,
+          hardware_only_volume_checbox,
+          layout = wibox.layout.align.horizontal
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
         vol_footer
       },
       {
@@ -496,18 +502,6 @@ return function()
     {
       layout = wibox.layout.fixed.vertical,
       spacing = m,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       scrollbox_body
     }
   }

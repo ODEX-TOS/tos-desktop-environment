@@ -229,7 +229,7 @@ screen.connect_signal(
 			y = screen_geometry.y
 		}
 
-		s.exit_screen.bg = beautiful.background.hue_800
+		s.exit_screen.bg = beautiful.background.hue_800 .. beautiful.background_transparency
 		s.exit_screen.fg = beautiful.exit_screen_fg or beautiful.wibar_fg or "#FEFEFE"
 
 		screen.connect_signal(

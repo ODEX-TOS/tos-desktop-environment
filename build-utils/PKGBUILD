@@ -15,7 +15,8 @@ _LUA_VER="5.3"
 
 # The branch to build
 # TODO: Change this branch to release once it support this build
-BRANCH="release"
+BRANCH="v0.8"
+VERSION="v0.8"
 
 # This is an force rebuild number in case the pkgbuild changed slightly (similar to pkgrel
 _TVER=41
@@ -28,7 +29,11 @@ arch=('x86_64')
 license=('GPL2')
 depends=('cairo' 'dbus' 'gdk-pixbuf2' 'imlib2' 'libxdg-basedir' 'lua53' 'lua53-lgi' 'pango'
          'startup-notification' 'xcb-util-cursor' 'xcb-util-keysyms' 'xcb-util-wm'
-         'xorg-xmessage' 'libxkbcommon-x11' 'libxkbcommon' 'xcb-util-xrm' 'tos-tools' 'pacman-contrib' 'xcb-util-errors' 'light-locker' 'awesome-freedesktop-git' 'lxsession-gtk3' 'rofi-tos' 'python-gobject' 'python-dbus' 'picom-tryone-tos' 'upower' 'rlwrap' 'imagemagick' 'libqalculate' 'autorandr' 'udiskie' 'librsvg' 'tde-touchegg' 'qrencode')
+         'xorg-xmessage' 'libxkbcommon-x11' 'libxkbcommon' 'xcb-util-xrm' 'tos-tools' 
+         'pacman-contrib' 'xcb-util-errors' 'light-locker' 'awesome-freedesktop-git' 
+         'lxsession-gtk3' 'rofi-tos' 'python-gobject' 'python-dbus' 'picom-tryone-tos' 
+         'upower' 'rlwrap' 'imagemagick' 'libqalculate' 'autorandr' 'udiskie' 'librsvg' 
+         'tde-touchegg' 'qrencode')
 makedepends=('asciidoc' 'pkgconf' 'cmake' 'docbook-xsl' 'doxygen' 'imagemagick' 'ldoc' 'xmlto')
 optdepends=('dex: autostart your desktop files'
             'kdeconnect: Link your phone with TDE')
@@ -70,7 +75,7 @@ build() {
     -DLUA_INCLUDE_DIR=/usr/include/lua${_LUA_VER} \
     -DLUA_LIBRARY=/usr/lib/liblua.so.${_LUA_VER} \
     -DLUA_EXECUTABLE=/usr/bin/lua${_LUA_VER} \
-    -DOVERRIDE_VERSION="$BRANCH.$(git rev-list --count HEAD)"
+    -DOVERRIDE_VERSION="$VERSION.$(git rev-list --count HEAD)"
   make
 }
 

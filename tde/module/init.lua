@@ -45,3 +45,5 @@ end
 
 require("module.battery-notifier")
 _G.collision = require("collision")()
+
+require("module.info-gather")

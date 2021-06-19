@@ -28,15 +28,12 @@
 -- To get the charging status of the battery you must do an asynchronous call to not block the main thread
 -- a function call must be wrapped in a `awful.spawn.easy_async_with_shell`
 --
---     awful.spawn.easy_async_with_shell(lib-tde.function.battery.chargedScript, function(stdout)
---        lib-tde.function.battery.isBatteryCharging(stdout) -- returns is the battery is charging e.g. false
---     end)
+--     local isCharging = lib-tde.function.battery.isBatteryCharging()
 --
 -- Another example is to check the current battery percentage
 --
---     awful.spawn.easy_async_with_shell(lib-tde.function.battery.upowerBatteryScript, function(stdout)
---        lib-tde.function.battery.getBatteryInformationFromUpower(stdout) -- returns battery percentage e.g. 87
---     end)
+--     local percentage = lib-tde.function.battery.getBatteryPercentage()
+
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
@@ -78,7 +75,7 @@ local function isBatteryCharging()
     return false
 end
 
---- Return the percentage of the battery or nil (if no battery exists)
+--- Return the percentage of the battery or -1 (if no battery exists)
 -- @return number The percentage of the battery
 -- @staticfct getBatteryPercentage
 -- @usage -- This will 100 if fully charged
@@ -97,7 +94,7 @@ local function getBatteryPercentage()
         return tonumber(value)
     end
     -- something went wrong parsing the value
-    return 0
+    return -1
 end
 
 return {

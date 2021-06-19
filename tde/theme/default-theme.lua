@@ -163,10 +163,10 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")
   awesome_theme.bat_fg_critical = color(config["foreground_critical"]) or darkLightSwitcher("#232323", "#BEBEBE3")
 
-  awesome_theme.bg_normal = awesome_theme.background.hue_800
+  awesome_theme.bg_normal = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
   awesome_theme.bg_focus = color(config["background_focus"]) or "#5a5a5a"
   awesome_theme.bg_urgent = color(config["background_urgent"]) or "#3F3F3F"
-  awesome_theme.bg_systray = awesome_theme.background.hue_800
+  awesome_theme.bg_systray = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
 
   awesome_theme.bg_modal = color(config["background_modal"]) or darkLightSwitcher("#ffffff35", "#ffffffA0")
   awesome_theme.bg_modal_title = color(config["background_modal_title"]) or darkLightSwitcher("#ffffff55", "#ffffffD0")
@@ -174,7 +174,7 @@ local awesome_overrides = function(awesome_theme)
   -- Borders
 
   awesome_theme.border_width = dpi(2)
-  awesome_theme.border_normal = awesome_theme.background.hue_800
+  awesome_theme.border_normal = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
   awesome_theme.border_focus = awesome_theme.primary.hue_300
   awesome_theme.border_marked = color(config["border_marked"]) or "#CC9393"
 
@@ -222,6 +222,8 @@ local awesome_overrides = function(awesome_theme)
   signals.connect_background_theme_changed(function (pallet)
     beautiful.background = pallet
     awesome_theme.background = pallet
+    awesome_theme.bg_normal = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
+    awesome_theme.tooltip_bg = (color(config["tooltip_bg"]) or awesome_theme.bg_normal)
     awesome_theme = add_taglist(awesome_theme)
   end)
 
@@ -238,14 +240,14 @@ local awesome_overrides = function(awesome_theme)
   -- Tasklist
 
   awesome_theme.tasklist_font = "Roboto Regular 10"
-  awesome_theme.tasklist_bg_normal = awesome_theme.background.hue_800 .. "99"
+  awesome_theme.tasklist_bg_normal = awesome_theme.bg_modal .. "99"
   awesome_theme.tasklist_bg_focus =
     "linear:0,0:0," ..
     dpi(48) ..
       ":0," ..
-        awesome_theme.background.hue_800 ..
+      awesome_theme.bg_modal ..
           ":0.95," ..
-            awesome_theme.background.hue_800 .. ":0.95," .. awesome_theme.fg_normal .. ":1," .. awesome_theme.fg_normal
+          awesome_theme.bg_modal.. ":0.95," .. awesome_theme.fg_normal .. ":1," .. awesome_theme.fg_normal
   awesome_theme.tasklist_bg_urgent = awesome_theme.primary.hue_800
   awesome_theme.tasklist_fg_focus = awesome_theme.fg_focus
   awesome_theme.tasklist_fg_urgent = awesome_theme.fg_urgent

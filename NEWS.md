@@ -26,6 +26,26 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 # Patch Notes
 
+## Patch 0.8
+
+### New Features
+
+- Todo list allows editing existing entries
+- The settings application can now be moved using the mouse
+
+### Bug Fixes
+
+- Todo list prompt now works after aborting it
+- Reduced repaint event when arranging tiled windows, causing faster repaints
+- Pinentry-gtk-2 now renders properly
+- Todo widget is now readable over a white background
+- Users with the default shell as fish won't break specific shell scripts
+
+### Dev Notes
+
+- We lazily load modules that are by default not loaded in. This decreases the initial load time
+
+
 ## Patch 0.7
 
 ### New Features

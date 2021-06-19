@@ -53,22 +53,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   local graph = card()
   graph.forced_height = 200
   graph.forced_width = settings_width - settings_nw - (m * 2)
@@ -322,18 +306,6 @@ return function()
     layout = wibox.container.background,
     {
       layout = wibox.layout.fixed.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       graph,
       {layout = wibox.container.margin, top = m, pac},
       {layout = wibox.container.margin, top = m, bottom = m, general_info}

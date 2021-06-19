@@ -22,4 +22,4 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-return require("parser")(require("config").colors_config)
+return color_config or require("parser")(require("config").colors_config)

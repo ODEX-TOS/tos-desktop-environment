@@ -29,8 +29,6 @@ local icons = require("theme.icons")
 local dpi = require("beautiful").xresources.apply_dpi
 local clickable_container = require("widget.material.clickable-container")
 
--- Load panel rules, it will create panel for each screen
-require("widget.control-center.panel-rules")
 
 local widget =
   wibox.widget {
@@ -40,6 +38,34 @@ local widget =
     resize = true
   },
   layout = wibox.layout.align.horizontal
+}
+
+-- Load panel rules, it will create panel for each screen
+-- The panel get's loaded in on the first time it is needed
+_G.screen.primary.left_panel = {
+  toggle = function (value)
+    print("Load")
+
+    -- load in the real panel
+    require("widget.control-center.panel-rules")
+
+    -- listen for panel events and update the button image
+    _G.screen.primary.left_panel:connect_signal(
+      "opened",
+      function()
+        widget.icon:set_image(icons.close)
+        _G.menuopened = true
+      end
+    )
+    _G.screen.primary.left_panel:connect_signal(
+      "closed",
+      function()
+        widget.icon:set_image(icons.settings)
+        _G.menuopened = false
+      end
+    )
+    _G.screen.primary.left_panel:toggle(value)
+  end
 }
 
 local home_button = clickable_container(wibox.container.margin(widget, dpi(5), dpi(10), dpi(5), dpi(5)))
@@ -57,21 +83,6 @@ home_button:buttons(
   )
 )
 
-_G.screen.primary.left_panel:connect_signal(
-  "opened",
-  function()
-    widget.icon:set_image(icons.close)
-    _G.menuopened = true
-  end
-)
-
-_G.screen.primary.left_panel:connect_signal(
-  "closed",
-  function()
-    widget.icon:set_image(icons.settings)
-    _G.menuopened = false
-  end
-)
 
 widget.icon:set_image(icons.settings)
 

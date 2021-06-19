@@ -49,6 +49,8 @@ plugins = require("parser")(os.getenv("HOME") .. "/.config/tos/plugins.conf")
 tags = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")
 keys = require("parser")(os.getenv("HOME") .. "/.config/tos/keys.conf")
 floating = require("parser")(os.getenv("HOME") .. "/.config/tos/floating.conf")
+color_config = require("parser")(require("config").colors_config)
+
 
 local bIsIntegrationTest = os.getenv("HOME") == "/tmp/tde"
 IsreleaseMode = not bIsIntegrationTest

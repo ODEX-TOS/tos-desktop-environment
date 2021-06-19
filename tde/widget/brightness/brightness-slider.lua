@@ -53,13 +53,23 @@ local brightness_slider =
 _G.brightness1 = brightness_slider
 
 local update = function()
-  awful.spawn.easy_async_with_shell(
-    [[grep -q on ~/.cache/oled && brightness -g -F || brightness -g]],
-    function(stdout)
-      local brightness = string.match(stdout, "(%d+)")
-      signals.emit_brightness(tonumber(brightness))
-    end
-  )
+
+  local extract_data = function(stdout)
+    local brightness = string.match(stdout, "(%d+)")
+    signals.emit_brightness(tonumber(brightness))
+  end
+
+  if _G.save_state.oled_mode then
+    awful.spawn.easy_async(
+      [[brightness -g -F]],
+      extract_data
+    )
+  else
+    awful.spawn.easy_async(
+      [[brightness -g]],
+      extract_data
+    )
+  end
 end
 
 awesome.connect_signal(
@@ -90,5 +100,7 @@ local brightness_setting =
   brightness_slider,
   widget = mat_list_item
 }
+
+update()
 
 return brightness_setting

@@ -22,9 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local awful = require("awful")
 local wibox = require("wibox")
-local gears = require("gears")
 local beautiful = require("beautiful")
 local execute = require("lib-tde.hardware-check").execute
 local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
@@ -89,23 +87,8 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
-
   local logo = wibox.widget.imagebox(icons.logo)
+  logo.forced_height = settings_index * 3
 
   local separator = seperator_widget(settings_index / 1.5)
 
@@ -177,8 +160,6 @@ return function()
   -- TDE currently only supports X11
   windowing_system_text.text = "X11"
 
-  require("widget.settings.info-gather")
-
   container:add(device_name)
 
   container:add(separator)
@@ -202,18 +183,6 @@ return function()
     layout = wibox.container.background,
     {
       layout = wibox.layout.align.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
       {
         layout = wibox.container.place,
         valign = "top",

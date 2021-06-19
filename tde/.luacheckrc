@@ -104,6 +104,7 @@ globals = {
     "tags",
     "keys",
     "floating",
+    "color_config",
     "backdrop",
     "taglist_occupied",
     "print",

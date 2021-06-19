@@ -54,6 +54,9 @@ local settings_nw = dpi(260)
 -- This gets populated by the scrollbox
 local body = {}
 
+-- if we are dragging the settings app with the mouse
+local bIsDragging = false
+
 -- save the index state of last time
 local INDEX = 1
 
@@ -157,12 +160,17 @@ local function close_views()
   collectgarbage("collect")
 end
 
+local title = wibox.widget.textbox()
+title.font = beautiful.title_font
+
+
 local function setActiveView(i, link)
   print("Active view: " .. i)
   for index, widget in ipairs(root.elements.settings_views) do
     if index == i or widget.link == link then
       root.elements.settings_views[index].link.active = true
       root.elements.settings_views[index].link.activate()
+      title.text = root.elements.settings_views[index].title.text or ""
       INDEX = index
     else
       root.elements.settings_views[index].link.bg = beautiful.bg_modal_title .. "00"
@@ -170,6 +178,7 @@ local function setActiveView(i, link)
     end
   end
 end
+
 
 -- If you set the index to -1 then we go to the last remembered index
 local function enable_view_by_index(i, s, bNoAnimation)
@@ -194,19 +203,19 @@ local function enable_view_by_index(i, s, bNoAnimation)
     if not s then
       return
     end
-    -- center the hub in height
-    local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
-    root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
 
     -- reset the scrollbox when we open the settings app
     if not root.elements.settings.visible then
       body:reset()
-    end
-    root.elements.settings.visible = true
+      -- center the hub in height
+      local y_height = ((s.workarea.height - settings_height - m) / 2) + s.workarea.y
+      root.elements.settings.x = ((s.workarea.width / 2) - (settings_width / 2)) + s.workarea.x
+      root.elements.settings.visible = true
 
-    if not (bNoAnimation == true) then
-      root.elements.settings.y = s.geometry.y - settings_height
-      animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+      if not (bNoAnimation == true) then
+        root.elements.settings.y = s.geometry.y - settings_height
+        animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+      end
     end
   end
 end
@@ -217,12 +226,8 @@ local function make_view(i, t, v, a)
   icon.forced_width = settings_index
   icon.align = "center"
 
-  local title = wibox.widget.textbox(t)
-  if a == nil then
-    title.font = beautiful.title_font
-  else
-    title.font = beautiful.title_font
-  end
+  local _title = wibox.widget.textbox(t)
+  _title.font = beautiful.title_font
 
   local view = wibox.container.margin()
   view.margins = m
@@ -256,7 +261,7 @@ local function make_view(i, t, v, a)
       {
         layout = wibox.container.margin,
         left = m,
-        title
+        _title
       }
     }
   }
@@ -270,7 +275,6 @@ local function make_view(i, t, v, a)
     function()
       close_views()
       view.visible = true
-      title.font = beautiful.title_font
       setActiveView(-1, btn)
       if view.refresh then
         view.refresh()
@@ -292,7 +296,7 @@ local function make_view(i, t, v, a)
     btn.emulate_focus_loss()
   end
 
-  return {link = btn, view = view, title = title}
+  return {link = btn, view = view, title = _title}
 end
 
 local function make_nav()
@@ -325,7 +329,7 @@ local function make_nav()
 
   local rule = wibox.container.background()
   rule.forced_height = 1
-  rule.bg = beautiful.background.hue_800
+  rule.bg = beautiful.background.hue_800 .. beautiful.background_transparency
   rule.widget = wibox.widget.base.empty_widget()
 
   signals.connect_background_theme_changed(
@@ -458,7 +462,7 @@ return function()
       ontop = true,
       visible = false,
       type = "toolbar",
-      bg = beautiful.background.hue_800,
+      bg = beautiful.background.hue_800 .. beautiful.background_transparency,
       width = settings_width,
       height = settings_height,
       screen = scrn
@@ -494,12 +498,58 @@ return function()
     )
   )
 
+  local close = wibox.widget.imagebox(icons.close)
+  close.forced_height = settings_index * 1.5
+  close:buttons(
+    gears.table.join(
+      awful.button(
+        {},
+        1,
+        function()
+          if root.elements.settings then
+            root.elements.settings.close()
+          end
+        end
+      )
+    )
+  )
+
+  local top_bar = wibox.widget {
+    layout = wibox.layout.align.horizontal,
+    nil,
+    wibox.container.margin(
+      {
+        layout = wibox.container.place,
+        title
+      },
+      settings_index * 2
+    ),
+    close
+  }
+
+  top_bar:connect_signal("button::press", function()
+    if bIsDragging then
+      return
+    end
+    bIsDragging = true
+    awful.mouse.wibox.move(hub, function()
+      bIsDragging = false
+    end)
+  end)
+
   hub:setup {
     layout = wibox.layout.flex.vertical,
     {
       layout = wibox.layout.align.horizontal,
       nav,
-      view_container
+      wibox.widget{
+        layout = wibox.container.background,
+        {
+          layout = wibox.layout.fixed.vertical,
+          top_bar,
+          view_container
+        }
+      }
     }
   }
 
@@ -514,7 +564,22 @@ return function()
     end
   )
 
+  hub.widget:connect_signal("button::press", function(_, _, _, btn, mods)
+    if bIsDragging then
+      return
+    end
+
+    if btn == 1 and mods[1] == modKey and #mods == 1 then
+      bIsDragging = true
+      awful.mouse.wibox.move(hub, function()
+        bIsDragging = false
+      end)
+    end
+  end)
+
+
   hub.close = function()
+    bIsDragging = false
     if root.elements.settings_views[INDEX].view.stop_view then
       root.elements.settings_views[INDEX].view.stop_view()
     end

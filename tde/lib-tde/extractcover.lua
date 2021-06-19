@@ -41,10 +41,11 @@ local extract = {}
 -- TODO: get image information from spotify
 
 --- Creates a file in /tmp/cover.jpg asynchronously containing the cover image of the current song
+-- @tparam function callback The callback function when the cover is extracted
 -- @staticfct extractalbum
--- @usage -- This will return {1: "abc", 2: "def"}
--- lib-tde.extract_cover.extractalbum() -> returns nothing
-local extract_cover = function()
+-- @usage -- Creates a file async in `/tmp/cover.jpg`
+-- lib-tde.extract_cover.extractalbum()
+local extract_cover = function(callback)
   -- see https://github.com/altdesktop/playerctl/issues/172 for more info
   local extract_script =
     [[
@@ -58,6 +59,7 @@ local extract_cover = function()
     extract_script,
     function(stderr)
       print("Music image: " .. stderr)
+      callback()
     end,
     false
   )
