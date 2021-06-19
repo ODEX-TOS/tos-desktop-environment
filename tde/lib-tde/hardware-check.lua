@@ -60,7 +60,7 @@ local batteryHandle = require("lib-tde.function.battery")
 
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
 -- @tparam cmd string The command to execute
--- @treturn tuple<string, number> The first element is the standard output of the command (string), the second element is the exit code (number)
+-- @treturn tuple The first element is the standard output of the command (string), the second element is the exit code (number)
 -- @staticfct execute
 -- @usage -- This returns Tuple<"hello", 0>
 -- lib-tde.hardware-check.execute("echo hello")

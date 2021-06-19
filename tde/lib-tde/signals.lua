@@ -40,7 +40,6 @@
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers
 -- @tdemod lib-tde.signals
--- @supermodule awesome
 ---------------------------------------------------------------------------
 
 local connections = {}

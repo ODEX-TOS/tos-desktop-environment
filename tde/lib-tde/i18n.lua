@@ -115,6 +115,7 @@ end
 
 --- Used to translate the line into the user language
 -- @tparam string str The string to translate
+-- @return string The translated string
 -- @staticfct translate
 -- @usage -- The word hello gets translated to the native language of the user
 -- i18n.translate("hello") -- becomes hallo if the system language is dutch

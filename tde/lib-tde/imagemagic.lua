@@ -55,11 +55,11 @@ local function check()
 end
 
 --- Scale an image to a specific size
--- @tparam input string The path to the original image
--- @tparam width number The width of the scaled image in pixels
--- @tparam height number The height of the scaled image in pixels
--- @tparam output string The path where you want to save the scaled image to
--- @tparam callback function The function to trigger when the image is scaled
+-- @tparam string input The path to the original image
+-- @tparam number width The width of the scaled image in pixels
+-- @tparam number height The height of the scaled image in pixels
+-- @tparam string output The path where you want to save the scaled image to
+-- @tparam function callback The function to trigger when the image is scaled
 -- @staticfct scale
 -- @usage
 --    lib-tde.imagemagic.scale("file.png", 300, 200, "out.png", function()
@@ -81,9 +81,9 @@ local function scale(input, width, height, output, callback)
 end
 
 --- Convert your image to be grayscale
--- @tparam input string The path to the original image
--- @tparam output string The path where you want to save the grayscaled image to
--- @tparam callback function The function to trigger when the image is generated
+-- @tparam string input The path to the original image
+-- @tparam string output The path where you want to save the grayscaled image to
+-- @tparam function callback The function to trigger when the image is generated
 -- @staticfct grayscale
 -- @usage
 --    lib-tde.imagemagic.grayscale("file.png", "gray.png", function()
@@ -105,10 +105,10 @@ local function grayscale(input, output, callback)
 end
 
 --- Make a color in an image transparent
--- @tparam input string The path to the original image
--- @tparam output string The path where you want to save the transparent image to
--- @tparam color string The color to make transparent in hex
--- @tparam callback function The function to trigger when the image is made transparent
+-- @tparam string input The path to the original image
+-- @tparam string output The path where you want to save the transparent image to
+-- @tparam string color The color to make transparent in hex
+-- @tparam function callback The function to trigger when the image is made transparent
 -- @staticfct transparent
 -- @usage
 --    lib-tde.imagemagic.transparent("file.png", "out.png", "#FFFFFF", function()
@@ -130,10 +130,10 @@ local function transparent(input, output, color, callback)
 end
 
 --- Compress an image to save disk space and memory consumption
--- @tparam input string The path to the original image
--- @tparam output string The path where you want to save the compressed image to
--- @tparam rate number The amount of quality to keep in percentage
--- @tparam callback function The function to trigger when the image is compressed
+-- @tparam string input The path to the original image
+-- @tparam string output The path where you want to save the compressed image to
+-- @tparam number rate The amount of quality to keep in percentage
+-- @tparam function callback The function to trigger when the image is compressed
 -- @staticfct compress
 -- @usage
 --    lib-tde.imagemagic.compress("file.png", "out.png", 85, function()
@@ -159,9 +159,9 @@ local function compress(input, output, rate, callback)
 end
 
 --- Convert from one image type to another
--- @tparam input string The path to the original image
--- @tparam output string The path where you want to save the new image to
--- @tparam callback function The function to trigger when the image is converted
+-- @tparam string input The path to the original image
+-- @tparam string output The path where you want to save the new image to
+-- @tparam function callback The function to trigger when the image is converted
 -- @staticfct convert
 -- @usage
 --    lib-tde.imagemagic.convert("file.png", "file.jpg", function()
