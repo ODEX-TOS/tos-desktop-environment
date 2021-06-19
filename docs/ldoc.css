@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
 body {
   color: #47555c;
   font-size: 16px;
-  font-family: "Times New Roman", Times, serif;
+  font-family: 'Roboto', 'Times New Roman', sans-serif;
   margin: 0;
   background: #eff4ff;
 }

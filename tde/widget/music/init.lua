@@ -180,13 +180,9 @@ local cover =
 }
 
 local function checkCover()
-  if gears.surface.clear_cache ~= nil then
-    gears.surface.clear_cache()
-  end
   if filehandle.exists("/tmp/cover.jpg") then
-    cover.icon:set_image(gears.surface("/tmp/cover.jpg"))
-  else
-    cover.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
+    cover.icon:set_image(gears.surface.load_uncached("/tmp/cover.jpg"))
+    filehandle.rm("/tmp/cover.jpg")
   end
 end
 
@@ -194,11 +190,13 @@ _G.checkCover = checkCover
 
 -- Update info
 local function updateInfo()
-  _G.getTitle()
-  _G.getArtist()
-  apps.bins().coverUpdate()
-  print("Song changed")
-  awesome.emit_signal("song_changed")
+  apps.bins().coverUpdate(function ()
+    checkCover()
+    _G.getTitle()
+    _G.getArtist()
+    print("Song changed")
+    awesome.emit_signal("song_changed")
+  end)
 end
 
 _G.updateInfo = updateInfo
@@ -263,17 +261,10 @@ gears.timer {
 awesome.connect_signal(
   "song_changed",
   function()
-    gears.timer {
-      timeout = config.player_reaction_time,
-      autostart = true,
-      single_shot = true,
-      callback = function()
-        checkCover()
-        if filehandle.exists("/tmp/cover.jpg") then
-          filehandle.rm("/tmp/cover.jpg")
-        end
-      end
-    }
+    checkCover()
+    if filehandle.exists("/tmp/cover.jpg") then
+      filehandle.rm("/tmp/cover.jpg")
+    end
   end
 )
 
@@ -281,12 +272,9 @@ widget.icon:set_image(theme(PATH_TO_ICONS .. "music" .. ".svg"))
 
 -- Update music info on Initialization
 local function initMusicInfo()
-  -- set the cover to vinyl until the right image is loaded
   cover.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "vinyl" .. ".svg")))
-  apps.bins().coverUpdate()
-  checkCover()
-  _G.getTitle()
-  _G.getArtist()
+  -- set the cover to vinyl until the right image is loaded
+  updateInfo()
 end
 initMusicInfo()
 

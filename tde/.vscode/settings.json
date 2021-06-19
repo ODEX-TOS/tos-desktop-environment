@@ -2,8 +2,8 @@
     "Lua.runtime.version": "Lua 5.3",
     "Lua.workspace.ignoreSubmodules": false,
     "Lua.workspace.library": [
-        "/usr/share/awesome/lib",
-        "/etc/xdg/awesome"
+        "/usr/share/tde/lib",
+        "/etc/xdg/tde"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global",
