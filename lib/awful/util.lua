@@ -7,7 +7,6 @@
 ---------------------------------------------------------------------------
 
 -- Grab environment we need
-local os = os
 local assert = assert
 local load = loadstring or load -- luacheck: globals loadstring (compatibility with Lua 5.1)
 local loadfile = loadfile
@@ -32,7 +31,7 @@ util.table = {}
 
 --- The default shell used when spawing processes.
 -- @param string
-util.shell = os.getenv("SHELL") or "/bin/sh"
+util.shell = "/bin/sh"
 
 --- Execute a system command and road the output.
 -- This function implementation **has been removed** and no longer

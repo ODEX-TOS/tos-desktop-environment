@@ -372,7 +372,7 @@ return function()
     end
 
     awful.spawn.easy_async_with_shell(
-      'sh -c \'ip link | grep ": en" | grep " UP "\'',
+      'ip link | grep ": en" | grep " UP "',
       function(_, _, _, c)
         if (c == 0) then
           print("Lan on")
