@@ -32,13 +32,13 @@ end
 -- Default theme for the documentation examples
 local module = {
     fg_normal    = "#ffffffde"  ,
-    bg_normal    = "#00000066",
-    bg_focus     = "#5a5a5a",
+    bg_normal    = "#00ACC166",
+    bg_focus     = "#0097A7",
     bg_highlight = "#3F3F3F",
     border_color = "#4DD0E1"  ,
     border_width = 1.5        ,
 
-    prompt_bg_cursor = "#00FF7D",
+    prompt_bg_cursor = "#4DD0E1",
 
     -- Fake resources handling
     xresources = require("beautiful.xresources"),
