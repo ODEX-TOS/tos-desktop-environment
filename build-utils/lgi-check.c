@@ -51,7 +51,7 @@ int main()
                 lua_tostring(L, -1));
         fprintf(stderr, "\n\n       WARNING\n       =======\n\n"
                 " The lgi check failed.\n"
-                " Awesome needs lgi to run.\n"
+                " TDE needs lgi to run.\n"
                 " Add %s=1 to your environment to continue.\n\n\n",
                 env);
         if (getenv(env) == NULL)

@@ -1,4 +1,4 @@
-Output of `awesome --version`:
+Output of `tde --version`:
 
 _REPLACE with full version output_
 
