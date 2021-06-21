@@ -53,7 +53,7 @@ _fatal(int line, const char *fct, const char *fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
-    fprintf(stderr, "%sE: awesome: %s:%d: ", a_current_time_str(), fct, line);
+    fprintf(stderr, "%sE: TDE: %s:%d: ", a_current_time_str(), fct, line);
     vfprintf(stderr, fmt, ap);
     va_end(ap);
     fprintf(stderr, "\n");
@@ -67,7 +67,7 @@ _warn(int line, const char *fct, const char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
-    fprintf(stderr, "%sW: awesome: %s:%d: ", a_current_time_str(), fct, line);
+    fprintf(stderr, "%sW: TDE: %s:%d: ", a_current_time_str(), fct, line);
     vfprintf(stderr, fmt, ap);
     va_end(ap);
     fprintf(stderr, "\n");
