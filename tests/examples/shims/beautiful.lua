@@ -31,7 +31,7 @@ end
 
 -- Default theme for the documentation examples
 local module = {
-    fg_normal    = "#ffffffde"  ,
+    fg_normal    = "#000000"  ,
     bg_normal    = "#26C6DA66",
     bg_focus     = "#26C6DA",
     bg_highlight = "#80DEEA",

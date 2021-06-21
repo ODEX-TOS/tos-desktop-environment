@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
 body {
-  color: #47555c;
+  color: #009ddf;
   font-size: 16px;
   font-family: 'Roboto', 'Times New Roman', sans-serif;
   margin: 0;
@@ -9,21 +9,23 @@ body {
 }
 
 #content ul {
-  color: #7036ff;
+  color: #009ddf;
 }
 
 * {
-  scrollbar-color: #7036ff;
+  scrollbar-color: #009ddf;
+}
+
+
+a:hover {
+  color: #00b2c9;
+}
+a {
+  color: #00BCD4;
 }
 
 a:visited {
-  color: #542cb7;
-}
-a:hover {
-  color: #542cb7;
-}
-a {
-  color: #561ce6;
+  color: #00b2c9;
 }
 
 h1 {
@@ -56,7 +58,7 @@ tt {
 span.parameter {
   font-family: monospace;
   font-weight: bold;
-  color: rgb(152, 99, 188);
+  color: #03b2c9;
 }
 span.parameter:after {
   content: ":";
@@ -79,13 +81,13 @@ p.name {
 kbd,
 p code,
 ol code {
-  background-color: #9618ec33;
+  background-color: #18e9ec33;
   padding-left: 3px;
   padding-right: 3px;
   border-radius: 3px;
   border-style: solid;
   border-width: 1px;
-  border-color: #b7bac1;
+  border-color: #37bbf2;
   font-family: monospace;
   margin-left: 5px;
   margin-right: 5px;
@@ -137,23 +139,23 @@ ol code {
 }
 
 #content h1 {
-  background-color: #9000f2;
+  background-color: #4DD0E1;
   color: white;
   padding: 20px;
   margin: 0px;
   border-radius: 15px;
-  box-shadow: 0 4px 8px 0 #9000f244;
+  box-shadow: 0 4px 8px 0 #4DD0E144;
 }
 
 #content h2 {
-  background-color: #9000f2;
+  background-color: #4DD0E1;
   color: white;
   padding: 15px;
   padding-top: 15px;
   padding-bottom: 15px;
   margin-top: 0px;
   border-radius: 15px;
-  box-shadow: 0 4px 8px 0 #9000f244;
+  box-shadow: 0 4px 8px 0 #4DD0E144;
   transition: 0.3s;
 }
 
@@ -170,11 +172,11 @@ table tr:last-child td:last-child {
 }
 
 #content h1:hover {
-  box-shadow: 0 8px 16px 0 #9000f244;
+  box-shadow: 0 8px 16px 0 #4DD0E144;
 }
 
 #content h2:hover {
-  box-shadow: 0 8px 16px 0 #9000f244;
+  box-shadow: 0 8px 16px 0 #4DD0E144;
 }
 
 #content h2 a {
@@ -302,7 +304,7 @@ table td {
 }
 
 .widget_list th {
-  background-color: #2c3e67;
+  background-color: #4DD0E1;
   font-weight: bold;
   color: white;
   padding-top: 10px;
@@ -352,7 +354,7 @@ table.module_list,
 table.function_list {
   border-width: 1px;
   border-style: solid;
-  border-color: #ab94ff;
+  border-color: #4DD0E1;
   border-collapse: collapse;
   margin: 15px;
 }
@@ -389,7 +391,7 @@ table.function_list td.inheritance {
   background-color: white;
   border-right-width: 0px;
   border-left-width: 0px;
-  color: #ab94ff;
+  color: #4DD0E1;
   min-width: 200px;
 }
 
@@ -405,7 +407,7 @@ span.inheritance {
 
 .summarytype {
   background-color: white;
-  color: #ab94ff;
+  color: #4DD0E1;
   font-size: 85%;
   border-left: none;
   border-right: none;
@@ -413,26 +415,26 @@ span.inheritance {
 }
 
 table.function_list .function_args /*.function_modname*/ {
-  color: #ab94ff;
+  color: #4DD0E1;
   text-decoration: underline;
   text-decoration-color: #bbd3ff;
 }
 
 table.function_list .function_args b {
   font-weight: 500;
-  color: #ab94ff;
+  color: #4DD0E1;
   text-decoration: underline;
   text-decoration-color: #bbd3ff;
 }
 
 table.function_list .function_named_args b {
-  color: #b37cff;
+  color: #68646d;
   text-decoration: underline;
   text-decoration-color: #bbd3ff;
 }
 
 table.function_list .function_named_args {
-  color: #ba97ff;
+  color: #009ba6;
   text-decoration: underline;
   text-decoration-color: #bbd3ff;
 }
@@ -460,7 +462,7 @@ dl.function {
 }
 
 dl.function dt {
-  color: rgb(152, 99, 188);
+  color: #03b2c9;
   font-family: monospace;
   border-top: solid 1px rgb(193, 204, 228);
   padding: 15px;
@@ -531,7 +533,7 @@ a:target + * {
 
 /* tag + awful.tag */
 .listplusign {
-  color: #b861ff;
+  color: #61dfff;
   text-decoration: underline;
   text-decoration-color: white;
 }
@@ -559,7 +561,7 @@ pre .marker {
   font-weight: bold;
 }
 pre .string {
-  color: #cd48fd;
+  color: #009ddf;
 }
 pre .number {
   color: #f8660d;
@@ -573,7 +575,7 @@ pre .prepro {
   color: #a33243;
 }
 pre .global {
-  color: #ff00d7;
+  color: #009ddf;
 }
 pre .user-keyword {
   color: #800080;
@@ -621,7 +623,7 @@ pre .url {
 
 .index_guides div a {
     display: inline-block;
-    border: solid 1px #9000f244;
+    border: solid 1px #4DD0E144;
     width: 200px;
     margin-left: 10px;
     margin-right: 10px;
@@ -631,13 +633,13 @@ pre .url {
     border-radius: 15px;
     margin-bottom: 10px;
     background-color: #FFF;
-    box-shadow: 0 4px 8px 0 #9000f244;
+    box-shadow: 0 4px 8px 0 #4DD0E144;
     transition: 0.3s;
 }
 
 .index_guides div a:hover {
-    background-color: #9000f2;
-    box-shadow: 0 8px 16px 0 #9000f244;
+    background-color: #4DD0E1;
+    box-shadow: 0 8px 16px 0 #4DD0E144;
     color: #FFF;
 
 }
@@ -717,7 +719,7 @@ pre .url {
   }
 
   td.name {
-    background-color: #b861ff !important;
+    background-color: #61dfff !important;
     color: #FFFFFF;
     width: 90vw;
   }
