@@ -32,9 +32,9 @@ end
 -- Default theme for the documentation examples
 local module = {
     fg_normal    = "#ffffffde"  ,
-    bg_normal    = "#00ACC166",
-    bg_focus     = "#0097A7",
-    bg_highlight = "#3F3F3F",
+    bg_normal    = "#26C6DA66",
+    bg_focus     = "#26C6DA",
+    bg_highlight = "#80DEEA",
     border_color = "#4DD0E1"  ,
     border_width = 1.5        ,
 
