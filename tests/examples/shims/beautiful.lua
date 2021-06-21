@@ -2,6 +2,10 @@ local lgi = require("lgi")
 local Pango = lgi.Pango
 local cairo = lgi.cairo
 
+-- It's fine as long as gears doesn't depend on CAPI and $AWESOME_THEMES_PATH is set.
+local themes_path = require("gears.filesystem").get_themes_dir()
+
+
 -- A simple Awesome logo
 local function logo()
     local img = cairo.ImageSurface.create(cairo.Format.ARGB32, 22, 22)
@@ -27,11 +31,11 @@ end
 
 -- Default theme for the documentation examples
 local module = {
-    fg_normal    = "#000000"  ,
-    bg_normal    = "#6181FF7D",
-    bg_focus     = "#AA00FF7D",
-    bg_highlight = "#AA00FF7D",
-    border_color = "#6181FF"  ,
+    fg_normal    = "#ffffffde"  ,
+    bg_normal    = "#00000066",
+    bg_focus     = "#5a5a5a",
+    bg_highlight = "#3F3F3F",
+    border_color = "#4DD0E1"  ,
     border_width = 1.5        ,
 
     prompt_bg_cursor = "#00FF7D",
@@ -39,7 +43,7 @@ local module = {
     -- Fake resources handling
     xresources = require("beautiful.xresources"),
 
-    awesome_icon = logo(),
+    awesome_icon = themes_path .. "default/logo.svg",
     primary = {},
     accent = {},
     background = {}
@@ -64,9 +68,6 @@ end
 ------------------------------------------------------------------
 -- Import the titlebar and layout assets from the default theme --
 ------------------------------------------------------------------
-
--- It's fine as long as gears doesn't depend on CAPI and $AWESOME_THEMES_PATH is set.
-local themes_path = require("gears.filesystem").get_themes_dir()
 
 -- Define the image to load
 module.titlebar_close_button_normal = themes_path.."default/titlebar/close_normal.png"
@@ -95,7 +96,7 @@ module.titlebar_maximized_button_focus_inactive  = themes_path.."default/titleba
 module.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
 module.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
-module.wallpaper = themes_path.."default/background.png"
+module.wallpaper = themes_path.."default/background.jpg"
 
 -- You can use your own layout icons like this:
 module.layout_fairh = themes_path.."default/layouts/fairhw.png"
