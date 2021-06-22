@@ -181,12 +181,12 @@ local function topbar_right_plugin(s)
   table_widget:add(show_widget_or_default("widget.bluetooth", hardware.hasBluetooth()))
   table_widget:add(show_widget_or_default("widget.wifi", hardware.hasWifi()))
   table_widget:add(show_widget_or_default("widget.package-updater", general["minimize_network_usage"] ~= "1"))
-  --table_widget:add(
-  --  show_widget_or_default(
-  --    "widget.music",
-  --    (hardware.hasSound() and hardware.has_package_installed("playerctl") and IsreleaseMode) or weak_hardware
-  --  )
-  --) --only add this when the data can be extracted from spotify
+  table_widget:add(
+    show_widget_or_default(
+      "widget.music",
+      (hardware.hasSound() and hardware.has_package_installed("playerctl") and IsreleaseMode) or weak_hardware
+    )
+  ) --only add this when the data can be extracted from spotify
   table_widget:add(require("widget.about"))
   table_widget:add(show_widget_or_default("widget.screen-recorder", hardware.hasFFMPEG() or weak_hardware, true))
   table_widget:add(require("widget.search"))
