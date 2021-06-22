@@ -57,7 +57,7 @@ local notif_icon = function(ico_image)
     },
     layout = wibox.layout.fixed.horizontal
   }
-  noti_icon.icon:set_image(ico_image)
+  noti_icon.icon:set_image(gears.surface.load_uncached(ico_image))
   return noti_icon
 end
 
@@ -204,6 +204,7 @@ local function notif_generate(title, message, icon, noti)
         notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
       else
         notif_layout:remove_widgets(notif_template, true)
+        collectgarbage("collect")
       end
     end
   )
@@ -219,6 +220,7 @@ local function notif_generate(title, message, icon, noti)
         notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
       else
         notif_layout:remove_widgets(notif_template, true)
+        collectgarbage("collect")
       end
     end
   )
@@ -262,6 +264,14 @@ naughty.connect_signal(
     else
       -- Use the notification's icon
       notif_layout:insert(1, notif_generate(n.title, n.message, n.icon, n))
+    end
+
+    if #(notif_layout.children) > 10 then
+      for i = #(notif_layout.children), 10, -1 do
+        notif_layout:remove(i)
+      end
+      -- remove icons that are not used anymore
+      collectgarbage("collect")
     end
   end
 )

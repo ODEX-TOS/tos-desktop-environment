@@ -50,6 +50,7 @@ local aboutBackdrop
 screen.connect_signal(
   "request::desktop_decoration",
   function(s)
+    print("About page")
     -- Create the box
 
     aboutPage =

@@ -32,15 +32,10 @@ local card = require("lib-widget.card")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/user-profile/icons/"
 
-local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
-
 local signals = require("lib-tde.signals")
-local filehandle = require("lib-tde.file")
 
 local user_card = card()
 
--- guarantee that the cache dir exists
-filehandle.dir_create(PATH_TO_CACHE_ICON)
 
 local profile_imagebox =
   profilebox(

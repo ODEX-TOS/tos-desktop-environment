@@ -62,8 +62,6 @@ prepare() {
 
   cp -r "$srcdir/$_name/tde/" "$srcdir/$_name/build/tde-src"
   mkdir -p "$srcdir/$_name/build/"
-  [[ -d "$srcdir/$_name/build/tde-src/" ]] && rm -rf "$srcdir/$_name/build/tde-src"
-  cp -r "$srcdir/$_name/tde/" "$srcdir/$_name/build/tde-src"
 }
 
 build() {

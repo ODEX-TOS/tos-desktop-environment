@@ -55,6 +55,8 @@ function help() {
   echo -e "$name -fd | --filedescriptor \tSuppress all filedescriptor output from execution"
   echo -e "$name -o | --output <filename> \tStore the data in filename"
   echo -e "$name -r | --realtime \t\tReturn the time a function took in real time instead of utilized cpu time"
+  echo -e "$name -m | --memory \t\tFind the memory leaks in the application"
+
 }
 
 while true; do
@@ -99,6 +101,24 @@ while true; do
     "-c"|"--clean")
       CLEAN="1"
       shift
+    ;;
+    "-m"|"--memory")
+      tde-client profiler/snapshot.tde
+      mv ~/LuaMemRefInfo-All-[snap].txt ~/LuaMemRefInfo-before.txt 
+
+      echo "First memory profile is done, waiting 60 seconds to start second profile"
+
+      sleep 60
+
+      echo "Starting second memory profile"
+      tde-client profiler/snapshot.tde
+      mv ~/LuaMemRefInfo-All-[snap].txt ~/LuaMemRefInfo-after.txt 
+
+      echo "Second memory profile is done, comparing"
+
+      tde-client profiler/compare_memory.tde
+      rm ~/LuaMemRefInfo-after.txt ~/LuaMemRefInfo-before.txt 
+      exit 0
     ;;
     "")
       break

@@ -40,6 +40,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Pinentry-gtk-2 now renders properly
 - Todo widget is now readable over a white background
 - Users with the default shell as fish won't break specific shell scripts
+- When using the floating layout, render the titlebars
 
 ### Dev Notes
 

@@ -290,6 +290,7 @@ if(GENERATE_DOC)
     # Copy ldoc files.
     configure_file(${SOURCE_DIR}/docs/ldoc.css ${BUILD_DIR}/docs COPYONLY)
     configure_file(${SOURCE_DIR}/docs/ldoc.ltp ${BUILD_DIR}/docs COPYONLY)
+    configure_file(${SOURCE_DIR}/NEWS.md ${BUILD_DIR}/docs/89-NEWS.md COPYONLY)
 
     add_custom_target(ldoc ALL
         DEPENDS ${BUILD_DIR}/doc/index.html

@@ -68,7 +68,7 @@ local function isBatteryCharging()
     local battery = getBatteryPath()
     if battery then
         local value = filehandle.string(battery .. "/status"):gsub("\n", "")
-        if value == "Charging" then
+        if value == "Charging" or value == "fully" then
             return true
         end
     end
@@ -91,7 +91,7 @@ local function getBatteryPercentage()
     local value = filehandle.string(battery .. "/capacity")
     if value then
         value = value:gsub("\n", "")
-        return tonumber(value)
+        return tonumber(value) or -1
     end
     -- something went wrong parsing the value
     return -1

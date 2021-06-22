@@ -289,7 +289,8 @@ local TopPanel = function(s, offset, controlCenterOnly)
     {
       layout = wibox.layout.fixed.horizontal,
       -- Create a taglist widget
-      topbar_left_plugin(s)
+      topbar_left_plugin(s),
+
     },
     topbar_center_plugin(s),
     topbar_right_plugin(s)

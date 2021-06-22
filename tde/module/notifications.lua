@@ -175,6 +175,9 @@ naughty.connect_signal(
 naughty.connect_signal(
 	"request::display",
 	function(n)
+		if _G.dont_disturb then
+			return
+		end
 		if screen.count() < 1 or awesome.startup then
 			print("Enqueueing: " .. n.title)
 			queue.push(n)

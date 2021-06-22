@@ -5,7 +5,7 @@ local args = ...
 
 project='TDE'
 title='TDE API documentation'
-description='API documentation for TDE version @AWESOME_VERSION@.'
+description='API documentation for TDE version v0.8.'
 
 -- More on it: https://github.com/stevedonovan/LDoc/blob/master/doc/doc.md#markdown-support
 format='discount'
@@ -483,15 +483,15 @@ file = {
 
     -- LUA libraries
     '../lib/',
-    '../tde-src/',
+    '../tos-tde/tde/',
     -- Auto generated scripts
     '../script_files/',
     exclude = {
         -- exclude these modules, as they do not contain any written
         -- documentation
-        '../tde-src/lib-tde/lib-lua',
-        '../tde-src/lib-tde/lib-so',
-        '../tde-src/lib-tde/sentry',
+        '../tos-tde/tde/lib-tde/lib-lua',
+        '../tos-tde/tde/lib-tde/lib-so',
+        '../tos-tde/tde/lib-tde/sentry',
         '../lib/awful/autofocus.lua',
         '../lib/awful/dbus.lua',
         '../lib/awful/_compat.lua',
