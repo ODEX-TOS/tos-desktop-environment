@@ -269,7 +269,7 @@ return function()
 
     -- add buttons to test the audio
     sink_children:add(wibox.container.margin(button("Test speaker", function()
-      sound()
+      sound(true)
     end, active_pallet),m, m, m))
 
     -- If we are currently listing for microphone input

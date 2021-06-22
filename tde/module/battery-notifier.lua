@@ -35,6 +35,16 @@ local gears = require("gears")
 -- Subscribe to power supply status changes with acpi_listen
 local signals = require("lib-tde.signals")
 
+local prev_charge_state = battery_function.isBatteryCharging()
+
+local emit_charger_info = function()
+	local isCharging = battery_function.isBatteryCharging()
+	if isCharging ~= prev_charge_state then
+		prev_charge_state = isCharging
+		signals.emit_battery_charging(isCharging)
+	end
+end
+
 gears.timer {
 	timeout = config.battery_timeout,
 	call_now = true,
@@ -44,11 +54,9 @@ gears.timer {
 		if value then
 			signals.emit_battery(value)
 		end
+		emit_charger_info()
 	end
 }
-local emit_charger_info = function()
-	signals.emit_battery_charging(battery_function.isBatteryCharging())
-end
 
 -- Run once to initialize widgets
 emit_charger_info()

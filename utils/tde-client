@@ -21,8 +21,6 @@ READ_ARGS=""
 FZF_COLOR_SCHEME_FAILED="--color=info:#9a19d1,prompt:#d60039,pointer:#af5fff"
 FZF_COLOR_SCHEME_SUCCESS="--color=info:#9a19d1,prompt:#00d639,pointer:#af5fff"
 
-echo "$@"
-
 awesome_rlwrap() {
     if [ "$A_RERUN" = "" ]
     then
@@ -247,7 +245,7 @@ then
 
     # If one argument is supplied and it is a file execute it
     if [ $# -eq 1 ] && [ -f "$1" ]; then
-        a_dbus_send "$(cat "$1" | sed 1d)"
+        a_dbus_send "$(cat "$1" | sed '/^#/d')"
         exit $?
     fi
 

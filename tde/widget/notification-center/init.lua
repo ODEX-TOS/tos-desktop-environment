@@ -34,6 +34,7 @@ local theme = require("theme.icons.dark-light")
 -- The panel get's loaded in on the first time it is needed
 _G.screen.primary.right_panel = {
   toggle = function ()
+    print("Loading in notification center")
     -- load in the real panel
     require("widget.notification-center.panel-rules")
 

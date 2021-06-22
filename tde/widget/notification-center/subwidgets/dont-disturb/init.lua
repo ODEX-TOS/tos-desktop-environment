@@ -28,11 +28,13 @@ local mat_list_item = require("widget.material.list-item")
 local signals = require("lib-tde.signals")
 local card = require("lib-widget.card")
 local checkbox = require("lib-widget.checkbox")
+local naughty = require("naughty")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
 local theme = require("theme.icons.dark-light")
 
-_G.dont_disturb = false
+_G.dont_disturb = true
+naughty.suspended = _G.dont_disturb
 
 local disturb_card = card()
 local box
@@ -52,11 +54,12 @@ local function update_disturb(state)
     box.update(state)
   end
   signals.emit_do_not_disturb(dont_disturb)
+  naughty.suspended = dont_disturb
 end
 
 box =
   checkbox(
-  false,
+  _G.dont_disturb,
   function(checked)
     update_disturb(checked)
   end

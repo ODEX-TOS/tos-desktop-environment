@@ -268,7 +268,7 @@ awesome.connect_signal(
   end
 )
 
-widget.icon:set_image(theme(PATH_TO_ICONS .. "music" .. ".svg"))
+widget.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "music" .. ".svg")))
 
 -- Update music info on Initialization
 local function initMusicInfo()

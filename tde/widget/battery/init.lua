@@ -24,11 +24,8 @@
 ]]
 local wibox = require("wibox")
 
-local naughty = require("naughty")
-
-local config = require("config")
-local file = require("lib-tde.file")
 local gears = require("gears")
+local signals = require("lib-tde.signals")
 
 local clickable_container = require("widget.material.clickable-container")
 local dpi = require("beautiful").xresources.apply_dpi
@@ -112,45 +109,18 @@ local return_button = function()
 		end
 	)
 
-	local last_battery_check = os.time()
-	local notify_critcal_battery = true
-
-	local function show_battery_warning()
-		naughty.notification(
-			{
-				icon = widget_icon_dir .. "battery-alert.svg",
-				app_name = i18n.translate("System notification"),
-				title = i18n.translate("System notification"),
-				message = i18n.translate("Hey, I think we have a problem here. Save your work before it's to late!"),
-				urgency = "critical"
-			}
-		)
-	end
-
-	local update_battery = function(status)
-		status = status:gsub("%\n", "")
-		local percentage = file.string("/sys/class/power_supply/BAT0/capacity")
-		-- some hardware counts from BAT1
-		if percentage == "" or percentage == nil then
-			percentage = file.string("/sys/class/power_supply/BAT1/capacity")
-		end
-		local battery_percentage = tonumber(percentage) or 0
-		print("Battery percentage: " .. percentage)
+	local update_battery = function(charging, battery_percentage)
+		print("Battery percentage: " .. tostring(battery_percentage))
 
 		battery_widget.spacing = dpi(5)
 		battery_percentage_text.visible = true
-		battery_percentage_text:set_text(battery_percentage .. "%")
+		battery_percentage_text:set_text(tostring(battery_percentage) .. "%")
 
 		local icon_name = "battery"
 
-		if status:match("Discharging") then
+		if not charging then
 			if battery_percentage >= 0 and battery_percentage < 10 then
 				icon_name = icon_name .. "-" .. "alert-red"
-				if os.difftime(os.time(), last_battery_check) > 300 or notify_critcal_battery then
-					last_battery_check = os.time()
-					notify_critcal_battery = false
-					show_battery_warning()
-				end
 			elseif battery_percentage > 10 and battery_percentage < 20 then
 				icon_name = icon_name .. "-" .. "10"
 			elseif battery_percentage >= 20 and battery_percentage < 30 then
@@ -168,50 +138,42 @@ local return_button = function()
 			elseif battery_percentage == 100 then
 				icon_name = icon_name .. "-fully-charged"
 			end
-		elseif status:match("charging") or status:match("fully") then
+		else
 			if battery_percentage > 0 and battery_percentage < 20 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "10"
+				icon_name = icon_name .. "-charging-" .. "10"
 			elseif battery_percentage >= 20 and battery_percentage < 30 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "20"
+				icon_name = icon_name .. "-charging-"  .. "20"
 			elseif battery_percentage >= 30 and battery_percentage < 50 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "30"
+				icon_name = icon_name .. "-charging-"  .. "30"
 			elseif battery_percentage >= 50 and battery_percentage < 60 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "50"
+				icon_name = icon_name .. "-charging-" .. "50"
 			elseif battery_percentage >= 60 and battery_percentage < 80 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "60"
+				icon_name = icon_name .. "-charging-" .. "60"
 			elseif battery_percentage >= 80 and battery_percentage < 90 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "80"
+				icon_name = icon_name .. "-charging-" .. "80"
 			elseif battery_percentage >= 90 and battery_percentage < 100 then
-				icon_name = icon_name .. "-" .. status .. "-" .. "90"
+				icon_name = icon_name .. "-charging-" .. "90"
 			elseif battery_percentage == 100 then
 				icon_name = icon_name .. "-fully-charged"
 			end
 		end
 
-		battery_imagebox.icon:set_image(gears.surface.load(theme(widget_icon_dir .. icon_name .. ".svg")))
+		battery_imagebox.icon:set_image(gears.surface(theme(widget_icon_dir .. icon_name .. ".svg")))
 	end
 
-	gears.timer {
-		timeout = config.battery_timeout,
-		call_now = true,
-		autostart = true,
-		callback = function()
-			local status = file.string("/sys/class/power_supply/BAT0/status")
-			if status == "" then
-				-- possibility that the manufacturer starts counting from 1
-				status = file.string("/sys/class/power_supply/BAT1/status")
-			end
-			-- If no output or battery detected
-			if status == "" then
-				battery_widget.spacing = dpi(0)
-				battery_percentage_text.visible = false
-				battery_tooltip:set_text(i18n.translate("No battery detected!"))
-				battery_imagebox.icon:set_image(gears.surface.load(theme(widget_icon_dir .. "battery-unknown" .. ".svg")))
-				return
-			end
-			update_battery(status)
-		end
-	}
+	local last_level = 0
+	local last_charge_state = false
+
+	signals.connect_battery(function(level)
+		last_level = level or -1
+		update_battery(last_charge_state, last_level)
+	end)
+
+	signals.connect_battery_charging(function(isCharging)
+		last_charge_state = isCharging
+		update_battery(last_charge_state, last_level)
+	end)
+
 	return battery_button
 end
 return return_button
