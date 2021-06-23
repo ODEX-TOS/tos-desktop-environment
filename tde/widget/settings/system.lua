@@ -340,6 +340,13 @@ return function()
     end
   )
 
+  signals.emit_request_ram()
+  signals.emit_request_disk()
+  signals.emit_request_distro()
+  signals.emit_request_uptime()
+  signals.emit_request_cpu()
+  signals.emit_request_kernel()
+
   view.refresh = function()
   end
 
