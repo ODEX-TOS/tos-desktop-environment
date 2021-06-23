@@ -257,11 +257,7 @@ function widget.new(args)
         end
     end
 
-
-    function widget_instance:_load_widget_settings()
-        if self._widget_settings_loaded then return end
-        self.width = args.width or dpi(1200)
-        self.height = args.height or dpi(800)
+    function widget_instance:update_color_pallet()
         self.bg = args.bg or
             beautiful.hotkeys_bg or beautiful.bg_normal
         self.fg = args.fg or
@@ -272,11 +268,19 @@ function widget.new(args)
             beautiful.hotkeys_border_color or self.fg
         self.shape = args.shape or beautiful.hotkeys_shape
         self.modifiers_fg = args.modifiers_fg or
-            beautiful.hotkeys_modifiers_fg or beautiful.bg_minimize or "#555555"
+            beautiful.hotkeys_modifiers_fg or beautiful.primary.hue_500 or beautiful.bg_minimize or "#555555"
         self.label_bg = args.label_bg or
             beautiful.hotkeys_label_bg or self.fg
         self.label_fg = args.label_fg or
             beautiful.hotkeys_label_fg or self.bg
+    end
+
+
+    function widget_instance:_load_widget_settings()
+        if self._widget_settings_loaded then return end
+        self.width = args.width or dpi(1200)
+        self.height = args.height or dpi(800)
+        widget_instance:update_color_pallet()
         self.opacity = args.opacity or
             beautiful.hotkeys_opacity or 1
         self.font = args.font or
@@ -287,6 +291,7 @@ function widget.new(args)
             beautiful.hotkeys_group_margin or dpi(6)
         self.label_colors = beautiful.xresources.get_current_theme()
         self._widget_settings_loaded = true
+        self.update_theme = args.update_theme or true
     end
 
 
@@ -482,11 +487,11 @@ function widget.new(args)
         end
         current_column.layout:add(self:_group_label(group))
 
-        local function insert_keys(_keys, _add_new_column)
+        local function calc_text(_keys)
             local max_label_width = 0
             local joined_labels = ""
             for i, key in ipairs(_keys) do
-                local modifiers = key.mod
+                    local modifiers = key.mod
                 if not modifiers or modifiers == "none" then
                     modifiers = ""
                 else
@@ -513,8 +518,24 @@ function widget.new(args)
                     max_label_width = label_width
                 end
                 joined_labels = joined_labels .. rendered_hotkey .. (i~=#_keys and "\n" or "")
-                end
-            current_column.layout:add(wibox.widget.textbox(joined_labels))
+            end
+            return joined_labels, max_label_width
+        end
+
+        local function insert_keys(_keys, _add_new_column)
+            local joined_labels, max_label_width = calc_text(_keys)
+
+            local textbox = wibox.widget.textbox(joined_labels)
+
+            if awesome ~= nil and self.update_theme then
+                awesome.connect_signal("TDE::primary::theme::changed", function(_)
+                    widget_instance:update_color_pallet()
+                    joined_labels, max_label_width = calc_text(_keys)
+                    textbox.markup = joined_labels
+                end)
+            end
+
+            current_column.layout:add(textbox)
             local max_width = max_label_width + self.group_margin
             if not current_column.max_width or (max_width > current_column.max_width) then
                 current_column.max_width = max_width
