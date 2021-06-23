@@ -85,4 +85,3 @@ if exists(home .. "/.config/awesome/lib-tde/lib-so") then
 end
 
 package.cpath = package.cpath .. ";" .. pwd .. "/tde/lib-tde/lib-so/?/?.so;" .. pwd .. "/tde/lib-tde/lib-so/?.so"
-
