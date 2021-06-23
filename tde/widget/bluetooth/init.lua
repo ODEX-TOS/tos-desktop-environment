@@ -87,7 +87,7 @@ awful.tooltip(
 delayed_timer(
   config.bluetooth_poll,
   function()
-    awful.spawn.easy_async_with_shell(
+    awful.spawn.easy_async(
       "bluetoothctl --monitor show",
       function(stdout)
         -- Check if there  bluetooth
@@ -105,7 +105,7 @@ delayed_timer(
 
         signals.emit_bluetooth_status(checker)
 
-        local widgetIconName = "bluetooth-off"
+        local widgetIconName = "bluetooth_off"
 
         if checker then
           widgetIconName = "bluetooth"

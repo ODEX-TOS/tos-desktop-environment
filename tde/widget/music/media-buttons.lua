@@ -34,10 +34,6 @@ local PATH_TO_ICONS = "/etc/xdg/tde/widget/music/icons/"
 
 local theme = require("theme.icons.dark-light")
 
-local config = require("config")
-
-local sleep = require("lib-tde.function.common").sleep
-
 local playButton =
   wibox.widget {
   {
@@ -74,11 +70,10 @@ play_button:buttons(
       function()
         print("Toggeling song play mode")
         -- give spotify time to react
-        awful.spawn("playerctl play-pause")
-        -- give the music player time to react
-        sleep(config.player_reaction_time)
-        checkIfPlaying()
-        _G.updateInfo()
+        awful.spawn.easy_async("playerctl play-pause", function()
+          checkIfPlaying()
+          _G.updateInfo()
+        end)
       end
     )
   )
@@ -106,9 +101,10 @@ next_button:buttons(
       1,
       nil,
       function()
-        awful.spawn("playerctl next", false)
-        _G.updateInfo()
-        _G.checkCover()
+        awful.spawn.easy_async("playerctl next", function()
+          checkIfPlaying()
+          _G.updateInfo()
+        end)
       end
     )
   )
@@ -133,9 +129,10 @@ prev_button:buttons(
       1,
       nil,
       function()
-        awful.spawn("playerctl previous", false)
-        _G.updateInfo()
-        _G.checkCover()
+        awful.spawn.easy_async("playerctl previous", function()
+          checkIfPlaying()
+          _G.updateInfo()
+        end)
       end
     )
   )

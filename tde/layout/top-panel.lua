@@ -132,14 +132,7 @@ awful.screen.connect_for_each_screen(
 )
 --
 
---[[
--- Systray Widget
-local systray = wibox.widget.systray()
-	systray:set_horizontal(true)
-	systray:set_base_size(28)
-	beautiful.systray_icon_spacing = 24
-	opacity = 0
-]] local add_button =
+local add_button =
   mat_icon_button(mat_icon(icons.plus, dpi(16))) -- add button -- 24
 add_button:buttons(
   gears.table.join(
@@ -289,7 +282,7 @@ local TopPanel = function(s, offset, controlCenterOnly)
     {
       layout = wibox.layout.fixed.horizontal,
       -- Create a taglist widget
-      topbar_left_plugin(s),
+      topbar_left_plugin(s)
 
     },
     topbar_center_plugin(s),

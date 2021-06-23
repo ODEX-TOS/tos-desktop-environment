@@ -884,6 +884,7 @@ end
 -- @see fit_widget
 -- @constructorfct wibox.widget.base.make_widget
 function base.make_widget(proxy, widget_name, args)
+    print("Creating a new widget")
     args = args or {}
 
     local prop_default = args.enable_properties ~= false

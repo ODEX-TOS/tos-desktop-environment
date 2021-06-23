@@ -36,14 +36,12 @@ local function get_username()
 
     -- make the first letter capital
     local name = username:sub(1, 1):upper() .. username:sub(2)
+
     signals.emit_username(name)
-    delayed_timer(
-        10,
-        function()
-            signals.emit_username(name)
-        end,
-        0
-    )
+
+    signals.connect_request_user(function()
+        signals.emit_username(name)
+    end)
 end
 
 local function get_distro_name()
@@ -58,80 +56,137 @@ local function get_distro_name()
             end
         end
     end
-    delayed_timer(
-        10,
-        function()
-            signals.emit_distro(name)
-        end,
-        0
-    )
+
+    signals.connect_request_distro(function()
+        signals.emit_distro(name)
+    end)
 end
 
+
+
 local function get_uptime()
-    -- get the uptime
-    awful.widget.watch(
-        "uptime -p",
-        600,
-        function(_, stdout)
+    local function uptime_func()
+        awful.spawn.easy_async("uptime -p", function (stdout)
             local uptime = string.gsub(stdout, "%\n", "") or ""
             signals.emit_uptime(uptime)
-        end
+        end)
+    end
+
+    delayed_timer(
+        600,
+        uptime_func,
+        0
     )
+
+    signals.connect_request_uptime(uptime_func)
 end
 
 local function get_ram_info()
+    local function ram_func()
+        local usage, total = hardware.getRamInfo()
+        signals.emit_ram_usage(usage)
+        signals.emit_ram_total(common.num_to_str(total))
+        print("Ram usage: " .. usage .. "%")
+    end
     delayed_timer(
         config.ram_poll,
-        function()
-            local usage, total = hardware.getRamInfo()
-            signals.emit_ram_usage(usage)
-            signals.emit_ram_total(common.num_to_str(total))
-            print("Ram usage: " .. usage .. "%")
-        end,
+        ram_func,
         config.ram_startup_delay
     )
+
+    signals.connect_request_ram(ram_func)
 end
 
 local function get_disk_info()
+    local function disk_func()
+        local res = statvfs("/")
+        local usage = ((res.f_blocks - res.f_bfree) / res.f_blocks) * 100
+
+        -- by default f_blocks is in 512 byte chunks
+        local block_size = res.f_frsize or 512
+        local size_in_bytes = res.f_blocks * block_size
+
+        print("Hard drive size: " .. size_in_bytes .. "b")
+        print("Hard drive usage: " .. usage .. "%")
+
+        signals.emit_disk_usage(usage)
+        signals.emit_disk_space(common.bytes_to_grandness(size_in_bytes))
+    end
+
     delayed_timer(
         config.harddisk_poll,
-        function()
-            local res = statvfs("/")
-            local usage = ((res.f_blocks - res.f_bfree) / res.f_blocks) * 100
-
-            -- by default f_blocks is in 512 byte chunks
-            local block_size = res.f_frsize or 512
-            local size_in_bytes = res.f_blocks * block_size
-
-            print("Hard drive size: " .. size_in_bytes .. "b")
-            print("Hard drive usage: " .. usage .. "%")
-
-            signals.emit_disk_usage(usage)
-            signals.emit_disk_space(common.bytes_to_grandness(size_in_bytes))
-        end,
+        disk_func,
         config.harddisk_startup_delay
     )
+
+    signals.connect_request_ram(disk_func)
 end
 
 
-local prev_profile_pic = ""
 local function get_profile_pic()
-    delayed_timer(
-        60,
+    signals.connect_request_profile_pic(
         function()
             local picture = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
             if filehandle.exists(os.getenv("HOME") .. "/.face") then
               picture = os.getenv("HOME") .. "/.face"
             end
 
-            if prev_profile_pic ~= picture then
-                print("Loading profile picture")
-                signals.emit_profile_picture_changed(picture)
-                prev_profile_pic = picture
-            end
-        end,
-        0
+            print("Loading profile picture")
+            signals.emit_profile_picture_changed(picture)
+        end
     )
+end
+
+local function get_kernel()
+    local kernel = "N/A"
+    awful.spawn.easy_async_with_shell(
+        "uname -r | cut -d '-' -f 1,2",
+        function(out)
+          kernel = out:gsub("%\n", "")
+          signals.emit_kernel(kernel)
+        end
+      )
+
+    signals.connect_request_kernel(function ()
+        signals.emit_kernel(kernel)
+    end)
+end
+
+local function get_cpu()
+    local total_prev = 0
+    local idle_prev = 0
+
+    local last_cpu_state = 100
+
+    delayed_timer(
+        config.cpu_poll,
+        function()
+            local stdout = filehandle.string("/proc/stat", "^cpu")
+            if stdout == "" then
+                return
+            end
+            local user, nice, system, idle, iowait, irq, softirq, steal, _, _ =
+            stdout:match("(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s(%d+)%s")
+
+            local total = user + nice + system + idle + iowait + irq + softirq + steal
+
+            local diff_idle = idle - idle_prev
+            local diff_total = total - total_prev
+            local diff_usage = (1000 * (diff_total - diff_idle) / diff_total + 5) / 10
+
+            print("CPU usage: " .. diff_usage .. "%")
+            signals.emit_cpu_usage(diff_usage)
+            last_cpu_state = diff_usage
+
+            total_prev = total
+            idle_prev = idle
+        end,
+        config.cpu_startup_delay
+    )
+
+    signals.connect_request_cpu(function()
+        signals.emit_cpu_usage(last_cpu_state)
+    end)
 end
 
 local function init()
@@ -140,8 +195,11 @@ local function init()
     get_uptime()
     get_ram_info()
     get_disk_info()
+    get_cpu()
 
     get_profile_pic()
+
+    get_kernel()
 end
 
 init()

@@ -306,11 +306,13 @@ local function make_nav()
 
   local user = wibox.widget.textbox("")
   user.font = beautiful.title_font
+
   signals.connect_username(
     function(name)
       user.text = name
     end
   )
+  signals.emit_request_user()
   local img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
 
   local avatar =
@@ -326,6 +328,8 @@ local function make_nav()
       avatar.update(picture)
     end
   )
+
+  signals.emit_request_profile_pic()
 
   local rule = wibox.container.background()
   rule.forced_height = 1

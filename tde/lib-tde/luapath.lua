@@ -40,6 +40,8 @@ if bIsIntegrationTest then
     pwd = os.getenv("PWD") .. "/tos-tde"
 end
 
+--package.loaded["naughty.dbus"] = {}
+
 -- Used to enable custom widgets as a plugin mechanism for TDE
 package.path = home .. "/.config/tde/?/init.lua;" .. package.path
 package.path = home .. "/.config/tde/?.lua;" .. package.path

@@ -33,7 +33,7 @@ local hardware = require("lib-tde.hardware-check")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
 
-local width = dpi(100)
+local width = dpi(60)
 local height = width
 
 local amount = math.floor((mouse.screen.workarea.height / height) - 1)
@@ -160,7 +160,7 @@ local function create_icon(icon, name, num, callback, drag)
             {
                 image = icon,
                 resize = true,
-                forced_height = height - dpi(35),
+                forced_height = (2 * height) / 3,
                 widget = wibox.widget.imagebox
             }
         ),
@@ -169,7 +169,7 @@ local function create_icon(icon, name, num, callback, drag)
                 text = name,
                 halign = "center",
                 valign = "top",
-                font = beautiful.title_font,
+                font = beautiful.font,
                 widget = wibox.widget.textbox
             }
         ),

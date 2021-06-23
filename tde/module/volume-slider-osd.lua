@@ -109,6 +109,12 @@ awful.screen.connect_for_each_screen(
       if volumeOverlay == nil then
         return
       end
+
+      if _G.save_state.hardware_only_volume then
+        volumeOverlay.visible = false
+        return
+      end
+
       if (not _G.menuopened) then
         -- don't perform the toggle off if it is already off
         if ((not bool) and (not volumeOverlay.visible)) then
