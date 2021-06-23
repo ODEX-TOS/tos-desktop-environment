@@ -370,8 +370,93 @@ function test_emit_oled_mode_changed()
     assert(type(signals.emit_oled_mode) == "function", "Make sure emit_oled_mode is a signal and a function")
 end
 
+
+function test_emit_request_kernel()
+    assert(signals.emit_request_kernel, "Make sure the signal emit_request_kernel exists")
+    assert(type(signals.emit_request_kernel) == "function", "Make sure emit_request_kernel is a signal and a function")
+end
+
+function test_connect_request_kernel()
+    assert(signals.connect_request_kernel, "Make sure the signal connect_request_kernel exists")
+    assert(type(signals.connect_request_kernel) == "function", "Make sure connect_request_kernel is a signal and a function")
+end
+
+
+function test_emit_request_distro()
+    assert(signals.emit_request_distro, "Make sure the signal emit_request_distro exists")
+    assert(type(signals.emit_request_distro) == "function", "Make sure emit_request_distro is a signal and a function")
+end
+
+function test_connect_request_distro()
+    assert(signals.connect_request_distro, "Make sure the signal connect_request_distro exists")
+    assert(type(signals.connect_request_distro) == "function", "Make sure connect_request_distro is a signal and a function")
+end
+
+function test_emit_request_cpu()
+    assert(signals.emit_request_cpu, "Make sure the signal emit_request_cpu exists")
+    assert(type(signals.emit_request_cpu) == "function", "Make sure emit_request_cpu is a signal and a function")
+end
+
+function test_connect_request_cpu()
+    assert(signals.connect_request_cpu, "Make sure the signal connect_request_cpu exists")
+    assert(type(signals.connect_request_cpu) == "function", "Make sure connect_request_cpu is a signal and a function")
+end
+
+function test_emit_request_ram()
+    assert(signals.emit_request_ram, "Make sure the signal emit_request_ram exists")
+    assert(type(signals.emit_request_ram) == "function", "Make sure emit_request_ram is a signal and a function")
+end
+
+function test_connect_request_ram()
+    assert(signals.connect_request_ram, "Make sure the signal connect_request_ram exists")
+    assert(type(signals.connect_request_ram) == "function", "Make sure connect_request_ram is a signal and a function")
+end
+
+function test_emit_request_disk()
+    assert(signals.emit_request_disk, "Make sure the signal emit_request_disk exists")
+    assert(type(signals.emit_request_disk) == "function", "Make sure emit_request_disk is a signal and a function")
+end
+
+function test_connect_request_disk()
+    assert(signals.connect_request_disk, "Make sure the signal connect_request_disk exists")
+    assert(type(signals.connect_request_disk) == "function", "Make sure connect_request_disk is a signal and a function")
+end
+
+
+function test_emit_request_user()
+    assert(signals.emit_request_user, "Make sure the signal emit_request_user exists")
+    assert(type(signals.emit_request_user) == "function", "Make sure emit_request_user is a signal and a function")
+end
+
+function test_connect_request_user()
+    assert(signals.connect_request_user, "Make sure the signal connect_request_user exists")
+    assert(type(signals.connect_request_user) == "function", "Make sure connect_request_user is a signal and a function")
+end
+
+
+function test_emit_request_profile_pic()
+    assert(signals.emit_request_profile_pic, "Make sure the signal emit_request_profile_pic exists")
+    assert(type(signals.emit_request_profile_pic) == "function", "Make sure emit_request_profile_pic is a signal and a function")
+end
+
+function test_connect_request_profile_pic()
+    assert(signals.connect_request_profile_pic, "Make sure the signal connect_request_profile_pic exists")
+    assert(type(signals.connect_request_profile_pic) == "function", "Make sure connect_request_profile_pic is a signal and a function")
+end
+
+
+function test_emit_request_uptime()
+    assert(signals.emit_request_uptime, "Make sure the signal emit_request_uptime exists")
+    assert(type(signals.emit_request_uptime) == "function", "Make sure emit_request_uptime is a signal and a function")
+end
+
+function test_connect_request_uptime()
+    assert(signals.connect_request_uptime, "Make sure the signal connect_request_uptime exists")
+    assert(type(signals.connect_request_uptime) == "function", "Make sure connect_request_uptime is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 61
+    local amount = 83
     local result = tablelength(signals)
     assert(
         result == amount,

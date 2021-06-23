@@ -87,7 +87,8 @@ function test_theme_dir()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(dir_exists(value.dir), "Make sure theme dir exists")
@@ -97,7 +98,8 @@ function test_theme_font()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(type(value.font) == "string", "Make sure theme font exists")
@@ -108,7 +110,8 @@ function test_theme_fg()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(is_color(value.fg_normal), "Make sure theme fg_normal exists")
@@ -121,7 +124,8 @@ function test_theme_bg()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(is_color(value.bg_normal), "Make sure theme bg_normal exists")
@@ -136,7 +140,8 @@ function test_theme_border()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(type(value.border_width) == "number", "Make sure theme border_widthexists")
@@ -149,7 +154,8 @@ function test_theme_notification()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(is_color(value.transparent), "Make sure theme transparent exists")
@@ -171,7 +177,8 @@ function test_theme_group()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(is_color(value.groups_title_bg), "Make sure theme groups_title_bg exists")
@@ -184,7 +191,8 @@ function test_theme_menu()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(type(value.menu_height) == "number", "Make sure theme menu_height exists")
@@ -195,7 +203,8 @@ function test_theme_tooltip()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(is_color(value.tooltip_bg), "Make sure theme tooltip_bg exists")
@@ -207,7 +216,8 @@ function test_theme_layout()
     local value = {
         background = theme.background,
         primary = theme.primary,
-        accent = theme.accent
+        accent = theme.accent,
+        background_transparency = theme.background_transparency
     }
     awesomeOverride(value)
     assert(file_exists(value.layout_max), "Make sure theme layout_max exists")

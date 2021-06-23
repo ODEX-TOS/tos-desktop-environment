@@ -225,8 +225,20 @@ function test_theme_icon_dwindle()
     assert(file_exists(icons.dwindle), "Check that the dwindle icon exists")
 end
 
+function test_theme_icon_down()
+    assert(file_exists(icons.arrow_down), "Check that the arrow_down icon exists")
+end
+
+function test_theme_icon_up()
+    assert(file_exists(icons.arrow_up), "Check that the arrow_up icon exists")
+end
+
+function test_theme_icon_check()
+    assert(file_exists(icons.check), "Check that the check icon exists")
+end
+
 function test_that_all_icons_are_tested()
-    local amount = 50
+    local amount = 53
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

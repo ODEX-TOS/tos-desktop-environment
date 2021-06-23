@@ -45,7 +45,7 @@ end
 function test_config_player_update()
     assert(config.player_update, "Check that the config api is correct")
     assert(type(config.player_update) == "number", "The config type should be a number")
-    assert(config.player_update > 1, "Expected the value to be greater than 1")
+    assert(config.player_update >= 1, "Expected the value to be greater than 1")
 end
 
 function test_config_network_poll()
@@ -107,7 +107,7 @@ end
 
 function test_about_tde_and_tos()
     assert(config.aboutText, "Make sure the about text exists")
-    assert(config.aboutText:find("TOS"), "TOS must be mentioned in the about text: " .. config.aboutText)
+    assert(config.aboutText:find("TDE"), "TDE must be mentioned in the about text: " .. config.aboutText)
     assert(
         config.aboutText:find("MIT License"),
         "The license must be mentioned in the about text: " .. config.aboutText
