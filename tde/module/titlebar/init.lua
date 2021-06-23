@@ -938,7 +938,7 @@ local function set_client_titlebar(c)
         awful.placement.centered(c)
     end
 
-    if bIsFloating or c.titlebars_enabled then
+    if bIsFloating or c.titlebars_enabled and not (c.requests_no_titlebar) then
         awful.titlebar.show(c, "top")
     else
         awful.titlebar.hide(c, "top")
