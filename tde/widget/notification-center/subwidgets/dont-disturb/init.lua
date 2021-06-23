@@ -33,7 +33,7 @@ local naughty = require("naughty")
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/notification-center/icons/"
 local theme = require("theme.icons.dark-light")
 
-_G.dont_disturb = true
+_G.dont_disturb = false
 naughty.suspended = _G.dont_disturb
 
 local disturb_card = card()

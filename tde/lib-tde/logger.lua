@@ -81,6 +81,7 @@ local filename = dir .. "/stdout.log"
 local filename_error = dir .. "/error.log"
 
 filehandle.overwrite(filename, "")
+filehandle.overwrite(filename_error, "")
 
 -- helper function to convert a table to a string
 -- WARN: For internal use only, this should never be exposed to the end user

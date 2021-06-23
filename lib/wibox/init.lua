@@ -289,6 +289,7 @@ end
 -- @constructorfct wibox
 
 local function new(args)
+    print("Creating a new wibox")
     args = args or {}
     local ret = object()
     local w = capi.drawin(args)

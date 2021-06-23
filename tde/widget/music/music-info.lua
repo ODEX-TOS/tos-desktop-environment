@@ -40,7 +40,7 @@ local musicTitle =
   layout = wibox.layout.flex.horizontal
 }
 local function getTitle()
-  awful.spawn.easy_async_with_shell(
+  awful.spawn.easy_async(
     "playerctl metadata xesam:title",
     function(stdout)
       if (stdout:match("%W")) then
@@ -68,7 +68,7 @@ local musicArtist =
   layout = wibox.layout.flex.horizontal
 }
 local function getArtist()
-  awful.spawn.easy_async_with_shell(
+  awful.spawn.easy_async(
     "playerctl metadata xesam:artist",
     function(stdout)
       if (stdout:match("%W")) then

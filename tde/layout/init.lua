@@ -66,6 +66,7 @@ awful.screen.connect_for_each_screen(
 )
 
 signals.connect_anchor_changed(function (new_anchor)
+  print("Bottom panel Anchor changed")
   if type(new_anchor) ~= "string" then
     return
   end
