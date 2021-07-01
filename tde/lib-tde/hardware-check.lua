@@ -57,6 +57,8 @@
 
 local fileHandle = require("lib-tde.file")
 local batteryHandle = require("lib-tde.function.battery")
+local common = require('lib-tde.function.common')
+
 
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
 -- @tparam cmd string The command to execute
@@ -242,6 +244,22 @@ local function getDisplayFrequency()
     return number
 end
 
+--- Returns The amount of memory consumed by the desktop environment
+-- @return number The total memory consumption
+-- @return number The memory consumption inside of lua
+-- @staticfct getTDEMemoryConsumption
+-- @usage -- Returns The total memory consumption and consumption in lua (Heap + Stack)
+-- local total, lua_mem = lib-tde.hardware-check.getTDEMemoryConsumption()
+local function getTDEMemoryConsumption()
+    local unistd = require('posix.unistd')
+
+    local pid = unistd.getpid()
+    local statm = fileHandle.lines('/proc/' .. tostring(pid) .. '/statm')[1] or ""
+    local kbMem  = tonumber(common.split(statm, ' ')[1]) or 0
+
+    return kbMem, collectgarbage("count")
+end
+
 return {
     hasBattery = battery,
     hasWifi = wifi,
@@ -254,5 +272,6 @@ return {
     getCpuInfo = getCpuInfo,
     isWeakHardware = isWeakHardware,
     getDisplayFrequency = getDisplayFrequency,
+    getTDEMemoryConsumption = getTDEMemoryConsumption,
     execute = osExecute
 }
