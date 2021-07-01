@@ -60,10 +60,10 @@ else
   export LUA_CPATH="$PWD/tde/lib-tde/lib-so/?/?.so;$PWD/tde/lib-tde/lib-so/?.so;$LUA_CPATH;;"
 
   if [[ -n "$1" && -f "$1" ]]; then
-    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner.lua
+    RUNNER="junit" FILE="$1" LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner.lua || exit 1
   else
     # shellcheck disable=SC2068
-    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner.lua $@
+    LINES="$LINES" COLUMNS="$COLUMNS" "$LUA" tests/tde/runner.lua $@ || exit 1
   fi
 
   # check if busted is installed
@@ -73,5 +73,5 @@ else
     exit 0
   fi
 
-  make clean check-unit
+  make clean check-unit || exit 1
 fi

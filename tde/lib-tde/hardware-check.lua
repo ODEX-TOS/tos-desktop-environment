@@ -253,11 +253,13 @@ end
 local function getTDEMemoryConsumption()
     local unistd = require('posix.unistd')
 
+    local lua_mem = collectgarbage("count")
+
     local pid = unistd.getpid()
     local statm = fileHandle.lines('/proc/' .. tostring(pid) .. '/statm')[1] or ""
     local kbMem  = tonumber(common.split(statm, ' ')[1]) or 0
 
-    return kbMem, collectgarbage("count")
+    return kbMem, lua_mem
 end
 
 return {

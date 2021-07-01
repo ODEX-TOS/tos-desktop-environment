@@ -44,6 +44,14 @@ function test_hardware_check_ip_valid_return()
     assert(#split(ip, ".") == 4, "The ip address is not formatted correctly")
 end
 
+function test_hardware_check_tde_memory_consumption()
+    local total, lua_only = hardware.getTDEMemoryConsumption()
+    assert(type(total) == "number", "Total memory should be returned as a number")
+    assert(type(lua_only) == "number", "Total memory should be returned as a number")
+    
+    assert(total > 1, "We cannot consume less than 1 KB")
+end
+
 function test_hardware_check_api()
     assert(type(hardware.hasBattery) == "function", "Make sure the hardware api has a hasBattery function")
     assert(type(hardware.hasWifi) == "function", "Make sure the hardware api has a hasWifi function")
@@ -62,11 +70,15 @@ function test_hardware_check_api()
         type(hardware.getDisplayFrequency) == "function",
         "Make sure the hardware api has a getDisplayFrequency function"
     )
+    assert(
+        type(hardware.getTDEMemoryConsumption) == "function",
+        "Make sure the hardware api has a getTDEMemoryConsumption function"
+    )
     assert(type(hardware.execute) == "function", "Make sure the hardware api has a execute function")
 end
 
 function test_hardware_api_unit_tested()
-    local amount = 12
+    local amount = 13
     local result = tablelength(hardware)
     assert(
         result == amount,
