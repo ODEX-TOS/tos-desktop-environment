@@ -33,6 +33,15 @@ local volume = require("lib-tde.volume")
 
 local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 
+local function gen_default_tag()
+    return {
+        master_width_factor = 0.5,
+        master_count = 1,
+        gap = 4,
+        layout = "tile"
+    }
+end
+
 local function load()
     local table = {
         volume = 50,
@@ -43,7 +52,17 @@ local function load()
         oled_mode = false,
         bluetooth = false,
         auto_hide = false,
-        hardware_only_volume = false
+        hardware_only_volume = false,
+        tags = {
+            gen_default_tag(),
+            gen_default_tag(),
+            gen_default_tag(),
+            gen_default_tag(),
+            gen_default_tag(),
+            gen_default_tag(),
+            gen_default_tag(),
+            gen_default_tag(),
+        }
     }
     if not filehandle.exists(file) then
         return table
@@ -59,6 +78,7 @@ local function load()
     result.bluetooth = result.bluetooth or table.bluetooth
     result.auto_hide = result.auto_hide or table.auto_hide
     result.hardware_only_volume = result.hardware_only_volume or table.hardware_only_volume
+    result.tags = result.tags or table.tags
 
     -- always set the auto_hide true when using oled (To reduce burn in)
     if result.oled_mode then
@@ -173,6 +193,19 @@ local function get_mouse_state_id(id)
     end
     return name
 end
+
+local function gen_tag_list()
+    local tag_list = {}
+    for _, tag in ipairs(awful.screen.focused().tags) do
+      table.insert(tag_list, {
+        master_width_factor = tag.master_width_factor,
+        master_count = tag.master_count,
+        gap = tag.gap,
+        layout = tag.layout.name or "tile"
+      })
+    end
+    return tag_list
+  end
 
 -- listen for events and store the state on those events
 
@@ -301,4 +334,13 @@ signals.connect_auto_hide(function (bIsEnabled)
     end
     save_state.auto_hide = bIsEnabled
     save(save_state)
+end)
+
+signals.connect_save_tag_state(function()
+    local tags = gen_tag_list()
+
+    if #tags >= 8 then
+        save_state.tags = tags
+        save(save_state)
+    end
 end)

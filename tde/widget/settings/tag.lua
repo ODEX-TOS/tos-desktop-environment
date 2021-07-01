@@ -29,9 +29,7 @@ local card = require("lib-widget.card")
 local slider = require("lib-widget.slider")
 local scrollbox = require("lib-widget.scrollbox")
 local button = require("lib-widget.button")
-
-local configWriter = require("lib-tde.config-writer")
-local configFile = os.getenv("HOME") .. "/.config/tos/tags.conf"
+local signals = require("lib-tde.signals")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -77,8 +75,7 @@ local function gen_master_count(tags)
     end
     text.text = tostring(tags[1].master_count)
 
-    -- TODO: persist these changes
-    configWriter.update_entry(configFile, "tag_master_count_" .. tostring(tags[1].index), tostring(tags[1].master_count))
+    signals.emit_save_tag_state()
   end
 
   local dec = button("-", function()
@@ -116,7 +113,7 @@ local function generate_tag(tags, t_card)
     return tostring(tags[1].gap) .. 'px'
   end, function (_)
     print('Updating gap')
-    configWriter.update_entry(configFile, "tag_gap_" .. tostring(tags[1].index), tostring(tags[1].gap))
+    signals.emit_save_tag_state()
   end)
 
   local _slider_factor = slider(0, 1, 0.01, default_factor, function (value)
@@ -127,7 +124,7 @@ local function generate_tag(tags, t_card)
     return tostring(tags[1].master_width_factor * 100) .. '%'
   end, function (_)
     print('Updating master width factor')
-    configWriter.update_entry(configFile, "tag_master_width_" .. tostring(tags[1].index), tostring(tags[1].master_width_factor))
+    signals.emit_save_tag_state()
   end)
 
   local btn = gen_master_count(tags)

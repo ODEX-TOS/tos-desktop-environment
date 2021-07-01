@@ -455,8 +455,18 @@ function test_connect_request_uptime()
     assert(type(signals.connect_request_uptime) == "function", "Make sure connect_request_uptime is a signal and a function")
 end
 
+function test_emit_save_tag_state()
+    assert(signals.emit_save_tag_state, "Make sure the signal emit_save_tag_state exists")
+    assert(type(signals.emit_save_tag_state) == "function", "Make sure emit_save_tag_state is a signal and a function")
+end
+
+function test_connect_save_tag_state()
+    assert(signals.connect_save_tag_state, "Make sure the signal connect_save_tag_state exists")
+    assert(type(signals.connect_save_tag_state) == "function", "Make sure connect_save_tag_state is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 83
+    local amount = 85
     local result = tablelength(signals)
     assert(
         result == amount,

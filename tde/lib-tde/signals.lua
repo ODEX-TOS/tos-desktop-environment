@@ -897,6 +897,26 @@ connections.connect_anchor_changed = function(func)
     awesome.connect_signal("TDE::tag::anchor::changed", func)
 end
 
+--- Notify when we should save the tag state
+-- @staticfct emit_save_tag_state
+-- @usage -- Notify other TDE components that the tag state should be saved
+-- lib-tde.signals.emit_save_tag_state()
+connections.emit_save_tag_state = function()
+    awesome.emit_signal("TDE::tag::save::state")
+end
+
+--- Trigger a callback function when the tag data has changed
+-- @tparam function func The callback function that will be called when the tag data changed
+-- @staticfct connect_save_tag_state
+-- @usage --
+-- lib-tde.signals.connect_save_tag_state(
+--    function ()
+--      print("Saving the tag state")
+--    end)
+connections.connect_save_tag_state = function(func)
+    awesome.connect_signal("TDE::tag::save::state", func)
+end
+
 --- Notify when the auto_hide property has changed of the wiboxes
 -- @tparam boolean bIsEnabled If the auto hiding is enabled
 -- @staticfct emit_auto_hide

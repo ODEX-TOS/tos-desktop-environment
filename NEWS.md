@@ -33,6 +33,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 - Todo list allows editing existing entries
 - The settings application can now be moved using the mouse
+- Tag state now gets saved as well
 
 ### Bug Fixes
 

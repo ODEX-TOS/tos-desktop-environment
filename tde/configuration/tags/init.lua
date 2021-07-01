@@ -23,20 +23,14 @@
 --SOFTWARE.
 ]]
 local icons = require("theme.icons")
-local config = require("parser")(os.getenv("HOME") .. "/.config/tos/tags.conf")
 local menubar = require("menubar")
 
 local function icon(item)
   return menubar.utils.lookup_icon(item)
 end
 
-local function getItem(item)
-  return config[item] or nil
-end
-
 local function getLayoutPerTag(number)
-  local screen = "tag_" .. number
-  local item = getItem(screen)
+  local item = _G.save_state.tags[number].layout
   if item ~= nil then
     if item == "0" or item == "dwindle" then
       return awful.layout.suit.spiral.dwindle
@@ -65,18 +59,18 @@ local function getLayoutPerTag(number)
 end
 
 local function getGapPerTag(number)
-  local gap = "tag_gap_" .. number
-  return tonumber(getItem(gap)) or 4
+  local gap = _G.save_state.tags[number].gap
+  return gap or 4
 end
 
 local function getMasterCountPerTag(number)
-  local master = "tag_master_count_" .. number
-  return tonumber(getItem(master)) or 1
+  local master = _G.save_state.tags[number].master_count
+  return master or 1
 end
 
 local function getMasterWidthPerTag(number)
-  local master = "tag_master_width_" .. number
-  local width_factor = tonumber(getItem(master)) or 0.5
+  local master = _G.save_state.tags[number].master_width_factor
+  local width_factor = master or 0.5
 
   -- clamp the number between 0 and 1
   -- 0 in this context means that the master consumes 0 pixels
