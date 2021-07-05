@@ -136,6 +136,10 @@ local function add_prompt(text, active, index)
     end
     active = active or false
     index = index or #data.todo_items
+    -- when the #data.todo_items == 0
+    if index < 1 then
+        index = 1
+    end
     local pr = awful.widget.prompt()
 
     table.insert(rows, wibox.widget {
@@ -360,6 +364,14 @@ local function worker(user_args)
         end
 
         popup:setup(rows)
+
+        popup:connect_signal(
+        "mouse::leave",
+        function()
+            todo_widget.widget.bg = beautiful.transparent
+            popup.visible = false
+        end
+        )
     end
 
     signals.connect_background_theme_changed(function (_)

@@ -45,6 +45,9 @@ This draft is not a final version of what will be introduced in the next patch, 
 - When using the floating layout, render the titlebars
 - Don't show software volume osd slider when hardware only volume is active
 - Data views now show their data directly when starting
+- Fix empty todo list creation
+- Todo list now disappears on focus loss
+- Top bar hover is now uniform
 
 ### Dev Notes
 
