@@ -41,6 +41,7 @@ local wibox = require("wibox")
 local animate = require("lib-tde.animations").createAnimObject
 local gears = require("gears")
 local signals = require('lib-tde.signals')
+local logger = require("lib-tde.logger")
 
 --- Create a new auto_hide widget
 -- @tparam wibox box The wibox that should auto_hide when hovering
@@ -49,6 +50,11 @@ local signals = require('lib-tde.signals')
 -- @usage -- This will create a fading wibox
 -- local separate = lib-widget.auto_hide(wibox, 1)
 return function(box, auto_hide_time)
+
+    if box.struts == nil then
+        print("Auto Hide widget only support wiboxes as a parameter, but got: " .. tostring(box) , logger.warn)
+        return box
+    end
 
     auto_hide_time = auto_hide_time or 0.5
     local enabled = _G.save_state.auto_hide

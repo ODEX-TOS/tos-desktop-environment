@@ -151,6 +151,36 @@ function test_script_create_string_from_file_empty()
     rm_file("test_file_2")
 end
 
+function test_script_replace()
+    local data = "abc"
+    local expected = "bbc"
+
+    create_file("test_file_1", data)
+
+    files.replace("test_file_1", "a", "b")
+
+    assert(
+        files.string("test_file_1") == expected,
+        "The string representation of the file 'test_file_1' doesn't match: " .. expected
+    )
+    rm_file("test_file_1")
+end
+
+function test_script_replace_regex()
+    local data = "abc123def456"
+    local expected = "Z123Z456"
+
+    create_file("test_file_1", data)
+
+    files.replace("test_file_1", "[a-z]+", "Z")
+
+    assert(
+        files.string("test_file_1") == expected,
+        "The string representation of the file 'test_file_1' doesn't match: " .. expected
+    )
+    rm_file("test_file_1")
+end
+
 function test_script_lines_from_file()
     local lines = {}
     lines[1] = "this is some test data"
@@ -354,7 +384,7 @@ function test_dir_recursive_creation()
 end
 
 function test_filehandle_api_unit_tested()
-    local amount = 15
+    local amount = 16
     local result = tablelength(files)
     assert(
         result == amount,

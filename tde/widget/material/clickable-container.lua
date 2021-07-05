@@ -24,12 +24,17 @@
 ]]
 local wibox = require("wibox")
 local beautiful = require("beautiful")
+local gears = require("gears")
+local dpi = require("beautiful.xresources").apply_dpi
 
 local function build(widget)
 	local container =
 		wibox.widget {
 		widget,
-		widget = wibox.container.background
+		widget = wibox.container.background,
+		shape = function(cr, width, height)
+			gears.shape.rounded_rect(cr, width, height, dpi(4))
+		end,
 	}
 	local old_cursor, old_wibox
 

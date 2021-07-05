@@ -402,7 +402,6 @@ local globalKeys =
     function()
       print("Raising volume")
       volume.inc_volume()
-      signals.emit_volume_update()
     end,
     {description = i18n.translate("volume up"), group = i18n.translate(i18n.translate("hardware"))}
   ),
@@ -412,7 +411,6 @@ local globalKeys =
     function()
       print("Lowering volume")
       volume.dec_volume()
-      signals.emit_volume_update()
     end,
     {description = i18n.translate("volume down"), group = i18n.translate(i18n.translate("hardware"))}
   ),

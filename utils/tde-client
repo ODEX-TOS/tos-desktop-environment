@@ -237,10 +237,18 @@ exec_loop() {
         fi
 }
 
+# if no arguments are supplied default to stdin, is one argument is supplied and it is a file execute it
 if [ $# -ne 0 ]
 then
     # check for command-line arguments
     ARGS=""
+
+    # If one argument is supplied and it is a file execute it
+    if [ $# -eq 1 ] && [ -f "$1" ]; then
+        a_dbus_send "$(cat "$1" | sed '/^#/d')"
+        exit $?
+    fi
+
     while [[ $1 != "" ]]; do
         if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
             print_help

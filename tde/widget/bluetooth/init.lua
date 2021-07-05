@@ -36,6 +36,7 @@ local icons = require("theme.icons")
 -- Battery 0: Charging, 53%, 00:57:43 until charged
 
 local checker
+local prev_check
 
 local widget =
   wibox.widget {
@@ -86,23 +87,31 @@ awful.tooltip(
 delayed_timer(
   config.bluetooth_poll,
   function()
-    awful.spawn.easy_async_with_shell(
+    awful.spawn.easy_async(
       "bluetoothctl --monitor show",
       function(stdout)
         -- Check if there  bluetooth
-        checker = stdout:match("Powered: yes")
-        local widgetIconName
+        checker = (stdout:match("Powered: yes") ~= nil)
 
-        local status = (checker ~= nil)
-        signals.emit_bluetooth_status(status)
+        if prev_check == nil then
+          prev_check = not checker
+        end
 
-        if status then
+        if checker == prev_check then
+          return
+        end
+
+        prev_check = checker
+
+        signals.emit_bluetooth_status(checker)
+
+        local widgetIconName = "bluetooth_off"
+
+        if checker then
           widgetIconName = "bluetooth"
-        else
-          widgetIconName = "bluetooth-off"
         end
         widget.icon:set_image(icons[widgetIconName])
-        print("Polling bluetooth status: " .. tostring(status))
+        print("Polling bluetooth status: " .. tostring(checker))
       end
     )
   end,

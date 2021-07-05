@@ -17,6 +17,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - [ ] `accessibility Visual` Accessability settings for color impaired people (High contrast)
 - [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
 - [ ] `Default Applications` Allow setting the default application from the settings
+- [ ] `Key binding config` Allow setting the keybinding from the settings application
 
 
 ## Packaging
@@ -32,6 +33,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 - Todo list allows editing existing entries
 - The settings application can now be moved using the mouse
+- Tag state now gets saved as well
 
 ### Bug Fixes
 
@@ -40,6 +42,12 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Pinentry-gtk-2 now renders properly
 - Todo widget is now readable over a white background
 - Users with the default shell as fish won't break specific shell scripts
+- When using the floating layout, render the titlebars
+- Don't show software volume osd slider when hardware only volume is active
+- Data views now show their data directly when starting
+- Fix empty todo list creation
+- Todo list now disappears on focus loss
+- Top bar hover is now uniform
 
 ### Dev Notes
 

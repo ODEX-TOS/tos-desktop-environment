@@ -1,0 +1,5 @@
+#!/usr/bin/tde-client
+
+require("MemoryReferenceInfo").m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1,
+os.getenv("PWD") .. "/LuaMemRefInfo-before.txt",
+os.getenv("PWD") .. "/LuaMemRefInfo-after.txt")

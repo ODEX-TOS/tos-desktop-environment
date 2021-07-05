@@ -286,7 +286,7 @@ return function()
 
   local timer =
     gears.timer {
-    autostart = true,
+    autostart = false,
     timeout = 20,
     callback = function()
       print("Refreshing")

@@ -34,6 +34,7 @@
 local hardware = require("lib-tde.hardware-check")
 local execute = hardware.execute
 local split = require("lib-tde.function.common").split
+local signals = require("lib-tde.signals")
 
 local err = "\27[0;31m[ ERROR "
 
@@ -185,7 +186,9 @@ end
 --    inc_volume()
 local function inc_volume()
     if _should_control_via_software() then
-        awful.spawn("amixer -D pulse sset Master 5%+")
+        awful.spawn.easy_async("amixer -D pulse sset Master 5%+", function()
+            signals.emit_volume_update()
+        end)
     end
 end
 
@@ -195,7 +198,9 @@ end
 --    dec_volume()
 local function dec_volume()
     if _should_control_via_software() then
-        awful.spawn("amixer -D pulse sset Master 5%-")
+        awful.spawn.easy_async("amixer -D pulse sset Master 5%-", function()
+            signals.emit_volume_update()
+        end)
     end
 end
 
@@ -205,7 +210,9 @@ end
 --    toggle_master()
 local function toggle_master()
     if _should_control_via_software() then
-        awful.spawn("amixer -D pulse set Master 1+ toggle")
+        awful.spawn.easy_async("amixer -D pulse set Master 1+ toggle", function ()
+            signals.emit_volume_update()
+        end)
     end
 end
 
@@ -263,7 +270,7 @@ end
 -- @usage -- Set the volume to max (of application with sink #75)
 --    set_volume(75, 100)
 local function set_application_volume(sink, value)
-    execute("pactl set-sink-input-volume " .. tostring(sink) .. " " .. tostring(math.floor(value)) .. "%")
+    awful.spawn("pactl set-sink-input-volume " .. tostring(sink) .. " " .. tostring(math.floor(value)) .. "%")
 end
 
 --- Set the volume in percentage
@@ -273,7 +280,9 @@ end
 --    set_volume(100)
 local function set_volume(value)
     if _should_control_via_software() then
-        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ " .. tostring(math.floor(value)) .. "%")
+        awful.spawn.easy_async("pactl set-sink-volume @DEFAULT_SINK@ " .. tostring(math.floor(value)) .. "%", function ()
+            signals.emit_volume_update()
+        end)
     else
         awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 100%")
     end

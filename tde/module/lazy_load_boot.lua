@@ -32,6 +32,7 @@ if not (general["disable_desktop"] == "1") then
     if IsreleaseMode then
         require("module.installer")
     end
+
     require("module.desktop")
 end
 

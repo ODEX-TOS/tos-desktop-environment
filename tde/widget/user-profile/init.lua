@@ -32,15 +32,10 @@ local card = require("lib-widget.card")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/user-profile/icons/"
 
-local PATH_TO_CACHE_ICON = os.getenv("HOME") .. "/.cache/tos/user-icons/"
-
 local signals = require("lib-tde.signals")
-local filehandle = require("lib-tde.file")
 
 local user_card = card()
 
--- guarantee that the cache dir exists
-filehandle.dir_create(PATH_TO_CACHE_ICON)
 
 local profile_imagebox =
   profilebox(
@@ -104,15 +99,15 @@ local function init()
     end
   )
 
-  -- Run once on startup or login
-  awful.spawn.easy_async_with_shell(
-    "uname -r | cut -d '-' -f 1,2",
-    function(out)
-      local kernel = out:gsub("%\n", "")
-      kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
-      signals.emit_kernel(kernel)
-    end
-  )
+  signals.connect_kernel(function(kernel)
+    kernel_name.markup = '<span font="SFNS Display Regular 12">Kernel: ' .. kernel .. "</span>"
+  end)
+
+  signals.emit_request_kernel()
+  signals.emit_request_user()
+  signals.emit_request_distro()
+  signals.emit_request_profile_pic()
+  signals.emit_request_uptime()
 end
 
 init()

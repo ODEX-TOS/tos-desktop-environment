@@ -1,0 +1,3 @@
+#!/usr/bin/tde-client
+
+require("MemoryReferenceInfo").m_cMethods.DumpMemorySnapshot(os.getenv("PWD"), "snap", -1)

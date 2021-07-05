@@ -276,6 +276,27 @@ connections.connect_username = function(func)
     awesome.connect_signal("user::changed", func)
 end
 
+---Request the user data
+-- @staticfct emit_request_user
+-- @see connect_username
+-- @usage -- notify other components that you want to know the user data
+-- lib-tde.signals.emit_request_user()
+connections.emit_request_user = function()
+    awesome.emit_signal("user::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the user data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_user
+-- @usage
+-- lib-tde.signals.connect_request_user(
+--    function ()
+--      print("Someone wants to know the user data")
+--    end)
+connections.connect_request_user = function(func)
+    awesome.connect_signal("user::request", func)
+end
+
 --- Notify other TDE components that the distro name changed
 -- @tparam string value The distribution name
 -- @staticfct emit_distro
@@ -295,6 +316,27 @@ end
 --    end)
 connections.connect_distro = function(func)
     awesome.connect_signal("distro::changed", func)
+end
+
+---Request the distro data
+-- @staticfct emit_request_distro
+-- @see connect_distro
+-- @usage -- notify other components that you want to know the distor data
+-- lib-tde.signals.emit_request_distro()
+connections.emit_request_distro = function()
+    awesome.emit_signal("distro::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the distro data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_distro
+-- @usage
+-- lib-tde.signals.connect_request_distro(
+--    function ()
+--      print("Someone wants to know the distro data")
+--    end)
+connections.connect_request_distro = function(func)
+    awesome.connect_signal("distro::request", func)
 end
 
 --- Notify other TDE components that the uptime changed
@@ -318,6 +360,27 @@ connections.connect_uptime = function(func)
     awesome.connect_signal("uptime::changed", func)
 end
 
+---Request the uptime data
+-- @staticfct emit_request_uptime
+-- @see connect_uptime
+-- @usage -- notify other components that you want to know the uptime
+-- lib-tde.signals.emit_request_uptime()
+connections.emit_request_uptime = function()
+    awesome.emit_signal("uptime::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the uptime data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_uptime
+-- @usage
+-- lib-tde.signals.connect_request_uptime(
+--    function ()
+--      print("Someone wants to know the uptime data")
+--    end)
+connections.connect_request_uptime = function(func)
+    awesome.connect_signal("uptime::request", func)
+end
+
 --- Notify other TDE components what the current kernel version is
 -- @tparam string value The kernel version
 -- @staticfct emit_kernel
@@ -337,6 +400,27 @@ end
 --    end)
 connections.connect_kernel = function(func)
     awesome.connect_signal("kernel::changed", func)
+end
+
+---Request the kernel data
+-- @staticfct emit_request_kernel
+-- @see connect_kernel
+-- @usage -- notify other components that you want to know the kernel data
+-- lib-tde.signals.emit_request_kernel()
+connections.emit_request_kernel = function()
+    awesome.emit_signal("kernel::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the kernel data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_kernel
+-- @usage
+-- lib-tde.signals.connect_request_kernel(
+--    function ()
+--      print("Someone wants to know the kernel data")
+--    end)
+connections.connect_request_kernel = function(func)
+    awesome.connect_signal("kernel::request", func)
 end
 
 --- Notify other TDE components how many packages should be updated
@@ -381,6 +465,27 @@ connections.connect_cpu_usage = function(func)
     awesome.connect_signal("cpu::usage", func)
 end
 
+---Request the cpu data
+-- @staticfct emit_request_cpu
+-- @see connect_cpu_usage
+-- @usage -- notify other components that you want to know the cpu data
+-- lib-tde.signals.emit_request_cpu()
+connections.emit_request_cpu = function()
+    awesome.emit_signal("cpu::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the cpu data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_cpu
+-- @usage
+-- lib-tde.signals.connect_request_cpu(
+--    function ()
+--      print("Someone wants to know the cpu usage")
+--    end)
+connections.connect_request_cpu = function(func)
+    awesome.connect_signal("cpu::request", func)
+end
+
 --- Notify other TDE components about the current disk usage
 -- @tparam number value The current disk usage in percentage
 -- @staticfct emit_disk_usage
@@ -400,6 +505,27 @@ end
 --    end)
 connections.connect_disk_usage = function(func)
     awesome.connect_signal("disk::usage", func)
+end
+
+---Request the disk data
+-- @staticfct emit_request_disk
+-- @see connect_disk_usage
+-- @usage -- notify other components that you want to know the disk data
+-- lib-tde.signals.emit_request_disk()
+connections.emit_request_disk = function()
+    awesome.emit_signal("disk::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the disk data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_disk
+-- @usage
+-- lib-tde.signals.connect_request_disk(
+--    function ()
+--      print("Someone wants to know the disk usage")
+--    end)
+connections.connect_request_disk = function(func)
+    awesome.connect_signal("disk::request", func)
 end
 
 --- Notify other TDE components about the total disk space
@@ -463,6 +589,27 @@ end
 --    end)
 connections.connect_ram_total = function(func)
     awesome.connect_signal("ram::total", func)
+end
+
+---Request the ram data
+-- @staticfct emit_request_ram
+-- @see connect_ram_usage
+-- @usage -- notify other components that you want to know the ram data
+-- lib-tde.signals.emit_request_ram()
+connections.emit_request_ram = function()
+    awesome.emit_signal("ram::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the ram data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_ram
+-- @usage
+-- lib-tde.signals.connect_request_ram(
+--    function ()
+--      print("Someone wants to know the ram data")
+--    end)
+connections.connect_request_ram = function(func)
+    awesome.connect_signal("ram::request", func)
 end
 
 --- Notify other TDE components about the current bluetooth status
@@ -623,6 +770,27 @@ connections.connect_profile_picture_changed = function(func)
     awesome.connect_signal("TDE::profile:picture::changed", func)
 end
 
+---Request the user data
+-- @staticfct emit_request_profile_pic
+-- @see connect_profile_picture_changed
+-- @usage -- notify other components that you want to know the profile data
+-- lib-tde.signals.emit_request_profile_pic()
+connections.emit_request_profile_pic = function()
+    awesome.emit_signal("profile::pic::request", true)
+end
+
+--- Trigger a callback function some end users want's to know the profile picture data
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_request_profile_pic
+-- @usage
+-- lib-tde.signals.connect_request_profile_pic(
+--    function ()
+--      print("Someone wants to know the profile picture data")
+--    end)
+connections.connect_request_profile_pic = function(func)
+    awesome.connect_signal("profile::pic::request", func)
+end
+
 --- Notify when the notification disturb state changes
 -- @tparam bool bDoNotDisturb If Do Not Disturb mode is turned on
 -- @staticfct emit_do_not_disturb
@@ -727,6 +895,26 @@ end
 --    end)
 connections.connect_anchor_changed = function(func)
     awesome.connect_signal("TDE::tag::anchor::changed", func)
+end
+
+--- Notify when we should save the tag state
+-- @staticfct emit_save_tag_state
+-- @usage -- Notify other TDE components that the tag state should be saved
+-- lib-tde.signals.emit_save_tag_state()
+connections.emit_save_tag_state = function()
+    awesome.emit_signal("TDE::tag::save::state")
+end
+
+--- Trigger a callback function when the tag data has changed
+-- @tparam function func The callback function that will be called when the tag data changed
+-- @staticfct connect_save_tag_state
+-- @usage --
+-- lib-tde.signals.connect_save_tag_state(
+--    function ()
+--      print("Saving the tag state")
+--    end)
+connections.connect_save_tag_state = function(func)
+    awesome.connect_signal("TDE::tag::save::state", func)
 end
 
 --- Notify when the auto_hide property has changed of the wiboxes

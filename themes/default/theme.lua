@@ -14,22 +14,22 @@ local theme = {}
 
 theme.font          = "sans 8"
 
-theme.bg_normal     = "#222222"
-theme.bg_focus      = "#535d6c"
-theme.bg_urgent     = "#ff0000"
-theme.bg_minimize   = "#444444"
-theme.bg_systray    = theme.bg_normal
+theme.bg_normal     = "#00000066"
+theme.bg_focus      = "#5a5a5a"
+theme.bg_urgent     = "#3F3F3F"
+theme.bg_minimize   = "#00000066"
+theme.bg_systray    = theme.bg_focus
 
-theme.fg_normal     = "#aaaaaa"
-theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.fg_normal     = "#ffffffde"
+theme.fg_focus      = "#e4e4e4"
+theme.fg_urgent     = "#CC9393"
+theme.fg_minimize   = "#232323"
 
-theme.useless_gap         = dpi(0)
+theme.useless_gap         = dpi(4)
 theme.border_width        = dpi(1)
-theme.border_color_normal = "#000000"
-theme.border_color_active = "#535d6c"
-theme.border_color_marked = "#91231c"
+theme.border_color_normal = "#00000066"
+theme.border_color_active = "#4DD0E1"
+theme.border_color_marked = "#CC9393"
 
 -- There are other variable sets
 -- overriding the default one when
@@ -98,7 +98,7 @@ theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar
 theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
-theme.wallpaper = themes_path.."default/background.png"
+theme.wallpaper = themes_path.."default/background.jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
@@ -119,9 +119,7 @@ theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
 theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 
 -- Generate Awesome icon:
-theme.awesome_icon = theme_assets.awesome_icon(
-    theme.menu_height, theme.bg_focus, theme.fg_focus
-)
+theme.awesome_icon =  themes_path .. "default/logo.svg"
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
@@ -131,7 +129,7 @@ theme.icon_theme = nil
 rnotification.connect_signal('request::rules', function()
     rnotification.append_rule {
         rule       = { urgency = 'critical' },
-        properties = { bg = '#ff0000', fg = '#ffffff' }
+        properties = { bg = '#00000066', fg = '#ffffff' }
     }
 end)
 

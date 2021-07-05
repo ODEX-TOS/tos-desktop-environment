@@ -22,48 +22,23 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local wibox = require("wibox")
-local mat_list_item = require("widget.material.list-item")
-local mat_slider = require("lib-widget.progress_bar")
-local mat_icon = require("widget.material.icon")
-local icons = require("theme.icons")
-local dpi = require("beautiful").xresources.apply_dpi
-local config = require("config")
-local file = require("lib-tde.file")
+
+local hardware = require('lib-tde.hardware-check')
 local delayed_timer = require("lib-tde.function.delayed-timer")
-
-
-local slider =
-  wibox.widget {
-  read_only = true,
-  widget = mat_slider
-}
-
-local max_temp = 80
+local common = require("lib-tde.function.common")
+local config = require("config")
 
 delayed_timer(
-  config.temp_poll,
-  function()
-    local stdout = file.string("/sys/class/thermal/thermal_zone0/temp") or ""
-    if stdout == "" then
-      return
-    end
-    local temp = stdout:match("(%d+)")
-    slider:set_value((temp / 1000) / max_temp * 100)
-    print("Current temperature: " .. (temp / 1000) .. " °C")
-  end,
-  config.temp_startup_delay
+        60,
+        function()
+            local total_mem, lua_mem = hardware.getTDEMemoryConsumption()
+
+            print("Total memory consumption: " .. common.bytes_to_grandness(total_mem, 1))
+            print("Lua memory consumption: " .. common.bytes_to_grandness(lua_mem, 1))
+
+            if total_mem > config.max_mem then
+                awesome.restart()
+            end
+        end,
+        31
 )
-
-local temperature_meter =
-  wibox.widget {
-  wibox.widget {
-    icon = icons.thermometer,
-    size = dpi(24),
-    widget = mat_icon
-  },
-  slider,
-  widget = mat_list_item
-}
-
-return temperature_meter

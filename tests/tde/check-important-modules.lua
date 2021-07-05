@@ -566,8 +566,18 @@ function test_lib_tde_translations_en()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function test_memory_management()
+    local file = "tde/MemoryReferenceInfo.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_tde_reloader()
+    local file = "tde/module/tde-reloader.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function test_that_all_important_files_are_tested()
-    local amount = 100
+    local amount = 102
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

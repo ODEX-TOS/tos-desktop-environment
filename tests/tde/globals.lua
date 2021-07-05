@@ -30,7 +30,9 @@ awesome = {
         print("Awesome signal connector: " .. location)
     end,
     register_xproperty = function()
-    end
+    end,
+    release = "unit-test-mock",
+    version = "v0.0"
 }
 
 client = {

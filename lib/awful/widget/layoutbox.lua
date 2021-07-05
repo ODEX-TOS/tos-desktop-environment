@@ -35,6 +35,8 @@ local function update(w, screen)
     local img = surface.load_silently(beautiful["layout_" .. name], false)
     w.imagebox.image = img
     w.textbox.text   = img and "" or name
+
+    awesome.emit_signal("TDE::tag::save::state")
 end
 
 local function update_from_tag(t)

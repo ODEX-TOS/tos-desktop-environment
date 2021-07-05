@@ -257,18 +257,7 @@ gears.timer {
   end
 }
 
--- Execute if button is next/play/prev button is pressed
-awesome.connect_signal(
-  "song_changed",
-  function()
-    checkCover()
-    if filehandle.exists("/tmp/cover.jpg") then
-      filehandle.rm("/tmp/cover.jpg")
-    end
-  end
-)
-
-widget.icon:set_image(theme(PATH_TO_ICONS .. "music" .. ".svg"))
+widget.icon:set_image(gears.surface(theme(PATH_TO_ICONS .. "music" .. ".svg")))
 
 -- Update music info on Initialization
 local function initMusicInfo()

@@ -45,7 +45,7 @@ end
 function test_config_player_update()
     assert(config.player_update, "Check that the config api is correct")
     assert(type(config.player_update) == "number", "The config type should be a number")
-    assert(config.player_update > 1, "Expected the value to be greater than 1")
+    assert(config.player_update >= 1, "Expected the value to be greater than 1")
 end
 
 function test_config_network_poll()
@@ -105,9 +105,15 @@ function test_config_garbage_cycle()
     assert(config.garbage_collection_cycle > 60, "garbage collection is very taxing on resources, don't call it ofter")
 end
 
+function test_config_memory()
+    assert(config.max_mem, "Check that the config api is correct")
+    assert(type(config.max_mem) == "number", "The config type should be a number")
+    assert(config.max_mem > 200000, "The max memory option should be larger that 200MB as that is roughly what TDE uses by default")
+end
+
 function test_about_tde_and_tos()
     assert(config.aboutText, "Make sure the about text exists")
-    assert(config.aboutText:find("TOS"), "TOS must be mentioned in the about text: " .. config.aboutText)
+    assert(config.aboutText:find("TDE"), "TDE must be mentioned in the about text: " .. config.aboutText)
     assert(
         config.aboutText:find("MIT License"),
         "The license must be mentioned in the about text: " .. config.aboutText
@@ -119,7 +125,7 @@ function test_about_tde_and_tos()
 end
 
 function test_config_api_unit_tested()
-    local amount = 21
+    local amount = 22
     local result = tablelength(config)
     assert(
         result == amount,

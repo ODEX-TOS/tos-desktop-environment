@@ -179,6 +179,10 @@ return function()
   container:add(tde_uptime_name)
   container:add(windowing_system_name)
 
+  signals.emit_request_user()
+  signals.emit_request_ram()
+  signals.emit_request_distro()
+
   view:setup {
     layout = wibox.container.background,
     {
