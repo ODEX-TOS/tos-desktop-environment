@@ -46,6 +46,12 @@ signals.connect_volume(
     end
 )
 
+signals.connect_mic_volume(
+    function (value)
+        volume.set_mic_volume(value or 0)
+    end
+)
+
 signals.connect_volume_update(
     function()
         volume.get_volume(

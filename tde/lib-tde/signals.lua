@@ -169,6 +169,27 @@ connections.connect_volume = function(func)
     awesome.connect_signal("volume::update", func)
 end
 
+--- Notify other TDE components that the microphone volume changed
+-- @tparam number value The volume between 0 and 100
+-- @staticfct emit_mic_volume
+-- @usage -- notify other components when the microphone volume changed
+-- lib-tde.signals.emit_mic_volume(100)
+connections.emit_mic_volume = function(value)
+    awesome.emit_signal("mic::volume::update", value)
+end
+
+--- Trigger a callback function when the microphone volume changed
+-- @tparam function func The callback function that will be called when the event happens
+-- @staticfct connect_mic_volume
+-- @usage -- notify other components when the microphone volume changed
+-- lib-tde.signals.connect_mic_volume(
+--    function (value)
+--      print("Current microphone volume: " .. tostring(value))
+--    end)
+connections.connect_mic_volume = function(func)
+    awesome.connect_signal("mic::volume::update", func)
+end
+
 --- Request an update to check to volume value
 -- @staticfct emit_volume_update
 -- @usage -- Notify that you changed the state of volume

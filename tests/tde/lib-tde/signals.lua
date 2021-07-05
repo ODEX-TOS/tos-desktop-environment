@@ -465,8 +465,18 @@ function test_connect_save_tag_state()
     assert(type(signals.connect_save_tag_state) == "function", "Make sure connect_save_tag_state is a signal and a function")
 end
 
+function test_emit_mic_volume()
+    assert(signals.emit_mic_volume, "Make sure the signal emit_mic_volume exists")
+    assert(type(signals.emit_mic_volume) == "function", "Make sure emit_mic_volume is a signal and a function")
+end
+
+function test_connect_mic_volume()
+    assert(signals.connect_mic_volume, "Make sure the signal connect_mic_volume exists")
+    assert(type(signals.connect_mic_volume) == "function", "Make sure connect_mic_volume is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 85
+    local amount = 87
     local result = tablelength(signals)
     assert(
         result == amount,

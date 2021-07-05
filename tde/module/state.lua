@@ -45,6 +45,7 @@ end
 local function load()
     local table = {
         volume = 50,
+        mic_volume = 50,
         volume_muted = false,
         brightness = 100,
         mouse = {},
@@ -71,6 +72,7 @@ local function load()
     -- in case someone modified the state object and some properties are faulty or errored outputs
     result.volume = result.volume or table.volume
     result.volume_muted = result.volume_muted or table.volume_muted
+    result.mic_volume = result.mic_volume or table.mic_volume
     result.brightness = result.brightness or table.brightness
     result.mouse = result.mouse or table.mouse
     result.do_not_disturb = result.do_not_disturb or table.do_not_disturb
@@ -103,6 +105,8 @@ local function setup_state(state)
     -- set the volume
     print("Setting volume: " .. state.volume)
     volume.set_volume(state.volume or 0)
+
+    volume.set_mic_volume(state.mic_volume or 0)
 
     -- set the brightness
     if (_G.oled) then
@@ -215,6 +219,16 @@ signals.connect_volume(
             return
         end
         save_state.volume = value
+        save(save_state)
+    end
+)
+
+signals.connect_mic_volume(
+    function(value)
+        if save_state.mic_volume == value then
+            return
+        end
+        save_state.mic_volume = value
         save(save_state)
     end
 )
