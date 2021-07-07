@@ -165,11 +165,20 @@ local function focused_screen()
     return awful.screen.focused () or screen[1]
 end
 
+--- Trim leading and trailing whitespace
+-- @staticfct trim
+-- @usage -- returns the trimmed string
+-- lib-tde.function.trim("  abc   ") -- returns 'abc'
+local function trim(s)
+    return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
 return {
     split = split,
     sleep = sleep,
     num_to_si_prefix = num_to_si_prefix,
     bytes_to_grandness = bytes_to_grandness,
     num_to_str = num_to_str,
+    trim = trim,
     focused_screen = focused_screen
 }

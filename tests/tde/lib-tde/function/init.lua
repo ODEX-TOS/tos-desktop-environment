@@ -24,5 +24,5 @@
 ]]
 require("tests.tde.lib-tde.function.application_runner")
 require("tests.tde.lib-tde.function.battery")
-require("tests.tde.lib-tde.function.break-timer")
+require("tests.tde.lib-tde.function.datetime")
 require("tests.tde.lib-tde.function.common")

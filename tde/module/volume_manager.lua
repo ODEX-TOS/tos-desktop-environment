@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 local signals = require("lib-tde.signals")
-local sound = require("lib-tde.sound")
+local sound = require("lib-tde.sound").play_sound
 local time = require("socket").gettime
 local volume = require("lib-tde.volume")
 

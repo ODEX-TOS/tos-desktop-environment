@@ -35,7 +35,7 @@ local volume = require("lib-tde.volume")
 local button = require("lib-widget.button")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
-local sound = require("lib-tde.sound")
+local sound = require("lib-tde.sound").play_sound
 local scrollbox = require("lib-widget.scrollbox")
 
 

@@ -82,6 +82,8 @@ return {
   qr_code = theme(dir .. "/qr_code.svg"),
   dwindle = theme(dir .. "/dwindle.svg"),
   check = theme(dir .. "/check.svg"),
+  clock = theme(dir .. "/clock.svg"),
+  clock_add = theme(dir .. "/clock-add.svg"),
   arrow_up = theme(dir .. "/arrow_up.svg"),
   arrow_down = theme(dir .. "/arrow_down.svg"),
 
