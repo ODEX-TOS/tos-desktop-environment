@@ -50,6 +50,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Fix empty todo list creation
 - Todo list now disappears on focus loss
 - Top bar hover is now uniform
+- The countdown timer now doesn't trigger when in a fullscreen application (only the sound triggers)
 
 ### Dev Notes
 

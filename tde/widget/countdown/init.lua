@@ -91,7 +91,12 @@ end
 
 local function show_timer_done()
     if awful.screen.focused().countdownOverlay then
-        awful.screen.focused().countdownOverlay.show()
+        if mouse.current_client.fullscreen then
+            -- only play the timer sound
+            awful.screen.focused().countdownOverlay.play()
+        else
+            awful.screen.focused().countdownOverlay.show()
+        end
     end
 end
 
@@ -427,6 +432,9 @@ local function worker(user_args)
 
                     show_timer_done()
                 end
+            end
+
+            if #data.countdown_items > 0 then
                 save(data)
             end
 

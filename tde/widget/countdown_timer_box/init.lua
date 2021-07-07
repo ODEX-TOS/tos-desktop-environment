@@ -157,14 +157,32 @@ awful.screen.connect_for_each_screen(
             pid = sound(true)
         end
 
+        countdownOverlay.kill_sound = function()
+          if pid ~= -1 and type(pid) == "number" and filehandle.dir_exists('/proc/' .. tostring(pid)) then
+            awful.spawn('kill ' .. tostring(pid))
+          end
+          pid = -1
+        end
+
+        countdownOverlay.play = function(timeout)
+          timeout = timeout or 5
+          pid = sound(true)
+
+          gears.timer {
+            single_shot = true,
+            autostart = true,
+            timeout = timeout,
+            callback = function()
+              countdownOverlay.kill_sound()
+            end
+          }
+        end
+
         countdownOverlay.hide = function()
             countdownbackdrop.visible = false
             countdownOverlay.visible = false
 
-            if pid ~= -1 and type(pid) == "number" and filehandle.dir_exists('/proc/' .. tostring(pid)) then
-              awful.spawn('kill ' .. tostring(pid))
-            end
-            pid = -1
+            countdownOverlay.kill_sound()
         end
 
         s.countdownOverlay = countdownOverlay
