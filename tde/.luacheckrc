@@ -111,6 +111,7 @@ globals = {
     "echo",
     "desktop_icons",
     "IsreleaseMode",
+    "docs", -- this is to quickly open the local documentation from tde-client
     "os.start_time"
 }
 

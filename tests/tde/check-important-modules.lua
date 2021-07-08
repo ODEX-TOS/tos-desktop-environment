@@ -162,6 +162,10 @@ function test_configuration_mod_key_tde_module_screen_changed()
     assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/screen_changed.lua exists")
 end
 
+function test_configuration_mod_key_tde_module_docs_exists()
+    assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/docs.lua exists")
+end
+
 function test_configuration_mod_key_tde_configuration_apps_lua()
     assert(exists("tde/configuration/apps.lua"), "Check that tde/configuration/apps.lua exists")
 end
@@ -576,8 +580,53 @@ function test_tde_reloader()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function test_fuzzy_find()
+    local file = "tde/lib-tde/fuzzy_find.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_module_prompt()
+    local file = "tde/module/prompt.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_docs()
+    local file = "tde/module/docs.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_prompt_completion()
+    local file = "tde/module/prompt_completions/init.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_prompt_completion_calculator()
+    local file = "tde/module/prompt_completions/calculator.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_prompt_completion_documentation()
+    local file = "tde/module/prompt_completions/documentation.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_prompt_completion_ssh()
+    local file = "tde/module/prompt_completions/ssh.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_prompt_completion_browser()
+    local file = "tde/module/prompt_completions/browser.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function test_prompt_completion_plugin()
+    local file = "tde/module/prompt_completions/plugin.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function test_that_all_important_files_are_tested()
-    local amount = 102
+    local amount = 111
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

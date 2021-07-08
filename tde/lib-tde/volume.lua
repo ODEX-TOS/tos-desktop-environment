@@ -492,11 +492,7 @@ local function set_mic_volume(volume)
     -- unmute the mic
     set_mic_muted(false)
 
-    if _should_control_via_software() then
-        awful.spawn("amixer set Capture " .. tostring(volume) .. '%')
-    else
-        awful.spawn("amixer set Capture 100%")
-    end
+    awful.spawn("amixer set Capture " .. tostring(volume) .. '%')
 end
 
 --- Get the microphone volume asynchronously

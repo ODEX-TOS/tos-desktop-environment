@@ -22,45 +22,42 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- menu takes a bit of time to load in.
--- because of this we put it in the back so the rest of the system can already behave
--- Look into awesome-freedesktop for more information
+local icons = require("theme.icons")
 
-require("module.menu")
 
-if not (general["disable_desktop"] == "1") then
-    if IsreleaseMode then
-        require("module.installer")
-    end
+local function get_completions(query)
+    local res = {}
 
-    require("module.desktop")
-end
+    local evaluated = load("return " .. query)
 
-if IsreleaseMode then
-    require("tutorial")
-
-    require("module.dev-widget-update")
-
-    require("module.lua-completion")
-
-    require("lib-tde.signals").connect_exit(
-        function()
-            -- stop current autorun.sh
-            -- This is done because otherwise multiple instances would be running at the same time
-            awful.spawn("pgrep -f /etc/xdg/tde/autorun.sh | xargs kill -9")
+    if type(evaluated) == "function" then
+        local err, payload = pcall(evaluated)
+        if not err then
+            return res
         end
-    )
 
-    local lockscreentime = general["screen_on_time"] or "120"
-    if general["screen_timeout"] == 1 or general["screen_timeout"] == nil then
-        awful.spawn("/etc/xdg/tde/autorun.sh " .. lockscreentime)
-    else
-        awful.spawn("/etc/xdg/tde/autorun.sh")
+        if type(payload) ~= "number" and type(payload) ~= "string" then
+            return res
+        end
+
+        table.insert(res, {
+            icon = icons.calc,
+            text = tostring(payload),
+            __score = math.huge,
+            payload = {}
+        })
     end
+
+    return res
 end
 
-require("module.docs")
-require("module.prompt")
+local function perform_action(_)
+end
 
+local name = "Calc"
 
-require("module.screen_changed")
+return {
+    get_completion = get_completions,
+    perform_action = perform_action,
+    name = name,
+}

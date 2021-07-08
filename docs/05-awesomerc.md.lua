@@ -4,7 +4,7 @@ local f = assert(io.open(filename, "w"))
 
 f:write[[# Default configuration file documentation
 
-This document explains the default `rc.lua` file provided by Awesome.
+This document explains the default `rc.lua` file provided by TDE.
 
 ]]
 
@@ -13,7 +13,7 @@ This document explains the default `rc.lua` file provided by Awesome.
 local sections = {}
 
 sections.DOC_REQUIRE_SECTION = [[
-The Awesome API is distributed across many libraries (also called modules).
+The TDE API is distributed across many libraries (also called modules).
 
 Here are the modules that we import:
 
@@ -23,41 +23,44 @@ Here are the modules that we import:
    <th align='center'>Description</th>
   </tr>
   <tr><td>`gears`</td><td>Utilities such as color parsing and objects</td></tr>
-  <tr><td>`wibox`</td><td>Awesome own generic widget framework</td></tr>
+  <tr><td>`wibox`</td><td>TDE own generic widget framework</td></tr>
   <tr><td>`awful`</td><td>Everything related to window managment</td></tr>
   <tr><td>`naughty`</td><td>Notifications</td></tr>
   <tr><td>`ruled`</td><td>Define declarative rules on various events</td></tr>
   <tr><td>`menubar`</td><td>XDG (application) menu implementation</td></tr>
-  <tr><td>`beautiful`</td><td>Awesome theme module</td></tr>
+  <tr><td>`beautiful`</td><td>TDE theme module</td></tr>
+  <tr><td>`lib-tde`</td><td>Generic low level helpers for managing a desktop environment</td></tr>
+  <tr><td>`lib-widget`</td><td>A high level widget library</td></tr>
+
 </table>
 
 ]]
 
 sections.DOC_ERROR_HANDLING = [[
 
-Awesome is a window managing framework. It allows its users great (ultimate?)
+TDE is a window managing framework. It allows its users great (ultimate?)
 flexibility. However, it also allows the user to write invalid code. Here's a
 non-exhaustive list of possible errors:
 
- * Syntax: There is an `awesome -k` option available in the command line to
-   check the configuration file. Awesome cannot start with an invalid `rc.lua`
+ * Syntax: There is an `tde -k` option available in the command line to
+   check the configuration file. TDE cannot start with an invalid `rc.lua`
  * Invalid APIs and type errors: Lua is a dynamic language. It doesn't have much
    support for static/compile time checks. There is the `luacheck` utility to
-   help find some categories of errors. Those errors will cause Awesome to
+   help find some categories of errors. Those errors will cause TDE to
    "drop" the current call stack and start over. Note that if it cannot
    reach the end of the `rc.lua` without errors, it will fall back to the
    original file.
  * Invalid logic: It is possible to write fully valid code that will render
-   Awesome unusable (like an infinite loop or blocking commands). In that case,
+ TDE unusable (like an infinite loop or blocking commands). In that case,
    the best way to debug this is either using `print()` or using `gdb`. For
    this, see the [Debugging tips Readme section](../documentation/01-readme.md.html)
- * Deprecated APIs: The Awesome API is not frozen for eternity. After a decade
+ * Deprecated APIs: The TDE API is not frozen for eternity. After a decade
    of development and recent changes to enforce consistency, it hasn't
    changed much. This doesn't mean it won't change in the future. Whenever
    possible, changes won't cause errors but will instead print a deprecation
-   message in the Awesome logs. These logs are placed in various places
-   depending on the distribution. By default, Awesome will print errors on
-  `stderr` and `stdout`.
+   message in the TDE logs. These logs are placed in various places
+   depending on the distribution. By default, TDE will print errors on
+  `stderr` and `stdout`. As well as save those to `~/.cache/tde/stdout.log and ~/.cache/tde/error.log`
 
 
 ]]
@@ -65,9 +68,9 @@ non-exhaustive list of possible errors:
 
 sections.DOC_LOAD_THEME = [[
 To create custom themes, the easiest way is to copy the `default` theme folder
-from `/usr/share/awesome/themes/` into `~/.config/awesome` and modify it.
+from `/usr/share/tde/themes/` into `~/.config/awesome` and modify it.
 
-Awesome currently doesn't behave well without a theme containing all the "basic"
+TDE currently doesn't behave well without a theme containing all the "basic"
 variables such as `bg_normal`. To get a list of all official variables, see
 the [appearance guide](../documentation/06-appearance.md.html).
 ]]
@@ -250,7 +253,7 @@ local output, output_script = {}, {[[
 ---------------------------------------------------------------------------
 --- The default rc.lua file.
 --
--- A copy of this file is usually installed in `/etc/xdg/awesome/`.
+-- A copy of this file is usually installed in `/etc/xdg/tde/`.
 --
 -- See [The declarative layout system](../documentation/05-awesomerc.md.html)
 -- for a version with additional comments.

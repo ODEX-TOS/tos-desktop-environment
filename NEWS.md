@@ -36,6 +36,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Tag state now gets saved as well
 - Allow changing microphone volume in the settings
 - Add support to configure countdown timers/clocks
+- Add a prompt with support for completing: ssh, browser searching, tde docs, plugins, calculator and more
 
 ### Bug Fixes
 

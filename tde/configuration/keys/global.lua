@@ -58,7 +58,17 @@ local globalKeys =
     {modkey},
     "F1",
     hotkeys_popup.show_help,
-    {description = i18n.translate("show help"), group = i18n.translate("awesome")}
+    {description = i18n.translate("show help"), group = i18n.translate("TDE")}
+  ),
+  awful.key(
+    {modkey},
+    "F2",
+    function()
+      if _G.root.prompt ~= nil then
+        _G.root.prompt()
+      end
+    end,
+    {description = i18n.translate("Show the prompt"), group = i18n.translate("TDE")}
   ),
   -- Custom Keys
   awful.key(
@@ -258,13 +268,13 @@ local globalKeys =
     {modkey, "Control"},
     config.restart,
     _G.awesome.restart,
-    {description = i18n.translate("reload awesome"), group = i18n.translate("awesome")}
+    {description = i18n.translate("reload TDE"), group = i18n.translate("TDE")}
   ),
   awful.key(
     {modkey, "Control"},
     config.quit,
     _G.awesome.quit,
-    {description = i18n.translate("quit awesome"), group = i18n.translate("awesome")}
+    {description = i18n.translate("quit TDE"), group = i18n.translate("TDE")}
   ),
   awful.key(
     {altkey, "Shift"},
