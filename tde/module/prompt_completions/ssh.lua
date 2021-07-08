@@ -69,6 +69,7 @@ local function get_completions(query)
     if is_ssh then
         table.insert(res, {
             icon = icons.login,
+            __score = math.huge,
             text = "ssh" .. "\t" .. new_query,
             payload = new_query
         })
