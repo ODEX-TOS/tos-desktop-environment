@@ -59,5 +59,8 @@ if IsreleaseMode then
     end
 end
 
+require("module.docs")
+require("module.prompt")
+
 
 require("module.screen_changed")

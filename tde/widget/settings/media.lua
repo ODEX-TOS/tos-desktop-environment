@@ -35,7 +35,7 @@ local volume = require("lib-tde.volume")
 local button = require("lib-widget.button")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
-local sound = require("lib-tde.sound")
+local sound = require("lib-tde.sound").play_sound
 local scrollbox = require("lib-widget.scrollbox")
 
 
@@ -115,6 +115,17 @@ return function()
     end
   )
 
+  local mic_slider =
+  slider(
+  0,
+  100,
+  1,
+  _G.save_state.mic_volume,
+  function(value)
+    signals.emit_mic_volume(value)
+  end
+)
+
   local hardware_only_volume_checbox = checkbox(_G.save_state.hardware_only_volume, function (checked)
     signals.emit_volume_is_controlled_in_software(not checked)
   end)
@@ -124,6 +135,15 @@ return function()
       local number = tonumber(value)
       if not (number == vol_slider.value) then
         vol_slider.update(tonumber(value) or 0)
+      end
+    end
+  )
+
+  signals.connect_mic_volume(
+    function(value)
+      local number = tonumber(value)
+      if not (number == mic_slider.value) then
+        mic_slider.update(tonumber(value) or 0)
       end
     end
   )
@@ -424,7 +444,25 @@ return function()
         right = m,
         bottom = m,
         forced_height = dpi(30) + (m * 2),
-        vol_slider
+        {
+          mat_icon(icons.volume, dpi(25)),
+          nil,
+          vol_slider,
+          layout = wibox.layout.fixed.horizontal
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        forced_height = dpi(30) + (m * 2),
+        {
+          mat_icon(icons.microphone, dpi(25)),
+          nil,
+          mic_slider,
+          layout = wibox.layout.fixed.horizontal
+        }
       },
       {
         layout = wibox.container.margin,

@@ -237,8 +237,28 @@ function test_theme_icon_check()
     assert(file_exists(icons.check), "Check that the check icon exists")
 end
 
+function test_theme_icon_clock()
+    assert(file_exists(icons.clock), "Check that the clock icon exists")
+end
+
+function test_theme_icon_clock_add()
+    assert(file_exists(icons.clock_add), "Check that the clock icon exists")
+end
+
+function test_theme_icon_docs()
+    assert(file_exists(icons.docs), "Check that the docs icon exists")
+end
+
+function test_theme_icon_calc()
+    assert(file_exists(icons.calc), "Check that the calc icon exists")
+end
+
+function test_theme_icon_login()
+    assert(file_exists(icons.login), "Check that the login icon exists")
+end
+
 function test_that_all_icons_are_tested()
-    local amount = 53
+    local amount = 58
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

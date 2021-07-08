@@ -34,6 +34,9 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Todo list allows editing existing entries
 - The settings application can now be moved using the mouse
 - Tag state now gets saved as well
+- Allow changing microphone volume in the settings
+- Add support to configure countdown timers/clocks
+- Add a prompt with support for completing: ssh, browser searching, tde docs, plugins, calculator and more
 
 ### Bug Fixes
 
@@ -48,6 +51,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Fix empty todo list creation
 - Todo list now disappears on focus loss
 - Top bar hover is now uniform
+- The countdown timer now doesn't trigger when in a fullscreen application (only the sound triggers)
 
 ### Dev Notes
 

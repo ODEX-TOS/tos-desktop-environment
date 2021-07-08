@@ -161,8 +161,16 @@ function test_common_function_screen_exists()
     assert(type(common.focused_screen) == "function", "the focussed screen api needs to exist and be a function")
 end
 
+function test_trim_whitespace()
+    assert(type(common.trim) == "function", "the string trim api needs to exist and be a function")
+    assert(common.trim(" abc") == "abc", "trimming leading whitespace is not working")
+    assert(common.trim("abc ") == "abc", "trimming trailing whitespace is not working")
+    assert(common.trim(" abc ") == "abc", "trimming leading and trailing whitespace is not working")
+    assert(common.trim("  abc   ") == "abc", "trimming trailing tabs whitespace is not working")
+end
+
 function test_imagemagic_api_unit_tested()
-    local amount = 4
+    local amount = 5
     local result = tablelength(common)
     assert(
         result == amount,

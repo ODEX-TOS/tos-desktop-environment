@@ -71,3 +71,4 @@ _G.update_anim_speed(tonumber(general["animation_speed"] or "0.3"))
 
 -- Theme
 beautiful.init(require("theme"))
+

@@ -286,6 +286,7 @@ local function set_volume(value)
     else
         awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 100%")
     end
+    set_muted_state(false)
 end
 
 --- Get a list of all audio sinks back (A sink is an audio player such as headphones, speakers or monitors)
@@ -453,6 +454,65 @@ local function reset_server()
     print("Resetting audio server")
 end
 
+--- Change the microphone state
+-- @tparam boolean bIsMuted If the microphone is enabled or not
+-- @staticfct set_mic_muted
+-- @usage -- Turn off the microphone
+--    set_mic_muted(true)
+local function set_mic_muted(bIsMuted)
+    if type(bIsMuted) ~= "boolean" then
+        print("set_mic_muted expects a boolean", err)
+        return
+    end
+
+    if bIsMuted then
+        awful.spawn("amixer set Capture nocap")
+    else
+        awful.spawn("amixer set Capture cap")
+    end
+end
+
+--- Change the microphone volume
+-- @tparam number volume The volume of the microphone (between 0 and 100%)
+-- @staticfct set_mic_volume
+-- @usage -- Set the microphone volume to 100% (Max volume)
+--    set_mic_volume(100)
+local function set_mic_volume(volume)
+    if type(volume) ~= "number" then
+        print("set_mic_volume expects a number", err)
+        return
+    end
+
+    if volume < 0 then
+        volume = 0
+    end
+    if volume > 100 then
+        volume = 100
+    end
+    -- unmute the mic
+    set_mic_muted(false)
+
+    awful.spawn("amixer set Capture " .. tostring(volume) .. '%')
+end
+
+--- Get the microphone volume asynchronously
+-- @tparam function callback A callback function to trigger when the microphone volume is gathered
+-- @staticfct get_mic_volume
+-- @usage -- Get the microphone volume in percentage
+--    get_mic_volume(function(percentage, muted)
+--        print("Current microphone volume level: " .. tostring(percentage))
+--    end)
+local function get_mic_volume(callback)
+    awful.spawn.easy_async_with_shell(
+        "amixer get Capture",
+        function(out)
+            local muted = string.find(out, "off")
+            local volume = tonumber(string.match(out, "(%d?%d?%d)%%")) or 0
+            callback(volume, muted ~= nil or muted == "off")
+        end
+    )
+end
+
 return {
     get_volume = get_volume,
     inc_volume = inc_volume,
@@ -471,5 +531,8 @@ return {
     get_default_source = get_default_source,
     set_sink_port = set_sink_port,
     set_source_port = set_source_port,
+    set_mic_volume = set_mic_volume,
+    get_mic_volume = get_mic_volume,
+    set_mic_muted = set_mic_muted,
     reset_server = reset_server
 }

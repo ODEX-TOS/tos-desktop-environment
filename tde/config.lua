@@ -51,7 +51,7 @@ local config = {
     cpu_startup_delay = 9,
     garbage_collection_cycle = 2 * 60, -- collect garbage every x seconds,
 
-    max_mem = 500 * 1000, -- This is expressed in kilobytes, TDE should never consume more than 1GB
+    max_mem = 450 * 1000, -- This is expressed in kilobytes, TDE should never consume more than 1GB
 
     colors_config = HOME .. "/.config/tos/colors.conf",
     icons_config = HOME .. "/.config/tos/icons.conf",

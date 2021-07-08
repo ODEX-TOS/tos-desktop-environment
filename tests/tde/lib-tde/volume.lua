@@ -114,9 +114,24 @@ function test_api_lib_tde_volume_set_source_port()
     assert(type(volume.set_source_port) == "function", "Volume api is wrong, volume.set_source_port should be a function")
 end
 
+function test_api_lib_tde_volume_set_mic_volume()
+    assert(volume.set_mic_volume, "Make sure the volume.set_mic_volume api exists")
+    assert(type(volume.set_mic_volume) == "function", "Volume api is wrong, volume.set_mic_volume should be a function")
+end
+
+function test_api_lib_tde_volume_get_mic_volume()
+    assert(volume.get_mic_volume, "Make sure the volume.get_mic_volume api exists")
+    assert(type(volume.get_mic_volume) == "function", "Volume api is wrong, volume.get_mic_volume should be a function")
+end
+
+function test_api_lib_tde_volume_set_mic_muted()
+    assert(volume.set_mic_muted, "Make sure the volume.set_mic_muted api exists")
+    assert(type(volume.set_mic_muted) == "function", "Volume api is wrong, volume.set_mic_muted should be a function")
+end
+
 
 function test_api_lib_tde_volume_all_functions_tested()
-    local amount = 18
+    local amount = 21
     local length = tablelength(volume)
     assert(length == amount, "You didn't write unit tests for all api functions, tested: " .. tostring(amount) .. " but there are: " .. tostring(length) .. " api functions")
 end
