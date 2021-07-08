@@ -93,7 +93,7 @@ end
 -- @usage -- This True if a network card with wifi exists
 -- lib-tde.hardware-check.hasWifi()
 local function wifi()
-    return fileHandle.exists("/proc/net/wireless")
+    return fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 2
 end
 
 --- Check to see the hardware has a network card with bluetooth support
