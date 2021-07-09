@@ -186,7 +186,7 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off, on
   )
 end
 
-local function create_option_slider(title, min, max, inc, option, start_value, callback, tooltip_callback)
+local function create_option_slider(title, min, max, inc, option, start_value, callback, tooltip_callback, inverted)
   local option_slider =
     slider(
     min,
@@ -194,6 +194,9 @@ local function create_option_slider(title, min, max, inc, option, start_value, c
     inc,
     start_value,
     function(value)
+      if inverted then
+        value = max - value
+      end
       callback(value)
       configWriter.update_entry(configFile, option, tostring(value))
     end,
@@ -405,10 +408,12 @@ return function()
       1.5,
       0.05,
       "animation_speed",
-      tonumber(general["window_screen_mode"]) or (1.5 - _G.anim_speed),
+      1.5 - (tonumber(general["animation_speed"]) or _G.anim_speed),
       function(value)
-        _G.update_anim_speed(1.5 - value)
-      end
+        _G.update_anim_speed(value)
+      end,
+      nil,
+      true
     ),
     layout = wibox.layout.flex.vertical
   }
