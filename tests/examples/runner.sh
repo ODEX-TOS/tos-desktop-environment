@@ -22,6 +22,7 @@ exit_code=0
 "$@" > ${file_stdout} 2> ${file_stderr} || exit_code=$?
 
 # If exit code is not zero or anything was produced on stderr...
+# shellcheck disable=SC2166
 if [ $exit_code -ne 0 -o -s "${file_stderr}" ]
 then
     echo "Result: ${exit_code}"

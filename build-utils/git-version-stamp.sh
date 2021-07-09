@@ -27,7 +27,7 @@ then
     echo "git version changed: $STAMP -> $CURRENT"
     sed -e s/$STAMP/$CURRENT/g "$2" 1> "$2.new" || die
     mv "$2.new" "$2"
-    echo -n "$CURRENT" > "$1"
+    printf "%s" "$CURRENT" > "$1"
 fi
 
 # vim: filetype=sh:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80

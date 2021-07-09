@@ -184,6 +184,7 @@ get_line() {
         line="$(cat "$HOME/.tde-client_history" | fzf  $FZF_COLOR_SCHEME --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 --preview {}" )"
     else
         echo -en "$line_feed"
+        # shellcheck disable=SC2229
         read $READ_ARGS
     fi
 }

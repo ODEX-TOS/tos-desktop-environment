@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VERSION="$(git rev-list --count HEAD)"
+# shellcheck disable=SC2063
 BRANCH="$(git branch | grep '*' | cut -d' ' -f2)"
 
 
