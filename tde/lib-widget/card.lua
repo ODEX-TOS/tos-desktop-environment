@@ -62,7 +62,7 @@ local titled_card = function(title, height)
         wibox.widget.base.empty_widget(),
         bg = bg,
         shape = function(cr, rect_width, rect_height)
-            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, 6)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, dpi(10))
         end,
         widget = wibox.container.background,
         forced_height = height
@@ -77,7 +77,7 @@ local titled_card = function(title, height)
                 wibox.container.margin(header, dpi(10), dpi(10), dpi(10), dpi(10)),
                 bg = bg_title,
                 shape = function(cr, rect_width, rect_height)
-                    gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, 6)
+                    gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, dpi(10))
                 end,
                 widget = wibox.container.background
             },
@@ -149,7 +149,7 @@ local bare_card = function()
         wibox.widget.base.empty_widget(),
         bg = bg,
         shape = function(cr, rect_width, rect_height)
-            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, 6)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, dpi(10))
         end,
         widget = wibox.container.background
     }

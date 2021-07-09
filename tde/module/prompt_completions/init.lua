@@ -31,6 +31,7 @@ local ssh = require("module.prompt_completions.ssh")
 local plugin = require("module.prompt_completions.plugin")
 
 local function get_completions(query)
+    print("Fetching completions for: " .. tostring(query))
     local doc_completions = documentation.get_completion(query)
     local calc_completions = calculator.get_completion(query)
     local browser_completions = browser.get_completion(query)

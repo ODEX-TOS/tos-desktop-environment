@@ -58,7 +58,10 @@ screen.connect_signal(
       height = dpi(380),
       width = dpi(260),
       x = s.geometry.width - dpi(270),
-      y = s.geometry.y + padding
+      y = s.geometry.y + padding,
+      shape = function(cr, shapeWidth, shapeHeight)
+        gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(5))
+      end
     }
 
     screen.connect_signal(
@@ -174,7 +177,9 @@ local cover =
     id = "icon",
     widget = wibox.widget.imagebox,
     resize = true,
-    clip_shape = gears.shape.rounded_rect
+    clip_shape = function(cr, shapeWidth, shapeHeight)
+      gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(24))
+    end,
   },
   layout = wibox.layout.fixed.vertical
 }
@@ -219,10 +224,6 @@ musicPlayer:setup {
   },
   -- The real background color
   bg = beautiful.background.hue_800 .. beautiful.background_transparency,
-  -- The real, anti-aliased shape
-  shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 12)
-  end,
   widget = wibox.container.background()
 }
 

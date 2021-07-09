@@ -469,7 +469,10 @@ return function()
       bg = beautiful.background.hue_800 .. beautiful.background_transparency,
       width = settings_width,
       height = settings_height,
-      screen = scrn
+      screen = scrn,
+      shape = function(cr, shapeWidth, shapeHeight)
+        gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(20))
+      end,
     }
   )
 

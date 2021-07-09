@@ -27,6 +27,8 @@ local beautiful = require("beautiful")
 local signals = require("lib-tde.signals")
 local get_screen = require("lib-tde.function.common").focused_screen
 local dpi = beautiful.xresources.apply_dpi
+local animate = require("lib-tde.animations").createAnimObject
+
 
 local card = require("lib-widget.card")
 local separator = require("lib-widget.separator")(dpi(5), "vertical")
@@ -41,7 +43,7 @@ local promptPage
 
 local prompt = wibox.widget.textbox("Default text")
 
-local height = dpi(230)
+local height = dpi(50)
 local width = dpi(500)
 local padding = dpi(2)
 
@@ -59,7 +61,10 @@ screen.connect_signal(
         height = height,
         width = width,
         x = s.geometry.x + s.geometry.width / 2 - (width / 2),
-        y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+        y = s.geometry.y + s.geometry.height / 2 - (height / 2),
+        shape = function(cr, shapeWidth, shapeHeight)
+          gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(10))
+        end,
         }
 
     promptPage:setup {
@@ -71,10 +76,6 @@ screen.connect_signal(
         },
         -- The real background color
         bg = beautiful.background.hue_800 .. beautiful.background_transparency,
-        -- The real, anti-aliased shape
-        shape = function(cr, shapeWidth, shapeHeight)
-          gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(24))
-        end,
         widget = wibox.container.background()
       }
 end)
@@ -100,9 +101,12 @@ signals.connect_background_theme_changed(
 
 local _index = 1
 -- amount of items to show at once
-local _list_amount = 5
+local _list_amount = 1
+local _default_list_amount = 5
 -- what item in the _list_amount is the active one
 local _selected_list_index = 0
+
+local previous_search
 
 local function update_rows()
   for i, child in ipairs(results.children) do
@@ -112,11 +116,24 @@ local function update_rows()
       child.widget.unhighlight()
     end
   end
+
+  -- calculate the prompt page height
+  local child_height = height - (padding * 2)
+  local _height = #results.children * child_height + height
+
+  animate(
+    _G.anim_speed,
+    promptPage,
+    {height = _height},
+    "outCubic",
+    function()
+    end
+  )
 end
 
 local _results = {}
 
-local function create_result_selection(result)
+local function create_result_selection(result, index)
   local _card = card()
   results:add(wibox.container.margin(_card, padding, padding, padding, padding) )
 
@@ -140,11 +157,34 @@ local function create_result_selection(result)
     layout = wibox.layout.ratio.horizontal
   }
 
-  ratio.forced_height = (height / 6) - (padding * 2)
+  ratio.forced_height = dpi(50) - (padding * 2)
 
   ratio:adjust_ratio(2, 0.15, 0.55, 0.30)
 
   _card.update_body(ratio)
+
+  _card:connect_signal("mouse::enter", function ()
+    _card.highlight()
+  end)
+
+  _card:connect_signal("button::press", function ()
+    _card.highlight()
+
+    -- set the current result as the active one
+    _index = index - _selected_list_index
+    print("Set index to: " .. tostring(_index))
+
+    -- stop the keygrabber and trigger the 'done_callback'
+    root.fake_input('key_press'  , "Return")
+    root.fake_input('key_release', "Return")
+  end)
+
+  _card:connect_signal("mouse::leave", function ()
+    -- only if this result is not the active result
+    if index ~= (_index + _selected_list_index) then
+      _card.unhighlight()
+    end
+  end)
 end
 
 local function down()
@@ -192,21 +232,31 @@ _G.root.prompt = function()
           elseif key == 'Up' then
             up()
             update_rows()
-          elseif key == 'Escape' then
+          elseif key == "Escape" then
             _index = -1
             _selected_list_index = 0
           end
         end,
         changed_callback = function(input_text)
             if not input_text or #input_text == 0 then return end
-            _results = delegator.get_completions(input_text)
+            if prompt.text ~= previous_search then
+              _results = delegator.get_completions(input_text)
+              previous_search = prompt.text
+            end
+
+            if _list_amount < _default_list_amount then
+              _list_amount = _default_list_amount
+            end
+            if _list_amount > #_results then
+              _list_amount = #_results
+            end
 
             results.children = {}
             -- we render only the selected list of items
             if _index > 0 and _index <= #_results then
               for index, result in ipairs(_results) do
                 if index >= _index and index < (_index + _list_amount) then
-                  create_result_selection(result)
+                  create_result_selection(result, index)
                 end
               end
             end
@@ -217,10 +267,16 @@ _G.root.prompt = function()
         done_callback = function()
             promptPage.visible = false
 
+            print("Running action on index: " .. tostring(_index + _selected_list_index))
+
             -- we found our match
             if _results[_index + _selected_list_index] ~= nil then
               delegator.perform_actions(_results[_index + _selected_list_index].payload, _results[_index + _selected_list_index].action_name)
             end
+
+            -- after the execution, reset the values
+            _index = -1
+            _selected_list_index = 0
         end
     }
 end
