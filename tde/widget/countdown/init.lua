@@ -447,8 +447,8 @@ local function worker(user_args)
                             local geometry = {
                                 x = mouse.coords().x,
                                 y = mouse.screen.geometry.y + dpi(20),
-                                width = 1,
-                                height = 1
+                                width = 10,
+                                height = 10
                             }
                             popup:move_next_to(geometry)
                         end
