@@ -89,13 +89,13 @@ local function toYYDDHHMMSS(seconds)
     return toHHMMSS(seconds)
 end
 
-local function show_timer_done()
+local function show_timer_done(msg)
     if awful.screen.focused().countdownOverlay then
-        if mouse.current_client.fullscreen then
+        if mouse.current_client ~= nil and mouse.current_client.fullscreen then
             -- only play the timer sound
             awful.screen.focused().countdownOverlay.play()
         else
-            awful.screen.focused().countdownOverlay.show()
+            awful.screen.focused().countdownOverlay.show(msg)
         end
     end
 end
@@ -106,7 +106,7 @@ local function save(payload)
     }
     for _, v in ipairs(payload.countdown_items) do
         table.insert(res.countdown_items,
-            {time = v.time, name = v.name, id = v.id}
+            {time = v.time, name = v.name, message = v.message}
         )
     end
 
@@ -189,16 +189,7 @@ local add_button = wibox.widget {
 
 local bIsInPrompt = false
 
-
-
-local function add_prompt(text, index)
-    if bIsInPrompt then
-        return
-    end
-    index = index or #data.countdown_items
-    if index < 1 then
-        index = 1
-    end
+local function create_pr()
     local pr = awful.widget.prompt()
 
     table.insert(rows, wibox.widget {
@@ -215,17 +206,25 @@ local function add_prompt(text, index)
         widget = wibox.container.background
     })
 
-    bIsInPrompt = true
+    return pr
+end
+
+local function add_txt_prompt(time, start, name, message, index, pr)
+
+    -- we don't have a prompt to work with, let's create one
+    if pr == nil then
+        pr = create_pr()
+    end
 
     awful.prompt.run{
-        prompt = "<b>" .. i18n.translate("New timer") .. "</b>: ",
+        prompt = "<b>" .. i18n.translate("Message") .. "</b>: ",
         bg = beautiful.bg_modal,
         bg_cursor = beautiful.primary.hue_700,
         textbox = pr.widget,
-        text = text or "1m",
+        text = message or "",
         exe_callback = function(input_text)
             if not input_text or #input_text == 0 then return end
-            table.insert(data.countdown_items, index, {time = os.time() + toseconds(input_text), start=os.time(), name = input_text})
+            table.insert(data.countdown_items, index, {time = time, start=start, name = name, message = input_text})
             save(data)
         end,
         -- make sure that cancelling the prompt also cleanly stops
@@ -238,8 +237,39 @@ local function add_prompt(text, index)
     popup:setup(rows)
 end
 
+
+local function add_time_prompt(text, index)
+    if bIsInPrompt then
+        return
+    end
+    index = index or #data.countdown_items
+    if index < 1 then
+        index = 1
+    end
+
+    local pr = create_pr()
+
+    bIsInPrompt = true
+
+    awful.prompt.run{
+        prompt = "<b>" .. i18n.translate("New timer") .. "</b>: ",
+        bg = beautiful.bg_modal,
+        bg_cursor = beautiful.primary.hue_700,
+        textbox = pr.widget,
+        text = text or "1m",
+        exe_callback = function(input_text)
+            if not input_text or #input_text == 0 then return end
+            add_txt_prompt(os.time() + toseconds(input_text),
+            os.time(),
+            input_text, "", index, pr)
+        end,
+    }
+
+    popup:setup(rows)
+end
+
 add_button:connect_signal("button::press", function()
-    add_prompt("")
+    add_time_prompt("")
 end)
 add_button:connect_signal("mouse::enter", function(c) c:set_bg(beautiful.primary.hue_800) end)
 add_button:connect_signal("mouse::leave", function(c) c:set_bg(beautiful.bg_modal) end)
@@ -324,7 +354,7 @@ local function worker(user_args)
                 local item = data.countdown_items[i]
                 table.remove(data.countdown_items, i)
                 update_widget()
-                add_prompt(item.name, i)
+                add_txt_prompt(item.time, item.start, item.name, item.message, i)
             end)
 
             local row = wibox.widget {
@@ -340,7 +370,16 @@ local function worker(user_args)
                             left = dpi(10),
                             layout = wibox.container.margin
                         },
-                        nil,
+                        {
+                            {
+                                text = "",
+                                id = 'text',
+                                align = 'right',
+                                widget = wibox.widget.textbox
+                            },
+                            right = dpi(10),
+                            layout = wibox.container.margin
+                        },
                         {
                             {
                                 edit_button,
@@ -366,7 +405,8 @@ local function worker(user_args)
             }
 
             row.update_text = function ()
-                row:get_children_by_id("text")[1].text = toYYDDHHMMSS(countdown_item.time - os.time())
+                row:get_children_by_id("text")[1].text = countdown_item.message or ""
+                row:get_children_by_id("text")[2].text = toYYDDHHMMSS(countdown_item.time - os.time())
             end
 
             row.update_text()
@@ -430,13 +470,11 @@ local function worker(user_args)
                     popup:setup(rows)
                     countdown_widget:update_counter(data.countdown_items)
 
-                    show_timer_done()
+                    show_timer_done(item.message)
                 end
             end
 
-            if #data.countdown_items > 0 then
-                save(data)
-            end
+            save(data)
 
             for i, row in ipairs(rows) do
                 if i > 1 then

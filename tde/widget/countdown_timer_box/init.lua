@@ -57,6 +57,19 @@ local delay =
   )
 )
 
+local message =  wibox.widget {
+  text = "",
+  align = "center",
+  valign = "center",
+  read_only = true,
+  font = beautiful.font_type .. ' 30',
+  widget = wibox.widget.textbox
+}
+
+local function update_message(text)
+  message.text = text
+end
+
 local buttons =
   wibox.widget {
   {
@@ -78,8 +91,9 @@ local countdownMeter =
     },
     widget = mat_list_item
   },
+  wibox.container.margin(message, 0, 0, dpi(100), 0),
   buttons,
-  spacing = dpi(200),
+  spacing = dpi(100),
   layout = wibox.layout.fixed.vertical
 }
 
@@ -150,9 +164,12 @@ awful.screen.connect_for_each_screen(
                 height = s.geometry.height - dpi(40)
             }
 
-        countdownOverlay.show = function()
+        countdownOverlay.show = function(msg)
+            msg = msg or ""
             countdownbackdrop.visible = true
             countdownOverlay.visible = true
+
+            update_message(msg)
 
             pid = sound(true)
         end
