@@ -12,12 +12,12 @@ die()
     exit 0
 }
 
-STAMP=`cat "$1" 2> /dev/null`
+STAMP="$(cat "$1" 2> /dev/null)"
 if [ -z "$STAMP" ]; then
     die "Missing STAMP: $1"
 fi
 
-CURRENT=`git describe --dirty 2>/dev/null`
+CURRENT="$(git describe --dirty 2>/dev/null)"
 if [ -z "$CURRENT" ]; then
     die "git describe failed: $(git describe --dirty)."
 fi
@@ -25,7 +25,7 @@ fi
 if [ "$STAMP" != "$CURRENT" ]
 then
     echo "git version changed: $STAMP -> $CURRENT"
-    sed -e s/$STAMP/$CURRENT/g "$2" 1> "$2.new" || die
+    sed -e "s/$STAMP/$CURRENT/g" "$2" 1> "$2.new" || die
     mv "$2.new" "$2"
     printf "%s" "$CURRENT" > "$1"
 fi

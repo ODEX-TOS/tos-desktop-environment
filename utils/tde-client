@@ -26,7 +26,7 @@ awesome_rlwrap() {
     then
         A_RERUN="no" exec "$AWESOME_RLWRAP" "$0" "$@"
     fi
-    READ_ARGS="-r line"
+    READ_ARGS="line"
 }
 
 
@@ -51,7 +51,7 @@ then
         awesome_rlwrap $@
     else
         # No rlwrap: use bash's readline.
-        READ_ARGS="-e -r line"
+        READ_ARGS="-e line"
     fi
 fi
 
@@ -181,11 +181,12 @@ get_line() {
         [[ ! -f "$HOME/.tde-client_history" ]] && touch "$HOME/.tde-client_history"
 
         # Our prompt
+        # shellcheck disable=SC2002
         line="$(cat "$HOME/.tde-client_history" | fzf  $FZF_COLOR_SCHEME --tac --height=40% --prompt "tde ➡" --history="$HOME/.tde-client_history" --bind "enter:accept-non-empty" --bind "change:reload(exec '$0' --complete {q})" --preview="exec $0 --preview {}" )"
     else
         echo -en "$line_feed"
-        # shellcheck disable=SC2229
-        read $READ_ARGS
+        # shellcheck disable=SC2229,SC2086
+        read -r $READ_ARGS
     fi
 }
 
@@ -224,7 +225,7 @@ exec_loop() {
         elif [[ "$line" == "cd "* ]]; then
             new_dir="$current_dir/$(echo "$line" | cut -d " " -f2- )"
             if [[ -d "$new_dir" ]]; then
-                current_dir="$(realpath $new_dir)"
+                current_dir="$(realpath "$new_dir")"
             fi
             return
         elif [[ "$line" == "pwd" ]]; then
@@ -248,7 +249,7 @@ then
 
     # If one argument is supplied and it is a file execute it
     if [ $# -eq 1 ] && [ -f "$1" ]; then
-        a_dbus_send "$(cat "$1" | sed '/^#/d')"
+        a_dbus_send "$(sed '/^#/d' "$1")"
         exit $?
     fi
 
@@ -260,8 +261,8 @@ then
             shift
             quoted="${1//\'/\\\'}"
             result=$(a_dbus_send "return get_completion($1, '$quoted')")
-            echo -en $result | wc -l
-            if [[ "$(echo -en $result | wc -l)" -le "1" && "$(echo -en $result | grep -E '<eof>|unexpected')" != "" ]]; then
+            echo -en "$result" | wc -l
+            if [[ "$(echo -en "$result" | wc -l)" -le "1" && "$(echo -en "$result" | grep -E '<eof>|unexpected')" != "" ]]; then
                 echo "$1"
                 cat "$HOME/.tde-client_history"
             else

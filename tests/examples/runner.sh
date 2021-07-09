@@ -19,7 +19,7 @@ shift
 
 # Run the command that we were given
 exit_code=0
-"$@" > ${file_stdout} 2> ${file_stderr} || exit_code=$?
+"$@" > "${file_stdout}" 2> "${file_stderr}" || exit_code=$?
 
 # If exit code is not zero or anything was produced on stderr...
 # shellcheck disable=SC2166

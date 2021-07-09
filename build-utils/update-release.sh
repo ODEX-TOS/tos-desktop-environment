@@ -25,7 +25,7 @@ cd build-utils || exit 1
 rm tde-* || true
 cp PKGBUILD PKGBUILD_BLANK
 
-sed -i -E 's/BRANCH=".*"/BRANCH="'$BRANCH'"/g' PKGBUILD
+sed -i -E 's/BRANCH=".*"/BRANCH="'"$BRANCH"'"/g' PKGBUILD
 
 # build the package
 makepkg -f || exit 1
@@ -36,4 +36,4 @@ rm -rf tos-desktop-enviroment src pkg || true
 cd ../ || exit 1
 
 file="$(find . -type f -iname 'tde-*.pkg.*' | head -n1)"
-gh release create "$BRANCH-$VERSION" -F NEWS.md $file -t "$BRANCH-$VERSION: Pre-release package" -R "$REPO_OWNER/$REPO_NAME"
+gh release create "$BRANCH-$VERSION" -F NEWS.md "$file" -t "$BRANCH-$VERSION: Pre-release package" -R "$REPO_OWNER/$REPO_NAME"
