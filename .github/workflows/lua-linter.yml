@@ -25,4 +25,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: Roang-zero1/factorio-mod-luacheck@master
         with:
-          luacheckrc_url: https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/master/tde/.luacheckrc
+          luacheckrc_url: https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/release/tde/.luacheckrc

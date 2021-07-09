@@ -42,10 +42,12 @@ then
     then
         # TDE_FZF_DISABLED disables the fzf logic
         if [[ -n "$TDE_FZF_DISABLED" ]]; then
+            # shellcheck disable=SC2068
             awesome_rlwrap $@
         fi
     elif [ -n "$AWESOME_RLWRAP" ]
     then
+        # shellcheck disable=SC2068
         awesome_rlwrap $@
     else
         # No rlwrap: use bash's readline.
