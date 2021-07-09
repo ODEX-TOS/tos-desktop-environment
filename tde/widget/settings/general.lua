@@ -405,9 +405,9 @@ return function()
       1.5,
       0.05,
       "animation_speed",
-      tonumber(general["window_screen_mode"]) or _G.anim_speed,
+      tonumber(general["window_screen_mode"]) or (1.5 - _G.anim_speed),
       function(value)
-        _G.update_anim_speed(value)
+        _G.update_anim_speed(1.5 - value)
       end
     ),
     layout = wibox.layout.flex.vertical

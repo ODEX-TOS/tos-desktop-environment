@@ -122,7 +122,7 @@ local function update_rows()
   local _height = #results.children * child_height + height
 
   animate(
-    _G.anim_speed,
+    _G.anim_speed * 1.5,
     promptPage,
     {height = _height},
     "outCubic",
@@ -218,6 +218,8 @@ _G.root.prompt = function()
 
     promptPage.visible = true
     results.children = {}
+
+    update_rows()
 
     awful.prompt.run{
         prompt = "<b>" .. i18n.translate("Search") .. "</b>: ",
