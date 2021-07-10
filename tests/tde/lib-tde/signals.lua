@@ -475,8 +475,18 @@ function test_connect_mic_volume()
     assert(type(signals.connect_mic_volume) == "function", "Make sure connect_mic_volume is a signal and a function")
 end
 
+function test_emit_showed_news()
+    assert(signals.emit_showed_news, "Make sure the signal emit_showed_news exists")
+    assert(type(signals.emit_showed_news) == "function", "Make sure emit_showed_news is a signal and a function")
+end
+
+function test_connect_showed_news()
+    assert(signals.connect_showed_news, "Make sure the signal connect_showed_news exists")
+    assert(type(signals.connect_showed_news) == "function", "Make sure connect_showed_news is a signal and a function")
+end
+
 function test_signals_api_unit_tested()
-    local amount = 87
+    local amount = 89
     local result = tablelength(signals)
     assert(
         result == amount,

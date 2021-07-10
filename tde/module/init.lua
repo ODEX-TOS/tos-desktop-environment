@@ -49,3 +49,5 @@ _G.collision = require("collision")()
 require("module.info-gather")
 
 require("module.tde-reloader")
+
+require("module.version_update_news")

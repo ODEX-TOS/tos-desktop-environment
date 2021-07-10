@@ -959,5 +959,25 @@ connections.connect_auto_hide = function(func)
     awesome.connect_signal("TDE::auto_hide::changed", func)
 end
 
+--- Notify TDE components that the latest news has been showed
+-- @staticfct emit_showed_news
+-- @usage
+-- lib-tde.signals.emit_showed_news()
+connections.emit_showed_news = function()
+    awesome.emit_signal("TDE::update::news::showed")
+end
+
+--- Trigger a callback function the updated news has been shown
+-- @tparam function func The callback function that will be called when the update news has been shown
+-- @staticfct connect_showed_news
+-- @usage
+-- lib-tde.signals.connect_showed_news(
+--    function ()
+--      print("The user has seen the latest updates")
+--    end)
+connections.connect_showed_news = function(func)
+    awesome.connect_signal("TDE::update::news::showed", func)
+end
+
 
 return connections

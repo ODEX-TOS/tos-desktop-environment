@@ -92,4 +92,8 @@ return {
 
   --png's
   unknown = theme(dir .. "/noicon.png"),
+
+  -- large svg's
+  news_Large = theme(dir .. "/news_large.svg"),
+
 }

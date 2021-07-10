@@ -29,6 +29,15 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ## Patch 0.8
 
+### Release Notes
+
+Patch version 0.8 introduces a lot of new stability bugfixes.
+The goal for this patch-set was to fix long awaited bugfixes as well as introducing a few new UI elements
+
+This patch introduced the new prompt, accessible through <span font_weight="bold">Mod+F2</span> keyboard shortcut.
+
+As well as a TODO list and a countdown timer plugin for the topbar.
+
 ### New Features
 
 - Todo list allows editing existing entries
@@ -52,6 +61,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Todo list now disappears on focus loss
 - Top bar hover is now uniform
 - The countdown timer now doesn't trigger when in a fullscreen application (only the sound triggers)
+- Animation slider in the settings is now inverted making the UX more coherent
 
 ### Dev Notes
 

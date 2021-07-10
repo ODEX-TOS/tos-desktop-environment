@@ -246,7 +246,7 @@ aboutPage:setup {
   bg = beautiful.background.hue_800 .. beautiful.background_transparency,
   -- The real, anti-aliased shape
   shape = function(cr, shapeWidth, shapeHeight)
-    gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, 12)
+    gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(12))
   end,
   widget = wibox.container.background()
 }

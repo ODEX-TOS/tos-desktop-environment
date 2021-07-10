@@ -630,8 +630,14 @@ function test_prompt_completion_update()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function test_module_update_news()
+    local file = "tde/module/version_update_news.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+
 function test_that_all_important_files_are_tested()
-    local amount = 112
+    local amount = 113
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

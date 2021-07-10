@@ -70,6 +70,7 @@ local function split(inputstr, sep)
     if inputstr == "" then
         return {""}
     end
+
     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
         table.insert(t, str)
     end
@@ -173,6 +174,14 @@ local function trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
+--- Get the major version number
+-- @staticfct major_version
+-- @usage -- returns the trimmed string
+-- lib-tde.function.major_version() -- returns '0.8'
+local function major_version()
+    return tonumber(string.match(awesome.version, "v(%d+%.%d+)")) or 0
+end
+
 return {
     split = split,
     sleep = sleep,
@@ -180,5 +189,6 @@ return {
     bytes_to_grandness = bytes_to_grandness,
     num_to_str = num_to_str,
     trim = trim,
-    focused_screen = focused_screen
+    focused_screen = focused_screen,
+    major_version = major_version
 }

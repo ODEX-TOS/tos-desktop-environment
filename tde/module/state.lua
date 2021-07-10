@@ -30,6 +30,7 @@ local serialize = require("lib-tde.serialize")
 local filehandle = require("lib-tde.file")
 local mouse = require("lib-tde.mouse")
 local volume = require("lib-tde.volume")
+local major_version = require("lib-tde.function.common").major_version
 
 local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 
@@ -54,6 +55,7 @@ local function load()
         bluetooth = false,
         auto_hide = false,
         hardware_only_volume = false,
+        last_version = major_version(),
         tags = {
             gen_default_tag(),
             gen_default_tag(),
@@ -81,6 +83,8 @@ local function load()
     result.auto_hide = result.auto_hide or table.auto_hide
     result.hardware_only_volume = result.hardware_only_volume or table.hardware_only_volume
     result.tags = result.tags or table.tags
+
+    result.last_version = result.last_version or table.last_version
 
     -- always set the auto_hide true when using oled (To reduce burn in)
     if result.oled_mode then
@@ -357,4 +361,12 @@ signals.connect_save_tag_state(function()
         save_state.tags = tags
         save(save_state)
     end
+end)
+
+signals.connect_showed_news(function()
+    if save_state.last_version == major_version() then
+        return
+    end
+    save_state.last_version = major_version()
+    save()
 end)
