@@ -38,8 +38,10 @@ local config = require("config")
 local animate = require("lib-tde.animations").createAnimObject
 local signals = require("lib-tde.signals")
 
-local height = dpi(200)
-local width = dpi(380)
+local button = require("lib-widget.button")
+
+local height = dpi(300)
+local width = dpi(480)
 local theme = require("theme.icons.dark-light")
 
 local icon = theme("/etc/xdg/tde/widget/about/icons/info.svg")
@@ -234,12 +236,20 @@ aboutPage:setup {
   expand = "none",
   {
     browserOpen,
-    wibox.widget {
-      text = config.aboutText,
-      font = "Iosevka Regular 10",
-      align = "center",
-      widget = wibox.widget.textbox
-    },
+    wibox.container.margin(wibox.container.place(wibox.widget{
+      wibox.widget {
+        text = config.aboutText,
+        font = "Iosevka Regular 10",
+        align = "center",
+        widget = wibox.widget.textbox
+      },
+      nil,
+      wibox.container.margin(button(i18n.translate("News"), function()
+        toggleAbout()
+        require("module.version_update_news").show()
+      end), dpi(10), dpi(10), dpi(20), dpi(10)),
+      layout =wibox.layout.fixed.vertical,
+    }), dpi(20), 0,0,0),
     layout = wibox.layout.fixed.horizontal
   },
   -- The real background color

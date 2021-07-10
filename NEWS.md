@@ -46,6 +46,7 @@ As well as a To-do list and a countdown timer plugin for the top-bar.
 - Allow changing microphone volume in the settings
 - Add support to configure countdown timers/clocks
 - Add a prompt with support for completing: ssh, browser searching, tde docs, plugins, calculator and more
+- Show the News/Updates from the latest version when upgrading between major TDE versions
 
 ### Bug Fixes
 

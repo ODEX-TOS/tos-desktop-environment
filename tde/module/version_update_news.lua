@@ -38,6 +38,8 @@ local icons = require("theme.icons")
 local button = require("lib-widget.button")
 local scrollbox = require("lib-widget.scrollbox")
 
+local animate = require("lib-tde.animations").createAnimObject
+
 local function to_obj(news)
     local section
     local prev_section = nil
@@ -227,11 +229,32 @@ local function create_wiboxes(news)
         newsOverlay.show = function()
             newsbackdrop.visible = true
             newsOverlay.visible = true
+
+            newsOverlay.y = newsOverlay.screen.geometry.y - newsOverlay.height
+
+            height = math.max(min_height, newsOverlay.screen.geometry.height / 2)
+
+            animate(
+                _G.anim_speed * 1.5,
+                newsOverlay,
+                {y = newsOverlay.screen.geometry.y + (height / 2),},
+                "outCubic",
+                function()
+                end
+            )
         end
 
         newsOverlay.hide = function()
-            newsbackdrop.visible = false
-            newsOverlay.visible = false
+            animate(
+                _G.anim_speed,
+                newsOverlay,
+                {y = newsOverlay.screen.geometry.y - newsOverlay.height},
+                "outCubic",
+                function()
+                    newsbackdrop.visible = false
+                    newsOverlay.visible = false
+                end
+            )
 
             signals.emit_showed_news()
         end
@@ -249,13 +272,21 @@ local function show_news(news)
     common.focused_screen().newsOverlay.show()
 end
 
-if version > _G.save_state.last_version then
-    print("We have a newer tde version")
-    -- lets fetch the news asynchronously
+local function show()
     local cmd = [[curl -s https://raw.githubusercontent.com/ODEX-TOS/tos-desktop-environment/release/NEWS.md]]
     awful.spawn.easy_async_with_shell(cmd, function(stdout)
         local news = extract_news_from_markdown(stdout or "")
         show_news(news)
     end)
 end
+
+if version > _G.save_state.last_version then
+    print("We have a newer tde version")
+    -- lets fetch the news asynchronously
+    show()
+end
+
+return {
+    show = show
+}
 
