@@ -93,7 +93,7 @@ local function create_news_widget(news)
         }
     )
     layout:add(wibox.container.margin(wibox.widget{
-        text = news["Release Notes"] or "",
+        markup = news["Release Notes"] or "",
         align = "center",
         font = beautiful.font,
         widget = wibox.widget.textbox

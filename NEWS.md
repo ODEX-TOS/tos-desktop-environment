@@ -31,12 +31,12 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### Release Notes
 
-Patch version 0.8 introduces a lot of new stability bugfixes.
-The goal for this patch-set was to fix long awaited bugfixes as well as introducing a few new UI elements
+Patch version 0.8 introduces a lot of new stability bug fixes.
+The goal for this patch-set was to fix long awaited bugs as well as introducing a few new UI elements.
 
 This patch introduced the new prompt, accessible through <span font_weight="bold">Mod+F2</span> keyboard shortcut.
 
-As well as a TODO list and a countdown timer plugin for the topbar.
+As well as a To-do list and a countdown timer plugin for the top-bar.
 
 ### New Features
 
