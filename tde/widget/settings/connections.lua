@@ -32,6 +32,7 @@ local icons = require("theme.icons")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
+local loading = require("lib-widget.loading")
 local inputfield = require("lib-widget.inputfield")
 local tde_button = require("lib-widget.button")
 local signals = require("lib-tde.signals")
@@ -87,6 +88,9 @@ local function make_qr_code_field()
     image = qr_code_image,
     resize = true,
     forced_height = (settings_height / 2),
+    clip_shape = function(cr, _width, _height)
+      gears.shape.rounded_rect(cr, _width, _height, dpi(20))
+    end,
     widget = wibox.widget.imagebox
   }
   local done_btn =
@@ -336,7 +340,11 @@ return function()
   }
 
   local function setup_network_connections()
+    local loader = loading()
+    connections:add(wibox.container.place(loader))
     network.get_ssid_list(function (list)
+      loader.stop()
+      connections.children = static_connections
       for _, value in pairs(list) do
         connections:add(make_network_widget(value["ssid"], value["active"]))
       end

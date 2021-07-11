@@ -32,6 +32,7 @@ local signals = require("lib-tde.signals")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
+local loading_widget = require("lib-widget.loading")
 local naughty = require("naughty")
 local execute = require("lib-tde.hardware-check").execute
 local scrollbox = require("lib-widget.scrollbox")
@@ -40,7 +41,6 @@ local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_height = dpi(900)
 local settings_width = dpi(1100)
 local settings_nw = dpi(260)
 
@@ -54,18 +54,19 @@ local paired_devices = {}
 
 local connections = wibox.layout.fixed.vertical()
 
+local loader
+
 local function loading()
   connections.children = {}
-  local text =
-    wibox.widget {
-    text = i18n.translate("Connecting..."),
-    font = "SFNS Display Regular 24",
-    align = "center",
-    valign = "center",
-    widget = wibox.widget.textbox,
-    forced_height = settings_height - settings_index
-  }
-  connections:add(text)
+  loader = loading_widget()
+  connections:add(wibox.container.place(loader))
+end
+
+local function stop_loading()
+  if loader then
+    loader.stop()
+    connections.children = {}
+  end
 end
 
 local function notify(title, msg)
@@ -105,6 +106,7 @@ local function make_bluetooth_widget(tbl)
           awful.spawn.easy_async(
             cmd,
             function(out, _, _, code)
+              stop_loading()
               print("Bluetooth connection result: " .. out)
               if not (code == 0) then
                 notify("Disconnection failed", out)
@@ -132,6 +134,7 @@ local function make_bluetooth_widget(tbl)
           awful.spawn.easy_async(
             cmd,
             function(out, _, _, code)
+              stop_loading()
               print("Bluetooth connection result: " .. out)
               if not (code == 0) then
                 notify("Connection failed", out)
@@ -160,6 +163,7 @@ local function make_bluetooth_widget(tbl)
           awful.spawn.easy_async(
             cmd,
             function(out, _, _, code)
+              stop_loading()
               print("Bluetooth pairing result: " .. out)
               if not (code == 0) then
                 notify("Pairing failed", out)
@@ -191,6 +195,7 @@ local function make_bluetooth_widget(tbl)
               awful.spawn.easy_async(
                 cmd2,
                 function()
+                  stop_loading()
                   refresh()
                 end
               )
