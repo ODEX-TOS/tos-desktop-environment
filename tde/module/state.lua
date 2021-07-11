@@ -86,6 +86,12 @@ local function load()
 
     result.last_version = result.last_version or table.last_version
 
+    -- For some reason we downgraded tos, in this case we should also trigger the news section
+    -- We do this by making the last_version smaller
+    if result.last_version > major_version() then
+        result.last_version = major_version() - 0.1
+    end
+
     -- always set the auto_hide true when using oled (To reduce burn in)
     if result.oled_mode then
         result.auto_hide = true
