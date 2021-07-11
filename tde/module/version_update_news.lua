@@ -179,8 +179,8 @@ end
 local function create_wiboxes(news)
     awful.screen.connect_for_each_screen(
   function(s)
-        local min_height = dpi(400)
-        local image_height = dpi(150)
+        local min_height = dpi(700)
+        local image_height = dpi(250)
         local margin = dpi(10)
 
         local height = math.max(min_height, s.geometry.height / 2)
@@ -194,7 +194,7 @@ local function create_wiboxes(news)
             width = s.geometry.width / 2,
             bg = beautiful.background.hue_800 .. beautiful.background_transparency,
             x = s.geometry.x + s.geometry.width / 4,
-            y = s.geometry.y + (height / 2),
+            y = s.geometry.y + ((s.geometry.height / 2) - (height / 2)),
             shape = function(cr, shapeWidth, shapeHeight)
                 gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(12))
             end
@@ -212,7 +212,7 @@ local function create_wiboxes(news)
         )
 
         local text_info = create_news_widget(news)
-        text_info.forced_height = height - image_height - (margin * 3) - dpi(60)
+        text_info.forced_height = height - image_height - (margin * 5) - dpi(60)
 
 
         signals.connect_refresh_screen(
@@ -224,18 +224,11 @@ local function create_wiboxes(news)
             height = math.max(min_height, s.geometry.height / 2)
             -- the action center itself
             newsOverlay.x = s.geometry.x + s.geometry.width / 4
-            newsOverlay.y = s.geometry.y + (height / 2)
+            newsOverlay.y = s.geometry.y + ((s.geometry.height/2) - (height / 2))
             newsOverlay.width = s.geometry.width / 2
             newsOverlay.height = height
         end
         )
-
-        local os_image_box = wibox.widget{
-            image = colorized_svg(icons.os_Large, "#00b0ff", beautiful.primary.hue_600),
-            resize = true,
-            forced_height = image_height,
-            widget = wibox.widget.imagebox,
-        }
 
         local news_image_box = wibox.widget{
             image = colorized_svg(icons.news_Large, "#00b0ff", beautiful.primary.hue_600),
@@ -245,7 +238,6 @@ local function create_wiboxes(news)
         }
 
         signals.connect_primary_theme_changed(function(pallet)
-            os_image_box:set_image(colorized_svg(icons.os_Large, "#00b0ff", pallet.hue_600))
             news_image_box:set_image(colorized_svg(icons.news_Large, "#00b0ff", pallet.hue_600))
         end)
 
@@ -257,14 +249,7 @@ local function create_wiboxes(news)
         newsOverlay:setup {
             -- Container
             {
-                wibox.container.margin(
-                    wibox.widget {
-                        os_image_box,
-                        nil,
-                        news_image_box,
-                        layout = wibox.layout.align.horizontal
-                }
-                , margin * 3, margin * 3,margin,margin),
+                wibox.container.margin(wibox.container.place(news_image_box), 0, 0, 0, margin * 2),
                 wibox.widget{
                     text = i18n.translate("News") .. ' TDE ' .. tostring(version) .. ' (' .. awesome.release .. ')',
                     align = "center",
@@ -308,7 +293,7 @@ local function create_wiboxes(news)
             animate(
                 _G.anim_speed * 1.5,
                 newsOverlay,
-                {y = newsOverlay.screen.geometry.y + (height / 2),},
+                {y = newsOverlay.screen.geometry.y + ((newsOverlay.screen.geometry.height / 2) - (height / 2)),},
                 "outCubic",
                 function()
                 end
@@ -329,6 +314,10 @@ local function create_wiboxes(news)
 
             signals.emit_showed_news()
         end
+
+        newsbackdrop:connect_signal("button::press", function()
+            newsOverlay.hide()
+        end)
 
         s.newsOverlay = newsOverlay
 end
