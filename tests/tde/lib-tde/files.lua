@@ -40,7 +40,9 @@ end
 -- WARNING: Be careful with this function
 -- It removes files for the filesystem
 local function rm_file(location)
-    os.remove(location)
+    files.rm(location)
+
+    assert(not files.exists(location), "Failed to remove the file: " .. location)
 end
 
 -- simple test functions that were written previously can be integrated
@@ -60,6 +62,7 @@ function test_file_check_parameters_exist()
     assert(files.mktempdir, "The file api should have a mktempdir function")
     assert(files.overwrite, "The file api should have a overwrite function")
     assert(files.rm, "The file api should have a rm function")
+    assert(files.copy_file, "The file api should have a copy_file function")
     assert(files.write, "The file api should have a write function")
 end
 
@@ -101,6 +104,42 @@ end
 -- some system files that should exist
 function test_script_lines_in_file()
     assert(files.exists(os.getenv("PWD") .. "/tde/rc.lua"), os.getenv("PWD") .. "/tde/rc.lua is missing")
+end
+
+function test_script_copy_file()
+    local data = "this is some test data"
+    create_file("test_file_1", data)
+    assert(
+        files.string("test_file_1") == data,
+        "The string representation of the file 'test_file_1' doesn't match: " .. data
+    )
+    assert(files.copy_file("test_file_1", "test_file_2"))
+    assert(
+        files.string("test_file_2") == data,
+        "The string representation of the file 'test_file_1' doesn't match the string representation of file 'test_file_2', whilsts it was copied"
+    )
+    rm_file("test_file_1")
+    rm_file("test_file_2")
+end
+
+function test_script_copy_file_overwrite()
+    local data = "this is some test data"
+    create_file("test_file_1", data)
+    assert(
+        files.string("test_file_1") == data,
+        "The string representation of the file 'test_file_1' doesn't match: " .. data
+    )
+
+    -- make sure content of test_file_2 doesn't get overridden
+    assert(files.copy_file("test_file_1", "test_file_2"))
+    assert(not files.copy_file("test_file_1", "test_file_2"))
+
+    assert(
+        files.string("test_file_2") == data,
+        "The string representation of the file 'test_file_1' doesn't match the string representation of file 'test_file_2', whilsts it was copied"
+    )
+    rm_file("test_file_1")
+    rm_file("test_file_2")
 end
 
 function test_script_create_string_from_file_single_line()
@@ -384,7 +423,7 @@ function test_dir_recursive_creation()
 end
 
 function test_filehandle_api_unit_tested()
-    local amount = 16
+    local amount = 17
     local result = tablelength(files)
     assert(
         result == amount,

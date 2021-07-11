@@ -95,5 +95,6 @@ return {
 
   -- large svg's
   news_Large = theme(dir .. "/news_large.svg"),
+  os_Large = theme(dir .. "/os_large.svg"),
 
 }

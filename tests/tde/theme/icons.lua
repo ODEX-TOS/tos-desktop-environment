@@ -261,8 +261,12 @@ function test_theme_icon_news_large()
     assert(file_exists(icons.news_Large), "Check that the news_Large icon exists")
 end
 
+function test_theme_icon_os_large()
+    assert(file_exists(icons.os_Large), "Check that the os_Large icon exists")
+end
+
 function test_that_all_icons_are_tested()
-    local amount = 59
+    local amount = 60
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

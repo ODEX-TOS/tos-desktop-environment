@@ -341,33 +341,73 @@ local function list_dir_full(str)
 end
 
 --- Function to remove a file for the filesystem
---@param string filename the path to the file
+--@tparam string filename the path to the file
+-- @treturn boolean if the operation was successfull
+
 local function rm(filename)
   -- make sure we don't destroy the root :-)
   if filename == "/" then
     return
   end
+
   if dir_exists(filename) then
     local execute = require("lib-tde.hardware-check").execute
     -- TODO: lua implementation for rm
-    return execute("rm -rf " .. filename)
+    local _, exitcode = execute("rm -rf " .. filename)
+    return exitcode == 0
   end
-  return os.remove(filename)
+
+  local suc, _ = os.remove(filename)
+  return suc
+end
+
+--- Make a copy of a file
+--@tparam string filename the path to the file
+local function copy_file(input, output)
+  if type(input) ~= "string" then
+    return false
+  end
+  if type(output) ~= "string" then
+    return false
+  end
+
+  if not file_exists(input) then
+    return false
+  end
+
+  if file_exists(output) then
+    return false
+  end
+
+  local file = io.open(input, "r")
+
+  if file == nil then
+    return false
+  end
+
+  local content = file:read("*a")
+  file:close()
+
+  return overwrite(output, content)
 end
 
 --- Function to create a temporary file in /tmp
+-- @tparam string template The template to use as a base for where to create the temporary file
 -- @usage -- This returns a string containing the file
 -- local file = lib-tde.file.mktemp()
-local function mktemp()
-  local _, file = require("posix.stdlib").mkstemp("/tmp/tde.XXXXXX")
+local function mktemp(template)
+  template = template or "/tmp/tde.XXXXXX"
+  local _, file = require("posix.stdlib").mkstemp(template)
   return file
 end
 
 --- Function to create a temporary directory in /tmp
+-- @tparam string template The template to use as a base for where to create the temp_dir
 -- @usage -- This returns a string containing the directory
 -- local dir = lib-tde.file.mktempdir()
-local function mktempdir()
-  local dir = require("posix.stdlib").mkdtemp("/tmp/tde.d.XXXXXX")
+local function mktempdir(template)
+  template = template or "/tmp/tde.d.XXXXXX"
+  local dir = require("posix.stdlib").mkdtemp(template)
   return dir
 end
 
@@ -396,6 +436,7 @@ return {
   dirname = dirname,
   dir_create = dir_create,
   rm = rm,
+  copy_file = copy_file,
   mktemp = mktemp,
   mktempdir = mktempdir
 }
