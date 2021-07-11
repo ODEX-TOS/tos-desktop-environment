@@ -192,8 +192,10 @@ local function make_network_widget(ssid, active)
     ),
     wibox.container.margin(password, dpi(10), dpi(10), dpi(7), dpi(7)),
     button,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.ratio.horizontal
   }
+
+  widget:adjust_ratio(2, 0.20, 0.75, 0.05)
 
   box.update_body(widget)
 
