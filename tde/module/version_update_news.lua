@@ -351,7 +351,8 @@ local function show()
     end)
 end
 
-if version > _G.save_state.last_version then
+-- if the user is root, than this is most likely a live iso
+if version > _G.save_state.last_version and os.getenv("USER") ~= "root" then
     print("We have a newer tde version")
     -- lets fetch the news asynchronously
     show()
