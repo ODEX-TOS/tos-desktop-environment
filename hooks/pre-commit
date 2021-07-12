@@ -23,6 +23,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 WARNING="-1000"
+ERROR="1"
 
 # $1 is the exit code
 # $2 is the message
@@ -166,6 +167,7 @@ function run_license_linter_bash() {
 }
 
 function run_test_suite() {
+  log "0" "Starting test suite"
   if [[ "$(grep '^NAME' /etc/os-release | cut -d'=' -f2 | tr -d '"')" == "TOS Linux" ]]; then
     UNIT_TEST_OUT="$(bash test-runner.sh 2>/dev/null)"
     UNIT_EXIT_CODE="$?"
@@ -185,7 +187,27 @@ function run_correct_branch() {
   if [[ "$_branch" == "master" ]]; then
     echo
     log "$WARNING" "Consider using a feature branch"
+  else
+    log "0" "Using branch '$_branch' is allowed"
   fi
+}
+
+function run_minified_svg() {
+  SVG_EXIT_CODE="0"
+  failed_file_count="0"
+  total_file_count="0"
+    # shellcheck disable=SC2044
+  for file in $(find tde -type f -iname "*.svg" -not -path "./build/*" ); do
+    count="$(wc -l "$file" | cut -d' ' -f1)"
+    if [[ "$count" > "1" ]]; then
+      log "$ERROR" "SVG file $file should be compressed"
+      SVG_EXIT_CODE="1"
+      failed_file_count="$(( failed_file_count + 1 ))"
+    fi
+    total_file_count="$(( total_file_count + 1 ))"
+  done
+  success_count="$(( total_file_count - failed_file_count ))"
+  log "$SVG_EXIT_CODE" "Compression check on svg files" "($success_count/$total_file_count)"
 }
 
 function print_errors() {
@@ -213,6 +235,11 @@ function print_errors() {
     exit 1
   }
 
+  [[ ! "$SVG_EXIT_CODE" -eq "0" ]] && {
+    log "1" "Status"
+    exit 1
+  }
+
   echo -e "\n"
   log "0" "Status"
 }
@@ -224,6 +251,8 @@ run_license_linter_lua
 run_license_linter_bash
 
 run_correct_branch
+
+run_minified_svg
 
 run_test_suite
 
