@@ -231,14 +231,14 @@ local function create_wiboxes(news)
         )
 
         local news_image_box = wibox.widget{
-            image = colorized_svg(icons.news_Large, "#00b0ff", beautiful.primary.hue_600),
+            image = colorized_svg(icons.news_Large, "#00b0ff", beautiful.primary.hue_500),
             resize = true,
             forced_height = image_height,
             widget = wibox.widget.imagebox,
         }
 
         signals.connect_primary_theme_changed(function(pallet)
-            news_image_box:set_image(colorized_svg(icons.news_Large, "#00b0ff", pallet.hue_600))
+            news_image_box:set_image(colorized_svg(icons.news_Large, "#00b0ff", pallet.hue_500))
         end)
 
         signals.connect_background_theme_changed(function(pallet)
