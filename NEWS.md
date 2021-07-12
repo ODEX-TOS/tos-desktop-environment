@@ -27,11 +27,22 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 # Patch Notes
 
-## Patch 0.8
+## Patch 1.0
 
 ### Release Notes
 
-Patch version 0.8 introduces a lot of new stability bug fixes.
+### New Features
+
+### Bug Fixes
+
+### Dev Notes
+
+
+## Patch 0.9
+
+### Release Notes
+
+Patch version 0.9 introduces a lot of new stability bug fixes.
 The goal for this patch-set was to fix long awaited bugs as well as introducing a few new UI elements.
 
 This patch introduced the new prompt, accessible through <span font_weight="bold">Mod+F2</span> keyboard shortcut.
@@ -71,7 +82,7 @@ As well as a To-do list and a countdown timer plugin for the top-bar.
 - We lazily load modules that are by default not loaded in. This decreases the initial load time
 
 
-## Patch 0.7
+## Patch 0.8
 
 ### New Features
 
@@ -102,7 +113,7 @@ As well as a To-do list and a countdown timer plugin for the top-bar.
 - `stderr` messages get written to `error.log`
 - `card` has support for highlighting
 
-## Patch 0.6
+## Patch 0.7
 
 ### New Features
 
