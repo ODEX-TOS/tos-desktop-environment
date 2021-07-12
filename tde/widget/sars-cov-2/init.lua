@@ -26,7 +26,8 @@ local watch = require("awful.widget.watch")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local theme = require("theme.icons.dark-light")
-local split = require("lib-tde.function.common").split
+local common = require("lib-tde.function.common")
+local split = common.split
 local card = require("lib-widget.card")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/sars-cov-2/icons/"
@@ -51,20 +52,29 @@ local covid_deaths =
   widget = wibox.widget.textbox
 }
 
-watch(
-  [[bash -c "curl -s https://corona-stats.online/$(curl https://ipapi.co/country/)?minimal=true | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g'"]],
-  3600,
-  function(_, stdout)
-    local array = split(split(stdout, "\n")[2], "%s*")
-    local infected = i18n.translate("Infected: ") .. (array[4] or i18n.translate("unknown"))
-    local death = i18n.translate("Deaths: ") .. (array[7] or i18n.translate("unknown"))
-    covid_deceases.text = infected
-    covid_deaths.text = death
+local country = ""
+
+awful.spawn.easy_async("curl -s 'https://network.odex.be/country'", function (_stdout)
+  if _stdout ~= nil then
+    country = common.trim(_stdout)
+    local cmd = [[bash -c "curl -s 'https://corona-stats.online/]] .. country .. [[?minimal=true' | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g'"]]
+    print(cmd)
+    watch(
+      cmd,
+      3600,
+      function(_, stdout)
+        local array = split(split(stdout, "\n")[2], "%s*")
+        local infected = i18n.translate("Infected: ") .. (array[4] or i18n.translate("unknown"))
+        local death = i18n.translate("Deaths: ") .. (array[7] or i18n.translate("unknown"))
+        covid_deceases.text = infected
+        covid_deaths.text = death
+      end
+    )
   end
-)
+end)
 
 watch(
-  [[curl -s https://ipapi.co/country_name]],
+  [[curl -s https://network.odex.be/country_name]],
   3600,
   function(_, stdout)
     covid_card.update_title(i18n.translate("Covid-19 cases in ") .. stdout)
