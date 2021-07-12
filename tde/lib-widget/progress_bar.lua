@@ -130,13 +130,13 @@ local function new(args)
     paddings = 0,
     shape = gears.shape.rounded_rect,
     background_color = beautiful.bg_modal,
-    color = beautiful.accent.hue_500 or "#fdfdfd",
+    color = beautiful.accent.hue_600 or "#fdfdfd",
     widget = wibox.widget.progressbar
   }
 
   signals.connect_primary_theme_changed(
     function(theme)
-      ret._private.progress_bar.color = theme.hue_500
+      ret._private.progress_bar.color = theme.hue_600
     end
   )
 
