@@ -75,10 +75,10 @@ return function(min, max, increment, default_value, callback, tooltip_callback, 
     end
     widget.bar_height = dpi(30)
     widget.bar_color = background_theme.hue_700 .. beautiful.background_transparency
-    widget.bar_active_color = theme.hue_500
+    widget.bar_active_color = theme.hue_600
     widget.handle_shape = gears.shape.circle
     widget.handle_width = dpi(35)
-    widget.handle_color = theme.hue_500
+    widget.handle_color = theme.hue_600
     widget.handle_border_width = 1
     widget.handle_border_color = "#00000012"
     widget.minimum = min * step_size

@@ -62,7 +62,29 @@ local function color(value)
   if value == nil then
     return nil
   end
-  return "#" .. value
+
+  if tonumber(value, 16) ~= nil then
+    return "#" .. value
+  end
+
+  if type(value) == "string" then
+    -- probably a HEX that already starts with #
+    if value:sub(1,1) == "#" then
+      return value
+    end
+
+    -- Lets assume it is a formated gradient
+    -- <type>:<sx>,<sy>:<ex>,<ey>:<begin>:<hex>:<end>:<hex>
+    local _type, sx, sy, ex, ey, _begin, _begin_hex, _end, end_hex =
+    string.match(value, "([a-z]+):(%d+),(%d+):(%d+),(%d+):(%d+),([a-fA-F0-9]+):(%d+),([a-fA-F0-9]+)")
+
+    if _type == nil or sx == nil or sy == nil or ex == nil or ey == nil or _begin == nil
+    or _begin_hex == nil or _end == nil or end_hex == nil then
+      return nil
+    end
+
+    return string.format("%s:%d,%d:%d,%d:%d,#%s:%d,#%s", _type, sx, sy, ex, ey, _begin, _begin_hex, _end, end_hex)
+  end
 end
 
 local function loadtheme(standard, override, prefix)

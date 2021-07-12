@@ -384,12 +384,34 @@ function slider:draw(_, cr, width, height)
             active_rate * (width - x_offset - right_margin)
             - (handle_width - handle_border_width/2) * (active_rate - 0.5)
         )
-        cr:set_source(color.create_pattern{
-            type        = "linear",
-            from        = {0,0},
-            to          = {bar_active_width, 0},
-            stops       = {{0.99, bar_active_color}, {0.99, bar_color}}
-        })
+        if string.len(bar_active_color) > 7 then
+            if string.sub(bar_active_color, 1, 7) == "linear:" then
+                print(bar_active_color)
+                local _type, sx, sy, _, _, _begin, _begin_hex, _end, end_hex =
+                string.match(bar_active_color, "([a-z]+):(%d+),(%d+):(%d+),(%d+):(%d+),(#[a-fA-F0-9]+):(%d+),(#[a-fA-F0-9]+)")
+
+                if _type == nil or sx == nil or sy == nil or _begin == nil or _begin_hex == nil or _end == nil or end_hex == nil then
+                    print("Slider nil")
+                    cr:set_source(color.create_pattern(bar_active_color))
+                else
+                    cr:set_source(color.create_pattern{
+                        type        = "linear",
+                        from        = {0,0},
+                        to          = {bar_active_width, 0},
+                        stops       = {{0, _begin_hex}, {0.99, end_hex}, {0.99, bar_color}}
+                    })
+                end
+            else
+                cr:set_source(color.create_pattern(bar_active_color))
+            end
+        else
+            cr:set_source(color.create_pattern{
+                type        = "linear",
+                from        = {0,0},
+                to          = {bar_active_width, 0},
+                stops       = {{0.99, bar_active_color}, {0.99, bar_color}}
+            })
+        end
     end
 
     if bar_color then
