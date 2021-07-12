@@ -310,5 +310,5 @@ Project Link:
 [issues-shield]: https://img.shields.io/github/issues/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
 [issues-url]: https://github.com/ODEX-TOS/tos-desktop-environment/issues
 [license-shield]: https://img.shields.io/github/license/ODEX-TOS/tos-desktop-environment.svg?style=flat-square
-[license-url]: https://github.com/ODEX-TOS/tos-desktop-environment/blob/master/LICENSE.txt
+[license-url]: https://github.com/ODEX-TOS/tos-desktop-environment/blob/release/LICENSE
 [product-screenshot]: https://tos.odex.be/images/logo.svg
