@@ -114,14 +114,14 @@ end
 
 local function add_taglist(awesome_theme)
   taglist_occupied = color(config["taglist_occupied"]) or "#ffffff"
-  awesome_theme.taglist_bg_empty = awesome_theme.background.hue_800 .. "99"
+  awesome_theme.taglist_bg_empty = "#00000000"
   awesome_theme.taglist_bg_occupied =
     "linear:0," ..
     dpi(48) ..
       ":0,0:0," ..
         taglist_occupied ..
           ":0.11," ..
-            taglist_occupied .. ":0.11," .. awesome_theme.background.hue_800 .. "99" .. awesome_theme.background.hue_800
+            taglist_occupied .. ":0.11,#00000000:1,#00000000"
   awesome_theme.taglist_bg_urgent =
     "linear:0," ..
     dpi(48) ..
@@ -129,7 +129,7 @@ local function add_taglist(awesome_theme)
         awesome_theme.accent.hue_500 ..
           ":0.11," ..
             awesome_theme.accent.hue_500 ..
-              ":0.11," .. awesome_theme.background.hue_800 .. ":1," .. awesome_theme.background.hue_800
+              ":0.11,#00000000:1,#00000000"
   awesome_theme.taglist_bg_focus =
     "linear:0," ..
     dpi(48) ..
@@ -137,7 +137,7 @@ local function add_taglist(awesome_theme)
         awesome_theme.primary.hue_500 ..
           ":0.11," ..
             awesome_theme.primary.hue_500 ..
-              ":0.11," .. awesome_theme.background.hue_800 .. ":1," --[[':1,']] .. awesome_theme.background.hue_800
+            ":0.11,#00000000:1,#00000000"
 
   return awesome_theme
 end
