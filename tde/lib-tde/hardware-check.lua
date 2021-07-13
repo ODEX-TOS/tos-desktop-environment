@@ -251,15 +251,13 @@ end
 -- @usage -- Returns The total memory consumption and consumption in lua (Heap + Stack)
 -- local total, lua_mem = lib-tde.hardware-check.getTDEMemoryConsumption()
 local function getTDEMemoryConsumption()
-    local unistd = require('posix.unistd')
-
     local lua_mem = collectgarbage("count")
+    local statm = fileHandle.lines('/proc/self/statm')[1] or ""
+    local kbMem  = tonumber(common.split(statm, ' ')[2]) or 0
 
-    local pid = unistd.getpid()
-    local statm = fileHandle.lines('/proc/' .. tostring(pid) .. '/statm')[1] or ""
-    local kbMem  = tonumber(common.split(statm, ' ')[1]) or 0
-
-    return kbMem, lua_mem
+    -- we multiply by the page size of 4KB
+    -- as statm returns the amount of pages
+    return kbMem * 4, lua_mem
 end
 
 return {
