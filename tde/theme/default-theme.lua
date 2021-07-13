@@ -141,6 +141,7 @@ local function add_taglist(awesome_theme)
 
   return awesome_theme
 end
+
 -- Colors Pallets
 
 -- Custom

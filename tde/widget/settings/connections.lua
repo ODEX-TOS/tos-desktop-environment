@@ -110,11 +110,38 @@ local function make_qr_code_field()
   }
 end
 
+local __id = 1
+
 local function make_network_widget(ssid, active)
   -- make sure ssid is not nil
   ssid = ssid or ""
 
   local box = card()
+
+  local password
+
+  password = inputfield(
+      function(text)
+        active_text = text
+      end,
+      function(_)
+        root.elements.settings_grabber:start()
+      end,
+      function()
+        print("Not resetting: " .. password["id"] .. " (" .. ssid .. ")")
+        for _, v in ipairs(password_fields) do
+          if v["id"] ~= password["id"] then
+            v.reset()
+          end
+        end
+
+        password.focus()
+      end,
+      true
+    )
+
+  __id = __id + 1
+  password["id"] = __id
 
   local button = mat_icon_button(mat_icon(icons.plus, dpi(25)))
   button:buttons(
@@ -136,6 +163,7 @@ local function make_network_widget(ssid, active)
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
               function(_)
+                password.clear_text()
                 refresh()
               end
             )
@@ -143,17 +171,6 @@ local function make_network_widget(ssid, active)
         end
       )
     )
-  )
-
-  local password =
-    inputfield(
-    function(text)
-      active_text = text
-    end,
-    function(_)
-      root.elements.settings_grabber:start()
-    end,
-    true
   )
 
   if active then

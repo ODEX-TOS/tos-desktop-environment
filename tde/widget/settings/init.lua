@@ -154,6 +154,13 @@ local function close_views()
   if grabber.is_running then
     grabber:stop()
   end
+
+  -- make sure we have no lingering keygrabber left
+  -- Some grabbers might use a 'stop_callback' and start another grabber
+  while awful.keygrabber.is_running do
+    awful.keygrabber.current_instance:stop()
+  end
+
   -- perform an entire garbage collection
   -- this operation is heavy
   -- however the settings app can open up a lot of images which will consume a lot of memory
