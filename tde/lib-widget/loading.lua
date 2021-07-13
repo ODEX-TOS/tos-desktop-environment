@@ -94,19 +94,22 @@ local function generate_loader_dot(offset, animation_speed, size)
         end)
     end
 
-    gears.timer {
-        timeout = offset,
-        single_shot = true,
-        autostart = true,
-        callback = callback_function
-    }
-
-
+    widget.start = function()
+        should_animate = true
+        gears.timer {
+            timeout = offset,
+            single_shot = true,
+            autostart = true,
+            callback = callback_function
+        }
+    end
 
     widget.stop = function()
         -- force stop the animation loop
         should_animate = false
     end
+
+    widget.start()
 
     return widget
 end
@@ -137,6 +140,16 @@ return function(dots)
 
     for _, dot in ipairs(_dots) do
         widget:add(dot)
+    end
+
+    --- Start the loading animation
+    -- @staticfct loading.start
+    -- @usage -- Start the animation
+    -- loading.start()
+    widget.start = function()
+        for _, animator in ipairs(_dots) do
+            animator.start()
+        end
     end
 
     --- Stop the loading animation from playing

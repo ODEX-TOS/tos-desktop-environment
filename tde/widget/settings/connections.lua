@@ -57,6 +57,22 @@ local scrollbox_body
 local refresh = function()
 end
 
+local connections = wibox.layout.fixed.vertical()
+
+local loader = loading()
+loader.stop()
+
+local function start_loading()
+  loader.start()
+  connections.children = static_connections
+  connections:add(wibox.container.place(loader))
+end
+
+local function stop_loading()
+  loader.stop()
+  connections.children = static_connections
+end
+
 local qr_code_image = ""
 local bIsShowingNetworkTab = true
 
@@ -153,16 +169,20 @@ local function make_network_widget(ssid, active)
         function()
           -- try to connect without a password
           if active_text == "" then
+            start_loading()
             awful.spawn.easy_async(
               "tos network connect " .. ssid,
               function(_)
+                stop_loading()
                 refresh()
               end
             )
           else
+            start_loading()
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
               function(_)
+                stop_loading()
                 password.clear_text()
                 refresh()
               end
@@ -314,8 +334,6 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local connections = wibox.layout.fixed.vertical()
-
   local wireless = make_connection("wireless")
   local wired = make_connection("wired")
   local network_settings =
@@ -357,11 +375,9 @@ return function()
   }
 
   local function setup_network_connections()
-    local loader = loading()
-    connections:add(wibox.container.place(loader))
+    start_loading()
     network.get_ssid_list(function (list)
-      loader.stop()
-      connections.children = static_connections
+      stop_loading()
       for _, value in pairs(list) do
         connections:add(make_network_widget(value["ssid"], value["active"]))
       end

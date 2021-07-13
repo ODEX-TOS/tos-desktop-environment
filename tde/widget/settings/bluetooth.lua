@@ -54,19 +54,17 @@ local paired_devices = {}
 
 local connections = wibox.layout.fixed.vertical()
 
-local loader
+local loader = loading_widget()
 
 local function loading()
   connections.children = {}
-  loader = loading_widget()
+  loader.start()
   connections:add(wibox.container.place(loader))
 end
 
 local function stop_loading()
-  if loader then
-    loader.stop()
-    connections.children = {}
-  end
+  loader.stop()
+  connections.children = {}
 end
 
 local function notify(title, msg)
