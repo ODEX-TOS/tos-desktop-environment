@@ -55,6 +55,7 @@ local paired_devices = {}
 local connections = wibox.layout.fixed.vertical()
 
 local loader = loading_widget()
+loader.stop()
 
 local function loading()
   connections.children = {}

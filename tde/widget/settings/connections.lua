@@ -168,8 +168,8 @@ local function make_network_widget(ssid, active)
         nil,
         function()
           -- try to connect without a password
+          start_loading()
           if active_text == "" then
-            start_loading()
             awful.spawn.easy_async(
               "tos network connect " .. ssid,
               function(_)
@@ -178,7 +178,6 @@ local function make_network_widget(ssid, active)
               end
             )
           else
-            start_loading()
             awful.spawn.easy_async(
               "tos network connect " .. ssid .. " password " .. active_text,
               function(_)
