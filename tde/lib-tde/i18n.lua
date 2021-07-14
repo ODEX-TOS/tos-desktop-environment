@@ -119,7 +119,9 @@ end
 -- @staticfct translate
 -- @usage -- The word hello gets translated to the native language of the user
 -- i18n.translate("hello") -- becomes hallo if the system language is dutch
-local function translate(str)
+-- i18n.translate("hello %s", "world") -- becomes hallo wereld if the system language is dutch
+-- i18n.translate("The number %d is greater than %d", 10, 5) -- we support lua format string
+local function translate(str, ...)
     if not init_loaded then
         print("I18N - Cannot translate before initializing i18n use i18n.init() ", warn)
     end
@@ -136,7 +138,14 @@ local function translate(str)
             print("I18N - cannot find translation for '" .. str .. "'", warn)
             return str
         end
-        return translation
+        local translated_arg = {}
+        for _, v in ipairs({...}) do
+            table.insert(translated_arg, translate(tostring(v)))
+        end
+        if #translated_arg == 0 then
+            return translation
+        end
+        return string.format(translation, table.unpack(translated_arg))
     end
     return str
 end

@@ -47,7 +47,7 @@ function test_i18n_system_language()
     assert(i18n.system_language() == "en", "Chaning system language back to 'en' didn't work")
 end
 
-function test_i18n_custome_translations()
+function test_i18n_custom_translations()
     -- we set the language to anything else than English
     -- because translating from English to English is not valid
     i18n.set_system_language("dutch")
@@ -60,6 +60,20 @@ function test_i18n_custome_translations()
     assert(
         i18n.translate("random") == "modnar",
         "the word 'random' translated should be 'modnar' but got: " .. i18n.translate("random")
+    )
+    i18n.set_system_language("en")
+end
+
+function test_i18n_test_format_strings()
+    -- we set the language to anything else than English
+    -- because translating from English to English is not valid
+    i18n.set_system_language("dutch")
+    local translations = {}
+    translations["Hello %s how are you?"] = "Hallo %s hoe gaat het?"
+    i18n.custom_translations(translations)
+    assert(
+        i18n.translate("Hello %s how are you?", "tom") == "Hallo tom hoe gaat het?",
+        "the word 'Hello %s how are you?' translated should be 'Hallo tom hoe gaat het?' but got: " .. i18n.translate("Hello %s how are you?", "tom")
     )
     i18n.set_system_language("en")
 end

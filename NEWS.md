@@ -18,6 +18,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
 - [ ] `Default Applications` Allow setting the default application from the settings
 - [ ] `Key binding config` Allow setting the keybinding from the settings application
+- [ ] `Change keyboard layout` Allow changing the keyboard layout from within the settings and using a keyboard shortcut
 
 
 ## Packaging
@@ -36,6 +37,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### Bug Fixes
 
 ### Dev Notes
+- The inputfield now allows editing of the field
+- You can now use printf syntax for the i18n.translate api
 
 
 ## Patch 0.9
