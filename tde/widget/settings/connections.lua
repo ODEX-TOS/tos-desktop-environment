@@ -32,6 +32,7 @@ local icons = require("theme.icons")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
+local button_widget = require("lib-widget.button")
 local loading = require("lib-widget.loading")
 local inputfield = require("lib-widget.inputfield")
 local tde_button = require("lib-widget.button")
@@ -350,6 +351,26 @@ return function()
 
   table.insert(static_connections, wireless.widget)
   table.insert(static_connections, wired.widget)
+  table.insert(static_connections, button_widget("Restart Network", function()
+    start_loading()
+
+    -- make sure the input goes to the polkit authenticator
+    root.elements.settings.ontop = false
+    root.elements.settings_grabber:stop()
+
+    awful.spawn.easy_async("tos network restart", function()
+      stop_loading()
+
+      -- Regrab the focus back (unless we closed the settings)
+      if root.elements.settings.visible then
+        root.elements.settings.ontop = true
+        root.elements.settings_grabber:start()
+      end
+
+      refresh()
+    end)
+
+  end))
   table.insert(static_connections, network_settings)
 
   connections:add(wireless.widget)
