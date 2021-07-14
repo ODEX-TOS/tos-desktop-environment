@@ -33,6 +33,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### Release Notes
 
 ### New Features
+- Restart crashed daemon processes
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
