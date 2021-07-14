@@ -125,11 +125,21 @@ local function translate(str, ...)
     if not init_loaded then
         print("I18N - Cannot translate before initializing i18n use i18n.init() ", warn)
     end
+
+    -- translate all parameters
+    local translated_arg = {}
+    for _, v in ipairs({...}) do
+        table.insert(translated_arg, translate(tostring(v)))
+    end
+
     -- TDE treads all input strings into translation as English
     -- We always translate from English to an unknown language
     -- This statement bypasses the overhead of translating (because we don't need to translate)
     if system_language == "en" then
-        return str
+        if #translated_arg == 0 then
+            return str
+        end
+        return string.format(str, table.unpack(translated_arg))
     end
 
     if translations then
@@ -137,10 +147,6 @@ local function translate(str, ...)
         if translation == nil then
             print("I18N - cannot find translation for '" .. str .. "'", warn)
             return str
-        end
-        local translated_arg = {}
-        for _, v in ipairs({...}) do
-            table.insert(translated_arg, translate(tostring(v)))
         end
         if #translated_arg == 0 then
             return translation
