@@ -24,7 +24,7 @@
 ]]
 local tutorial = require("tutorial")
 
-function test_check_tutorial_functions_exists()
+function Test_check_tutorial_functions_exists()
     assert(tutorial.secondTip, "Check that secondTip exists in the tutorial")
     assert(tutorial.thirdTip, "Check that thirdTip exists in the tutorial")
     assert(tutorial.fourthTip, "Check that fourthTip exists in the tutorial")
@@ -36,7 +36,7 @@ function test_check_tutorial_functions_exists()
     assert(tutorial.finish, "Check that finish exists in the tutorial")
 end
 
-function test_check_tutorial_functions_are_functions()
+function Test_check_tutorial_functions_are_functions()
     assert(type(tutorial.secondTip) == "function", "checks that secondTip is a function")
     assert(type(tutorial.thirdTip) == "function", "checks that thirdTip is a function")
     assert(type(tutorial.fourthTip) == "function", "checks that fourthTip is a function")
@@ -48,7 +48,7 @@ function test_check_tutorial_functions_are_functions()
     assert(type(tutorial.finish) == "function", "checks that finish is a function")
 end
 
-function test_check_tutorial_file_creation()
+function Test_check_tutorial_file_creation()
     local filehandle = require("tde.lib-tde.file")
     local file_exists = filehandle.exists
     local dir_create = filehandle.dir_create
@@ -72,7 +72,7 @@ function test_check_tutorial_file_creation()
     --assert(not require("tde.tutorial"))
 end
 
-function test_tutorial_api_unit_tested()
+function Test_tutorial_api_unit_tested()
     local amount = 10
     local result = tablelength(tutorial)
     assert(

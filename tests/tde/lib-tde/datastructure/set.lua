@@ -24,14 +24,14 @@
 ]]
 local set = require("tde.lib-tde.datastructure.set")
 
-function test_data_structure_set_basic_usage()
+function Test_data_structure_set_basic_usage()
     local map = set()
     assert(not map.exists("test"), "The set should't have a: 'test' key in it")
     map.add("test")
     assert(map.exists("test"), "The set should have a: 'test' key in it")
 end
 
-function test_data_structure_set_api_exists()
+function Test_data_structure_set_api_exists()
     local map = set()
     assert(type(map.exists) == "function", "set should have a exists function")
     assert(type(map.add) == "function", "set should have a add function")
@@ -42,7 +42,7 @@ function test_data_structure_set_api_exists()
 
 end
 
-function test_data_structure_set_remove_works()
+function Test_data_structure_set_remove_works()
     local map = set()
     map.add("test")
     assert(map.exists("test"), "The set should have a: 'test' key in it")
@@ -52,7 +52,7 @@ function test_data_structure_set_remove_works()
     assert(#map.to_list() == 0, "The length of the map should be 0")
 end
 
-function test_data_structure_set_loop()
+function Test_data_structure_set_loop()
     local map = set()
     for i = 1, 50 do
         map.add(i)
@@ -68,7 +68,7 @@ function test_data_structure_set_loop()
     assert(#map.to_list() == 50, "A set shouldn't have any unique keys expected 50 elements but got: " .. tostring(#map.to_list()))
 end
 
-function test_data_structure_set_works_with_number_as_key()
+function Test_data_structure_set_works_with_number_as_key()
     local map = set()
     assert(not map.exists(1), "The set should't have a: '1' key in it")
     map.add(1)
@@ -77,7 +77,7 @@ function test_data_structure_set_works_with_number_as_key()
     assert(not map.exists(1), "The set should't have a: '1' key in it")
 end
 
-function test_data_structure_set_iterator()
+function Test_data_structure_set_iterator()
     local map = set()
     for i = 1, 10, 1 do
         print("Adding: " .. tostring(i*2))
@@ -91,7 +91,7 @@ function test_data_structure_set_iterator()
     end
 end
 
-function test_data_structure_set_unique_key()
+function Test_data_structure_set_unique_key()
     local map = set()
 
     assert(#map.to_list() == 0, "The set list should be empty")
@@ -112,7 +112,7 @@ function test_data_structure_set_unique_key()
 end
 
 
-function test_set_api_unit_tested()
+function Test_set_api_unit_tested()
     local map = set()
     local amount = 6
     local result = tablelength(map)
@@ -122,7 +122,7 @@ function test_set_api_unit_tested()
     )
 end
 
-function test_set_api_to_ordered_list()
+function Test_set_api_to_ordered_list()
     local map = set()
     for i = 1, 10, 1 do
         map.add(i)

@@ -24,7 +24,7 @@
 ]]
 local linkedList = require("tde.lib-tde.datastructure.linkedList")
 
-function test_data_structure_linkedList_basic_usage()
+function Test_data_structure_linkedList_basic_usage()
     local list = linkedList()
 
     assert(list.head.value == nil, "Check that the double linked list has a head.value property")
@@ -49,7 +49,7 @@ function test_data_structure_linkedList_basic_usage()
     assert(list.head.previous.value == "test-1", "The previous value should be correct")
 end
 
-function test_data_structure_linkedList_api_exists()
+function Test_data_structure_linkedList_api_exists()
     local list = linkedList()
 
     assert(type(list.setHead) == "function", "The linked list api should have a setHead function")
@@ -67,7 +67,7 @@ function test_data_structure_linkedList_api_exists()
     assert(type(list.previous) == "function", "The linked list api should have a previous function")
 end
 
-function test_data_structure_linkedList_delete_works_previous()
+function Test_data_structure_linkedList_delete_works_previous()
     local list = linkedList()
     list.setHead("hello")
     list.setNext("World")
@@ -78,7 +78,7 @@ function test_data_structure_linkedList_delete_works_previous()
     assert(list.head.value == "World", "The value of head is not set")
 end
 
-function test_data_structure_linkedList_delete_works_next()
+function Test_data_structure_linkedList_delete_works_next()
     local list = linkedList()
     list.setHead("hello")
     list.setPrevious("World")
@@ -89,7 +89,7 @@ function test_data_structure_linkedList_delete_works_next()
     assert(list.head.value == "World", "The value of head is not set")
 end
 
-function test_data_structure_linkedList_delete_in_between_values_works()
+function Test_data_structure_linkedList_delete_in_between_values_works()
     local list = linkedList()
     list.setHead(1)
     list.setNext(2)
@@ -102,7 +102,7 @@ function test_data_structure_linkedList_delete_in_between_values_works()
     assert(list.head.next.value == 3, "The next attribute of head is not set")
 end
 
-function test_data_structure_linkedList_delete_in_between_values_works_previous()
+function Test_data_structure_linkedList_delete_in_between_values_works_previous()
     local list = linkedList()
     list.setHead(1)
     list.setPrevious(2)
@@ -115,7 +115,7 @@ function test_data_structure_linkedList_delete_in_between_values_works_previous(
     assert(list.head.previous.value == 3, "The previous attribute of head is not set")
 end
 
-function test_data_structure_linkedList_multi_next()
+function Test_data_structure_linkedList_multi_next()
     local list = linkedList()
     list.setHead(0)
     for i = 1, 50 do
@@ -128,7 +128,7 @@ function test_data_structure_linkedList_multi_next()
     assert(list.head.previous.previous.value == 48, "The head previous attribute should also have a previous attribute")
 end
 
-function test_general_linked_list()
+function Test_general_linked_list()
     local list = linkedList()
     assert(list.head.value == nil, "The head value should be empty")
     assert(list.head.next.value == nil, "The head next attribute should be empty")
@@ -146,7 +146,7 @@ function test_general_linked_list()
     assert(list.head.previous.value == "Hello", "The head previous value should exist")
 end
 
-function test_data_structure_linkedList_insertBetween_Nodes()
+function Test_data_structure_linkedList_insertBetween_Nodes()
     local list = linkedList()
     list.setHead(0)
     list.setNext(1)
@@ -156,7 +156,7 @@ function test_data_structure_linkedList_insertBetween_Nodes()
     assert(list.head.next.next.value == 1, "The head next attribute should have a next attribute")
 end
 
-function test_data_structure_linkedList_insertBetween_Nodes_previous()
+function Test_data_structure_linkedList_insertBetween_Nodes_previous()
     local list = linkedList()
     list.setHead(0)
     list.setPrevious(1)
@@ -166,7 +166,7 @@ function test_data_structure_linkedList_insertBetween_Nodes_previous()
     assert(list.head.previous.previous.value == 1, "The head previous attribute should have a previous attribute")
 end
 
-function test_linked_list_api_unit_tested()
+function Test_linked_list_api_unit_tested()
     local tree = linkedList()
     local amount = 10
     local result = tablelength(tree)

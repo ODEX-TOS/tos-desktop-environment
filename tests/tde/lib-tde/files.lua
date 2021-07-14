@@ -47,7 +47,7 @@ end
 
 -- simple test functions that were written previously can be integrated
 -- in luaunit too
-function test_file_check_parameters_exist()
+function Test_file_check_parameters_exist()
     assert(files.dir_exists, "The file api should have a dir_exists function")
     assert(files.exists, "The file api should have a exists function")
     assert(files.lines, "The file api should have a lines function")
@@ -68,17 +68,17 @@ end
 
 -- TODO: verify that dir exists only works for directories
 -- HINT: list_dir should contain . and ..
-function test_dir_exists_validation()
+function Test_dir_exists_validation()
     assert(not files.dir_exists(123), "a directory cannot be an integer, must be a string")
     assert(files.dir_exists("/"), "The root directory always exists")
 end
 
-function test_dir_exists_works_with_symlink()
+function Test_dir_exists_works_with_symlink()
     -- On TOS based systems /bin is symlinked to /usr/bin
     assert(files.dir_exists("/bin"), "/bin is a directory that always exists")
 end
 
-function test_dir_exists_for_known_directories()
+function Test_dir_exists_for_known_directories()
     local project_dir = script_path()
 
     assert(files.dir_exists(project_dir), "The current working directory should exists")
@@ -90,7 +90,7 @@ end
 
 -- TODO: check that file_exists doesn't mark a directory as a file
 
-function test_script_file_exists()
+function Test_script_file_exists()
     local project_dir = script_path()
     -- this file that contains this code must exist
     assert(files.exists(project_dir .. "files.lua"), "The file " .. project_dir .. "files.lua should exist")
@@ -102,11 +102,11 @@ function test_script_file_exists()
 end
 
 -- some system files that should exist
-function test_script_lines_in_file()
+function Test_script_lines_in_file()
     assert(files.exists(os.getenv("PWD") .. "/tde/rc.lua"), os.getenv("PWD") .. "/tde/rc.lua is missing")
 end
 
-function test_script_copy_file()
+function Test_script_copy_file()
     local data = "this is some test data"
     create_file("test_file_1", data)
     assert(
@@ -122,7 +122,7 @@ function test_script_copy_file()
     rm_file("test_file_2")
 end
 
-function test_script_copy_file_overwrite()
+function Test_script_copy_file_overwrite()
     local data = "this is some test data"
     create_file("test_file_1", data)
     assert(
@@ -142,7 +142,7 @@ function test_script_copy_file_overwrite()
     rm_file("test_file_2")
 end
 
-function test_script_create_string_from_file_single_line()
+function Test_script_create_string_from_file_single_line()
     local data = "this is some test data"
     create_file("test_file_1", data)
     create_file("test_file_2", data)
@@ -158,7 +158,7 @@ function test_script_create_string_from_file_single_line()
     rm_file("test_file_2")
 end
 
-function test_script_create_string_from_file_multi_line()
+function Test_script_create_string_from_file_multi_line()
     local data = "this is some more test data\nwith_some_more_information\never a third line is present"
     create_file("test_file_1", data)
     create_file("test_file_2", data)
@@ -174,7 +174,7 @@ function test_script_create_string_from_file_multi_line()
     rm_file("test_file_2")
 end
 
-function test_script_create_string_from_file_empty()
+function Test_script_create_string_from_file_empty()
     local data = ""
     create_file("test_file_1", data)
     create_file("test_file_2", data)
@@ -190,7 +190,7 @@ function test_script_create_string_from_file_empty()
     rm_file("test_file_2")
 end
 
-function test_script_replace()
+function Test_script_replace()
     local data = "abc"
     local expected = "bbc"
 
@@ -205,7 +205,7 @@ function test_script_replace()
     rm_file("test_file_1")
 end
 
-function test_script_replace_regex()
+function Test_script_replace_regex()
     local data = "abc123def456"
     local expected = "Z123Z456"
 
@@ -220,7 +220,7 @@ function test_script_replace_regex()
     rm_file("test_file_1")
 end
 
-function test_script_lines_from_file()
+function Test_script_lines_from_file()
     local lines = {}
     lines[1] = "this is some test data"
     lines[2] = "this is the second line"
@@ -250,7 +250,7 @@ function test_script_lines_from_file()
     rm_file("test_file_1")
 end
 
-function test_script_lines_from_file_empty()
+function Test_script_lines_from_file_empty()
     local lines = {}
 
     local data = ""
@@ -276,27 +276,27 @@ end
 -- TODO: check that . and .. are excluded
 -- TODO: verify recursion
 
-function test_directory_list_works()
+function Test_directory_list_works()
     assert(files.list_dir("/etc"), "/etc should have some files in it")
     assert(type(files.list_dir("/etc")) == "table", "The files in /etc should be in a table")
 end
 
-function test_directory_list_unexisting_dir_works()
+function Test_directory_list_unexisting_dir_works()
     assert(#files.list_dir("/bdquqddqdsqdqsd") == 0, "/bdquqddqdsqdqsd shouldn't contain any files")
     assert(type(files.list_dir("/bdquqddqdsqdqsd")) == "table", "list_dir should return files")
 end
 
-function test_directory_list_works_reqursive()
+function Test_directory_list_works_reqursive()
     assert(files.list_dir_full("/tmp"), "/bdquqddqdsqdqsd shouldn't contain any files")
     assert(type(files.list_dir_full("/tmp")) == "table", "list_dir_full should return files")
 end
 
-function test_directory_list_unexisting_dir_works_reqursive()
+function Test_directory_list_unexisting_dir_works_reqursive()
     assert(#files.list_dir_full("/bdquqddqdsqdqsd") == 0, "/bdquqddqdsqdqsd shouldn't contain any files")
     assert(type(files.list_dir_full("/bdquqddqdsqdqsd")) == "table", "list_dir_full should return files")
 end
 
-function test_file_remove_works()
+function Test_file_remove_works()
     assert(not files.exists("should_not_exist"), "the file 'should_not_exist' shouldn't exist")
     assert(files.write("should_not_exist", ""), "Writing data to 'should_not_exist' failed")
     assert(files.exists("should_not_exist"), "The file 'should_not_exist' should temporarily exist")
@@ -306,7 +306,7 @@ function test_file_remove_works()
     assert(not files.exists("should_not_exist"), "The file 'should_not_exist' shouldn't exist anymore")
 end
 
-function test_file_basename_works()
+function Test_file_basename_works()
     assert(files.basename("hello") == "hello", files.basename("Hello") .. " should equal 'Hello'")
     assert(files.basename("/root/hello") == "hello", files.basename("/root/hello") .. " should equal 'hello'")
     assert(
@@ -320,7 +320,7 @@ function test_file_basename_works()
     )
 end
 
-function test_file_basename_works_with_spaces()
+function Test_file_basename_works_with_spaces()
     assert(
         files.basename("hello world") == "hello world",
         files.basename("hello world") .. " should equal 'hello world'"
@@ -344,7 +344,7 @@ function test_file_basename_works_with_spaces()
     )
 end
 
-function test_file_basename_validate_input()
+function Test_file_basename_validate_input()
     assert(files.basename(nil) == nil, "You cannot ask the basename of nil")
     assert(files.basename(10) == nil, "You cannot ask the basename of a number")
     assert(files.basename(-10) == nil, "You cannot ask the basename of a number")
@@ -359,7 +359,7 @@ function test_file_basename_validate_input()
     )
 end
 
-function test_file_dirname_works()
+function Test_file_dirname_works()
     assert(files.dirname("hello") == "./", files.dirname("hello") .. " should equal './'")
     assert(files.dirname("/root/hello") == "/root/", files.dirname("/root/hello") .. " should equal '/root/'")
     assert(
@@ -373,7 +373,7 @@ function test_file_dirname_works()
     )
 end
 
-function test_file_dirname_works_with_spaces()
+function Test_file_dirname_works_with_spaces()
     assert(files.dirname("hello world") == "./", files.dirname("hello world") .. " should equal './'")
     assert(
         files.dirname("/root/hello world") == "/root/",
@@ -392,7 +392,7 @@ function test_file_dirname_works_with_spaces()
     )
 end
 
-function test_file_dirname_validate_input()
+function Test_file_dirname_validate_input()
     assert(files.dirname(nil) == nil, "You cannot ask the basename of nil")
     assert(files.dirname(10) == nil, "You cannot ask the basename of a number")
     assert(files.dirname(-10) == nil, "You cannot ask the basename of a number")
@@ -407,14 +407,14 @@ function test_file_dirname_validate_input()
     )
 end
 
-function test_dir_components()
+function Test_dir_components()
     local dir = "/etc/xdg/tde/lib-tde/"
     local file = dir .. "/logger.lua"
     assert(files.dirname(dir) == dir, "The directory name doesn't match: " .. dir)
     assert(files.dirname(file) == dir, "The directory name doesn't match: " .. file)
 end
 
-function test_dir_recursive_creation()
+function Test_dir_recursive_creation()
     local dir = "/tmp/some/random/dir/that/doesn't/exist/"
     files.dir_create(dir)
     local result = files.dir_exists(dir)
@@ -422,7 +422,7 @@ function test_dir_recursive_creation()
     assert(result, "The directroy didn't get created: " .. dir)
 end
 
-function test_filehandle_api_unit_tested()
+function Test_filehandle_api_unit_tested()
     local amount = 17
     local result = tablelength(files)
     assert(

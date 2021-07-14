@@ -29,243 +29,243 @@ local file_exists = function(loc)
     return exists(loc)
 end
 
-function test_theme_icon_chrome()
+function Test_theme_icon_chrome()
     assert(file_exists(icons.chrome), "Check that the chrome icon exists")
 end
 
-function test_theme_icon_code()
+function Test_theme_icon_code()
     assert(file_exists(icons.code), "Check that the code icon exists")
 end
 
-function test_theme_icon_social()
+function Test_theme_icon_social()
     assert(file_exists(icons.social), "Check that the social icon exists")
 end
 
-function test_theme_icon_folder()
+function Test_theme_icon_folder()
     assert(file_exists(icons.folder), "Check that the folder icon exists")
 end
 
-function test_theme_icon_music()
+function Test_theme_icon_music()
     assert(file_exists(icons.music), "Check that the music icon exists")
 end
 
-function test_theme_icon_game()
+function Test_theme_icon_game()
     assert(file_exists(icons.game), "Check that the game icon exists")
 end
 
-function test_theme_icon_lab()
+function Test_theme_icon_lab()
     assert(file_exists(icons.lab), "Check that the lab icon exists")
 end
 
-function test_theme_icon_terminal()
+function Test_theme_icon_terminal()
     assert(file_exists(icons.terminal), "Check that the terminal icon exists")
 end
 
-function test_theme_icon_art()
+function Test_theme_icon_art()
     assert(file_exists(icons.art), "Check that the art icon exists")
 end
 
-function test_theme_icon_menu()
+function Test_theme_icon_menu()
     assert(file_exists(icons.menu), "Check that the menu icon exists")
 end
 
-function test_theme_icon_logo()
+function Test_theme_icon_logo()
     assert(file_exists(icons.logo), "Check that the logo icon exists")
 end
 
-function test_theme_icon_settings()
+function Test_theme_icon_settings()
     assert(file_exists(icons.settings), "Check that the settings icon exists")
 end
 
-function test_theme_icon_close()
+function Test_theme_icon_close()
     assert(file_exists(icons.close), "Check that the close icon exists")
 end
 
-function test_theme_icon_logout()
+function Test_theme_icon_logout()
     assert(file_exists(icons.logout), "Check that the logout icon exists")
 end
 
-function test_theme_icon_sleep()
+function Test_theme_icon_sleep()
     assert(file_exists(icons.sleep), "Check that the sleep icon exists")
 end
 
-function test_theme_icon_power()
+function Test_theme_icon_power()
     assert(file_exists(icons.power), "Check that the power icon exists")
 end
 
-function test_theme_icon_lock()
+function Test_theme_icon_lock()
     assert(file_exists(icons.lock), "Check that the lock icon exists")
 end
 
-function test_theme_icon_restart()
+function Test_theme_icon_restart()
     assert(file_exists(icons.restart), "Check that the restart icon exists")
 end
 
-function test_theme_icon_search()
+function Test_theme_icon_search()
     assert(file_exists(icons.search), "Check that the search icon exists")
 end
 
-function test_theme_icon_monitor()
+function Test_theme_icon_monitor()
     assert(file_exists(icons.monitor), "Check that the monitor icon exists")
 end
 
-function test_theme_icon_wifi()
+function Test_theme_icon_wifi()
     assert(file_exists(icons.wifi), "Check that the wifi icon exists")
 end
 
-function test_theme_icon_volume()
+function Test_theme_icon_volume()
     assert(file_exists(icons.volume), "Check that the volume icon exists")
 end
 
-function test_theme_icon_muted()
+function Test_theme_icon_muted()
     assert(file_exists(icons.muted), "Check that the muted icon exists")
 end
 
-function test_theme_icon_brightness()
+function Test_theme_icon_brightness()
     assert(file_exists(icons.brightness), "Check that the brightness icon exists")
 end
 
-function test_theme_icon_chart()
+function Test_theme_icon_chart()
     assert(file_exists(icons.chart), "Check that the chart icon exists")
 end
 
-function test_theme_icon_memory()
+function Test_theme_icon_memory()
     assert(file_exists(icons.memory), "Check that the memory icon exists")
 end
 
-function test_theme_icon_harddisk()
+function Test_theme_icon_harddisk()
     assert(file_exists(icons.harddisk), "Check that the harddisk icon exists")
 end
 
-function test_theme_icon_thermometer()
+function Test_theme_icon_thermometer()
     assert(file_exists(icons.thermometer), "Check that the thermometer icon exists")
 end
 
-function test_theme_icon_plus()
+function Test_theme_icon_plus()
     assert(file_exists(icons.plus), "Check that the plus icon exists")
 end
 
-function test_theme_icon_minus()
+function Test_theme_icon_minus()
     assert(file_exists(icons.minus), "Check that the minus icon exists")
 end
 
-function test_theme_icon_network()
+function Test_theme_icon_network()
     assert(file_exists(icons.network), "Check that the network icon exists")
 end
 
-function test_theme_icon_upload()
+function Test_theme_icon_upload()
     assert(file_exists(icons.upload), "Check that the upload icon exists")
 end
 
-function test_theme_icon_download()
+function Test_theme_icon_download()
     assert(file_exists(icons.download), "Check that the download icon exists")
 end
 
-function test_theme_icon_warning()
+function Test_theme_icon_warning()
     assert(file_exists(icons.warning), "Check that the warning icon exists")
 end
 
-function test_theme_icon_lan()
+function Test_theme_icon_lan()
     assert(file_exists(icons.lan), "Check that the lan icon exists")
 end
 
-function test_theme_icon_lan_off()
+function Test_theme_icon_lan_off()
     assert(file_exists(icons.lan_off), "Check that the lan_off icon exists")
 end
 
-function test_theme_icon_calendar()
+function Test_theme_icon_calendar()
     assert(file_exists(icons.calendar), "Check that the calendar icon exists")
 end
 
-function test_theme_icon_brush()
+function Test_theme_icon_brush()
     assert(file_exists(icons.brush), "Check that the brush icon exists")
 end
 
-function test_theme_icon_package()
+function Test_theme_icon_package()
     assert(file_exists(icons.package), "Check that the package icon exists")
 end
 
-function test_theme_icon_about()
+function Test_theme_icon_about()
     assert(file_exists(icons.about), "Check that the about icon exists")
 end
 
-function test_theme_icon_mouse()
+function Test_theme_icon_mouse()
     assert(file_exists(icons.mouse), "Check that the mouse icon exists")
 end
 
-function test_theme_icon_unknown()
+function Test_theme_icon_unknown()
     assert(file_exists(icons.unknown), "Check that the unknown icon exists")
 end
 
-function test_theme_icon_user()
+function Test_theme_icon_user()
     assert(file_exists(icons.user), "Check that the user icon exists")
 end
 
-function test_theme_icon_bluetooth()
+function Test_theme_icon_bluetooth()
     assert(file_exists(icons.bluetooth), "Check that the bluetooth icon exists")
 end
 
-function test_theme_icon_bluetooth_off()
+function Test_theme_icon_bluetooth_off()
     assert(file_exists(icons.bluetooth_off), "Check that the bluetooth_off icon exists")
 end
 
-function test_theme_icon_bluetooth_off()
+function Test_theme_icon_bluetooth_off()
     assert(file_exists(icons.qr_code), "Check that the bluetooth_off icon exists")
 end
 
-function test_theme_icon_microphone()
+function Test_theme_icon_microphone()
     assert(file_exists(icons.microphone), "Check that the microphone icon exists")
 end
 
-function test_theme_icon_bios()
+function Test_theme_icon_bios()
     assert(file_exists(icons.bios), "Check that the bios icon exists")
 end
 
-function test_theme_icon_dwindle()
+function Test_theme_icon_dwindle()
     assert(file_exists(icons.dwindle), "Check that the dwindle icon exists")
 end
 
-function test_theme_icon_down()
+function Test_theme_icon_down()
     assert(file_exists(icons.arrow_down), "Check that the arrow_down icon exists")
 end
 
-function test_theme_icon_up()
+function Test_theme_icon_up()
     assert(file_exists(icons.arrow_up), "Check that the arrow_up icon exists")
 end
 
-function test_theme_icon_check()
+function Test_theme_icon_check()
     assert(file_exists(icons.check), "Check that the check icon exists")
 end
 
-function test_theme_icon_clock()
+function Test_theme_icon_clock()
     assert(file_exists(icons.clock), "Check that the clock icon exists")
 end
 
-function test_theme_icon_clock_add()
+function Test_theme_icon_clock_add()
     assert(file_exists(icons.clock_add), "Check that the clock icon exists")
 end
 
-function test_theme_icon_docs()
+function Test_theme_icon_docs()
     assert(file_exists(icons.docs), "Check that the docs icon exists")
 end
 
-function test_theme_icon_calc()
+function Test_theme_icon_calc()
     assert(file_exists(icons.calc), "Check that the calc icon exists")
 end
 
-function test_theme_icon_login()
+function Test_theme_icon_login()
     assert(file_exists(icons.login), "Check that the login icon exists")
 end
 
-function test_theme_icon_news_large()
+function Test_theme_icon_news_large()
     assert(file_exists(icons.news_Large), "Check that the news_Large icon exists")
 end
 
-function test_theme_icon_os_large()
+function Test_theme_icon_os_large()
     assert(file_exists(icons.os_Large), "Check that the os_Large icon exists")
 end
 
-function test_that_all_icons_are_tested()
+function Test_that_all_icons_are_tested()
     local amount = 60
     assert(
         tablelength(icons) == amount,

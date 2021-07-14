@@ -37,19 +37,19 @@ local function rm_file(location)
     os.remove(location)
 end
 
-function test_config_parser_exists()
+function Test_config_parser_exists()
     assert(parser, "Make sure the config parser exists")
     assert(type(parser) == "function", "Make sure the api of the config parser is correct")
 end
 
-function test_config_parser_works_single_value()
+function Test_config_parser_works_single_value()
     create_file("test.conf", "value=1")
     local result = parser("test.conf")
     assert(result["value"] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"]))
     rm_file("test.conf")
 end
 
-function test_config_parser_works_multi_value()
+function Test_config_parser_works_multi_value()
     create_file("test.conf", "value=1\nvalue=2")
     local result = parser("test.conf")
     assert(result["value"][1] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"][1]))
@@ -57,7 +57,7 @@ function test_config_parser_works_multi_value()
     rm_file("test.conf")
 end
 
-function test_config_parser_works_spacing()
+function Test_config_parser_works_spacing()
     create_file("test.conf", "value =1\nvalue= 2")
     local result = parser("test.conf")
     assert(result["value"][1] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"][1]))
@@ -65,7 +65,7 @@ function test_config_parser_works_spacing()
     rm_file("test.conf")
 end
 
-function test_config_parser_works_newlines()
+function Test_config_parser_works_newlines()
     create_file("test.conf", "value =1\n\nvalue= 2")
     local result = parser("test.conf")
     assert(result["value"][1] == "1", "Parsing 'value' should be 1 but got " .. tostring(result["value"][1]))
@@ -73,35 +73,35 @@ function test_config_parser_works_newlines()
     rm_file("test.conf")
 end
 
-function test_config_parser_works_quotes()
+function Test_config_parser_works_quotes()
     create_file("test.conf", "value = 'abc'")
     local result = parser("test.conf")
     assert(result["value"] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"]))
     rm_file("test.conf")
 end
 
-function test_config_parser_works_dubble_quotes()
+function Test_config_parser_works_dubble_quotes()
     create_file("test.conf", 'value = "abc"')
     local result = parser("test.conf")
     assert(result["value"] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"]))
     rm_file("test.conf")
 end
 
-function test_config_parser_comments()
+function Test_config_parser_comments()
     create_file("test.conf", '# this is a comment\nvalue = "abc"')
     local result = parser("test.conf")
     assert(result["value"] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"]))
     rm_file("test.conf")
 end
 
-function test_config_parser_comments_behind_values()
+function Test_config_parser_comments_behind_values()
     create_file("test.conf", 'value = "abc" # this is a comment')
     local result = parser("test.conf")
     assert(result["value"] == "abc", "Parsing 'value' should be 'abc' but got " .. tostring(result["value"]))
     rm_file("test.conf")
 end
 
-function test_config_parser_single_value_is_no_list_multi_value_is_list()
+function Test_config_parser_single_value_is_no_list_multi_value_is_list()
     create_file("test.conf", 'value = "abc" # this is a comment')
     local result = parser("test.conf")
     assert(type(result["value"]) == "string", "result should be a string but is: " .. type(result["value"]))
@@ -116,28 +116,28 @@ function test_config_parser_single_value_is_no_list_multi_value_is_list()
     rm_file("test.conf")
 end
 
-function test_config_parser_edge_cases()
+function Test_config_parser_edge_cases()
     local result = parser("doesn.exist")
     assert(result, "Parsing a file that doesn't exist should yield an empty table")
     -- check to see if it is empty
     assert(next(result) == nil, "Parsed table is not empty")
 end
 
-function test_config_parser_edge_cases_2()
+function Test_config_parser_edge_cases_2()
     local result = parser("")
     assert(result, "Parsing a file that doesn't exist should yield an empty table")
     -- check to see if it is empty
     assert(next(result) == nil, "Parsed table is not empty")
 end
 
-function test_config_parser_edge_cases_3()
+function Test_config_parser_edge_cases_3()
     local result = parser(nil)
     assert(result, "Parsing a file that doesn't exist should yield an empty table")
     -- check to see if it is empty
     assert(next(result) == nil, "Parsed table is not empty")
 end
 
-function test_config_parser_edge_cases_4()
+function Test_config_parser_edge_cases_4()
     local result = parser(123)
     assert(result, "Parsing a file that doesn't exist should yield an empty table")
     -- check to see if it is empty

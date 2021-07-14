@@ -24,7 +24,7 @@
 ]]
 local queue = require("tde.lib-tde.datastructure.queue")
 
-function test_data_structure_queue_basic_usage()
+function Test_data_structure_queue_basic_usage()
     local list = queue()
     assert(list.next() == nil, "The queue next should be empty")
     list.push("first")
@@ -40,7 +40,7 @@ function test_data_structure_queue_basic_usage()
     assert(list.size() == 0, "The queue size should be 0")
 end
 
-function test_data_structure_queue_types_number()
+function Test_data_structure_queue_types_number()
     local list = queue()
     assert(list.next() == nil, "The queue next should be empty")
     list.push(1)
@@ -56,7 +56,7 @@ function test_data_structure_queue_types_number()
     assert(list.size() == 0, "The queue size should be 0")
 end
 
-function test_data_structure_queue_functions_exist()
+function Test_data_structure_queue_functions_exist()
     local list = queue()
     assert(type(list.next) == "function", "The queue api should have a next function")
     assert(type(list.size) == "function", "The queue api should have a size function")
@@ -64,7 +64,7 @@ function test_data_structure_queue_functions_exist()
     assert(type(list.pop) == "function", "The queue api should have a pop function")
 end
 
-function test_data_structure_queue_large_dataset()
+function Test_data_structure_queue_large_dataset()
     local list = queue()
     for i = 1, 1000 do
         list.push(i)
@@ -76,7 +76,7 @@ function test_data_structure_queue_large_dataset()
     assert(list.size() == 1, "The queue size should be 1")
 end
 
-function test_data_structure_queue_very_large_dataset()
+function Test_data_structure_queue_very_large_dataset()
     local list = queue()
     for i = 1, 10000 do
         list.push(i)
@@ -88,7 +88,7 @@ function test_data_structure_queue_very_large_dataset()
     assert(list.size() == 1, "The queue size should be 1")
 end
 
-function test_queue_api_unit_tested()
+function Test_queue_api_unit_tested()
     local tree = queue()
     local amount = 4
     local result = tablelength(tree)

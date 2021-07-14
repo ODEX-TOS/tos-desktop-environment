@@ -31,7 +31,7 @@ local function compare_list(first, second)
     end
 end
 
-function test_mappers_mapping_basics()
+function Test_mappers_mapping_basics()
     local list = {1, 2, 3}
     local result =
         mappers.map(
@@ -44,7 +44,7 @@ function test_mappers_mapping_basics()
     compare_list(result, expected)
 end
 
-function test_mappers_mapping_with_index()
+function Test_mappers_mapping_with_index()
     local list = {1, 2, 3, 5}
     local result =
         mappers.map(
@@ -57,7 +57,7 @@ function test_mappers_mapping_with_index()
     compare_list(result, expected)
 end
 
-function test_mappers_mapping_with_string()
+function Test_mappers_mapping_with_string()
     local list = {"A", "B", "C"}
     local result =
         mappers.map(
@@ -70,7 +70,7 @@ function test_mappers_mapping_with_string()
     compare_list(result, expected)
 end
 
-function test_mappers_filter_basics()
+function Test_mappers_filter_basics()
     local list = {1, 2, 3, 5, 7, 9, 10}
     local result =
         mappers.filter(
@@ -83,7 +83,7 @@ function test_mappers_filter_basics()
     compare_list(result, expected)
 end
 
-function test_mappers_filter_basics_with_string()
+function Test_mappers_filter_basics_with_string()
     local list = {"a", "b", "c", "d"}
     local result =
         mappers.filter(
@@ -96,7 +96,7 @@ function test_mappers_filter_basics_with_string()
     compare_list(result, expected)
 end
 
-function test_mapper_reducer_basics()
+function Test_mapper_reducer_basics()
     local list = {1, 2, 3, 4}
     local result =
         mappers.reduce(
@@ -109,7 +109,7 @@ function test_mapper_reducer_basics()
     assert(result == 10, "The result should be 10 but got: " .. tostring(result))
 end
 
-function test_mapper_reducer_basics_with_initial_value()
+function Test_mapper_reducer_basics_with_initial_value()
     local list = {1, 2, 3, 4}
     local result =
         mappers.reduce(
@@ -122,7 +122,7 @@ function test_mapper_reducer_basics_with_initial_value()
     assert(result == 40, "The result should be 40 but got: " .. tostring(result))
 end
 
-function test_mapper_reducer_basics_with_index()
+function Test_mapper_reducer_basics_with_index()
     local list = {1, 2, 3, 4}
     local result =
         mappers.reduce(
@@ -135,7 +135,7 @@ function test_mapper_reducer_basics_with_index()
     assert(result == 20, "The result should be 20 but got: " .. tostring(result))
 end
 
-function test_mapper_reducer_with_string()
+function Test_mapper_reducer_with_string()
     local list = {"a", "b", "c"}
     local result =
         mappers.reduce(
@@ -148,7 +148,7 @@ function test_mapper_reducer_with_string()
     assert(result == "abc", "The result should be 'abc' but got: '" .. result .. "'")
 end
 
-function test_mapper_contains_basic()
+function Test_mapper_contains_basic()
     local list = {1, 2, 3, 4, 5}
     local result =
         mappers.contains(
@@ -160,7 +160,7 @@ function test_mapper_contains_basic()
     assert(result, "The result should be true but got false")
 end
 
-function test_mapper_contains_basic_not_exists()
+function Test_mapper_contains_basic_not_exists()
     local list = {1, 2, 3, 4, 5}
     local result =
         mappers.contains(
@@ -172,7 +172,7 @@ function test_mapper_contains_basic_not_exists()
     assert(not result, "The result should be false but got true")
 end
 
-function test_mapper_contains_basic_not_exists_index()
+function Test_mapper_contains_basic_not_exists_index()
     local list = {1, 2, 3, 4, 5}
     local result =
         mappers.contains(
@@ -184,7 +184,7 @@ function test_mapper_contains_basic_not_exists_index()
     assert(not result, "The result should be false but got true")
 end
 
-function test_mapper_contains_string()
+function Test_mapper_contains_string()
     local list = {"A", "B", "C"}
     local result =
         mappers.contains(
@@ -196,7 +196,7 @@ function test_mapper_contains_string()
     assert(not result, "The result should be false but got true")
 end
 
-function test_mapper_contains_string()
+function Test_mapper_contains_string()
     local list = {"A", "B", "C", "a", "b", "c"}
     local result =
         mappers.contains(
@@ -208,14 +208,14 @@ function test_mapper_contains_string()
     assert(result, "The result should be true but got false")
 end
 
-function test_mappers_api_is_correct()
+function Test_mappers_api_is_correct()
     assert(type(mappers.map) == "function", "The mappers api should be contain a map function")
     assert(type(mappers.filter) == "function", "The mappers api should be contain a filter function")
     assert(type(mappers.reduce) == "function", "The mappers api should be contain a reduce function")
     assert(type(mappers.contains) == "function", "The mappers api should be contain a contains function")
 end
 
-function test_mappers_api_unit_tested()
+function Test_mappers_api_unit_tested()
     local amount = 4
     local result = tablelength(mappers)
     assert(

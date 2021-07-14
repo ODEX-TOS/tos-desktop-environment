@@ -25,7 +25,7 @@
 local sound = require("tde.lib-tde.sound")
 local exists = require("tde.lib-tde.file").exists
 
-function test_exists_lib_tde_sound()
+function Test_exists_lib_tde_sound()
     assert(sound.play_sound, "Make sure the sound 'play_sound' api exists")
     assert(type(sound.play_sound) == "function", "Sound 'play_sound' api is wrong, should be a function")
 
@@ -33,10 +33,10 @@ function test_exists_lib_tde_sound()
     assert(type(sound.timer_sound) == "function", "Sound 'timer_sound' api is wrong, should be a function")
 end
 
-function test_sound_pop_wav_file_exists()
+function Test_sound_pop_wav_file_exists()
     assert(exists(os.getenv("PWD") .. "/tde/sound/audio-pop.wav"), "Make sure the sound file exists")
 end
 
-function test_sound_alarm_wav_file_exists()
+function Test_sound_alarm_wav_file_exists()
     assert(exists(os.getenv("PWD") .. "/tde/sound/alarm.wav"), "Make sure the sound file exists")
 end

@@ -25,6 +25,6 @@
 local network = require("tde.lib-tde.network")
 
 
-function test_check_api()
+function Test_check_api()
     assert(type(network.get_ssid_list) == "function", "network api is faulty")
 end

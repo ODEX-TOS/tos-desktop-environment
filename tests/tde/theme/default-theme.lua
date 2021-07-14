@@ -60,30 +60,30 @@ local function is_color(str)
     return startsWithHash and lenght and not hasInvalidChars and type(str) == "string"
 end
 
-function test_theme_primary()
+function Test_theme_primary()
     assert(theme.primary, "Make sure theme primary exists")
     test_material_theme(theme.primary)
 end
 
-function test_theme_accent()
+function Test_theme_accent()
     assert(theme.accent, "Make sure theme accent exists")
     test_material_theme(theme.accent)
 end
 
-function test_theme_background()
+function Test_theme_background()
     assert(theme.background, "Make sure theme background exists")
     test_material_theme(theme.background)
 end
 
-function test_theme_foreground_color()
+function Test_theme_foreground_color()
     assert(is_color(theme.text), "Make sure theme text exists")
 end
 
-function test_theme_icon_dir()
+function Test_theme_icon_dir()
     assert(dir_exists(theme.icons), "Make sure theme icons exists")
 end
 
-function test_theme_dir()
+function Test_theme_dir()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -94,7 +94,7 @@ function test_theme_dir()
     assert(dir_exists(value.dir), "Make sure theme dir exists")
 end
 
-function test_theme_font()
+function Test_theme_font()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -106,7 +106,7 @@ function test_theme_font()
     assert(type(value.title_font) == "string", "Make sure theme title_font exists")
 end
 
-function test_theme_fg()
+function Test_theme_fg()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -120,7 +120,7 @@ function test_theme_fg()
     assert(is_color(value.bat_fg_critical), "Make sure theme bat_fg_critical exists")
 end
 
-function test_theme_bg()
+function Test_theme_bg()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -136,7 +136,7 @@ function test_theme_bg()
     assert(is_color(value.bg_modal_title), "Make sure theme bg_modal_title exists")
 end
 
-function test_theme_border()
+function Test_theme_border()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -150,7 +150,7 @@ function test_theme_border()
     assert(is_color(value.border_marked), "Make sure theme border_marked exists")
 end
 
-function test_theme_notification()
+function Test_theme_notification()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -173,7 +173,7 @@ function test_theme_notification()
     )
 end
 
-function test_theme_group()
+function Test_theme_group()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -187,7 +187,7 @@ function test_theme_group()
     assert(type(value.groups_radius) == "number", "Make sure theme groups_radius exists")
 end
 
-function test_theme_menu()
+function Test_theme_menu()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -199,7 +199,7 @@ function test_theme_menu()
     assert(type(value.menu_width) == "number", "Make sure theme menu_width exists")
 end
 
-function test_theme_tooltip()
+function Test_theme_tooltip()
     local value = {
         background = theme.background,
         primary = theme.primary,
@@ -212,7 +212,7 @@ function test_theme_tooltip()
     assert(type(value.tooltip_border_width) == "number", "Make sure theme tooltip_border_width exists")
 end
 
-function test_theme_layout()
+function Test_theme_layout()
     local value = {
         background = theme.background,
         primary = theme.primary,

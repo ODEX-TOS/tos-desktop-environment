@@ -24,14 +24,14 @@
 ]]
 local serialize = require("lib-tde.serialize")
 
-function test_serialize_api()
+function Test_serialize_api()
     assert(type(serialize.deserialize) == "function", "Make sure serialize.deserialize exists")
     assert(type(serialize.serialize) == "function", "Make sure serialize.serialize exists")
     assert(type(serialize.serialize_to_file) == "function", "Make sure serialize.serialize_to_file exists")
     assert(type(serialize.deserialize_from_file) == "function", "Make sure serialize.deserialize_from_file exists")
 end
 
-function test_serialize_basic_usage()
+function Test_serialize_basic_usage()
     local table = {1, 2, 3}
     local result = serialize.serialize(table)
     local deserialized = serialize.deserialize(result)
@@ -41,7 +41,7 @@ function test_serialize_basic_usage()
     )
 end
 
-function test_serialize_basic_usage_2()
+function Test_serialize_basic_usage_2()
     local table = {a = "a", b = "b", c = "c"}
     local result = serialize.serialize(table)
     local deserialized = serialize.deserialize(result)
@@ -51,7 +51,7 @@ function test_serialize_basic_usage_2()
     )
 end
 
-function test_serialize_api_unit_tested()
+function Test_serialize_api_unit_tested()
     local amount = 4
     local result = tablelength(serialize)
     assert(

@@ -35,11 +35,11 @@ local function rm_file(location)
     os.remove(location)
 end
 
-function test_dark_light()
+function Test_dark_light()
     assert(type(require("tde.theme.icons.dark-light")) == "function", "Make sure the theme dark-light toggler works")
 end
 
-function test_dark_light_light()
+function Test_dark_light_light()
     local darkLight = require("tde.theme.icons.dark-light")
 
     local light = "test.svg"
@@ -57,7 +57,7 @@ function test_dark_light_light()
     rm_file(dark)
 end
 
-function test_dark_light_default_is_light()
+function Test_dark_light_default_is_light()
     local darkLight = require("tde.theme.icons.dark-light")
 
     local light = "test.svg"
@@ -73,7 +73,7 @@ function test_dark_light_default_is_light()
     assert(result == light, "Make sure that " .. result .. " equals: " .. light)
 end
 
-function test_dark_light_dark()
+function Test_dark_light_dark()
     local darkLight = require("tde.theme.icons.dark-light")
 
     local light = "test.svg"

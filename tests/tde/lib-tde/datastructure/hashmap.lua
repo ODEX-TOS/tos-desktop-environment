@@ -24,21 +24,21 @@
 ]]
 local hashmap = require("tde.lib-tde.datastructure.hashmap")
 
-function test_data_structure_hashmap_basic_usage()
+function Test_data_structure_hashmap_basic_usage()
     local map = hashmap()
     assert(map.get("test") == nil, "The hashmap should't have a: 'test' key in it")
     map.add("test", "hello")
     assert(map.get("test") == "hello", "The hashmap should have a: 'test' key in it")
 end
 
-function test_data_structure_hashmap_api_exists()
+function Test_data_structure_hashmap_api_exists()
     local map = hashmap()
     assert(type(map.get) == "function", "hashmap should have a get function")
     assert(type(map.add) == "function", "hashmap should have a add function")
     assert(type(map.delete) == "function", "hashmap should have a delete function")
 end
 
-function test_data_structure_hashmap_delete_works()
+function Test_data_structure_hashmap_delete_works()
     local map = hashmap()
     assert(map.get("test") == nil, "The hashmap should't have a: 'test' key in it")
     map.add("test", "hello")
@@ -47,7 +47,7 @@ function test_data_structure_hashmap_delete_works()
     assert(map.get("test") == nil, "The hashmap should't have a: 'test' key in it")
 end
 
-function test_data_structure_hashmap_add_a_lot_of_keys()
+function Test_data_structure_hashmap_add_a_lot_of_keys()
     local map = hashmap()
     for i = 0, 50 do
         map.add(tostring(i), tostring(i) .. " value")
@@ -60,7 +60,7 @@ function test_data_structure_hashmap_add_a_lot_of_keys()
     end
 end
 
-function test_data_structure_hashmap_works_with_number_as_key()
+function Test_data_structure_hashmap_works_with_number_as_key()
     local map = hashmap()
     assert(map.get(1) == nil, "The hashmap should't have a: '1' key in it")
     map.add(1, "hello")
@@ -69,7 +69,7 @@ function test_data_structure_hashmap_works_with_number_as_key()
     assert(map.get(1) == nil, "The hashmap should't have a: '1' key in it")
 end
 
-function test_data_structure_hashmap_works_with_negative_number_as_key()
+function Test_data_structure_hashmap_works_with_negative_number_as_key()
     local map = hashmap()
     assert(map.get(-98) == nil, "The hashmap should't have a: '-98' key in it")
     map.add(-98, "hello")
@@ -78,7 +78,7 @@ function test_data_structure_hashmap_works_with_negative_number_as_key()
     assert(map.get(-98) == nil, "The hashmap should't have a: '-98' key in it")
 end
 
-function test_hashmap_api_unit_tested()
+function Test_hashmap_api_unit_tested()
     local tree = hashmap()
     local amount = 3
     local result = tablelength(tree)

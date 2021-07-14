@@ -24,12 +24,12 @@
 ]]
 local datetime = require("tde.lib-tde.function.datetime")
 
-function test_break_timer_exists()
+function Test_break_timer_exists()
     assert(datetime, "The break timer api should exist")
     assert(type(datetime) == "table", "The break timer api should be a table")
 end
 
-function test_break_timer_props()
+function Test_break_timer_props()
     assert(datetime.numberZeroPadding, "The break timer api should have a numberZeroPadding function")
     assert(type(datetime.numberZeroPadding) == "function", "The numberZeroPadding element should be a function")
 
@@ -52,7 +52,7 @@ function test_break_timer_props()
     assert(type(datetime.unit_test_split) == "function", "The unit_test_split element should be a function")
 end
 
-function test_break_timer_zero_padding_1()
+function Test_break_timer_zero_padding_1()
     assert(
         datetime.numberZeroPadding(1) == "01",
         "Padding the number '1' should give '01'  but got: '" .. datetime.numberZeroPadding(1) .. "'"
@@ -95,7 +95,7 @@ function test_break_timer_zero_padding_1()
     )
 end
 
-function test_break_timer_zero_padding_special_cases()
+function Test_break_timer_zero_padding_special_cases()
     assert(
         datetime.numberZeroPadding(-1) == "-1",
         "Padding of the negative number '-1' shoud return '-1' but got: '" .. datetime.numberZeroPadding(-1) .. "'"
@@ -110,7 +110,7 @@ function test_break_timer_zero_padding_special_cases()
     assert(datetime.numberZeroPadding(nil) == "00", "Empty input should result in 00")
 end
 
-function test_break_timer_zero_padding_big_cases()
+function Test_break_timer_zero_padding_big_cases()
     assert(
         datetime.numberZeroPadding(10) == "10",
         "Padding the number '10' should give '10'  but got: '" .. datetime.numberZeroPadding(10) .. "'"
@@ -129,7 +129,7 @@ function test_break_timer_zero_padding_big_cases()
     )
 end
 
-function test_break_timer_number_sec_to_MS()
+function Test_break_timer_number_sec_to_MS()
     assert(
         datetime.numberInSecToMS(0) == "00:00",
         "The result should be '00:00' but got: '" .. tostring(datetime.numberInSecToMS(0)) .. "'"
@@ -160,7 +160,7 @@ function test_break_timer_number_sec_to_MS()
     )
 end
 
-function test_break_timer_number_sec_to_HMS()
+function Test_break_timer_number_sec_to_HMS()
     assert(
         datetime.numberInSecToHMS(0) == "00:00:00",
         "The result should be '00:00:00' but got: '" .. tostring(datetime.numberInSecToHMS(0)) .. "'"
@@ -201,7 +201,7 @@ function test_break_timer_number_sec_to_HMS()
     )
 end
 
-function test_break_timer_number_sec_to_MS_edge_cases()
+function Test_break_timer_number_sec_to_MS_edge_cases()
     assert(
         datetime.numberInSecToMS(-1) == "00:00",
         "The result should be '00:00' but got: '" .. tostring(datetime.numberInSecToMS(-1)) .. "'"
@@ -224,7 +224,7 @@ function test_break_timer_number_sec_to_MS_edge_cases()
     )
 end
 
-function test_break_timer_number_sec_to_HMS_edge_cases()
+function Test_break_timer_number_sec_to_HMS_edge_cases()
     assert(
         datetime.numberInSecToHMS(-1) == "00:00:00",
         "The result should be '00:00:00' but got: '" .. tostring(datetime.numberInSecToHMS(-1)) .. "'"
@@ -247,7 +247,7 @@ function test_break_timer_number_sec_to_HMS_edge_cases()
     )
 end
 
-function test_break_timer_split()
+function Test_break_timer_split()
     assert(datetime.unit_test_split("abc;def", ";")[1] == "abc", "Splitting resulting in the wrong location")
     assert(datetime.unit_test_split("abc;def", ";")[2] == "def", "Splitting resulting in the wrong location")
     assert(datetime.unit_test_split("abc;def", ",")[1] == "abc;def", "Splitting resulting in the wrong location")
@@ -255,7 +255,7 @@ function test_break_timer_split()
     assert(datetime.unit_test_split("abc", "")[1] == "abc", "Splitting resulting in the wrong location")
 end
 
-function test_break_timer_split_edge_cases()
+function Test_break_timer_split_edge_cases()
     assert(datetime.unit_test_split(123, 123) == nil, "Splitting on number is not allowed")
     assert(datetime.unit_test_split({}, {}) == nil, "Splitting on tables is not allowed")
     assert(datetime.unit_test_split(123, ";") == nil, "Splitting on numbers is not allowed")
@@ -265,7 +265,7 @@ function test_break_timer_split_edge_cases()
     )
 end
 
-function test_break_timer_current_time_inbetween()
+function Test_break_timer_current_time_inbetween()
     assert(
         datetime.current_time_inbetween(
             "10:00",
@@ -297,7 +297,7 @@ function test_break_timer_current_time_inbetween()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_1()
+function Test_break_timer_current_time_inbetween_edge_cases_1()
     assert(
         not datetime.current_time_inbetween(
             100,
@@ -311,7 +311,7 @@ function test_break_timer_current_time_inbetween_edge_cases_1()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_2()
+function Test_break_timer_current_time_inbetween_edge_cases_2()
     assert(
         not datetime.current_time_inbetween(
             100,
@@ -325,7 +325,7 @@ function test_break_timer_current_time_inbetween_edge_cases_2()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_3()
+function Test_break_timer_current_time_inbetween_edge_cases_3()
     assert(
         not datetime.current_time_inbetween(
             "10:00",
@@ -339,7 +339,7 @@ function test_break_timer_current_time_inbetween_edge_cases_3()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_4()
+function Test_break_timer_current_time_inbetween_edge_cases_4()
     assert(
         not datetime.current_time_inbetween(
             "10",
@@ -353,7 +353,7 @@ function test_break_timer_current_time_inbetween_edge_cases_4()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_5()
+function Test_break_timer_current_time_inbetween_edge_cases_5()
     assert(
         not datetime.current_time_inbetween(
             "10",
@@ -367,7 +367,7 @@ function test_break_timer_current_time_inbetween_edge_cases_5()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_6()
+function Test_break_timer_current_time_inbetween_edge_cases_6()
     assert(
         not datetime.current_time_inbetween(
             "-10:00",
@@ -381,7 +381,7 @@ function test_break_timer_current_time_inbetween_edge_cases_6()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_7()
+function Test_break_timer_current_time_inbetween_edge_cases_7()
     assert(
         datetime.current_time_inbetween(
             "23:00",
@@ -395,7 +395,7 @@ function test_break_timer_current_time_inbetween_edge_cases_7()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_8()
+function Test_break_timer_current_time_inbetween_edge_cases_8()
     assert(
         not datetime.current_time_inbetween(
             "25:00",
@@ -409,7 +409,7 @@ function test_break_timer_current_time_inbetween_edge_cases_8()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_9()
+function Test_break_timer_current_time_inbetween_edge_cases_9()
     assert(
         datetime.current_time_inbetween(
             "00:00",
@@ -423,7 +423,7 @@ function test_break_timer_current_time_inbetween_edge_cases_9()
     )
 end
 
-function test_break_timer_current_time_inbetween_edge_cases_10()
+function Test_break_timer_current_time_inbetween_edge_cases_10()
     assert(
         datetime.current_time_inbetween(
             "00:00",
@@ -437,13 +437,13 @@ function test_break_timer_current_time_inbetween_edge_cases_10()
     )
 end
 
-function test_datetime_to_seconds()
+function Test_datetime_to_seconds()
     assert(datetime.toSeconds, 'Make sure the datetime.toSeconds api exists')
     assert(type(datetime.toSeconds) == "function", 'Make sure the datetime.toSeconds api is a function')
 
 end
 
-function test_datetime_to_seconds_from_seconds()
+function Test_datetime_to_seconds_from_seconds()
     assert(datetime.toSeconds("1") == 1, "Converting from 1 second to a seconds should remain the same, but got '" .. datetime.toSeconds("1") .. "'")
     assert(datetime.toSeconds("10") == 10, "Converting from 10 second to seconds should remain the same, but got '" .. datetime.toSeconds("10") .. "'")
     assert(datetime.toSeconds("100") == 100, "Converting from 100 second to seconds should remain the same, but got '" .. datetime.toSeconds("100") .. "'")
@@ -452,7 +452,7 @@ function test_datetime_to_seconds_from_seconds()
 
 end
 
-function test_datetime_to_seconds_with_delimiter()
+function Test_datetime_to_seconds_with_delimiter()
     assert(datetime.toSeconds("10:10") == 610, "Converting from '10:10' should result in 610 seconds but got '" .. tostring(datetime.toSeconds("10:10") .. "'"))
     assert(datetime.toSeconds("10:10:10") == 36610, "Converting from '10:10:10' should result in 36610 seconds but got '" .. tostring(datetime.toSeconds("10:10:10") .. "'"))
     assert(datetime.toSeconds("10:11:12") == 36672, "Converting from '10:11:12' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10:11:12") .. "'"))
@@ -466,7 +466,7 @@ function test_datetime_to_seconds_with_delimiter()
 
 end
 
-function test_datetime_to_seconds_with_spaces()
+function Test_datetime_to_seconds_with_spaces()
     assert(datetime.toSeconds("1 1 1 1") == 90061, "Converting from '1 1 1 1' should result in 90061 seconds but got '" .. tostring(datetime.toSeconds("1 1 1 1") .. "'"))
     assert(datetime.toSeconds("10 11 12") == 36672, "Converting from '10 11 12' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10 11 12") .. "'"))
     assert(datetime.toSeconds("10       11 12") == 36672, "Converting from '10       11 12' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10       11 12") .. "'"))
@@ -476,7 +476,7 @@ function test_datetime_to_seconds_with_spaces()
     assert(datetime.toSeconds("  10   11 12") == 36672, "Converting from '  10   11 12' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("  10   11 12") .. "'"))
 end
 
-function test_datetime_to_seconds_with_expressions()
+function Test_datetime_to_seconds_with_expressions()
     assert(datetime.toSeconds("1d 1h 1m 1s") == 90061, "Converting from '1d 1h 1m 1s' should result in 90061 seconds but got '" .. tostring(datetime.toSeconds("1d 1h 1m 1s") .. "'"))
     assert(datetime.toSeconds("10h 11m 12") == 36672, "Converting from '10h 11m 12' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10h 11m 12") .. "'"))
     assert(datetime.toSeconds("10h-11m-12s") == 36672, "Converting from '10h-11m-12s' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10h-11m-12s") .. "'"))
@@ -486,7 +486,7 @@ function test_datetime_to_seconds_with_expressions()
 
 end
 
-function test_datetime_to_seconds_with_capital_expressions()
+function Test_datetime_to_seconds_with_capital_expressions()
     assert(datetime.toSeconds("1D 1H 1M 1S") == 90061, "Converting from '1D 1H 1M 1S' should result in 90061 seconds but got '" .. tostring(datetime.toSeconds("1D 1H 1M 1S") .. "'"))
     assert(datetime.toSeconds("10H 11m 12S") == 36672, "Converting from '10H 11m 12S' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10H 11m 12S") .. "'"))
     assert(datetime.toSeconds("10H-11m-12s") == 36672, "Converting from '10H-11m-12s' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10H-11m-12s") .. "'"))
@@ -497,7 +497,7 @@ function test_datetime_to_seconds_with_capital_expressions()
 
 end
 
-function test_datetime_to_seconds_invalid_input()
+function Test_datetime_to_seconds_invalid_input()
     assert(datetime.toSeconds("-1") == 0, "Invalid input '-1' should result in 0 seconds, but got '" .. datetime.toSeconds("-1") .. "'")
     assert(datetime.toSeconds(nil) == 0, "Invalid input 'nil' should result in 0 seconds, but got '" .. datetime.toSeconds(nil) .. "'")
     assert(datetime.toSeconds({}) == 0, "Invalid input '{}' should result in 0 seconds, but got '" .. datetime.toSeconds({}) .. "'")
@@ -507,7 +507,7 @@ function test_datetime_to_seconds_invalid_input()
     assert(datetime.toSeconds("hello world") == 0, "Invalid input 'hello world' should result in 0 seconds, but got '" .. datetime.toSeconds("hello world") .. "'")
 end
 
-function test_datetime_to_seconds_with_delimiter_and_expressions()
+function Test_datetime_to_seconds_with_delimiter_and_expressions()
     assert(datetime.toSeconds("10h-11m-12s") == 36672, "Converting from '10h-11m-12s' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10h-11m-12s") .. "'"))
     assert(datetime.toSeconds("11m-10h-12s") == 36672, "Converting from '11m-10h-12s' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("11m-10h-12s") .. "'"))
     assert(datetime.toSeconds("11m,10h,12s") == 36672, "Converting from '11m,10h,12s' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("11m,10h,12s") .. "'"))
@@ -517,7 +517,7 @@ function test_datetime_to_seconds_with_delimiter_and_expressions()
     assert(datetime.toSeconds("10h,11,12s") == 36672, "Converting from '10h,11,12s' should result in 36672 seconds but got '" .. tostring(datetime.toSeconds("10h,11,12s") .. "'"))
 end
 
-function test_datetime_to_seconds_large_values()
+function Test_datetime_to_seconds_large_values()
     assert(datetime.toSeconds("1y 1W 1D 1H 1m 1S") == 32144461, "Converting from '1y 1W 1D 1H 1m 1S' should result in 32144461 seconds but got '" .. tostring(datetime.toSeconds("1y 1W 1D 1H 1m 1S") .. "'"))
     assert(datetime.toSeconds("1Y 1W 1D 1H 1m 1S") == 32144461, "Converting from '1Y 1W 1D 1H 1m 1S' should result in 32144461 seconds but got '" .. tostring(datetime.toSeconds("1Y 1W 1D 1H 1m 1S") .. "'"))
 
@@ -534,7 +534,7 @@ function test_datetime_to_seconds_large_values()
 
 end
 
-function test_break_timer_api_unit_tested()
+function Test_break_timer_api_unit_tested()
     local amount = 6
     local result = tablelength(datetime)
     assert(

@@ -24,7 +24,7 @@
 ]]
 local quicksort = require("tde.lib-tde.sort.quicksort")
 
-function test_sorting_quicksort()
+function Test_sorting_quicksort()
     local list = {1, 2, -1}
     local truth = {-1, 1, 2}
     local result = quicksort(list)
@@ -36,7 +36,7 @@ function test_sorting_quicksort()
     end
 end
 
-function test_sorting_quicksort_big()
+function Test_sorting_quicksort_big()
     local list = {-7, 1, 8, -10, 101, 10, 22, -10, -5, 0, 55, -2, 0}
     local truth = {-10, -10, -7, -5, -2, 0, 0, 1, 8, 10, 22, 55, 101}
     local result = quicksort(list)
@@ -48,7 +48,7 @@ function test_sorting_quicksort_big()
     end
 end
 
-function test_sorting_quicksort_massive_random()
+function Test_sorting_quicksort_massive_random()
     local data = {}
     local expected = {}
     for i = 1, 10000 do
@@ -68,7 +68,7 @@ function test_sorting_quicksort_massive_random()
     end
 end
 
-function test_sorting_quicksort_custom_function_inverted_sort()
+function Test_sorting_quicksort_custom_function_inverted_sort()
     local list = {1, 2, -1}
     local truth = {2, 1, -1}
 
@@ -84,7 +84,7 @@ function test_sorting_quicksort_custom_function_inverted_sort()
     end
 end
 
-function test_sorting_quicksort_works_with_string_size_sorting()
+function Test_sorting_quicksort_works_with_string_size_sorting()
     local comparison = function(small, big)
         return #tostring(small) < #tostring(big)
     end

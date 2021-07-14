@@ -22,13 +22,13 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-function test_application_runner_exists()
+function Test_application_runner_exists()
     local runner = require("tde.lib-tde.function.application_runner")
     assert(runner, "Make sure the application runner exists")
     assert(type(runner) == "function", "Make sure the application runner is a function")
 end
 
-function test_application_runner_works()
+function Test_application_runner_works()
     local runner = require("tde.lib-tde.function.application_runner")
     -- only runs once
     assert(runner("echo hello"), "First time running 'echo hello' and it skipped it")
@@ -37,7 +37,7 @@ function test_application_runner_works()
     assert(not runner("echo hello"), "Third time running 'echo hello' and it still ran it")
 end
 
-function test_application_runner_works_2()
+function Test_application_runner_works_2()
     local runner = require("tde.lib-tde.function.application_runner")
     -- only runs once
     assert(runner("printf hello"), "First time running 'printf hello' and it skipped it")
@@ -47,7 +47,7 @@ function test_application_runner_works_2()
     assert(runner("echo hello2"), "First time running 'echo hello2' and it skipped it")
 end
 
-function test_application_runner_invalid_input()
+function Test_application_runner_invalid_input()
     local runner = require("tde.lib-tde.function.application_runner")
     -- only runs once
     assert(not runner(""), "Running an empty command is not allowed")

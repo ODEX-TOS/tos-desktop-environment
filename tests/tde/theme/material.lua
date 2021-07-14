@@ -38,98 +38,98 @@ local function is_material_design_pallet(pallet, name)
     assert(pallet.hue_900, "Check that pallet: " .. name .. " has the option hue_900")
 end
 
-function test_mat_colors_exists()
+function Test_mat_colors_exists()
     assert(colors)
     assert(type(colors) == "table")
 end
 
-function test_mat_colors_exists_red()
+function Test_mat_colors_exists_red()
     is_material_design_pallet(colors.red, "red")
 end
 
-function test_mat_colors_exists_pink()
+function Test_mat_colors_exists_pink()
     is_material_design_pallet(colors.pink, "pink")
 end
 
-function test_mat_colors_exists_purple()
+function Test_mat_colors_exists_purple()
     is_material_design_pallet(colors.purple, "purple")
 end
 
 -- deep purple
-function test_mat_colors_exists_hue_purple()
+function Test_mat_colors_exists_hue_purple()
     is_material_design_pallet(colors.hue_purple, "hue_purple")
 end
 
-function test_mat_colors_exists_indigo()
+function Test_mat_colors_exists_indigo()
     is_material_design_pallet(colors.indigo, "indigo")
 end
 
-function test_mat_colors_exists_blue()
+function Test_mat_colors_exists_blue()
     is_material_design_pallet(colors.blue, "blue")
 end
 
 -- light blue
-function test_mat_colors_exists_hue_blue()
+function Test_mat_colors_exists_hue_blue()
     is_material_design_pallet(colors.hue_blue, "hue_blue")
 end
 
-function test_mat_colors_exists_cyan()
+function Test_mat_colors_exists_cyan()
     is_material_design_pallet(colors.cyan, "cyan")
 end
 
-function test_mat_colors_exists_teal()
+function Test_mat_colors_exists_teal()
     is_material_design_pallet(colors.teal, "teal")
 end
 
-function test_mat_colors_exists_green()
+function Test_mat_colors_exists_green()
     is_material_design_pallet(colors.green, "green")
 end
 
 -- Light Green
-function test_mat_colors_exists_hue_green()
+function Test_mat_colors_exists_hue_green()
     is_material_design_pallet(colors.hue_green, "hue_green")
 end
 
-function test_mat_colors_exists_lime()
+function Test_mat_colors_exists_lime()
     is_material_design_pallet(colors.lime, "lime")
 end
 
-function test_mat_colors_exists_yellow()
+function Test_mat_colors_exists_yellow()
     is_material_design_pallet(colors.yellow, "yellow")
 end
 
-function test_mat_colors_exists_amber()
+function Test_mat_colors_exists_amber()
     is_material_design_pallet(colors.amber, "amber")
 end
 
-function test_mat_colors_exists_orange()
+function Test_mat_colors_exists_orange()
     is_material_design_pallet(colors.orange, "orange")
 end
 
-function test_mat_colors_exists_deep_orange()
+function Test_mat_colors_exists_deep_orange()
     is_material_design_pallet(colors.deep_orange, "deep_orange")
 end
 
-function test_mat_colors_exists_brown()
+function Test_mat_colors_exists_brown()
     is_material_design_pallet(colors.brown, "brown")
 end
 
-function test_mat_colors_exists_grey()
+function Test_mat_colors_exists_grey()
     is_material_design_pallet(colors.grey, "grey")
 end
 
-function test_mat_colors_exists_blue_grey()
+function Test_mat_colors_exists_blue_grey()
     is_material_design_pallet(colors.blue_grey, "blue_grey")
 end
 
-function test_mat_colors_exists_black()
+function Test_mat_colors_exists_black()
     is_material_design_pallet(colors.black, "black")
 end
 
-function test_mat_colors_exists_white()
+function Test_mat_colors_exists_white()
     is_material_design_pallet(colors.white, "white")
 end
 
-function test_mat_colors_exists_light()
+function Test_mat_colors_exists_light()
     is_material_design_pallet(colors.light, "light")
 end

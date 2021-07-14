@@ -27,13 +27,13 @@
 
 echo = print
 
-function test_loader()
+function Test_loader()
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     assert(plugin_loader, "Make sure that the plugin loader exists")
     print = echo
 end
 
-function test_loader_section_test()
+function Test_loader_section_test()
     plugins = {
         test = "mock-plugin"
     }
@@ -44,7 +44,7 @@ function test_loader_section_test()
     print = echo
 end
 
-function test_loader_section_mock_test()
+function Test_loader_section_mock_test()
     plugins = {
         test = "widget.mock-plugin"
     }
@@ -56,7 +56,7 @@ function test_loader_section_mock_test()
     print = echo
 end
 
-function test_loader_section_multi_plugin()
+function Test_loader_section_multi_plugin()
     plugins = {
         test = { "widget.mock-plugin", "widget.mock-plugin", "widget.mock-plugin"}
     }
@@ -73,7 +73,7 @@ function test_loader_section_multi_plugin()
     print = echo
 end
 
-function test_loader_section_multi_plugin2()
+function Test_loader_section_multi_plugin2()
     plugins = {
         test = "widget.mock-plugin",
         mock = "widget.mock-plugin"
@@ -95,7 +95,7 @@ function test_loader_section_multi_plugin2()
     print = echo
 end
 
-function test_loader_section_multi_multi_plugin()
+function Test_loader_section_multi_multi_plugin()
     plugins = {
         test = { "widget.mock-plugin", "widget.mock-plugin"},
         mock = { "widget.mock-plugin", "widget.mock-plugin"}
@@ -121,7 +121,7 @@ function test_loader_section_multi_multi_plugin()
     print = echo
 end
 
-function test_loader_section_inconsistent_flow_state()
+function Test_loader_section_inconsistent_flow_state()
     plugins = {
         test = { "widget.mock-plugin", "widget.mock-plugin", "widget.mock-plugin"},
     }

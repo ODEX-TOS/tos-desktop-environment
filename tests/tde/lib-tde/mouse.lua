@@ -24,14 +24,14 @@
 ]]
 local mouse = require("tde.lib-tde.mouse")
 
-function test_mouse_api_exists()
+function Test_mouse_api_exists()
     assert(mouse.getInputDevices, "The getInputDevices function doesn't exist")
     assert(mouse.setAcceleration, "The setAccellaration function doesn't exist")
     assert(mouse.setMouseSpeed, "The setMouseSpeed function doesn't exist")
     assert(mouse.setNaturalScrolling, "The setNaturalScrolling function doesn't exist")
 end
 
-function test_mouse_input_device_return_correct()
+function Test_mouse_input_device_return_correct()
     local result = mouse.getInputDevices()
     assert(type(result) == "table", "The list of input devices should be a table")
 
@@ -42,7 +42,7 @@ function test_mouse_input_device_return_correct()
     end
 end
 
-function test_mouse_api_unit_tested()
+function Test_mouse_api_unit_tested()
     local amount = 4
     local result = tablelength(mouse)
     assert(

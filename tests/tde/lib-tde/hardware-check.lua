@@ -24,7 +24,7 @@
 ]]
 local hardware = require("tde.lib-tde.hardware-check")
 
-function test_hardware_check_packages()
+function Test_hardware_check_packages()
     -- every tos system must have the pacman package installed
     assert(hardware.has_package_installed("pacman"), "Package 'pacman' should be installed")
     -- every tos system must have the filesystem package installed
@@ -37,14 +37,14 @@ function test_hardware_check_packages()
     assert(not hardware.has_package_installed(123), "type number is not allowed as a package name, use string instead")
 end
 
-function test_hardware_check_ip_valid_return()
+function Test_hardware_check_ip_valid_return()
     local split = require("tde.lib-tde.function.common").split
     local ip = hardware.getDefaultIP()
     assert(type(ip) == "string", "Local Ip should be returned as a string")
     assert(#split(ip, ".") == 4, "The ip address is not formatted correctly")
 end
 
-function test_hardware_check_tde_memory_consumption()
+function Test_hardware_check_tde_memory_consumption()
     local total, lua_only = hardware.getTDEMemoryConsumption()
     assert(type(total) == "number", "Total memory should be returned as a number")
     assert(type(lua_only) == "number", "Total memory should be returned as a number")
@@ -52,7 +52,7 @@ function test_hardware_check_tde_memory_consumption()
     assert(total > 1, "We cannot consume less than 1 KB")
 end
 
-function test_hardware_check_api()
+function Test_hardware_check_api()
     assert(type(hardware.hasBattery) == "function", "Make sure the hardware api has a hasBattery function")
     assert(type(hardware.hasWifi) == "function", "Make sure the hardware api has a hasWifi function")
     assert(type(hardware.hasBluetooth) == "function", "Make sure the hardware api has a hasBluetooth function")
@@ -77,7 +77,7 @@ function test_hardware_check_api()
     assert(type(hardware.execute) == "function", "Make sure the hardware api has a execute function")
 end
 
-function test_hardware_api_unit_tested()
+function Test_hardware_api_unit_tested()
     local amount = 13
     local result = tablelength(hardware)
     assert(

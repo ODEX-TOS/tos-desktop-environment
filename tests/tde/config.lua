@@ -24,94 +24,94 @@
 ]]
 local config = require("tde.config")
 
-function test_config_package_timeout()
+function Test_config_package_timeout()
     assert(config.package_timeout, "Check that the config api is correct")
     assert(type(config.package_timeout) == "number", "The config type should be a number")
     assert(config.package_timeout > 1, "Expected the value to be less than 1")
 end
 
-function test_config_battery_timeout()
+function Test_config_battery_timeout()
     assert(config.battery_timeout, "Check that the config api is correct")
     assert(type(config.battery_timeout) == "number", "The config type should be a number")
     assert(config.battery_timeout > 10, "Expected the value to be greater than 10")
 end
 
-function test_config_player_reaction_time()
+function Test_config_player_reaction_time()
     assert(config.player_reaction_time, "Check that the config api is correct")
     assert(type(config.player_reaction_time) == "number", "The config type should be a number")
     assert(config.player_reaction_time < 0.1, "Expected the value to be less than 0.1")
 end
 
-function test_config_player_update()
+function Test_config_player_update()
     assert(config.player_update, "Check that the config api is correct")
     assert(type(config.player_update) == "number", "The config type should be a number")
     assert(config.player_update >= 1, "Expected the value to be greater than 1")
 end
 
-function test_config_network_poll()
+function Test_config_network_poll()
     assert(config.network_poll, "Check that the config api is correct")
     assert(type(config.network_poll) == "number", "The config type should be a number")
     assert(config.network_poll > 1, "Expected the value to be greater than 1")
 end
 
-function test_config_bluetooth_poll()
+function Test_config_bluetooth_poll()
     assert(config.bluetooth_poll, "Check that the config api is correct")
     assert(type(config.bluetooth_poll) == "number", "The config type should be a number")
     assert(config.bluetooth_poll > 1, "Expected the value to be greater than 1")
 end
 
-function test_config_temp_poll()
+function Test_config_temp_poll()
     assert(config.temp_poll, "Check that the config api is correct")
     assert(type(config.temp_poll) == "number", "The config type should be a number")
     assert(config.temp_poll > 1, "Expected the value to be greater than 1")
 end
 
-function test_config_ram_poll()
+function Test_config_ram_poll()
     assert(config.ram_poll, "Check that the config api is correct")
     assert(type(config.ram_poll) == "number", "The config type should be a number")
     assert(config.ram_poll > 1, "Expected the value to be greater than 1")
 end
 
-function test_config_weather_poll()
+function Test_config_weather_poll()
     assert(config.weather_poll, "Check that the config api is correct")
     assert(type(config.weather_poll) == "number", "The config type should be a number")
     assert(config.weather_poll > 60, "Expected the value to be greater than 60")
 end
 
-function test_config_cpu_poll()
+function Test_config_cpu_poll()
     assert(config.cpu_poll, "Check that the config api is correct")
     assert(type(config.cpu_poll) == "number", "The config type should be a number")
     assert(config.cpu_poll > 1, "Expected the value to be greater than 1")
 end
 
-function test_config_compton_file()
+function Test_config_compton_file()
     assert(config.getComptonFile, "Check that the config api is correct")
     assert(type(config.getComptonFile) == "function", "The config type should be a function")
 end
 
-function test_config_colors_config()
+function Test_config_colors_config()
     assert(config.colors_config, "Check that the config api is correct")
     assert(type(config.colors_config) == "string", "The config type should be a string")
 end
 
-function test_config_icons_config()
+function Test_config_icons_config()
     assert(config.icons_config, "Check that the config api is correct")
     assert(type(config.icons_config) == "string", "The config type should be a string")
 end
 
-function test_config_garbage_cycle()
+function Test_config_garbage_cycle()
     assert(config.garbage_collection_cycle, "Check that the config api is correct")
     assert(type(config.garbage_collection_cycle) == "number", "The config type should be a number")
     assert(config.garbage_collection_cycle > 60, "garbage collection is very taxing on resources, don't call it ofter")
 end
 
-function test_config_memory()
+function Test_config_memory()
     assert(config.max_mem, "Check that the config api is correct")
     assert(type(config.max_mem) == "number", "The config type should be a number")
     assert(config.max_mem > 200000, "The max memory option should be larger that 200MB as that is roughly what TDE uses by default")
 end
 
-function test_about_tde_and_tos()
+function Test_about_tde_and_tos()
     assert(config.aboutText, "Make sure the about text exists")
     assert(config.aboutText:find("TDE"), "TDE must be mentioned in the about text: " .. config.aboutText)
     assert(
@@ -124,7 +124,7 @@ function test_about_tde_and_tos()
     )
 end
 
-function test_config_api_unit_tested()
+function Test_config_api_unit_tested()
     local amount = 22
     local result = tablelength(config)
     assert(

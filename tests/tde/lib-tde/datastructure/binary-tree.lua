@@ -24,7 +24,7 @@
 ]]
 local binarytree = require("tde.lib-tde.datastructure.binary-tree")
 
-function test_binary_tree_basics_string()
+function Test_binary_tree_basics_string()
     local tree = binarytree()
     tree.insert("hello")
     tree.insert("hi")
@@ -37,7 +37,7 @@ function test_binary_tree_basics_string()
     assert(not tree.contains("eve"), "The tree shouldn't contain 'eve'")
 end
 
-function test_binary_tree_basics_number()
+function Test_binary_tree_basics_number()
     local tree = binarytree()
     tree.insert(10)
     tree.insert(20)
@@ -50,7 +50,7 @@ function test_binary_tree_basics_number()
     assert(not tree.contains(100), "The tree shouldn't contain '100'")
 end
 
-function test_binary_tree_basics_removal()
+function Test_binary_tree_basics_removal()
     local tree = binarytree()
 
     tree.insert(10)
@@ -65,7 +65,7 @@ function test_binary_tree_basics_removal()
     assert(not tree.contains(10), "The tree shouldn't contain the element: '10' after removal")
 end
 
-function test_binary_tree_massive()
+function Test_binary_tree_massive()
     local tree = binarytree()
 
     for i = 1, 1000 do
@@ -77,7 +77,7 @@ function test_binary_tree_massive()
     end
 end
 
-function test_binary_tree_api_unit_tested()
+function Test_binary_tree_api_unit_tested()
     local tree = binarytree()
     local amount = 3
     local result = tablelength(tree)

@@ -25,7 +25,7 @@
 -- the logger class overrides the print function
 local logger = require("tde.lib-tde.logger")
 
-function test_logger_settings()
+function Test_logger_settings()
     assert(logger, "Make sure the logger api exists")
     assert(logger.warn, "Make sure that the logger api has a warn message")
     assert(logger.error, "Make sure the logger api has a error message")

@@ -34,19 +34,19 @@ local newCpath = package.cpath
 package.path = path
 package.cpath = cpath
 
-function test_plugin_path()
+function Test_plugin_path()
     assert(
         newPath:match(os.getenv("HOME") .. "/.config/tde"),
         "Make sure " .. os.getenv("HOME") .. "/.config/tde exists in luapath"
     )
 end
 
-function test_lib_lua_path()
+function Test_lib_lua_path()
     assert(newPath:match("lib[-]tde/lib[-]lua/[?]/[?].lua"), "Make sure tde/lib-lua is fully covered in luapath")
     assert(newPath:match("lib[-]tde/lib[-]lua/[?].lua"), "Make sure tde/lib-lua is fully covered in luapath")
 end
 
-function test_lib_so_path()
+function Test_lib_so_path()
     assert(newCpath:match("lib[-]tde/lib[-]so/[?]/[?].so"), "Make sure tde/lib-so is fully covered in luapath")
     assert(newCpath:match("lib[-]tde/lib[-]so/[?].so"), "Make sure tde/lib-so is fully covered in luapath")
 end

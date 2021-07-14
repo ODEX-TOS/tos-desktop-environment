@@ -25,7 +25,7 @@
 local i18n = require("tde.lib-tde.i18n")
 i18n._disable_color()
 
-function test_i18n_functions_exist()
+function Test_i18n_functions_exist()
     assert(type(i18n.init) == "function", "Make sure the i18n api has an init function")
     assert(type(i18n.translate) == "function", "Make sure the i18n api has a translate function")
     assert(
@@ -36,7 +36,7 @@ function test_i18n_functions_exist()
     assert(type(i18n.set_system_language) == "function", "Make sure the i18n api has an set_system_language function")
 end
 
-function test_i18n_system_language()
+function Test_i18n_system_language()
     assert(
         i18n.system_language() == "en",
         "The default system language should be 'en', if your development machine is not this language by default then use docker to run the test suite"
@@ -47,7 +47,7 @@ function test_i18n_system_language()
     assert(i18n.system_language() == "en", "Chaning system language back to 'en' didn't work")
 end
 
-function test_i18n_custom_translations()
+function Test_i18n_custom_translations()
     -- we set the language to anything else than English
     -- because translating from English to English is not valid
     i18n.set_system_language("dutch")
@@ -64,7 +64,7 @@ function test_i18n_custom_translations()
     i18n.set_system_language("en")
 end
 
-function test_i18n_test_format_strings()
+function Test_i18n_test_format_strings()
     -- we set the language to anything else than English
     -- because translating from English to English is not valid
     i18n.set_system_language("dutch")
@@ -78,13 +78,13 @@ function test_i18n_test_format_strings()
     i18n.set_system_language("en")
 end
 
-function test_init_works()
+function Test_init_works()
     -- init the translations with default values
     assert(i18n.init("en"), "Initializing to the language 'en' failed")
     assert(not i18n.init("en"), "Re-initializing to the language 'en' failed")
 end
 
-function test_dutch_translations()
+function Test_dutch_translations()
     i18n.set_system_language("nl")
     local home = i18n.translate("home")
     local connection = i18n.translate("Wireless connection")
@@ -97,7 +97,7 @@ function test_dutch_translations()
     )
 end
 
-function test_i18n_api_unit_tested()
+function Test_i18n_api_unit_tested()
     local amount = 6
     local result = tablelength(i18n)
     assert(

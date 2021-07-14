@@ -24,27 +24,27 @@
 ]]
 local battery = require("tde.lib-tde.function.battery")
 
-function test_lib_tde_battery()
+function Test_lib_tde_battery()
     assert(battery, "The battery api should exist")
     assert(type(battery) == "table", "The battery api should be in a list")
 end
 
-function test_lib_tde_battery_exposior_path()
+function Test_lib_tde_battery_exposior_path()
     assert(battery.getBatteryPath, "Finding the active battery should exist")
     assert(type(battery.getBatteryPath) == "function", "Finding the active battery should be a function")
 end
 
-function test_lib_tde_battery_is_charging()
+function Test_lib_tde_battery_is_charging()
     assert(battery.isBatteryCharging, "Charging the battery should exist")
     assert(type(battery.isBatteryCharging) == "function", "Charging the battery should be a function")
 end
 
-function test_lib_tde_battery_percentage()
+function Test_lib_tde_battery_percentage()
     assert(battery.getBatteryPercentage, "Getting the battery percentage should exist")
     assert(type(battery.getBatteryPercentage) == "function", "Getting the battery percentage should be a function")
 end
 
-function test_battery_api_unit_tested()
+function Test_battery_api_unit_tested()
     local amount = 3
     local result = tablelength(battery)
     assert(
