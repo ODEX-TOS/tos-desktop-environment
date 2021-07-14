@@ -35,6 +35,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 ### New Features
 
 ### Bug Fixes
+- Don't play a 'pop' sound when opening the left-panel
 
 ### Dev Notes
 - The inputfield now allows editing of the field
