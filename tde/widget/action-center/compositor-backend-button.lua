@@ -108,7 +108,7 @@ checkFrame()
 
 local settingsName =
   wibox.widget {
-  text = "Accelerated graphics composition",
+  text = i18n.translate("Accelerated graphics composition"),
   font = "Iosevka Regular 10",
   align = "left",
   widget = wibox.widget.textbox

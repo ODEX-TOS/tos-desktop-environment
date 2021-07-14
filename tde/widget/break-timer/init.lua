@@ -69,7 +69,7 @@ local countdownSlider =
     currentTime = currentTime + 1
     slider:set_value((currentTime / totalTime) * 100)
     timerText:set_markup_silently(
-      i18n.translate("Break Left:") .. " <b>" .. numberInSecToMS(totalTime - currentTime) .. "</b>"
+      i18n.translate("Break Left: %s", "<b>" .. numberInSecToMS(totalTime - currentTime) .. "</b>")
     )
     if currentTime >= totalTime then
       currentTime = 0

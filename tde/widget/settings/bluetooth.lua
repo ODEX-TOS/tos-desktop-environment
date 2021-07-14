@@ -211,26 +211,26 @@ local function make_bluetooth_widget(tbl)
     buttons:add(unpair_btn)
     awful.tooltip {
       objects = {unpair_btn},
-      text = i18n.translate("Forget ") .. name
+      text = i18n.translate("Forget %s", name)
     }
   else
     buttons:add(pair_btn)
     awful.tooltip {
       objects = {pair_btn},
-      text = i18n.translate("Pair with ") .. name
+      text = i18n.translate("Pair with %s", name)
     }
   end
   if connected then
     buttons:add(disconnect_btn)
     awful.tooltip {
       objects = {disconnect_btn},
-      text = i18n.translate("Disconnect from ") .. name
+      text = i18n.translate("Disconnect from %s", name)
     }
   else
     buttons:add(connect_btn)
     awful.tooltip {
       objects = {connect_btn},
-      text = i18n.translate("Connect to ") .. name
+      text = i18n.translate("Connect to %s", name)
     }
   end
 

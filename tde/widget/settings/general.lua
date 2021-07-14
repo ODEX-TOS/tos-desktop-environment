@@ -380,7 +380,7 @@ return function()
         break_timeout_value = value
       end,
       function()
-        return i18n.translate("Timeout before the break triggers: ") .. datetime.numberInSecToMS(break_timeout_value)
+        return i18n.translate("Timeout before the break triggers: %s", datetime.numberInSecToMS(break_timeout_value))
       end
     ),
     create_option_slider(
@@ -394,7 +394,7 @@ return function()
         break_time_value = value
       end,
       function()
-        return i18n.translate("Duration of the break: ") .. datetime.numberInSecToMS(break_time_value)
+        return i18n.translate("Duration of the break: %s", datetime.numberInSecToMS(break_time_value))
       end
     ),
     layout = wibox.layout.flex.vertical

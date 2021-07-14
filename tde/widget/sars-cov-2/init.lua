@@ -64,8 +64,8 @@ awful.spawn.easy_async("curl -s 'https://network.odex.be/country'", function (_s
       3600,
       function(_, stdout)
         local array = split(split(stdout, "\n")[2], "%s*")
-        local infected = i18n.translate("Infected: ") .. (array[4] or i18n.translate("unknown"))
-        local death = i18n.translate("Deaths: ") .. (array[7] or i18n.translate("unknown"))
+        local infected = i18n.translate("Infected: %s", array[4] or "unknown")
+        local death = i18n.translate("Deaths: %s", array[7] or "unknown")
         covid_deceases.text = infected
         covid_deaths.text = death
       end
@@ -77,7 +77,7 @@ watch(
   [[curl -s https://network.odex.be/country_name]],
   3600,
   function(_, stdout)
-    covid_card.update_title(i18n.translate("Covid-19 cases in ") .. stdout)
+    covid_card.update_title(i18n.translate("Covid-19 cases in %s", stdout))
   end
 )
 

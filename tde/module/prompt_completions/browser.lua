@@ -57,13 +57,13 @@ local function get_completions(query)
     if  bIsUri then
         table.insert(res, {
             icon = icons.search,
-            text = i18n.translate("Open in browser:") .. "\t" .. tostring(uri),
+            text = i18n.translate("Open in browser: %s", "\t" .. tostring(uri)),
             payload = tostring(uri)
         })
     else
         table.insert(res, {
             icon = icons.search,
-            text = i18n.translate("Open in browser:") .. "\t" .. tostring(query),
+            text = i18n.translate("Open in browser: %s", "\t" .. tostring(query)),
             payload = "https://www.google.com/search?q=" .. tostring(query)
         })
     end

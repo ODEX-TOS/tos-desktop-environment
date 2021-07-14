@@ -69,9 +69,9 @@ local function detect_system_language()
     local envLang = os.getenv("LANG") or "en_US.UTF-8"
     if envLang == "" then
         system_language = "en"
-    else
-        system_language = common.split(envLang, "_")[1] or "en"
+        return
     end
+    system_language = common.split(envLang, "_")[1] or "en"
 end
 
 local function _init(default)

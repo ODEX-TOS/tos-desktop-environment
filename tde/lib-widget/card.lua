@@ -93,12 +93,12 @@ local titled_card = function(title, height)
     -- @staticfct update_title
     -- @usage -- This will change the title to hello
     -- card.update_title("hello")
-    widget.update_title = function(updated_title)
+    widget.update_title = function(updated_title, ...)
         --filter out trailing whitespace in the title
         if type(updated_title) == "string" then
             updated_title = string.gsub(updated_title, '\n$', '')
         end
-        header.text = i18n.translate(updated_title)
+        header.text = i18n.translate(updated_title, ...)
     end
 
     --- Update the body of the card
@@ -116,8 +116,8 @@ local titled_card = function(title, height)
     -- @staticfct update
     -- @usage -- This will change the title to "hello" and the body to "world"
     -- card.update("hello", lib-widget.textbox("world"))
-    widget.update = function(updated_title, update_body)
-        widget.update_title(updated_title)
+    widget.update = function(updated_title, update_body, ...)
+        widget.update_title(updated_title, ...)
         widget.update_body(update_body)
     end
 

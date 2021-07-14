@@ -123,7 +123,7 @@ naughty.connect_signal(
 	function(message, startup)
 		naughty.notification {
 			urgency = "critical",
-			title = i18n.translate("Oops, an error happened") .. (startup and i18n.translate(" during startup!") or "!"),
+			title = i18n.translate("Oops, an error happened") .. (startup and " " .. i18n.translate("during startup!") or "!"),
 			message = message,
 			app_name = i18n.translate("System Notification"),
 			icon = icons.logo

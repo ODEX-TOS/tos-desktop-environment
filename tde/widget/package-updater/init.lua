@@ -89,18 +89,18 @@ awful.tooltip(
       if updateAvailable then
         local str
         if numOfUpdatesAvailable == "1" then
-          str = numOfUpdatesAvailable .. i18n.translate(" update is available!")
+          str = i18n.translate("%s update is available!", numOfUpdatesAvailable)
         else
-          str = numOfUpdatesAvailable .. i18n.translate(" updates are available!")
+          str = i18n.translate("%s updates are available!", numOfUpdatesAvailable)
         end
         if numOfSecUpdatesAvailable == "1" then
           return str ..
-            "\n" .. i18n.translate("Of which ") .. numOfSecUpdatesAvailable .. i18n.translate(" is security related")
+            "\n" .. i18n.translate("Of which %s is security related", numOfSecUpdatesAvailable)
         elseif numOfSecUpdatesAvailable == "0" then
           return str
         end
         return str ..
-          "\n" .. i18n.translate("Of which ") .. numOfSecUpdatesAvailable .. i18n.translate(" are security related")
+          "\n" .. i18n.translate("Of which %s are security related", numOfSecUpdatesAvailable)
       else
         return i18n.translate("We are up-to-date!")
       end
@@ -111,12 +111,9 @@ awful.tooltip(
 
 local function notifySecurityUpdate(num)
   local str =
-    i18n.translate("There are ") ..
-    num .. i18n.translate(" security vulnerabilities. Please try and update the system to prevent risks.")
+    i18n.translate("There are %s security vulnerabilities. Please try and update the system to prevent risks.", num)
   if num == "1" then
-    str =
-      i18n.translate("There is ") ..
-      num .. i18n.translate(" security vulnerability. Please try and update the system to prevent risks.")
+    str = i18n.translate("There is %s security vulnerability. Please try and update the system to prevent risks.", num)
   end
   if securityUpdateNotShown then
     naughty.notify(

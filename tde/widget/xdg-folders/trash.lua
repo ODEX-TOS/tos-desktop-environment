@@ -145,7 +145,7 @@ local check_trash_list = function()
 				awful.spawn.easy_async_with_shell(
 					"gio list trash:///",
 					function(stdout_2)
-						trash_tooltip.markup = "<b>" .. i18n.translate("Trash contains:") .. "</b>\n" .. stdout_2:gsub("\n$", "")
+						trash_tooltip.markup = "<b>" .. i18n.translate("Trash contains: %s", "</b>\n" .. stdout_2:gsub("\n$", ""))
 					end,
 					false
 				)

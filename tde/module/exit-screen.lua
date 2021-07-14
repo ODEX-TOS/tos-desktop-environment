@@ -39,11 +39,11 @@ local animate = require("lib-tde.animations").createAnimObject
 local icon_size = beautiful.exit_screen_icon_size or dpi(90)
 local exit_screen_hide
 
-local text = i18n.translate("Goodbye ")
+local text = i18n.translate("Goodbye")
 
 local user_name =
 	wibox.widget {
-	markup = text .. i18n.translate("user!"),
+	markup =  i18n.translate("%s user!", text),
 	font = "SF Pro Text UltraLight 48",
 	align = "center",
 	valign = "center",

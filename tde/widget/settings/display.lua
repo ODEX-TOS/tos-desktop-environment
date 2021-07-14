@@ -382,7 +382,7 @@ return function()
       end
     end,
     function()
-      return datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120) .. i18n.translate(" before sleeping")
+      return  i18n.translate("%s before sleeping", datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120))
     end
   )
 
@@ -828,7 +828,7 @@ return function()
 
     if monitor_information == nil then
       print('Invalid monitor aborting')
-      local widget = wibox.widget.textbox(monitor_id .. ' ' .. i18n.translate("is invalid"))
+      local widget = wibox.widget.textbox(i18n.translate("%s is invalid", monitor_id))
       layout:add(widget)
       return
     end

@@ -127,7 +127,7 @@ local function make_color_entry(name, slide, font_black)
 
   local text =
     wibox.widget {
-    markup = '<span foreground="' .. color .. '">' .. gears.string.xml_escape(name) .. "</span>",
+    markup = '<span foreground="' .. color .. '">' .. gears.string.xml_escape(i18n.translate(name)) .. "</span>",
     widget = wibox.widget.textbox
   }
 

@@ -153,7 +153,7 @@ local function menu()
 
       local label = ""
       if #choice == 1 then
-         label = 'Only <span weight="bold">' .. choice[1] .. "</span>"
+         label = i18n.translate("Only") .. ' <span weight="bold">' .. choice[1] .. "</span>"
       else
          for i, o in pairs(choice) do
             if i > 1 then
@@ -166,7 +166,7 @@ local function menu()
       menu_tbl[#menu_tbl + 1] = {label, cmd, choice}
       if #choice == 1 then
          menu_tbl[#menu_tbl + 1] = {
-            'Duplicate <span weight="bold">' .. choice[1] .. "</span>",
+            i18n.translate("Duplicate") .. ' <span weight="bold">' .. choice[1] .. "</span>",
             apps.default.duplicate_screens .. " " .. choice[1],
             choice
          }
@@ -211,7 +211,7 @@ local function xrandr()
    state.index = state.index + 1
 
    if not next then
-      label = "Keep the current configuration"
+      label = i18n.translate("Keep the current configuration")
       state.index = nil
    else
       label = next[1]
