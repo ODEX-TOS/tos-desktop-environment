@@ -35,7 +35,7 @@ local vol_slider =
   0,
   100,
   1,
-  0,
+  _G.save_state.volume or 0,
   function(value)
     signals.emit_volume(value)
   end
@@ -81,7 +81,5 @@ local volume_setting =
   vol_slider,
   widget = mat_list_item
 }
-
-signals.emit_volume_update()
 
 return volume_setting

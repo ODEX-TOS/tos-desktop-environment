@@ -30,7 +30,7 @@ local volume = require("lib-tde.volume")
 local startup = true
 local prev_time = 0
 local boot_time = time()
-local deltaTime = 0.1
+local deltaTime = 0.2
 
 signals.connect_volume(
     function(value)
