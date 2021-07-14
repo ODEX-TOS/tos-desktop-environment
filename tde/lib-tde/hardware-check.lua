@@ -260,6 +260,15 @@ local function getTDEMemoryConsumption()
     return kbMem * 4, lua_mem
 end
 
+--- Returns the user id of the user running TDE
+-- @return number The UID of the calling process
+-- @staticfct getUID
+-- @usage -- Returns the user ID (Usually 1000 for single user systems)
+-- local uid = lib-tde.hardware-check.getUID()
+local function getUID()
+    return require("posix.unistd").getuid()
+end
+
 return {
     hasBattery = battery,
     hasWifi = wifi,
@@ -273,5 +282,6 @@ return {
     isWeakHardware = isWeakHardware,
     getDisplayFrequency = getDisplayFrequency,
     getTDEMemoryConsumption = getTDEMemoryConsumption,
-    execute = osExecute
+    execute = osExecute,
+    getUID = getUID
 }

@@ -48,8 +48,20 @@ function Test_hardware_check_tde_memory_consumption()
     local total, lua_only = hardware.getTDEMemoryConsumption()
     assert(type(total) == "number", "Total memory should be returned as a number")
     assert(type(lua_only) == "number", "Total memory should be returned as a number")
-    
+
     assert(total > 1, "We cannot consume less than 1 KB")
+end
+
+function Test_hardware_check_UID()
+    local uid = hardware.getUID()
+
+    assert(type(uid) == "number", "uid should be returned as a number")
+
+    local id_shell, exit_code = hardware.execute("id -u")
+    assert(exit_code == 0)
+    id_shell = id_shell:gsub("\n",'')
+
+    assert(tostring(uid) == id_shell, "The uid: " .. tostring(uid) .. " should equal: " .. tostring(id_shell))
 end
 
 function Test_hardware_check_api()
@@ -65,6 +77,8 @@ function Test_hardware_check_api()
     assert(type(hardware.getDefaultIP) == "function", "Make sure the hardware api has a getDefaultIP function")
     assert(type(hardware.getRamInfo) == "function", "Make sure the hardware api has a getRamInfo function")
     assert(type(hardware.getCpuInfo) == "function", "Make sure the hardware api has a getCpuInfo function")
+    assert(type(hardware.getUID) == "function", "Make sure the hardware api has a getUID function")
+
     assert(type(hardware.isWeakHardware) == "function", "Make sure the hardware api has a isWeakHardware function")
     assert(
         type(hardware.getDisplayFrequency) == "function",
@@ -78,7 +92,7 @@ function Test_hardware_check_api()
 end
 
 function Test_hardware_api_unit_tested()
-    local amount = 13
+    local amount = 14
     local result = tablelength(hardware)
     assert(
         result == amount,

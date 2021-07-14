@@ -105,6 +105,22 @@ return {
     'sh -c "/etc/xdg/tde/firefox-color.sh \'' .. color .. "' '" .. colorBG .. '\'"',
     "xrdb $HOME/.Xresources"
   },
+  -- simular to the `run_on_start_up` table, but instead this holds all applications that continue to run on startup
+  daemons = {
+    {cmd={"light-locker", "--no-lock-on-suspend"}, tbl= {restart = true, kill_previous = true}},
+    {cmd={"lxsession", "-s", "TDE", "-e", "TDE"}, tbl= {restart = true, kill_previous = true}},
+    {cmd={"greenclip", "daemon"}, tbl= {restart = true, kill_previous = true}},
+
+    -- These are auxilary commands that might be usefull
+    {cmd={"kdeconnectd"}, tbl= {restart = true, kill_previous = true}},
+    {cmd={"udiskie"}, tbl= {restart = true, kill_previous = true}},
+    {cmd={"psi-notify"}, tbl= {restart = true, kill_previous = true}},
+
+    -- touchegg is special as it requires 2 processes, one as root and one as the user
+    -- we want to specifically only kill the user process
+    -- for that we need a custom kill command and we need to know the UID
+    {cmd={"touchegg"}, tbl= {restart = true, kill_previous = true, kill_cmd="pkill -U '" .. tostring(hardware.getUID()) .. "' %s"}}
+  },
   bins = function ()
     -- we wrap this in a function since the 'color variable changes in real time'
     return {

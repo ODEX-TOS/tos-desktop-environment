@@ -1,0 +1,151 @@
+--[[
+--MIT License
+--
+--Copyright (c) 2019 manilarome
+--Copyright (c) 2020 Tom Meyers
+--
+--Permission is hereby granted, free of charge, to any person obtaining a copy
+--of this software and associated documentation files (the "Software"), to deal
+--in the Software without restriction, including without limitation the rights
+--to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+--copies of the Software, and to permit persons to whom the Software is
+--furnished to do so, subject to the following conditions:
+--
+--The above copyright notice and this permission notice shall be included in all
+--copies or substantial portions of the Software.
+--
+--THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+--IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+--FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+--AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+--LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+--OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+--SOFTWARE.
+]]
+---------------------------------------------------------------------------
+-- Daemonize a given process
+--
+-- This will run a process in the background (As the user that runs TDE) and guarantees that is is up and running
+--
+--    lib-tde.daemonize.run("picom", {restart = true, max_restarts=-1}) -- true to restart
+--
+-- @author Tom Meyers
+-- @copyright 2021 Tom Meyers
+-- @tdemod lib-tde.daemonize
+---------------------------------------------------------------------------
+
+local split = require("lib-tde.function.common").split
+local exists = require("lib-tde.file").exists
+
+local LOG_ERROR = "\27[0;31m[ ERROR "
+
+
+local function __run_cmd_in_background(cmd, callback, should_kill, kill_cmd)
+    print("Starting daemon process:")
+    print(cmd)
+
+    if should_kill then
+        print("Killing")
+        print(kill_cmd)
+        awful.spawn.easy_async(kill_cmd, function()
+            awful.spawn.easy_async(cmd, callback)
+        end)
+        return
+    end
+
+    awful.spawn.easy_async(cmd, callback)
+end
+
+local function is_in_path(cmd)
+    if exists(cmd) then
+        return true
+    end
+
+    -- check all directories in the path variable and see if cmd exists there
+    local dirs = split(os.getenv("PATH"), ":")
+    for _, dir in ipairs(dirs) do
+        if exists(dir .. '/' .. cmd) then
+            return true
+        end
+    end
+
+    -- the command was not found in any dir, so it doesn't exist
+    return false
+end
+
+local function get_command(cmd)
+    if type(cmd) == "string" then
+        return split(cmd, " ")[1] or ""
+    elseif type(cmd) == "table" then
+        return cmd[1] or ""
+    end
+    return ""
+end
+
+local function not_exists(cmd)
+    local command = get_command(cmd)
+
+    if command == "" or command == nil then
+        return false
+    end
+
+    -- check if command exists in path
+    return not is_in_path(command)
+end
+
+local function __run(cmd, restart, max_restarts, should_kill, kill_cmd)
+    local restarts = 0
+
+    if not_exists(cmd) then
+        -- invalid command, aborting
+        print("Is not a valid daemonizable process, doesn't exist:", LOG_ERROR)
+        print(cmd, LOG_ERROR)
+        return
+    end
+
+    local restart_callback
+    restart_callback = function()
+        -- when the command is done, increment the restart counter
+        restarts = restarts + 1
+        if max_restarts > 0 and restarts > max_restarts then
+            -- we reached the max_retry count
+            print("We reached the max_retry count of: " .. tostring(max_restarts) .. " for process", LOG_ERROR)
+            print(cmd, LOG_ERROR)
+            return
+        end
+
+        if not restart then
+            -- we shouldn't restart the process
+            return
+        end
+
+        -- lets restart the process
+        __run_cmd_in_background(cmd, restart_callback, should_kill, kill_cmd)
+    end
+
+    __run_cmd_in_background(cmd, restart_callback, should_kill, kill_cmd)
+end
+
+--- Add custom translations into the translation lookup table
+-- @tparam table|string cmd The command to run as a daemon
+-- @tparam[opt] bool args.restart If the process should restart after finishing execution
+-- @tparam[opt] number args.max_restarts The amount of restarts until we stop trying to restart the program
+-- @tparam[opt] number args.kill_previous Kill the previous running command if found using the kill_cmd variable
+-- @tparam[opt] string args.kill_cmd The command used to kill the previous process %s will be replaced by the process name, default 'killall %s'
+-- @staticfct run
+-- @usage -- Run the program forever
+-- daemonize.run("touchegg") -- runs the program called touchegg and restarts it forever
+-- daemonize.run("picom", {restart = false}) -- Don't restart the compositor after a crash
+-- daemonize.run("echo hello", {max_restarts = 10}) -- Run the echo hello program 10 times then stop
+local function run(cmd, args)
+    local restart = args.restart or true
+    local max_restarts = -1 -- -1 means restart forever
+    local kill_previous = args.kill_previous or false
+    local kill_cmd = args.kill_cmd or "pkill '%s'"
+    local command = get_command(cmd)
+    __run(cmd, restart, max_restarts, kill_previous, string.format(kill_cmd, command))
+end
+
+return {
+    run = run
+}
