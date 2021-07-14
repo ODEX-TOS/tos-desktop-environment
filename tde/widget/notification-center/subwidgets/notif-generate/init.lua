@@ -265,14 +265,6 @@ naughty.connect_signal(
       -- Use the notification's icon
       notif_layout:insert(1, notif_generate(n.title, n.message, n.icon, n))
     end
-
-    if #(notif_layout.children) > 10 then
-      for i = #(notif_layout.children), 10, -1 do
-        notif_layout:remove(i)
-      end
-      -- remove icons that are not used anymore
-      collectgarbage("collect")
-    end
   end
 )
 
