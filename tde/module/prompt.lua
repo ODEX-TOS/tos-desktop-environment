@@ -80,18 +80,18 @@ screen.connect_signal(
       }
 end)
 
-signals.connect_refresh_screen(
-  function()
-    local s = get_screen()
-    print("Refreshing prompt page")
-    if not s.valid or promptPage == nil then
-      return
-    end
-    -- the action center itself
-    promptPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
-    promptPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+local refresh_screen = function()
+  local s = get_screen()
+  print("Refreshing prompt page")
+  if not s.valid or promptPage == nil then
+    return
   end
-)
+  -- the action center itself
+  promptPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
+  promptPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+end
+
+signals.connect_refresh_screen(refresh_screen)
 
 signals.connect_background_theme_changed(
   function(new_theme)
@@ -215,11 +215,12 @@ _G.root.prompt = function()
 
     _index = 1
 
+    refresh_screen()
+
+    results.children = {}
+    update_rows()
 
     promptPage.visible = true
-    results.children = {}
-
-    update_rows()
 
     awful.prompt.run{
         prompt = "<b>" .. i18n.translate("Search") .. "</b>: ",
