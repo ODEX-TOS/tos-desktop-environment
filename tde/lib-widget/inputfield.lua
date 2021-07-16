@@ -248,7 +248,7 @@ return function(typing_callback, done_callback, start_callback, hidden)
          -- clear the old text
          active_text = reset_textbox(textbox, active_text, hidden, false)
 
-         if awful.keygrabber.is_running then
+         if awful.keygrabber.current_instance ~= nil then
              print("Found an existing keygrabber")
              prev_keygrabber = awful.keygrabber.current_instance
              prev_keygrabber:stop()

@@ -40,55 +40,8 @@ local scrollbox = require("lib-widget.scrollbox")
 
 local animate = require("lib-tde.animations").createAnimObject
 
-local filehandle = require("lib-tde.file")
+local colorized_svg = require("lib-tde.function.svg").colorize
 
-local tmp_dir = filehandle.mktempdir("/tmp/tde.news.XXXXXX")
-filehandle.dir_create(tmp_dir)
-
-signals.connect_exit(function()
-    filehandle.rm(tmp_dir)
-end)
-
-local colorized_cache = {}
-
--- take an svg file as input, make a copy of it and replace the `color_to_replace` option to the primary color scheme
-local function colorized_svg(svg, color_to_replace, substitute)
-    if svg == nil then
-        return ""
-    end
-
-    if color_to_replace == nil then
-        return ""
-    end
-
-    if substitute == nil then
-        return ""
-    end
-
-    -- In case we already computed this specific svg file with the computed endresult
-    if colorized_cache[svg .. color_to_replace .. substitute] ~= nil then
-        return colorized_cache[svg .. color_to_replace .. substitute]
-    end
-
-    local new_file_path = filehandle.mktemp(tmp_dir .. '/' .. filehandle.basename(svg) .. ".XXXXXX")
-
-    if filehandle.exists(new_file_path) then
-        filehandle.rm(new_file_path)
-    end
-
-    -- make sure we have a copy of the svg file, that hasn't been modified yet
-    filehandle.copy_file(svg, new_file_path)
-
-    -- now we do a search and replace on the color_to_replace in the freshly generated svg file
-    local data = filehandle.string(new_file_path)
-    data = string.gsub(data, color_to_replace, substitute)
-    filehandle.overwrite(new_file_path, data)
-
-    colorized_cache[svg .. color_to_replace .. substitute] = new_file_path
-
-    -- the new modified svg file
-    return new_file_path
-end
 
 local function to_obj(news)
     local section

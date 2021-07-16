@@ -43,7 +43,7 @@ local notif_layout = wibox.layout.fixed.vertical(reverse)
 notif_layout.spacing = dpi(5)
 
 -- useful variable to check the notification's content
-_G.notification_firstime = true
+local notification_firstime = true
 
 local notif_icon = function(ico_image)
   local noti_icon =
@@ -200,7 +200,7 @@ local function notif_generate(title, message, icon, noti)
       -- Don't let the user make the notification center null
       if #notif_layout.children == 1 then
         notif_layout:reset(notif_layout)
-        _G.notification_firstime = true
+        notification_firstime = true
         notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
       else
         notif_layout:remove_widgets(notif_template, true)
@@ -216,7 +216,7 @@ local function notif_generate(title, message, icon, noti)
       -- Don't let the user make the notification center null
       if #notif_layout.children == 1 then
         notif_layout:reset(notif_layout)
-        _G.notification_firstime = true
+        notification_firstime = true
         notif_layout:insert(1, notif_generate(empty_title, empty_message, theme(PATH_TO_ICONS .. "boo" .. ".svg")))
       else
         notif_layout:remove_widgets(notif_template, true)
@@ -250,10 +250,10 @@ _G.notification_clear_all = clear_all
 naughty.connect_signal(
   "request::display",
   function(n)
-    if _G.notification_firstime then
+    if notification_firstime then
       -- Delete empty message if the 1st notification is generated
       notif_layout:remove(1)
-      _G.notification_firstime = false
+      notification_firstime = false
     end
 
     -- Check and set icon to the notification message in panel

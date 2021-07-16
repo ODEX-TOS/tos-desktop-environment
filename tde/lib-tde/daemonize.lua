@@ -35,7 +35,7 @@
 ---------------------------------------------------------------------------
 
 local split = require("lib-tde.function.common").split
-local exists = require("lib-tde.file").exists
+local hardware = require("lib-tde.hardware-check")
 
 local LOG_ERROR = "\27[0;31m[ ERROR "
 
@@ -56,23 +56,6 @@ local function __run_cmd_in_background(cmd, callback, should_kill, kill_cmd)
     awful.spawn.easy_async(cmd, callback)
 end
 
-local function is_in_path(cmd)
-    if exists(cmd) then
-        return true
-    end
-
-    -- check all directories in the path variable and see if cmd exists there
-    local dirs = split(os.getenv("PATH"), ":")
-    for _, dir in ipairs(dirs) do
-        if exists(dir .. '/' .. cmd) then
-            return true
-        end
-    end
-
-    -- the command was not found in any dir, so it doesn't exist
-    return false
-end
-
 local function get_command(cmd)
     if type(cmd) == "string" then
         return split(cmd, " ")[1] or ""
@@ -90,7 +73,7 @@ local function not_exists(cmd)
     end
 
     -- check if command exists in path
-    return not is_in_path(command)
+    return not hardware.is_in_path(command)
 end
 
 local function __run(cmd, restart, max_restarts, should_kill, kill_cmd)

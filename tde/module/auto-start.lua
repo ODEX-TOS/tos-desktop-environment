@@ -30,10 +30,13 @@ local run_once = require("lib-tde.function.application_runner")
 
 local daemon = require("lib-tde.daemonize")
 
-for _, app in ipairs(apps.run_on_start_up) do
-  run_once(app)
-end
 
-for _, d in ipairs(apps.daemons) do
-  daemon.run(d.cmd, d.tbl)
+if os.getenv("TDE_STAG") == nil then
+  for _, app in ipairs(apps.run_on_start_up) do
+    run_once(app)
+  end
+
+  for _, d in ipairs(apps.daemons) do
+    daemon.run(d.cmd, d.tbl)
+  end
 end

@@ -44,14 +44,38 @@ local height = dpi(300)
 local width = dpi(480)
 local theme = require("theme.icons.dark-light")
 
+local fetch_screen = require("lib-tde.function.common").focused_screen
+
 local icon = theme("/etc/xdg/tde/widget/about/icons/info.svg")
 
 local aboutPage
 local aboutBackdrop
 
+local amount = 0
+
+local function update_callback()
+  print("Refreshing about page")
+
+  local s = fetch_screen()
+
+  if not s.valid or aboutPage == nil then
+    return
+  end
+
+  aboutPage.screen = s
+
+  -- the action center itself
+  aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
+  aboutPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+end
+
 screen.connect_signal(
   "request::desktop_decoration",
   function(s)
+    if amount > 0 then
+      return
+    end
+
     print("About page")
     -- Create the box
 
@@ -78,17 +102,7 @@ screen.connect_signal(
     )
 
     signals.connect_refresh_screen(
-      function()
-        print("Refreshing about page")
-
-        if not s.valid or aboutPage == nil then
-          return
-        end
-
-        -- the action center itself
-        aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
-        aboutPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
-      end
+      update_callback
     )
 
     signals.connect_background_theme_changed(
@@ -109,6 +123,8 @@ screen.connect_signal(
       width = s.geometry.width,
       height = s.geometry.height - dpi(40)
     }
+
+    amount = amount + 1
   end
 )
 
@@ -138,6 +154,7 @@ local grabber =
 }
 
 local function toggleAbout()
+  update_callback()
   aboutBackdrop.visible = not aboutBackdrop.visible
   aboutPage.visible = not aboutPage.visible
   if aboutPage.visible then

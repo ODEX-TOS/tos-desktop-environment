@@ -49,9 +49,14 @@ local padding = dpi(2)
 
 local results = wibox.layout.fixed.vertical()
 
+local amount = 0
+
 screen.connect_signal(
   "request::desktop_decoration",
   function(s)
+    if amount > 0 then
+      return
+    end
     promptPage =
         wibox {
         bg = beautiful.background.hue_800 .. beautiful.background_transparency,
@@ -78,6 +83,7 @@ screen.connect_signal(
         bg = beautiful.background.hue_800 .. beautiful.background_transparency,
         widget = wibox.container.background()
       }
+      amount = amount + 1
 end)
 
 local refresh_screen = function()

@@ -50,22 +50,11 @@ local user_name =
 	widget = wibox.widget.textbox
 }
 
-awful.spawn.easy_async_with_shell(
-	"whoami",
-	function(stdout)
-		if stdout then
-			-- Remove new line
-			local username = stdout:gsub("%\n", "")
+signals.connect_username(function (username)
+	user_name:set_markup(text .. username .. "!")
+end)
 
-			-- Capitalize first letter of username
-			-- Comment it if you're not using your name as your username
-			username = username:sub(1, 1):upper() .. username:sub(2)
-
-			user_name:set_markup(text .. username .. "!")
-		end
-	end,
-	false
-)
+signals.emit_request_user()
 
 local buildButton = function(icon, name)
 	local button_text =

@@ -39,15 +39,37 @@ local config = require("config")
 local animate = require("lib-tde.animations").createAnimObject
 local signals = require("lib-tde.signals")
 
+local fetch_screen = require("lib-tde.function.common").focused_screen
+
 local bShowingWidget = false
 local padding = dpi(30)
 
 local musicPlayer
 
+local amount = 0
+
+local function update_callback()
+  print("Refreshing music player")
+  local s = fetch_screen()
+
+  if not s.valid or musicPlayer == nil then
+    return
+  end
+
+  musicPlayer.screen = s
+
+  -- the action center itself
+  musicPlayer.x = s.geometry.x + s.geometry.width - dpi(270)
+  musicPlayer.y = s.geometry.y + s.geometry.y + padding
+end
+
 screen.connect_signal(
   "request::desktop_decoration",
   function(s)
     -- Create the box
+    if amount > 0 then
+      return
+    end
 
     musicPlayer =
       wibox {
@@ -75,16 +97,8 @@ screen.connect_signal(
     )
 
     signals.connect_refresh_screen(
-      function()
-        print("Refreshing music player")
-
-        if not s.valid or musicPlayer == nil then
-          return
-        end
-
-        -- the action center itself
-        musicPlayer.x = s.geometry.width - dpi(270)
-        musicPlayer.y = s.geometry.y + padding
+      function ()
+        update_callback(musicPlayer)
       end
     )
 
@@ -93,6 +107,8 @@ screen.connect_signal(
         musicPlayer.bg = new_theme.hue_800 .. beautiful.background_transparency
       end
     )
+
+    amount = amount + 1
   end
 )
 
@@ -123,6 +139,7 @@ local grabber =
 }
 
 local function togglePlayer()
+  update_callback()
   musicPlayer.visible = not musicPlayer.visible
   if musicPlayer.visible then
     grabber:start()

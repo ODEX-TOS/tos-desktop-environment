@@ -37,6 +37,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
+- The prompt now opens on the monitor with focus, instead of the primary monitor
 
 ### Dev Notes
 - The inputfield now allows editing of the field

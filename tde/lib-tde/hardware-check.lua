@@ -127,6 +127,31 @@ local function has_package_installed(name)
     return returnValue == 0
 end
 
+--- Check if a certain binary is in the PATH variable
+-- @tparam cmd string the binary command
+-- @treturn bool True if the command exists
+-- @treturn string The full executable name
+-- @staticfct is_in_path
+-- @usage -- this returns /bin/bash
+-- lib-tde.hardware-check.is_in_path("bash")
+local function is_in_path(cmd)
+    if fileHandle.exists(cmd) then
+        return true, cmd
+    end
+
+    -- check all directories in the path variable and see if cmd exists there
+    local dirs = common.split(os.getenv("PATH"), ":")
+    for _, dir in ipairs(dirs) do
+        local full_path = dir .. '/' .. cmd
+        if fileHandle.exists(full_path) then
+            return true, full_path
+        end
+    end
+
+    -- the command was not found in any dir, so it doesn't exist
+    return false, ""
+end
+
 --- Check to see if ffmpeg is installed
 -- @treturn bool True if ffmpeg is installed, false otherwise
 -- @staticfct hasFfmpeg
@@ -283,5 +308,6 @@ return {
     getDisplayFrequency = getDisplayFrequency,
     getTDEMemoryConsumption = getTDEMemoryConsumption,
     execute = osExecute,
-    getUID = getUID
+    getUID = getUID,
+    is_in_path = is_in_path,
 }
