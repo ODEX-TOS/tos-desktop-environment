@@ -586,6 +586,8 @@ return function()
     if fetch_data and installed then
       firewall.get_rules(populate_data)
     elseif not installed then
+      stop_loading(true)
+      active_rule_list.children = {}
       active_rule_list:add(not_exists_text)
     else
       populate_data(rules, is_active)
