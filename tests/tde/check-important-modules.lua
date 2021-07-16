@@ -373,6 +373,11 @@ function Test_module_settings()
     assert(exists("tde/module/settings.lua"), "Check that tde/module/settings.lua exists")
 end
 
+function Test_settings_firewall()
+    local file = "tde/widget/settings/firewall.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function Test_module_state()
     assert(exists("tde/module/state.lua"), "Check that tde/module/state.lua exists")
 end
@@ -530,6 +535,11 @@ function Test_lib_tde_function_battery()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function Test_lib_tde_function_svg()
+    local file = "tde/lib-tde/function/svg.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 function Test_lib_tde_function_common()
     local file = "tde/lib-tde/function/common.lua"
     assert(exists(file), "Check that " .. file .. " exists")
@@ -641,8 +651,9 @@ function Test_lib_tde_daemonize()
 end
 
 
+
 function Test_that_all_important_files_are_tested()
-    local amount = 114
+    local amount = 116
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

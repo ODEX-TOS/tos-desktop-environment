@@ -78,6 +78,7 @@ function Test_hardware_check_api()
     assert(type(hardware.getRamInfo) == "function", "Make sure the hardware api has a getRamInfo function")
     assert(type(hardware.getCpuInfo) == "function", "Make sure the hardware api has a getCpuInfo function")
     assert(type(hardware.getUID) == "function", "Make sure the hardware api has a getUID function")
+    assert(type(hardware.is_in_path) == "function", "Make sure the hardware api has a is_in_path function")
 
     assert(type(hardware.isWeakHardware) == "function", "Make sure the hardware api has a isWeakHardware function")
     assert(
@@ -92,7 +93,7 @@ function Test_hardware_check_api()
 end
 
 function Test_hardware_api_unit_tested()
-    local amount = 14
+    local amount = 15
     local result = tablelength(hardware)
     assert(
         result == amount,

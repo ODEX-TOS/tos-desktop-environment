@@ -59,6 +59,9 @@ local password_to_star = function(pass)
 end
 
 local update_text = function(text, widget, bIsPassword, draw_location)
+    print(text)
+    print(bIsPassword)
+    print(draw_location)
     if draw_location == nil then
         draw_location = true
     end
@@ -75,11 +78,11 @@ local update_text = function(text, widget, bIsPassword, draw_location)
     local before = ""
     local markup = ""
     local after = ""
-    -- lets loop over the string and find the index
     if text == "" then
         markup = string.format("<span background='%s' foreground='%s'>|</span>", beautiful.primary.hue_500, beautiful.primary.hue_500)
     end
 
+    -- lets loop over the string and find the index
     for i = 1, #text do
         local char = text:sub(i,i)
         if i < cursor_index then
@@ -143,7 +146,7 @@ local reset_textbox = function(widget, active_text, hidden, has_focus)
         if cursor_index > string.len(active_text) then
             cursor_index = string.len(active_text)
         end
-        update_text(active_text, widget, hidden, not has_focus)
+        update_text(active_text, widget, hidden, has_focus)
     end
     return active_text
 end
@@ -188,20 +191,19 @@ return function(typing_callback, done_callback, start_callback, hidden)
 
     local stop_grabber = function(grabber)
         grabber:stop()
-        if prev_keygrabber then
+        if prev_keygrabber and prev_keygrabber ~= grabber then
             prev_keygrabber:start()
         end
         if done_callback then
             done_callback(active_text)
         end
-        active_text = reset_textbox(textbox, active_text, hidden)
     end
 
     local is_running = false
 
     local input_grabber =
         awful.keygrabber {
-        auto_start = true,
+        auto_start = false,
         stop_event = "release",
         keypressed_callback = function(_, _, key, _)
             if key == "BackSpace" then
@@ -229,9 +231,11 @@ return function(typing_callback, done_callback, start_callback, hidden)
         end,
         start_callback = function (_)
             is_running = true
+            active_text = reset_textbox(textbox, active_text, hidden, is_running)
         end,
         stop_callback = function ()
             is_running = false
+            active_text = reset_textbox(textbox, active_text, hidden, is_running)
         end,
         keyreleased_callback = function(self, _, key, _)
             if key == "Escape" or key == "Return" then
@@ -245,9 +249,6 @@ return function(typing_callback, done_callback, start_callback, hidden)
     end
 
     local function start()
-         -- clear the old text
-         active_text = reset_textbox(textbox, active_text, hidden, false)
-
          if awful.keygrabber.current_instance ~= nil then
              print("Found an existing keygrabber")
              prev_keygrabber = awful.keygrabber.current_instance
@@ -332,12 +333,20 @@ return function(typing_callback, done_callback, start_callback, hidden)
         end
     end
 
+    --- Lose focus
+    -- @staticfct unfocus
+    -- @usage -- Remove the focus from this
+    -- inputfield.unfocus()
+    widget.unfocus = function()
+        stop_grabber(input_grabber)
+        active_text = reset_textbox(textbox, active_text, hidden, false)
+    end
+
     --- Reset the inputfield, this means stop listening and reset the text
     -- @staticfct reset
     -- @usage -- Resets the inputfield
     -- inputfield.reset()
     widget.reset = function()
-        print('Called reset on: ' .. (widget["id"] or "inputfield"))
         widget.clear_text()
         widget.stop_grabbing()
     end

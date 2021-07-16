@@ -13,13 +13,13 @@ This draft is not a final version of what will be introduced in the next patch, 
 ## Features
 
 - [ ] `Package manager agnostic` Allow the package updater to use other package managers than strictly `pacman`
-- [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinees`
+- [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinese`
 - [ ] `accessibility Visual` Accessability settings for color impaired people (High contrast)
-- [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Usefull for oled screen not having burn in)
+- [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Useful for oled screen not having burn in)
 - [ ] `Default Applications` Allow setting the default application from the settings
 - [ ] `Key binding config` Allow setting the keybinding from the settings application
 - [ ] `Change keyboard layout` Allow changing the keyboard layout from within the settings and using a keyboard shortcut
-
+- [ ] `Firewall` Allow setting the firewall settings if ufw is installed and running
 
 ## Packaging
 

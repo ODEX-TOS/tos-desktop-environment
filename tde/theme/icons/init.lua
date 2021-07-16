@@ -89,6 +89,7 @@ return {
   login = theme(dir .. "/login.svg"),
   arrow_up = theme(dir .. "/arrow_up.svg"),
   arrow_down = theme(dir .. "/arrow_down.svg"),
+  firewall = theme(dir .. "/firewall.svg"),
 
   --png's
   unknown = theme(dir .. "/noicon.png"),
@@ -96,5 +97,6 @@ return {
   -- large svg's
   news_Large = theme(dir .. "/news_large.svg"),
   os_Large = theme(dir .. "/os_large.svg"),
+  firewall_Large = theme(dir .. "/firewall_logo.svg"),
 
 }

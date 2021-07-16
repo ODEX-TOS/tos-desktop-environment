@@ -265,8 +265,17 @@ function Test_theme_icon_os_large()
     assert(file_exists(icons.os_Large), "Check that the os_Large icon exists")
 end
 
+function Test_theme_icon_firewall()
+    assert(file_exists(icons.firewall), "Check that the firewall icon exists")
+end
+
+function Test_theme_icon_firewall_large()
+    assert(file_exists(icons.firewall_Large), "Check that the firewall_Large icon exists")
+end
+
+
 function Test_that_all_icons_are_tested()
-    local amount = 60
+    local amount = 62
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..
