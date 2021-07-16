@@ -92,6 +92,7 @@ function timer:start()
         return
     end
     self.data.source_id = glib.timeout_add(glib.PRIORITY_DEFAULT, self.data.timeout * 1000, function()
+        print(timer.name)
         protected_call(self.emit_signal, self, "timeout")
         return true
     end)
@@ -259,6 +260,8 @@ end
 capi.awesome.connect_signal("refresh", timer.run_delayed_calls_now)
 
 function timer.mt.__call(_, ...)
+    local d = debug.getinfo(2)
+    timer.name = d.short_src .. ':' .. tostring(d.currentline)
     return timer.new(...)
 end
 

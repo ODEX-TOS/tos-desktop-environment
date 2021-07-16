@@ -234,6 +234,7 @@ signal_object_emit(lua_State *L, signal_array_t *arr, const char *name, int narg
 
     if(sigfound)
     {
+        printf("Signal emit for: %s\n", name);
         int nbfunc = sigfound->sigfuncs.len;
         luaL_checkstack(L, nbfunc + nargs + 1, "too much signal");
         /* Push all functions and then execute, because this list can change
@@ -267,6 +268,7 @@ void
 luaA_object_emit_signal(lua_State *L, int oud,
                         const char *name, int nargs)
 {
+    printf("Signal emit for: %s\n", name);
     int oud_abs = luaA_absindex(L, oud);
     lua_class_t *lua_class = luaA_class_get(L, oud);
     lua_object_t *obj = luaA_toudata(L, oud, lua_class);

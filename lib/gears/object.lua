@@ -169,6 +169,7 @@ function object._setup_class_signals(t, args)
     -- @param ... The signal callback arguments
     function t.emit_signal(name, ...)
         assert(name)
+        print("Emiting " .. tostring(name))
         for _, func in pairs(conns[name] or {}) do
             func(...)
         end
