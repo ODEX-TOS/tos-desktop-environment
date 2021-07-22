@@ -222,6 +222,12 @@ local TopPanel = function(s, offset, controlCenterOnly)
   if offset == true then
     offsetx = dpi(45) -- 48
   end
+
+  if controlCenterOnly then
+    require("widget.notification-center")
+    return require("widget.control-center")
+  end
+
   local panel =
     wibox(
     {
@@ -288,9 +294,6 @@ local TopPanel = function(s, offset, controlCenterOnly)
     topbar_center_plugin(s),
     topbar_right_plugin(s)
   }
-  if controlCenterOnly then
-    return require("widget.control-center")
-  end
 
   return panel
 end
