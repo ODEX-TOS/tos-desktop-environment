@@ -277,15 +277,34 @@ _G.root.prompt = function()
             promptPage.visible = false
 
             print("Running action on index: " .. tostring(_index + _selected_list_index))
-
+            local response
+            local icon
+            local name
             -- we found our match
             if _results[_index + _selected_list_index] ~= nil then
-              delegator.perform_actions(_results[_index + _selected_list_index].payload, _results[_index + _selected_list_index].action_name)
+              name = _results[_index + _selected_list_index].action_name
+              icon = _results[_index + _selected_list_index].icon
+              response = delegator.perform_actions(_results[_index + _selected_list_index].payload, name)
             end
 
             -- after the execution, reset the values
             _index = -1
             _selected_list_index = 0
+
+            -- if the delegator returned a response then we display it back to the user
+            if type(response) == "string" and response ~= "" then
+
+              _results = {
+                icon = icon,
+                text = response,
+                action_name = name,
+                payload = nil
+              }
+
+              _G.root.prompt()
+              create_result_selection(_results, 1)
+              update_rows()
+            end
         end
     }
 end
