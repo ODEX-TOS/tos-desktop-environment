@@ -4,5 +4,12 @@
         "pacman's",
         "printf"
     ],
-    "Lua.completion.autoRequire": false
+    "Lua.completion.autoRequire": false,
+    "files.associations": {
+        ".luacheckrc": "lua",
+        "*.ld": "lua",
+        "*.ltp": "lua",
+        "*.tde": "lua",
+        "typeinfo": "c"
+    }
 }

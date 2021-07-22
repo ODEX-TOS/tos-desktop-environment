@@ -476,8 +476,8 @@ local function worker(user_args)
 
             save(data)
 
-            for i, row in ipairs(rows) do
-                if i > 1 then
+            for _, row in ipairs(rows) do
+               if row["update_text"] ~= nil then
                     row.update_text()
                 end
             end

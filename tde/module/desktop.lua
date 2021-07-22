@@ -127,6 +127,8 @@ gears.timer {
     autostart = true,
     callback = function()
         for ev in handle:events() do
+            print("file event:")
+            print(ev.name)
             local file = desktopLocation .. "/" .. ev.name
             if filehandle.exists(file) then
                 desktop_icon.from_file(
