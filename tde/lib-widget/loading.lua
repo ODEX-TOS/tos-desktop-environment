@@ -78,15 +78,15 @@ local function generate_loader_dot(offset, animation_speed, size)
         forced_height = size,
     }, 0,0,size,0)
 
-    local should_animate = true
+    widget.should_animate = true
 
     local function callback_function()
-        if not should_animate then
+        if not widget.should_animate then
             return
         end
         -- start the animation
         animate_object(widget, animation_speed, size , function()
-            if not should_animate then
+            if not widget.should_animate then
                 return
             end
 
@@ -95,7 +95,7 @@ local function generate_loader_dot(offset, animation_speed, size)
     end
 
     widget.start = function()
-        should_animate = true
+        widget.should_animate = true
         gears.timer {
             timeout = offset,
             single_shot = true,
@@ -106,7 +106,7 @@ local function generate_loader_dot(offset, animation_speed, size)
 
     widget.stop = function()
         -- force stop the animation loop
-        should_animate = false
+        widget.should_animate = false
     end
 
     widget.start()
