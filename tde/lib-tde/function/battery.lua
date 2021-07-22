@@ -42,18 +42,26 @@
 
 local filehandle = require("lib-tde.file")
 
+
+local _path_cache
+
 --- Check if a battery exists
 -- @return string The percentage of the battery
 -- @staticfct getBatteryPath
 -- @usage -- This will /sys/class/power_supply/BAT0 if it exists
 -- lib-tde.function.battery.getBatteryPath() -- return location of the battery state
 local function getBatteryPath()
+    if filehandle.dir_exists(_path_cache) then
+        return _path_cache
+    end
+
     -- check if battery 0 or 1 exists
     local battery_base_dir = "/sys/class/power_supply"
     local data = filehandle.list_dir(battery_base_dir)
     for _, item in ipairs(data) do
         if string.find(filehandle.basename(item), "BAT") ~= nil then
-            return item
+            _path_cache = item
+            return _path_cache
         end
     end
     return nil
