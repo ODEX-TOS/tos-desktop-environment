@@ -59,6 +59,7 @@ local fileHandle = require("lib-tde.file")
 local batteryHandle = require("lib-tde.function.battery")
 local common = require('lib-tde.function.common')
 
+local LOG_WARN = "\27[0;33m[ WARN "
 
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
 -- @tparam cmd string The command to execute
@@ -67,6 +68,12 @@ local common = require('lib-tde.function.common')
 -- @usage -- This returns Tuple<"hello", 0>
 -- lib-tde.hardware-check.execute("echo hello")
 local function osExecute(cmd)
+    print("Running synchronous shell code can dramatically slow down executiong", LOG_WARN)
+    print("The command being ran is:", LOG_WARN)
+    print(tostring(cmd), LOG_WARN)
+    print("Please use awful.spawn.easy_async(cmd, callback) instead")
+
+
     local handle = assert(io.popen(cmd, "r"))
     local commandOutput = assert(handle:read("*a"))
     local returnTable = {handle:close()}
