@@ -205,6 +205,7 @@ local function enable_view_by_index(i, s, bNoAnimation)
     root.elements.settings_views[INDEX].title.font = beautiful.title_font
     setActiveView(INDEX)
     if root.elements.settings_views[INDEX].view.refresh then
+      collectgarbage("collect")
       root.elements.settings_views[INDEX].view.refresh()
     end
     if not s then
