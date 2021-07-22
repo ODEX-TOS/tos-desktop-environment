@@ -44,7 +44,7 @@ local widget =
 -- The panel get's loaded in on the first time it is needed
 _G.screen.primary.left_panel = {
   toggle = function (value)
-    print("Load")
+    print("Loading left-panel")
 
     -- load in the real panel
     require("widget.control-center.panel-rules")

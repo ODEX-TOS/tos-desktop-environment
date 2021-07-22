@@ -33,8 +33,9 @@ Author: mu-tex
 License: MIT
 Repository: https://github.com/mut-ex/awesome-wm-nice
 Forked to fit TDE (transapancy support)
-]] -- ============================================================
--- local ret, lib-tde = pcall(require, "lib-tdes")
+]]
+-- ============================================================
+-- local ret, lib-tde = pcall(require, "lib-tde")
 -- local debug = ret and lib-tde.debug or function() end
 -- => Awesome WM
 -- ============================================================
