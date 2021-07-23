@@ -28,17 +28,32 @@ local gears = require("gears")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local signals = require("lib-tde.signals")
+local fetch_scrn = require("lib-tde.function.common").focused_screen
 
 local vol_osd = require("widget.brightness.brightness-slider-osd")
 
 local brightnessOverlay
 
+local offsetx = dpi(56)
+local offsety = dpi(300)
+
+local function refresh_scrn(scrn)
+  print("Refreshing brightness osd slider")
+
+  scrn = scrn or fetch_scrn()
+
+  if not scrn.valid or brightnessOverlay == nil then
+    return
+  end
+
+  -- the action center itself
+  brightnessOverlay.x = scrn.geometry.x + scrn.geometry.width - offsetx
+  brightnessOverlay.y = scrn.geometry.y + (scrn.geometry.height / dpi(2)) - (offsety / dpi(2))
+end
+
 awful.screen.connect_for_each_screen(
   function(s)
     -- Create the box
-
-    local offsetx = dpi(56)
-    local offsety = dpi(300)
     brightnessOverlay =
       wibox(
       {
@@ -65,22 +80,10 @@ awful.screen.connect_for_each_screen(
     )
 
     signals.connect_refresh_screen(
-      function()
-        print("Refreshing brightness osd slider")
-
-        if not s.valid or brightnessOverlay == nil then
-          return
-        end
-
-        -- the action center itself
-        brightnessOverlay.x = s.geometry.x + s.geometry.width - offsetx
-        brightnessOverlay.y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
-      end
+      refresh_scrn
     )
   end
 )
-
--- TODO: make this code run per screen, then the toggle function should loop over all screens and toggle each slider
 
 -- Put its items in a shaped container
 brightnessOverlay:setup {
@@ -119,6 +122,7 @@ local function toggleBriOSD(bool)
   if ((not bool) and (not brightnessOverlay.visible)) then
     return
   end
+  refresh_scrn()
   brightnessOverlay.visible = bool
   if bool then
     hideOSD:again()
@@ -129,6 +133,8 @@ local function toggleBriOSD(bool)
     hideOSD:stop()
   end
 end
+
+
 if _G.toggleBriOSD == nil then
   _G.toggleBriOSD = toggleBriOSD
 end

@@ -28,6 +28,7 @@ local gears = require("gears")
 local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local signals = require("lib-tde.signals")
+local fetch_scrn = require("lib-tde.function.common").focused_screen
 
 local vol_osd = require("widget.volume.volume-slider-osd")
 
@@ -61,9 +62,10 @@ awful.screen.connect_for_each_screen(
       end
     )
 
-    signals.connect_refresh_screen(
-      function()
+    local function refresh_scrn()
         print("Refreshing volume osd slider")
+
+        s = fetch_scrn()
 
         if not s.valid or volumeOverlay == nil then
           return
@@ -72,7 +74,10 @@ awful.screen.connect_for_each_screen(
         -- the action center itself
         volumeOverlay.x = s.geometry.x + s.geometry.width - offsetx
         volumeOverlay.y = s.geometry.y + (s.geometry.height / dpi(2)) - (offsety / dpi(2))
-      end
+    end
+
+    signals.connect_refresh_screen(
+      refresh_scrn
     )
 
     _G.volumeOverlay = volumeOverlay
@@ -120,6 +125,7 @@ awful.screen.connect_for_each_screen(
         if ((not bool) and (not volumeOverlay.visible)) then
           return
         end
+        refresh_scrn()
         volumeOverlay.visible = bool
         if bool then
           hideOSD:again()
