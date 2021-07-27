@@ -212,11 +212,11 @@ awful.screen.connect_for_each_screen(
 _G.tag.connect_signal(
   "property::layout",
   function(t)
-    local currentLayout = awful.tag.getproperty(t, "layout")
+    local currentLayout = t.layout
     if (currentLayout == awful.layout.suit.max) then
       t.gap = 0
     else
-      t.gap = awful.tag.getproperty(t, "gap") or 4
+      t.gap = t.gap or 4
     end
     t.master_count = getMasterCountPerTag(t.index)
     t.master_width_factor = getMasterWidthPerTag(t.index)
