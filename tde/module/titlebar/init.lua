@@ -934,6 +934,11 @@ function nice.initialize(args)
 end
 
 local function set_client_titlebar(c)
+
+    if general["draw_mode"] == "none" then
+        return
+    end
+
     local bIsFloating = c.floating or (c.screen.selected_tag.layout.name == "floating")
     if bIsFloating then
         awful.placement.centered(c)
