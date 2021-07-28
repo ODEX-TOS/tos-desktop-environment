@@ -24,6 +24,7 @@
 ]]
 require("lib-tde.luapath")
 require("lib-tde.logger")
+require("strace")
 
 print("Booting up...")
 
