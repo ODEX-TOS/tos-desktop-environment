@@ -125,7 +125,6 @@ awful.rules.rules = {
       class = getApplicationsPerTag(2)
     },
     properties = {
-      screen = 1,
       tag = "2",
     }
   },
@@ -134,14 +133,14 @@ awful.rules.rules = {
     rule_any = {
       class = getApplicationsPerTag(1)
     },
-    properties = {screen = 1, tag = "1"}
+    properties = {tag = "1"}
   },
   -- Editors
   {
     rule_any = {
       class = getApplicationsPerTag(3)
     },
-    properties = {screen = 1, tag = "3"}
+    properties = {tag = "3"}
   },
   -- File Managers
   {
@@ -174,7 +173,7 @@ awful.rules.rules = {
     rule_any = {
       class = getApplicationsPerTag(7)
     },
-    properties = {screen = 1, tag = "7"}
+    properties = {tag = "7"}
   },
   -- Custom
   {

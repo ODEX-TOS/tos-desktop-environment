@@ -39,6 +39,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - Don't play a 'pop' sound when opening the left-panel
 - The prompt now opens on the monitor with focus, instead of the primary monitor
 - Brightness and volume osd sliders now show on the focussed screen
+- Client popup windows now appear on the correct screen instead of the primary screen
 
 ### Dev Notes
 - The inputfield now allows editing of the field
