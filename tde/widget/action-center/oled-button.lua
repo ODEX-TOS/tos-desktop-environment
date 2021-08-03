@@ -34,10 +34,10 @@ local mode = _G.save_state.oled_mode or false
 local function update_oled()
   if (mode == true) then
     _G.oled = true
-    awful.spawn("notify-send 'Using OLED brightness mode'")
+    awful.spawn("notify-send 'Using OLED brightness mode'", false)
   else
     _G.oled = false
-    awful.spawn("notify-send 'Using Backlight brightness mode'")
+    awful.spawn("notify-send 'Using Backlight brightness mode'", false)
   end
   signals.emit_oled_mode(mode)
 end

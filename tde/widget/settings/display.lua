@@ -67,6 +67,11 @@ local resolution_card = card('Resolution list')
 local refresh_rate_cmd = ""
 local active_refresh_buttons = {}
 local active_resolution_buttons = {}
+local weak = {}
+weak.__mode = "k"
+setmetatable(active_refresh_buttons, weak)
+setmetatable(active_resolution_buttons, weak)
+
 -- END REFRESH MODE VARS
 
 
@@ -352,10 +357,10 @@ return function()
     0,
     function(value)
       if _G.oled then
-        awful.spawn("brightness -s " .. tostring(value) .. " -F")
+        awful.spawn("brightness -s " .. tostring(value) .. " -F", false)
       else
-        awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
-        awful.spawn("brightness -s " .. tostring(value))
+        awful.spawn("brightness -s 100 -F", false) -- reset pixel values when using backlight
+        awful.spawn("brightness -s " .. tostring(value), false)
       end
     end
   )
@@ -377,8 +382,8 @@ return function()
       general["screen_on_time"] = tostring(value)
       configWriter.update_entry(os.getenv("HOME") .. "/.config/tos/general.conf", "screen_on_time", tostring(value))
       if general["screen_timeout"] == "1" or general["screen_timeout"] == nil then
-        awful.spawn("pkill -f autolock.sh")
-        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(value))
+        awful.spawn("pkill -f autolock.sh", false)
+        awful.spawn("sh /etc/xdg/tde/autolock.sh " .. tostring(value), false)
       end
     end,
     function()
@@ -438,7 +443,7 @@ return function()
 
     -- make the changes persistant
     filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
-    awful.spawn({'xrdb', xresource_file})
+    awful.spawn({'xrdb', xresource_file}, false)
 
     awesome.restart()
   end)
@@ -790,7 +795,7 @@ return function()
           awful.spawn.easy_async_with_shell(
             cmd,
             function()
-              awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'")
+              awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'", false)
               Display_Mode = NORMAL_MODE
               refresh()
             end
@@ -844,7 +849,7 @@ return function()
         refresh_card,
         wibox.container.margin(button(
           "Save", function ()
-            awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'")
+            awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'", false)
             body.enable()
 
             Display_Mode = NORMAL_MODE

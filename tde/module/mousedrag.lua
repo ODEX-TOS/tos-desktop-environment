@@ -129,77 +129,85 @@ local function find_colliding_icons(computation)
     end
 end
 
-local time_delay = 1 / hardware.getDisplayFrequency()
 local timer
-timer =
-    gears.timer {
-    timeout = time_delay,
-    call_now = false,
-    autostart = false,
-    callback = function()
 
-        -- in this case we are in a client not on the root window, thus we need to disable dragging
-        if mouse.current_client ~= nil then
-            box.visible = false
-            if started and timer ~= nil then
-                timer:stop()
-                started = false
+hardware.getDisplayFrequency(function (freq)
+    local time_delay = 1 / freq
+    timer =
+        gears.timer {
+        timeout = time_delay,
+        call_now = false,
+        autostart = false,
+        callback = function()
+
+            -- in this case we are in a client not on the root window, thus we need to disable dragging
+            if mouse.current_client ~= nil then
+                box.visible = false
+                if started and timer ~= nil then
+                    timer:stop()
+                    started = false
+                end
+            end
+
+            local coords = mouse.coords()
+            endx = coords.x
+            endy = coords.y
+            local computation = calculate(startx, starty, endx, endy)
+
+            if computation.x == nil or computation.y == nil or computation.width == nil or computation.height == nil then
+                box.visible = false
+                return
+            end
+
+            if computation.x < 0 or computation.y < 0 or computation.width <= 0 or computation.height <= 0 then
+                box.visible = false
+                return
+            end
+
+            box.x = computation.x
+            box.y = computation.y
+            box.width = computation.width or 1
+            box.height = computation.height or 1
+            box.visible = true
+
+            find_colliding_icons(computation)
+        end
+    }
+
+    timer:connect_signal(
+        "timeout",
+        function()
+            if not mouse.coords().buttons[1] then
+                box.visible = false
+                if started then
+                    timer:stop()
+                    started = false
+                end
+            end
+
+            -- in this case we are in a client not on the root window, thus we need to disable dragging
+            if mouse.current_client ~= nil then
+                box.visible = false
+                if started and timer ~= nil then
+                    timer:stop()
+                    started = false
+                end
             end
         end
+    )
+end)
 
-        local coords = mouse.coords()
-        endx = coords.x
-        endy = coords.y
-        local computation = calculate(startx, starty, endx, endy)
-
-        if computation.x == nil or computation.y == nil or computation.width == nil or computation.height == nil then
-            box.visible = false
-            return
-        end
-
-        if computation.x < 0 or computation.y < 0 or computation.width <= 0 or computation.height <= 0 then
-            box.visible = false
-
-            return
-        end
-
-        box.x = computation.x
-        box.y = computation.y
-        box.width = computation.width or 1
-        box.height = computation.height or 1
-        box.visible = true
-
-        find_colliding_icons(computation)
-    end
-}
-
-timer:connect_signal(
-    "timeout",
-    function()
-        if not mouse.coords().buttons[1] then
-            box.visible = false
-            if started then
-                timer:stop()
-                started = false
-            end
-        end
-
-        -- in this case we are in a client not on the root window, thus we need to disable dragging
-        if mouse.current_client ~= nil then
-            box.visible = false
-            if started and timer ~= nil then
-                timer:stop()
-                started = false
-            end
-        end
-    end
-)
 
 local function clear_selected_icons()
     find_colliding_icons({x = 0, y = 0, width = 0, height = 0})
 end
 
 local function start()
+    if timer == nil then
+        print("Can't start mousedrag timer yet")
+        return
+    end
+
     local coords = mouse.coords()
     startx = coords.x
     starty = coords.y
@@ -214,6 +222,10 @@ local function start()
 end
 
 local function stop()
+    if timer == nil then
+        print("Can't stop mousedrag timer yet")
+        return
+    end
     if started then
         timer:stop()
         started = false

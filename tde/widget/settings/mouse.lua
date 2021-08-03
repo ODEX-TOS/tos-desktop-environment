@@ -148,21 +148,22 @@ return function()
     -- reset the layout of all mice
     layout:reset()
     scrollbox_body.reset()
-    local devices = mouse.getInputDevices()
-    for _, device in ipairs(devices) do
-      -- find the speed of the mouse
-      local speed = 1
-      local accel_speed = 0
-      local natural_scrolling = false
+    mouse.getInputDevices(function(devices)
+      for _, device in ipairs(devices) do
+        -- find the speed of the mouse
+        local speed = 1
+        local accel_speed = 0
+        local natural_scrolling = false
 
-      if _G.save_state.mouse ~= nil and _G.save_state.mouse[device.name] ~= nil then
-        speed = _G.save_state.mouse[device.name].speed or 1
-        accel_speed = _G.save_state.mouse[device.name].accel or 0
-        natural_scrolling = _G.save_state.mouse[device.name].natural_scroll or false
+        if _G.save_state.mouse ~= nil and _G.save_state.mouse[device.name] ~= nil then
+          speed = _G.save_state.mouse[device.name].speed or 1
+          accel_speed = _G.save_state.mouse[device.name].accel or 0
+          natural_scrolling = _G.save_state.mouse[device.name].natural_scroll or false
+        end
+        print("Setting the default value of the mouse to: " .. speed)
+        layout:add(make_mouse(device.id, device.name, speed, accel_speed, natural_scrolling))
       end
-      print("Setting the default value of the mouse to: " .. speed)
-      layout:add(make_mouse(device.id, device.name, speed, accel_speed, natural_scrolling))
-    end
+    end)
   end
 
   view:setup {

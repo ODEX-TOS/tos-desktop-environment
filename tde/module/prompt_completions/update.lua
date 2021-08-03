@@ -25,7 +25,11 @@
 local icons = require("theme.icons")
 local hardware = require("lib-tde.hardware-check")
 
-local function get_update_function()
+local function get_update_function(callback, index)
+    if index == nil then
+        index = 0
+    end
+
     local lookup_table = {
         {app = "pacman", exec = "sudo pacman -Syu"},
         {app = "yay", exec = "yay -Syu"},
@@ -34,16 +38,20 @@ local function get_update_function()
         {app = "yum", exec = "sudo yum update"}
     }
 
-    for _, updater in ipairs(lookup_table) do
-        if hardware.has_package_installed(updater.app) then
-            return updater.exec
+    local updater = lookup_table[index + 1]
+    hardware.has_package_installed(updater.app, function(exists)
+        if exists then
+            callback(updater.exec)
+        else
+            get_update_function(callback, index+1)
         end
-    end
-
-    return nil
+    end)
 end
 
-local update_packages_cmd = get_update_function()
+local update_packages_cmd
+get_update_function(function(cmd)
+    update_packages_cmd = cmd
+end)
 
 local function get_completions(_)
     local res = {}

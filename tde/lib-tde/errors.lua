@@ -102,12 +102,8 @@ local function send_error(msg)
     end
     in_error = true
     if general["minimize_network_usage"] ~= "1" then
-        -- make sure the error message doesn't block the draw thread
-        local co = coroutine.create(function ()
-            send(msg)
-        end)
-
-        coroutine.resume(co)
+        -- TODO: make sure the error message doesn't block the draw thread
+        send(msg)
     end
     in_error = false
 end

@@ -57,7 +57,11 @@ local hardware = require("lib-tde.hardware-check")
 local tween = require("lib-tde.animations.tween")
 
 -- we refresh at display frequency or 24 the lowest one frequency (thus the highest delay)
-local freq = math.max(1 / 24, 1 / hardware.getDisplayFrequency())
+local freq = 1 / 24
+
+hardware.getDisplayFrequency(function (hfreq)
+    freq = math.max(freq, 1 / hfreq)
+end)
 
 --- Create an animation out of a lua table
 -- @tparam number duration How long should the animation take

@@ -60,6 +60,10 @@ local linkedList = require("lib-tde.datastructure.linkedList")
 local function genList()
     local list = {}
 
+    local weak = {}
+    setmetatable(list, weak)
+    weak.__mode = "k"
+
     local _queue = linkedList()
     local _queue_size = 0
     local tail = _queue.head

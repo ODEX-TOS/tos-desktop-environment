@@ -67,7 +67,7 @@ local function open_doc(doc)
         return
     end
 
-    awful.spawn("xdg-open https://tos.odex.be/docs", function()
+    awful.spawn("xdg-open https://tos.odex.be/docs", false, function()
         find_browser()
     end)
 end

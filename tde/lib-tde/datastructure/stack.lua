@@ -60,6 +60,13 @@ local function genList()
 
     local _stack = {}
 
+    local weak = {}
+    setmetatable(list, weak)
+    weak.__mode = "k"
+
+    local weak2 = {}
+    setmetatable(_stack, weak2)
+    weak.__mode = "k"
     --- Add a new object to the stack
     -- @tparam object value The value to put into the stack
     -- @staticfct lib-tde.datastrucuture.stack.push

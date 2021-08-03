@@ -104,7 +104,7 @@ local function create_icon(icon, name, num, callback, drag)
 
     local timer =
         gears.timer {
-        timeout = 1 / hardware.getDisplayFrequency(),
+        timeout = 1 / 24,
         call_now = false,
         autostart = false,
         callback = function()
@@ -116,6 +116,10 @@ local function create_icon(icon, name, num, callback, drag)
             move_selected_boxes(box, offset)
         end
     }
+
+    hardware.getDisplayFrequency(function(freq)
+        timer.timeout = 1 / freq
+    end)
 
     local started = false
 
@@ -229,7 +233,7 @@ local function desktop_file(file, _, index, drag)
         function()
             print("Opened: " .. file)
             clear_selections()
-            awful.spawn("gtk-launch " .. filehandle.basename(file))
+            awful.spawn("gtk-launch " .. filehandle.basename(file), false)
         end,
         drag
     )
@@ -248,7 +252,7 @@ local function from_file(file, index, x, y, drag)
             function()
                 print("Opened: " .. file)
                 clear_selections()
-                awful.spawn("open " .. file)
+                awful.spawn("open " .. file, false)
             end,
             drag
         )

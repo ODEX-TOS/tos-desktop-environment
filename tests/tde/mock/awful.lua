@@ -22,9 +22,24 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+
+local spawn = {
+    easy_async_with_shell = function(arg1, arg2)
+    end,
+    easy_async = function(cmd, cb)
+        local handle = assert(io.popen(cmd, "r"))
+        local commandOutput = assert(handle:read("*a"))
+        local returnTable = {handle:close()}
+        cb(commandOutput, "", "unit test exit reason", returnTable[3])
+    end
+}
+setmetatable(
+    spawn,
+    {__call = function(_, ...)
+            return function(arg, snid) end
+        end}
+)
+
 return {
-    spawn = {
-        easy_async_with_shell = function(arg1, arg2)
-        end
-    }
+    spawn = spawn
 }

@@ -279,11 +279,14 @@ local awesome_overrides = function(awesome_theme)
   awesome_theme.icon_theme = "Papirus-Dark"
 
   -- TODO: use native functions instead of a shell script
-  local out =
+  local out_f =
     io.popen(
     "if [ -f ~/.config/gtk-3.0/settings.ini ]; " ..
       [[then grep "gtk-icon-theme-name" ~/.config/gtk-3.0/settings.ini | awk -F= '{printf $2}'; fi]]
-  ):read("*all")
+  )
+  local out = out_f:read("*all")
+  out_f:close()
+
   if out ~= nil then
     awesome_theme.icon_theme = out
   end

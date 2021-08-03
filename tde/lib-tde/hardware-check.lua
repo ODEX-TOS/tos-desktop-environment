@@ -59,6 +59,8 @@ local fileHandle = require("lib-tde.file")
 local batteryHandle = require("lib-tde.function.battery")
 local common = require('lib-tde.function.common')
 
+local time = require("socket").gettime
+
 local LOG_WARN = "\27[0;33m[ WARN "
 
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
@@ -68,15 +70,26 @@ local LOG_WARN = "\27[0;33m[ WARN "
 -- @usage -- This returns Tuple<"hello", 0>
 -- lib-tde.hardware-check.execute("echo hello")
 local function osExecute(cmd)
-    print("Running synchronous shell code can dramatically slow down executiong", LOG_WARN)
+    print("Running synchronous shell code can dramatically slow down execution", LOG_WARN)
     print("The command being ran is:", LOG_WARN)
     print(tostring(cmd), LOG_WARN)
-    print("Please use awful.spawn.easy_async(cmd, callback) instead")
+    print("Please use awful.spawn.easy_async(cmd, callback) instead", LOG_WARN)
 
-
+    local start = time()
     local handle = assert(io.popen(cmd, "r"))
     local commandOutput = assert(handle:read("*a"))
     local returnTable = {handle:close()}
+    local stop = time()
+
+    if _G.tt == nil then
+        _G.tt = 0
+    end
+
+    _G.tt = _G.tt + (stop - start)
+
+    print(string.format("Your command blocked the main thread for: %f seconds", stop - start), LOG_WARN)
+    print(string.format("Total time commands blocked the main thread for: %f seconds", _G.tt), LOG_WARN)
+
     return commandOutput, returnTable[3] -- rc[3] contains returnCode
 end
 
@@ -104,34 +117,26 @@ local function wifi()
 end
 
 --- Check to see the hardware has a network card with bluetooth support
+-- @tparam function callback The callback to trigger once we detect the bluetooth status
 -- @treturn bool True if a network card exists with bluetooth support, false otherwise
 -- @staticfct hasBluetooth
 -- @usage -- This True if a network card exists with bluetooth support
--- lib-tde.hardware-check.hasBluetooth()
-local function bluetooth()
-    local _, returnValue = osExecute("systemctl is-active bluetooth")
-    -- only check if a bluetooth controller is found if the bluetooth service is active
-    -- Otherwise the system will hang
-    if returnValue == 0 then
-        -- list all present controllers
-        local _, returnValue2 = osExecute("bluetoothctl list")
-        return returnValue2 == 0
-    end
-    return false
-end
-
---- Check if a certain piece of software is installed
--- @tparam name string The name of the software package
--- @treturn bool True that piece of software is installed, false otherwise
--- @staticfct has_package_installed
--- @usage -- This True for TOS based systems
--- lib-tde.hardware-check.has_package_installed("linux-tos")
-local function has_package_installed(name)
-    if name == "" or not (type(name) == "string") then
-        return false
-    end
-    local _, returnValue = osExecute("pacman -Q " .. name)
-    return returnValue == 0
+-- lib-tde.hardware-check.hasBluetooth(function(bHasBluetooth) print(bHasBluetooth) end)
+local function bluetooth(callback)
+    awful.spawn.easy_async("systemctl is-active bluetooth", function (_, _, _, returnValue)
+        -- only check if a bluetooth controller is found if the bluetooth service is active
+        -- Otherwise the system will hang
+        if returnValue == 0 then
+            print(returnValue)
+            -- list all present controllers
+            awful.spawn.easy_async("bluetoothctl list" , function (_, _, _, returnValue2)
+                print(returnValue2)
+                callback(returnValue2 == 0)
+            end)
+        else
+            callback(false)
+        end
+    end)
 end
 
 --- Check if a certain binary is in the PATH variable
@@ -159,13 +164,38 @@ local function is_in_path(cmd)
     return false, ""
 end
 
+--- Check if a certain piece of software is installed
+-- @tparam name string The name of the software package
+-- @tparam callback function  The function to call when we know if the package exists
+-- @treturn bool True that piece of software is installed, false otherwise
+-- @staticfct has_package_installed
+-- @usage -- This True for TOS based systems
+-- lib-tde.hardware-check.has_package_installed("linux-tos", function(bIsInstalled) print(bIsInstalled) end)
+local function has_package_installed(name, callback)
+    if name == "" or not (type(name) == "string") then
+        return callback(false)
+    end
+
+    local in_path = is_in_path(name)
+    if in_path then
+        return callback(true)
+    end
+
+    -- it is not in our path, now we do a heavy operation
+    awful.spawn.easy_async("pacman -Q " .. name, function (_,_,_, rc)
+        callback(rc == 0)
+    end)
+end
+
+
 --- Check to see if ffmpeg is installed
+-- @tparam callback function  The function to call when we know if the package exists
 -- @treturn bool True if ffmpeg is installed, false otherwise
 -- @staticfct hasFfmpeg
 -- @usage -- This True if ffmpeg is installed (a video processor)
--- lib-tde.hardware-check.hasFfmpeg()
-local function ffmpeg()
-    return has_package_installed("ffmpeg")
+-- lib-tde.hardware-check.hasFfmpeg(function(bIsInstalled) print(bIsInstalled) end)
+local function ffmpeg(callback)
+    has_package_installed("ffmpeg", callback)
 end
 
 --- Check to see the hardware has a sound card installed
@@ -174,8 +204,7 @@ end
 -- @usage -- This True if a sound card exists
 -- lib-tde.hardware-check.hasSound()
 local function sound()
-    local _, returnValue = osExecute("pactl info | grep 'Sink'")
-    return returnValue == 0
+    return fileHandle.exists("/proc/asound/cards") and #fileHandle.lines("/proc/asound/cards") > 1
 end
 
 --- Returns the ip address of the default route
@@ -261,19 +290,24 @@ end
 -- @staticfct getDisplayFrequency
 -- @usage -- Returns The frequency of the display panel in Hertz, for example 60 Hz
 -- lib-tde.hardware-check.getDisplayFrequency()
-local function getDisplayFrequency()
-    local out, rc = osExecute("xrandr -q --current | grep -o '[0-9\\.]*\\*' | awk '{printf $1}' | tr -d '*'")
-    -- In case nothing works return the default
-    if not (rc == 0) then
-        return 60
-    end
-    -- make sure the number is in a valid range
-    -- Current display don't exceed 1000 Hz so that should be a sane value
-    local number = tonumber(out) or 60
-    if number < 1 or number > 1000 then
-        return 60
-    end
-    return number
+local function getDisplayFrequency(callback)
+    -- TODO: find a way using lgi.Gdk - Gdk::Monitor::get_refresh_rate
+    awful.spawn.easy_async_with_shell("xrandr -q --current | awk '$2 ~ /[0-9/.]\\*/{print $2}' | tr -d '*' | tr -d '+' | sort -n | tail -n1", function(out, _, _, rc)
+        -- In case nothing works return the default
+        if not (rc == 0) then
+            callback(60)
+            return
+        end
+
+        -- make sure the number is in a valid range
+        -- Current display don't exceed 1000 Hz so that should be a sane value
+        local number = tonumber(out) or 60
+        if number < 1 or number > 1000 then
+            callback(60)
+            return
+        end
+        callback(number)
+    end)
 end
 
 --- Returns The amount of memory consumed by the desktop environment

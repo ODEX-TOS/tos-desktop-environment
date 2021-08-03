@@ -45,6 +45,12 @@ root.elements = {}
 root.widget = {}
 root.elements.settings_views = {}
 
+local weak = {}
+weak.__mode = "k"
+setmetatable(root.elements, weak)
+setmetatable(root.widget, weak)
+setmetatable(root.elements.settings_views, weak)
+
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
@@ -350,6 +356,26 @@ local function make_nav()
     end
   )
 
+
+  local header = wibox.container.margin()
+  header.margins = m
+  header.forced_height = m + settings_index + m
+  header:setup {
+    layout = wibox.layout.align.horizontal,
+    {
+      layout = wibox.container.margin,
+      right = m,
+      avatar
+    },
+    user
+  }
+
+  local nav_container = wibox.layout.fixed.vertical()
+  nav_container.forced_width = settings_nw
+  nav_container.forced_height = settings_height
+  nav_container:add(header)
+  nav_container:add(rule)
+
   table.insert(
     root.elements.settings_views,
     make_view(icons.settings, i18n.translate("General"), require("widget.settings.general")())
@@ -363,12 +389,15 @@ local function make_nav()
     make_view(icons.wifi, i18n.translate("Connections"), require("widget.settings.connections")())
   )
 
-  if hardware.hasBluetooth() then
-    table.insert(
-      root.elements.settings_views,
-      make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
-    )
-  end
+  hardware.hasBluetooth(function(bHasBT)
+    if bHasBT then
+      table.insert(
+        root.elements.settings_views,
+        make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
+      )
+      nav_container:add(root.elements.settings_views[#root.elements.settings_views])
+    end
+  end)
 
   table.insert(
     root.elements.settings_views,
@@ -415,24 +444,6 @@ local function make_nav()
     end
   end
 
-  local header = wibox.container.margin()
-  header.margins = m
-  header.forced_height = m + settings_index + m
-  header:setup {
-    layout = wibox.layout.align.horizontal,
-    {
-      layout = wibox.container.margin,
-      right = m,
-      avatar
-    },
-    user
-  }
-
-  local nav_container = wibox.layout.fixed.vertical()
-  nav_container.forced_width = settings_nw
-  nav_container.forced_height = settings_height
-  nav_container:add(header)
-  nav_container:add(rule)
   gears.table.map(
     function(v)
       nav_container:add(v.link)

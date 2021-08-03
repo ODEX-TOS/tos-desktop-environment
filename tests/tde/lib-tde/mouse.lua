@@ -32,14 +32,15 @@ function Test_mouse_api_exists()
 end
 
 function Test_mouse_input_device_return_correct()
-    local result = mouse.getInputDevices()
-    assert(type(result) == "table", "The list of input devices should be a table")
+    mouse.getInputDevices(function (result)
+        assert(type(result) == "table", "The list of input devices should be a table")
 
-    -- only run this when a mouse was found
-    if #result > 0 then
-        assert(type(result[1].name) == "string", "The input device list should have a name attribute")
-        assert(type(result[1].id) == "number", "The input device list should have a id attribute")
-    end
+        -- only run this when a mouse was found
+        if #result > 0 then
+            assert(type(result[1].name) == "string", "The input device list should have a name attribute")
+            assert(type(result[1].id) == "number", "The input device list should have a id attribute")
+        end
+    end)
 end
 
 function Test_mouse_api_unit_tested()

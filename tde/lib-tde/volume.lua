@@ -32,7 +32,6 @@
 -- @tdemod lib-tde.volume
 -----------------
 local hardware = require("lib-tde.hardware-check")
-local execute = hardware.execute
 local split = require("lib-tde.function.common").split
 local signals = require("lib-tde.signals")
 
@@ -42,124 +41,134 @@ local function _should_control_via_software()
     return not _G.save_state.hardware_only_volume
 end
 
-local function _extract_pa_ctl_state(command, id, port, description, hasID)
-    local res = split(execute("pactl list " .. command), "\n")
-    local lastPort
-    local lastSink
-    local lastDescription
-    local lastSinkId
-    local a_ports = {}
+local function _extract_pa_ctl_state(command, callback, id, port, description, hasID)
+    awful.spawn.easy_async("pactl list " .. command, function (out)
+        local res = split(out, "\n")
+        local lastPort
+        local lastSink
+        local lastDescription
+        local lastSinkId
+        local a_ports = {}
 
-    local result = {}
+        local result = {}
+        local weak = {}
+        weak.__mode = "k"
+        setmetatable(result, weak)
 
-    if (hasID == nil) then
-        hasID = true
-    end
-
-    local function addTable()
-        if lastSink == nil then
-            return
+        if (hasID == nil) then
+            hasID = true
         end
-        table.insert(result, {
-            --- The canonical name of the audio device
-            -- @property name
-            -- @param string
-            name = lastDescription,
-            --- the current sink/source number (used to set sink/source)
-            -- @property sink
-            -- @param number
-            sink = tonumber(lastSink) or 0,
-            --- The active port in the sink/source
-            -- @property port
-            -- @param string
-            port = lastPort or "",
-            --- The list of all ports this sink/source supports
-            -- @property available_ports
-            -- @param table
-            available_ports = a_ports,
-            --- The unique identifier for the sink
-            -- @property id
-            -- @param string
-            id = lastSinkId
-        })
-        lastDescription = nil
-        lastSink = nil
-        lastPort = nil
-        lastSinkId = nil
-        a_ports = {}
-    end
 
-    -- we found the ports section
-    -- now we loop until we found the next set_actions
-    -- arr is the line delimited output of pactl list
-    -- i is the index that the 'Ports:' section is found
-    local function populate_ports(arr, i)
-        i = i + 1
-        while true do
-            local line = arr[i]
-            if line == nil then
-                break
+        local function addTable()
+            if lastSink == nil then
+                return
             end
 
-            local _port = line:match("%s*(.*): .* %(.*%)$")
-            if _port ~= nil then
-                table.insert(a_ports, _port)
-            else
-                break
-            end
-            i = i + 1
-        end
-    end
-
-    for index, value in ipairs(res) do
-        local descriptionMatch = value:match(description)
-
-        if descriptionMatch ~= nil then
-            lastDescription = descriptionMatch
-        end
-
-        local portMatch = value:match(port)
-        if portMatch ~= nil then
-            lastPort = portMatch
-        end
-
-        local sinkMatch = value:match(id)
-        if sinkMatch ~= nil then
-            -- add the previous source/sink
-            addTable()
-            lastSink = sinkMatch
-        end
-
-        local sinkId = value:match("Name: (.*)$")
-        if sinkId ~= nil and hasID then
-            -- update to the new source/sink
-            lastSinkId = sinkId
-        end
-
-        -- find all ports assigned to this source/sink
-        local ports = value:match("Ports:$")
-        if ports ~= nil then
-            populate_ports(res, index)
-        end
-
-
-        if lastPort ~= nil and lastSink ~= nil and lastDescription ~= nil and not hasID then
-            table.insert(result, {
+            local __res = {
+                --- The canonical name of the audio device
+                -- @property name
+                -- @param string
                 name = lastDescription,
+                --- the current sink/source number (used to set sink/source)
+                -- @property sink
+                -- @param number
                 sink = tonumber(lastSink) or 0,
+                --- The active port in the sink/source
+                -- @property port
+                -- @param string
                 port = lastPort or "",
-                available_ports = a_ports
-            })
+                --- The list of all ports this sink/source supports
+                -- @property available_ports
+                -- @param table
+                available_ports = a_ports,
+                --- The unique identifier for the sink
+                -- @property id
+                -- @param string
+                id = lastSinkId
+            }
+
+            setmetatable(__res, weak)
+
+            table.insert(result, __res)
             lastDescription = nil
             lastSink = nil
             lastPort = nil
             lastSinkId = nil
             a_ports = {}
         end
-    end
-    -- just in case we didn't update the last element
-    addTable()
-    return result
+
+        -- we found the ports section
+        -- now we loop until we found the next set_actions
+        -- arr is the line delimited output of pactl list
+        -- i is the index that the 'Ports:' section is found
+        local function populate_ports(arr, i)
+            i = i + 1
+            while true do
+                local line = arr[i]
+                if line == nil then
+                    break
+                end
+
+                local _port = line:match("%s*(.*): .* %(.*%)$")
+                if _port ~= nil then
+                    table.insert(a_ports, _port)
+                else
+                    break
+                end
+                i = i + 1
+            end
+        end
+
+        for index, value in ipairs(res) do
+            local descriptionMatch = value:match(description)
+
+            if descriptionMatch ~= nil then
+                lastDescription = descriptionMatch
+            end
+
+            local portMatch = value:match(port)
+            if portMatch ~= nil then
+                lastPort = portMatch
+            end
+
+            local sinkMatch = value:match(id)
+            if sinkMatch ~= nil then
+                -- add the previous source/sink
+                addTable()
+                lastSink = sinkMatch
+            end
+
+            local sinkId = value:match("Name: (.*)$")
+            if sinkId ~= nil and hasID then
+                -- update to the new source/sink
+                lastSinkId = sinkId
+            end
+
+            -- find all ports assigned to this source/sink
+            local ports = value:match("Ports:$")
+            if ports ~= nil then
+                populate_ports(res, index)
+            end
+
+
+            if lastPort ~= nil and lastSink ~= nil and lastDescription ~= nil and not hasID then
+                table.insert(result, {
+                    name = lastDescription,
+                    sink = tonumber(lastSink) or 0,
+                    port = lastPort or "",
+                    available_ports = a_ports
+                })
+                lastDescription = nil
+                lastSink = nil
+                lastPort = nil
+                lastSinkId = nil
+                a_ports = {}
+            end
+        end
+        -- just in case we didn't update the last element
+        addTable()
+        callback(result)
+    end)
 end
 
 --- Get the volume asynchronously
@@ -224,12 +233,12 @@ end
 local function set_muted_state(bIsMuted)
     if _should_control_via_software() then
         if bIsMuted then
-            awful.spawn("amixer -D pulse sset Master off")
+            awful.spawn("amixer -D pulse sset Master off", false)
         else
-            awful.spawn("amixer -D pulse sset Master on")
+            awful.spawn("amixer -D pulse sset Master on", false)
         end
     else
-        awful.spawn("amixer -D pulse sset Master on")
+        awful.spawn("amixer -D pulse sset Master on", false)
     end
 end
 
@@ -270,7 +279,7 @@ end
 -- @usage -- Set the volume to max (of application with sink #75)
 --    set_volume(75, 100)
 local function set_application_volume(sink, value)
-    awful.spawn("pactl set-sink-input-volume " .. tostring(sink) .. " " .. tostring(math.floor(value)) .. "%")
+    awful.spawn("pactl set-sink-input-volume " .. tostring(sink) .. " " .. tostring(math.floor(value)) .. "%", false)
 end
 
 --- Set the volume in percentage
@@ -284,25 +293,27 @@ local function set_volume(value)
             signals.emit_volume_update()
         end)
     else
-        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 100%")
+        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 100%", false)
     end
     set_muted_state(false)
 end
 
 --- Get a list of all audio sinks back (A sink is an audio player such as headphones, speakers or monitors)
+-- @tparam function callback The callback to call when the sinks have been fetched
 -- @staticfct get_sinks
 -- @usage -- Returns an iterable table containing all sinks
 --    get_sinks() --  returns a list of sinks
-local function get_sinks()
-    return _extract_pa_ctl_state("sinks", "Sink #(.*)$", "Active Port: (.*)$", "Description: (.*)$")
+local function get_sinks(callback)
+    return _extract_pa_ctl_state("sinks", callback, "Sink #(.*)$", "Active Port: (.*)$", "Description: (.*)$")
 end
 
 --- Get a list of all applications that are currently playing audio
+-- @tparam function callback The callback to call when the applications have been fetched
 -- @staticfct get_applications
 -- @usage -- Returns an iterable table containing all applications playing audio
 --    get_applications() --  returns a list of application
-local function get_applications()
-    return _extract_pa_ctl_state("sink-inputs", "Sink Input #(.*)$", 'media.name = "(.*)"$', 'application.name = "(.*)"$', false)
+local function get_applications(callback)
+    return _extract_pa_ctl_state("sink-inputs", callback, "Sink Input #(.*)$", 'media.name = "(.*)"$', 'application.name = "(.*)"$', false)
 end
 
 
@@ -315,37 +326,40 @@ local function set_default_sink(sink)
     if not (type(sink) == "number") then
         print("set_active_sink expects a number", err)
     end
-    execute("pactl set-default-sink " .. sink)
+    awful.spawn("pactl set-default-sink " .. sink, false)
 end
 
 
 --- Return only the default sink
+-- @tparam function callback The callback to call when the default sink have been fetched
 -- @return table sink The currently active sink
 -- @staticfct get_default_sink
 -- @usage -- Get the default sink (the currently active audio device)
 --    local sink = get_default_sink()
-local function get_default_sink()
-    local sinkID
+local function get_default_sink(callback)
+    get_sinks(function(sinks)
+        local sinkID
 
-    -- get all the sinks
-    local sinks = get_sinks()
+        -- find the sinkId of the default sync
+        awful.spawn.easy_async("pactl info", function (out)
+            out = split(out, "\n")
+            for _, line in ipairs(out) do
+                local match = line:match("Default Sink: (.*)")
+                if match ~= nil then
+                    sinkID = match
+                end
+            end
 
-    -- find the sinkId of the default sync
-    local out = split(execute("pactl info"), "\n")
-    for _, line in ipairs(out) do
-        local match = line:match("Default Sink: (.*)")
-        if match ~= nil then
-            sinkID = match
-        end
-    end
-
-    -- loop over all sinks and find the default
-    for _, sink in ipairs(sinks) do
-        if sink.id == sinkID then
-            return sink
-        end
-    end
-    return {}
+            -- loop over all sinks and find the default
+            for _, sink in ipairs(sinks) do
+                if sink.id == sinkID then
+                    callback(sink, sinks)
+                    return
+                end
+            end
+            callback({}, sinks)
+        end)
+    end)
 end
 
 --- Change the sink (change the audio playback device) port
@@ -361,15 +375,16 @@ local function set_sink_port(sink, port)
     if not (type(port) == "string") then
         print("set_default_sink_port expects a port string", err)
     end
-    execute("pactl set-sink-port " .. sink .. ' ' .. port)
+    awful.spawn("pactl set-sink-port " .. sink .. ' ' .. port, false)
 end
 
 --- Get a list of all audio sources back (A source is an audio recording device such as microphones)
+-- @tparam function callback The callback to call when the sources have been fetched
 -- @staticfct get_sources
 -- @usage -- Returns an iterable table containing all sources
 --    get_sources() --  returns a list of sources
-local function get_sources()
-    return _extract_pa_ctl_state("sources", "Source #(.*)$", "Active Port: (.*)$", "Description: (.*)$")
+local function get_sources(callback)
+    return _extract_pa_ctl_state("sources", callback, "Source #(.*)$", "Active Port: (.*)$", "Description: (.*)$")
 end
 
 --- Change the default source (change the audio playback device)
@@ -381,36 +396,40 @@ local function set_default_source(source)
     if not (type(source) == "number") then
         print("set_active_source expects a number", err)
     end
-    execute("pactl set-default-source " .. source)
+    awful.spawn("pactl set-default-source " .. source, false)
 end
 
 --- Return only the default source
+-- @tparam function callback The callback to call when the default source have been fetched
 -- @return table source The currently active source
 -- @staticfct get_default_source
 -- @usage -- Get the default sink (the currently active microphone)
 --    local source = get_default_source()
-local function get_default_source()
-    local sourceID
-
+local function get_default_source(callback)
     -- get all the sinks
-    local sources = get_sources()
+    get_sources(function(sources)
+        local sourceID
 
-    -- find the sinkId of the default sync
-    local out = split(execute("pactl info"), "\n")
-    for _, line in ipairs(out) do
-        local match = line:match("Default Source: (.*)")
-        if match ~= nil then
-            sourceID = match
-        end
-    end
+        -- find the sinkId of the default sync
+        awful.spawn.easy_async("pactl info", function (out)
+            out = split(out, "\n")
+            for _, line in ipairs(out) do
+                local match = line:match("Default Source: (.*)")
+                if match ~= nil then
+                    sourceID = match
+                end
+            end
 
-    -- loop over all sinks and find the default
-    for _, source in ipairs(sources) do
-        if source.id == sourceID then
-            return source
-        end
-    end
-    return {}
+            -- loop over all sinks and find the default
+            for _, source in ipairs(sources) do
+                if source.id == sourceID then
+                    callback(source, sources)
+                    return
+                end
+            end
+            callback({}, sources)
+        end)
+    end)
 end
 
 --- Change the source (change the audio input device) port
@@ -426,18 +445,18 @@ local function set_source_port(source, port)
     if not (type(port) == "string") then
         print("set_default_source_port expects a port string", err)
     end
-    execute("pactl set-source-port " .. source .. ' ' .. port)
+    awful.spawn("pactl set-source-port " .. source .. ' ' .. port, false)
 end
 
 
 -- reset the pipewire server
 local function _reset_pipewire()
-    awful.spawn("systemctl --user restart pipewire")
+    awful.spawn("systemctl --user restart pipewire", false)
 end
 
 -- reset the pulseaudio server
 local function _reset_pulseaudio()
-    awful.spawn("pulseaudio -k && pulseaudio --start")
+    awful.spawn("pulseaudio -k && pulseaudio --start", false)
 end
 
 --- Resets the active audio server (either pulseaudio or pipewire)
@@ -445,13 +464,14 @@ end
 -- @usage -- Reset the entire audio server (temporarily breaks audio)
 --    reset_server()
 local function reset_server()
-    local bIsPipewire = hardware.has_package_installed("pipewire")
-    if bIsPipewire then
-        _reset_pipewire()
-    else
-        _reset_pulseaudio()
-    end
-    print("Resetting audio server")
+    hardware.has_package_installed("pipewire", function(bIsPipewire)
+        if bIsPipewire then
+            _reset_pipewire()
+        else
+            _reset_pulseaudio()
+        end
+        print("Resetting audio server")
+    end)
 end
 
 --- Change the microphone state
@@ -466,9 +486,9 @@ local function set_mic_muted(bIsMuted)
     end
 
     if bIsMuted then
-        awful.spawn("amixer set Capture nocap")
+        awful.spawn("amixer set Capture nocap", false)
     else
-        awful.spawn("amixer set Capture cap")
+        awful.spawn("amixer set Capture cap", false)
     end
 end
 
@@ -492,7 +512,7 @@ local function set_mic_volume(volume)
     -- unmute the mic
     set_mic_muted(false)
 
-    awful.spawn("amixer set Capture " .. tostring(volume) .. '%')
+    awful.spawn("amixer set Capture " .. tostring(volume) .. '%', false)
 end
 
 --- Get the microphone volume asynchronously

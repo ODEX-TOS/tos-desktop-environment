@@ -45,6 +45,10 @@ local STORAGE = os.getenv('HOME') .. '/.cache/tde/timers.json'
 local signals = require("lib-tde.signals")
 
 local rows  = { layout = wibox.layout.fixed.vertical }
+local weak = {}
+setmetatable(rows, weak)
+weak.__mode = "k"
+
 local countdown_widget = {}
 local update_widget
 local data = serialize.deserialize_from_file(STORAGE)

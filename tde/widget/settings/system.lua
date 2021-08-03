@@ -224,7 +224,7 @@ return function()
         1,
         function()
           local term = os.getenv("TERMINAL") or "st"
-          awful.spawn(term .. ' -e "system-updater"')
+          awful.spawn(term .. ' -e "system-updater"', false)
         end
       )
     )

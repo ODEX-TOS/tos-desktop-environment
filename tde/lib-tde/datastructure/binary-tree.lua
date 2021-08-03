@@ -47,6 +47,10 @@
 return function()
     local Node = {}
 
+    local weak = {}
+    setmetatable(Node, weak)
+    weak.__mode = "k"
+
     Node.__index = Node
 
     function Node:new(data)

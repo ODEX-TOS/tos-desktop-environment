@@ -29,6 +29,7 @@ local config = require("config")
 local delayed_timer = require("lib-tde.function.delayed-timer")
 local statvfs = require("posix.sys.statvfs").statvfs
 local common = require("lib-tde.function.common")
+local uname = require('posix.sys.utsname').uname()
 
 local function get_username()
     -- get the username
@@ -138,14 +139,8 @@ local function get_profile_pic()
 end
 
 local function get_kernel()
-    local kernel = "N/A"
-    awful.spawn.easy_async_with_shell(
-        "uname -r | cut -d '-' -f 1,2",
-        function(out)
-          kernel = out:gsub("%\n", "")
-          signals.emit_kernel(kernel)
-        end
-      )
+    local splitted = common.split(uname.release, '-')
+    local kernel = splitted[1] .. "-" .. splitted[2]
 
     signals.connect_request_kernel(function ()
         signals.emit_kernel(kernel)

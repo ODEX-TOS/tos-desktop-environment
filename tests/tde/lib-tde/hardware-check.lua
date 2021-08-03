@@ -26,15 +26,30 @@ local hardware = require("tde.lib-tde.hardware-check")
 
 function Test_hardware_check_packages()
     -- every tos system must have the pacman package installed
-    assert(hardware.has_package_installed("pacman"), "Package 'pacman' should be installed")
+    hardware.has_package_installed("pacman", function(installed)
+        assert(installed, "Package 'pacman' should be installed")
+    end)
     -- every tos system must have the filesystem package installed
-    assert(hardware.has_package_installed("filesystem"), "Package 'filesystem' should be installed")
+    hardware.has_package_installed("filesystem", function(installed)
+        assert(installed, "Package 'filesystem' should be installed")
+    end)
 
     -- normally this package shouldn't exists (if for a magical reason it does exist then modify here)
-    assert(not hardware.has_package_installed(""), "Empty packages should not exist")
-    assert(not hardware.has_package_installed("jdibqyudbuqyzuyduq"), "'jdibqyudbuqyzuyduq' package should not exist")
-    assert(not hardware.has_package_installed(nil), "Nil is an invalid package name")
-    assert(not hardware.has_package_installed(123), "type number is not allowed as a package name, use string instead")
+    hardware.has_package_installed("", function(installed)
+        assert(not installed, "Empty packages should not exist")
+    end)
+
+    hardware.has_package_installed("jdibqyudbuqyzuyduq", function(installed)
+        assert(not installed, "'jdibqyudbuqyzuyduq' package should not exist")
+    end)
+
+    hardware.has_package_installed(nil, function(installed)
+        assert(not installed, "Nil is an invalid package name")
+    end)
+
+    hardware.has_package_installed(123, function(installed)
+        assert(not installed, "type number is not allowed as a package name, use string instead")
+    end)
 end
 
 function Test_hardware_check_ip_valid_return()

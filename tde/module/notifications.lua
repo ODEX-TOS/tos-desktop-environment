@@ -223,6 +223,15 @@ naughty.connect_signal(
 			widget = naughty.list.actions
 		}
 
+		local _title = n.title
+		if _title == nil or _title == "" then
+			_title = n.app_name
+		end
+
+		if _title == nil or _title == "" then
+			_title = i18n.translate("System Notification")
+		end
+
 		-- Notification box Blueprint
 		naughty.layout.box {
 			notification = n,
@@ -240,7 +249,7 @@ naughty.connect_signal(
 											{
 												{
 													{
-														markup = (n.title or n.app_name) or i18n.translate("System Notification"),
+														text = _title,
 														font = "SF Pro Text Regular 10",
 														align = "center",
 														valign = "center",

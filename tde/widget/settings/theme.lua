@@ -55,6 +55,10 @@ local colorModeIsPrimary = true
 
 local widgets = {}
 local sliders = {}
+local weak = {}
+weak.__mode = "k"
+setmetatable(widgets, weak)
+setmetatable(sliders, weak)
 
 -- refreshing all widgets to contain the new colors
 local function refresh()

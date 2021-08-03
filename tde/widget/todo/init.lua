@@ -43,6 +43,10 @@ local signals = require("lib-tde.signals")
 local STORAGE = os.getenv('HOME') .. '/.cache/tde/todos.json'
 
 local rows  = { layout = wibox.layout.fixed.vertical }
+local weak = {}
+setmetatable(rows, weak)
+weak.__mode = "k"
+
 local todo_widget = {}
 local update_widget
 local data = serialize.deserialize_from_file(STORAGE)

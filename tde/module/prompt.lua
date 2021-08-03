@@ -224,6 +224,9 @@ _G.root.prompt = function()
     refresh_screen()
 
     results.children = {}
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(results.children, weak)
     update_rows()
 
     promptPage.visible = true
@@ -261,6 +264,7 @@ _G.root.prompt = function()
             end
 
             results.children = {}
+            setmetatable(results.children, weak)
             -- we render only the selected list of items
             if _index > 0 and _index <= #_results then
               for index, result in ipairs(_results) do

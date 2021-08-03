@@ -128,6 +128,10 @@ return function(dots)
 
     local _dots = {}
 
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(_dots, weak)
+
     for i = 1, dots, 1 do
         table.insert(_dots, generate_loader_dot(i / dots, animation_speed, width))
     end

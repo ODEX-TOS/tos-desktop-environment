@@ -201,6 +201,10 @@ return function()
     layout:reset()
 
     active_tags = {}
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(active_tags, weak)
+
     for s in screen do
       table.insert(active_tags, s.selected_tag)
     end

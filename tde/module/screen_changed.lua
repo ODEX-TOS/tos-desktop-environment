@@ -26,6 +26,11 @@ local signals = require("lib-tde.signals")
 local gettime = require("socket").gettime
 
 local screen_geometry = {}
+local weak = {}
+setmetatable(screen_geometry, weak)
+weak.__mode = "k"
+
+
 local bIsInRemoveState = false
 
 local function update_screens()

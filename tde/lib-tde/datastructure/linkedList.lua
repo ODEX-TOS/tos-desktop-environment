@@ -83,6 +83,10 @@
 local function genList()
     local list = {}
 
+    local weak = {}
+    setmetatable(list, weak)
+    weak.__mode = "k"
+
     --- The current pointer in the linked list
     -- @property head
     -- @param table

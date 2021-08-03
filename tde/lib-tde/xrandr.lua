@@ -185,7 +185,7 @@ local function naughty_destroy_callback(_)
       awful.spawn.easy_async_with_shell(
          action,
          function()
-            awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
+            awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'", false)
             --_G.awesome.restart()
          end
       )
@@ -273,6 +273,7 @@ local function output_data()
             end
          end
       end
+      xrandr_out:close()
    end
 
    return data_tbl

@@ -25,6 +25,9 @@
 -- generate the settings menu
 
 root.elements = {}
+local weak = {}
+setmetatable(root.elements, weak)
+weak.__mode = "k"
 
 -- only load in the settings once needed
 -- we don't need to load it in during boot

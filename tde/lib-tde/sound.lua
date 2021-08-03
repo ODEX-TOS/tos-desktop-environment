@@ -29,7 +29,7 @@ local function play_sound(bAlwaysPlay)
   local shouldPlay = bAlwaysPlay or (mode == "1" and not _G.save_state.hardware_only_volume)
   if shouldPlay then
     print("Playing audio-pop sound")
-    local pid, _ =spawn("paplay /etc/xdg/tde/sound/audio-pop.wav")
+    local pid, _ = spawn("paplay /etc/xdg/tde/sound/audio-pop.wav", false)
     return pid
   end
   return -1
@@ -39,7 +39,7 @@ local function timer_sound(bAlwaysPlay)
   local shouldPlay = bAlwaysPlay or (mode == "1" and not _G.save_state.hardware_only_volume)
   if shouldPlay then
     print("Playing audio-pop sound")
-    local pid, _ = spawn("paplay /etc/xdg/tde/sound/alarm.wav")
+    local pid, _ = spawn("paplay /etc/xdg/tde/sound/alarm.wav", false)
     return pid
   end
   return -1

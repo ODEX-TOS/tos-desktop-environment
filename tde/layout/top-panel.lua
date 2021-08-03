@@ -171,19 +171,35 @@ local function topbar_right_plugin(s)
     )
   end
   table_widget:add(show_widget_or_default("widget.battery", hardware.hasBattery(), true))
-  table_widget:add(show_widget_or_default("widget.bluetooth", hardware.hasBluetooth()))
   table_widget:add(show_widget_or_default("widget.wifi", hardware.hasWifi()))
   table_widget:add(show_widget_or_default("widget.package-updater", general["minimize_network_usage"] ~= "1"))
-  table_widget:add(
-    show_widget_or_default(
-      "widget.music",
-      (hardware.hasSound() and hardware.has_package_installed("playerctl") and IsreleaseMode) or weak_hardware
-    )
-  ) --only add this when the data can be extracted from spotify
   table_widget:add(require("widget.about"))
-  table_widget:add(show_widget_or_default("widget.screen-recorder", hardware.hasFFMPEG() or weak_hardware, true))
   table_widget:add(require("widget.search"))
   table_widget:add(show_widget_or_default("widget.notification-center", weak_hardware))
+
+  hardware.hasBluetooth(function(bHasBT)
+    table_widget:insert(
+      (#table_widget.children - 3),
+    show_widget_or_default("widget.bluetooth", bHasBT))
+  end)
+
+  hardware.has_package_installed("playerctl", function (bInstalled)
+    table_widget:insert(
+      (#table_widget.children - 2),
+      show_widget_or_default(
+        "widget.music",
+        (hardware.hasSound() and bInstalled and IsreleaseMode) or weak_hardware
+      )
+    ) --only add this when the data can be extracted from spotify
+  end)
+
+  hardware.hasFFMPEG(function(bHasFFMPEG)
+    table_widget:insert(
+      (#table_widget.children - 2),
+      show_widget_or_default("widget.screen-recorder", bHasFFMPEG or weak_hardware, true))
+  end)
+
+
   return table_widget
 end
 

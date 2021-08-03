@@ -34,12 +34,12 @@ local mode
 
 local function update_wifi()
   if (mode == false) then
-    awful.spawn("nmcli r wifi off")
-    awful.spawn("notify-send 'Airplane Mode Enabled'")
+    awful.spawn("nmcli r wifi off", false)
+    awful.spawn("notify-send 'Airplane Mode Enabled'", false)
     signals.emit_wifi_status(false)
   else
-    awful.spawn("nmcli r wifi on")
-    awful.spawn("notify-send 'Initializing WI-FI'")
+    awful.spawn("nmcli r wifi on", false)
+    awful.spawn("notify-send 'Initializing WI-FI'", false)
     signals.emit_wifi_status(true)
   end
 end

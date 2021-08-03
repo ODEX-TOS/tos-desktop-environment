@@ -419,6 +419,9 @@ return function()
 
   local function add_state_func()
     active_rule_list.children = {}
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(active_rule_list.children, weak)
 
     local rule = {
       default = false,
@@ -578,6 +581,10 @@ return function()
 
   local function list_state_func(fetch_data)
     active_rule_list.children = {}
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(active_rule_list.children, weak)
+
 
     start_loading()
 
@@ -588,6 +595,7 @@ return function()
     elseif not installed then
       stop_loading(true)
       active_rule_list.children = {}
+      setmetatable(active_rule_list.children, weak)
       active_rule_list:add(not_exists_text)
     else
       populate_data(rules, is_active)

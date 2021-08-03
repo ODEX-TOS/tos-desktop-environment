@@ -25,5 +25,17 @@
 return {
     get_configuration_dir = function()
         return os.getenv("PWD") .. "/tde"
+    end,
+    file_readable = function (filename)
+        local Gio = require("lgi").Gio
+        local gfile = Gio.File.new_for_path(filename)
+        local gfileinfo = gfile:query_info("standard::type,access::can-read",
+                                           Gio.FileQueryInfoFlags.NONE)
+        return gfileinfo and gfileinfo:get_file_type() ~= "DIRECTORY" and
+            gfileinfo:get_attribute_boolean("access::can-read")
+    end,
+    is_dir = function(path)
+        local Gio = require("lgi").Gio
+        return Gio.File.new_for_path(path):query_file_type({}) == "DIRECTORY"
     end
 }

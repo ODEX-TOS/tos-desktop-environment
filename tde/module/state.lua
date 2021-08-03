@@ -97,6 +97,10 @@ local function load()
         result.auto_hide = true
     end
 
+    local weak = {}
+    setmetatable(result, weak)
+    weak.__mode = "k"
+
     return result
 end
 
@@ -120,10 +124,10 @@ local function setup_state(state)
 
     -- set the brightness
     if (_G.oled) then
-        awful.spawn("brightness -s " .. math.max(state.brightness, 5) .. " -F") -- toggle pixel values
+        awful.spawn("brightness -s " .. math.max(state.brightness, 5) .. " -F", false) -- toggle pixel values
     else
-        awful.spawn("brightness -s 100 -F") -- reset pixel values
-        awful.spawn("brightness -s " .. math.max(state.brightness, 5))
+        awful.spawn("brightness -s 100 -F", false) -- reset pixel values
+        awful.spawn("brightness -s " .. math.max(state.brightness, 5), false)
     end
 
     signals.emit_brightness(math.max(state.brightness, 5))
@@ -141,7 +145,7 @@ local function setup_state(state)
             signals.connect_refresh_screen(
                 function()
                     -- update our wallpaper
-                    awful.spawn("sh -c 'tos theme set $(tos theme active)'")
+                    awful.spawn("sh -c 'tos theme set $(tos theme active)'", false)
                 end
             )
         end
@@ -163,15 +167,16 @@ local function setup_state(state)
 
     -- find all mouse peripheral that are currently attached to the machine
     if state.mouse then
-        local devices = mouse.getInputDevices()
-        for _, device in ipairs(devices) do
-            -- if they exist then set their properties
-            if state.mouse[device.name] ~= nil then
-                mouse.setAcceleration(device.id, state.mouse[device.name].accel or 0)
-                mouse.setMouseSpeed(device.id, state.mouse[device.name].speed or 1)
-                mouse.setNaturalScrolling(device.id, state.mouse[device.name].natural_scroll or false)
+        mouse.getInputDevices(function(devices)
+            for _, device in ipairs(devices) do
+                -- if they exist then set their properties
+                if state.mouse[device.name] ~= nil then
+                    mouse.setAcceleration(device.id, state.mouse[device.name].accel or 0)
+                    mouse.setMouseSpeed(device.id, state.mouse[device.name].speed or 1)
+                    mouse.setNaturalScrolling(device.id, state.mouse[device.name].natural_scroll or false)
+                end
             end
-        end
+        end)
     end
 end
 
@@ -186,30 +191,41 @@ end
 -- xinput id's are not persistent across reboots
 -- thus we map the xinput id to the device name, which is always the same
 -- in case our state doesn't have the id yet we create it
-local function get_mouse_state_id(id)
-    local devices = mouse.getInputDevices()
-    -- find the name in the device range
-    local name = nil
-    for _, device in ipairs(devices) do
-        if device.id == id then
-            name = device.name
+local function get_mouse_state_id(id, cb)
+    mouse.getInputDevices(function(devices)
+        -- find the name in the device range
+        local name = nil
+        for _, device in ipairs(devices) do
+            if device.id == id then
+                name = device.name
+            end
         end
-    end
-    if save_state.mouse == nil then
-        save_state.mouse = {}
-    end
-    if name ~= nil and save_state.mouse[name] == nil then
-        save_state.mouse[name] = {
-            accel = 0,
-            speed = 1,
-            natural_scroll = false
-        }
-    end
-    return name
+        if save_state.mouse == nil then
+            save_state.mouse = {}
+        end
+        if name ~= nil and save_state.mouse[name] == nil then
+            save_state.mouse[name] = {
+                accel = 0,
+                speed = 1,
+                natural_scroll = false
+            }
+        end
+
+        local weak = {}
+        setmetatable(save_state.mouse, weak)
+        weak.__mode = "k"
+
+        cb(name)
+    end)
 end
 
 local function gen_tag_list()
     local tag_list = {}
+
+    local weak = {}
+    setmetatable(tag_list, weak)
+    weak.__mode = "k"
+
     for _, tag in ipairs(awful.screen.focused().tags) do
       table.insert(tag_list, {
         master_width_factor = tag.master_width_factor,
@@ -278,7 +294,7 @@ signals.connect_brightness(
 signals.connect_exit(
     function()
         print("Shutting down, grabbing last state")
-        awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'")
+        awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'", false)
         save(save_state)
     end
 )
@@ -287,22 +303,24 @@ signals.connect_exit(
 signals.connect_mouse_speed(
     function(tbl)
         print("Saving mouse id: " .. tbl.id .. " to speed value: " .. tbl.speed)
-        local id = get_mouse_state_id(tbl.id)
-        if id ~= nil then
-            save_state.mouse[id].speed = tbl.speed
-            save(save_state)
-        end
+        get_mouse_state_id(tbl.id, function(id)
+            if id ~= nil then
+                save_state.mouse[id].speed = tbl.speed
+                save(save_state)
+            end
+        end)
     end
 )
 
 signals.connect_mouse_acceleration(
     function(tbl)
         print("Saving mouse id: " .. tbl.id .. " to accel value: " .. tbl.speed)
-        local id = get_mouse_state_id(tbl.id)
-        if id ~= nil then
-            save_state.mouse[id].accel = tbl.speed
-            save(save_state)
-        end
+        get_mouse_state_id(tbl.id, function(id)
+            if id ~= nil then
+                save_state.mouse[id].accel = tbl.speed
+                save(save_state)
+            end
+        end)
     end
 )
 
@@ -336,11 +354,12 @@ signals.connect_oled_mode(
 signals.connect_mouse_natural_scrolling(
     function(tbl)
         print("Saving mouse id: " .. tbl.id .. " to natural scrolling state: " .. tostring(tbl.state))
-        local id = get_mouse_state_id(tbl.id)
-        if id ~= nil then
-            save_state.mouse[id].natural_scroll = tbl.state
-            save(save_state)
-        end
+        get_mouse_state_id(tbl.id, function (id)
+            if id ~= nil then
+                save_state.mouse[id].natural_scroll = tbl.state
+                save(save_state)
+            end
+        end)
     end
 )
 

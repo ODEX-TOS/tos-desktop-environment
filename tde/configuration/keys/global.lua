@@ -36,18 +36,20 @@ local signals = require("lib-tde.signals")
 local volume = require("lib-tde.volume")
 
 -- returns true if we cannot create a screenshot
-local function send_notification_if_maim_missing()
-  if not has_package_installed("maim") then
-    require("naughty").notification(
-      {
-        title = i18n.translate("Cannot create screenshot"),
-        message = i18n.translate("maim is not installed, install it using tde-contrib package"),
-        app_name = i18n.translate("tde package notifier")
-      }
-    )
-    return true
-  end
-  return false
+local function send_notification_if_maim_missing(callback)
+  has_package_installed("maim", function (installed)
+    if not installed then
+      require("naughty").notification(
+        {
+          title = i18n.translate("Cannot create screenshot"),
+          message = i18n.translate("maim is not installed, install it using tde-contrib package"),
+          app_name = i18n.translate("tde package notifier")
+        }
+      )
+      return callback(true)
+    end
+    return callback(false)
+  end)
 end
 
 -- Key bindings
@@ -151,29 +153,6 @@ local globalKeys =
       _G.switcher.switch(-1, "Mod1", "Alt_L", "Shift", "Tab")
     end,
     {description = i18n.translate("Tab between applications in reverse order"), group = i18n.translate("Laucher")}
-  ),
-  -- Screen Shots
-  -- Screen Shot and Save
-  awful.key(
-    {},
-    "Print",
-    function()
-      print("Taking a full screenshot")
-      if not send_notification_if_maim_missing() then
-        awful.spawn("snap full")
-      end
-    end
-  ),
-  -- Screen Shot Area and Save
-  awful.key(
-    {modkey, "Shift"},
-    "s",
-    function()
-      print("Taking an area screenhot")
-      if not send_notification_if_maim_missing() then
-        awful.spawn("snap area")
-      end
-    end
   ),
   -- Toggle System Tray
   awful.key(
@@ -369,10 +348,10 @@ local globalKeys =
     function()
       print("Increasing brightness")
       if (_G.oled) then
-        awful.spawn("brightness -a 5 -F")
+        awful.spawn("brightness -a 5 -F", false)
       else
-        awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
-        awful.spawn("brightness -a 5")
+        awful.spawn("brightness -s 100 -F", false) -- reset pixel values when using backlight
+        awful.spawn("brightness -a 5", false)
       end
       awesome.emit_signal("widget::brightness")
       if _G.toggleBriOSD ~= nil then
@@ -390,10 +369,10 @@ local globalKeys =
     function()
       print("Decreasing brightness")
       if (_G.oled) then
-        awful.spawn("brightness -d 5 -F")
+        awful.spawn("brightness -d 5 -F", false)
       else
-        awful.spawn("brightness -s 100 -F") -- reset pixel values when using backlight
-        awful.spawn("brightness -d 5")
+        awful.spawn("brightness -s 100 -F", false) -- reset pixel values when using backlight
+        awful.spawn("brightness -d 5", false)
       end
       awesome.emit_signal("widget::brightness")
       if _G.toggleBriOSD ~= nil then
@@ -475,7 +454,7 @@ local globalKeys =
     "XF86AudioPlay",
     function()
       print("toggeling music")
-      awful.spawn("playerctl play-pause")
+      awful.spawn("playerctl play-pause", false)
     end,
     {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
@@ -484,7 +463,7 @@ local globalKeys =
     "XF86AudioPause",
     function()
       print("toggeling music")
-      awful.spawn("playerctl play-pause")
+      awful.spawn("playerctl play-pause", false)
     end,
     {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
@@ -493,7 +472,7 @@ local globalKeys =
     "XF86AudioPrev",
     function()
       print("Previous song")
-      awful.spawn("playerctl previous")
+      awful.spawn("playerctl previous", false)
     end,
     {description = i18n.translate("go to the previous song"), group = i18n.translate("hardware")}
   ),
@@ -502,7 +481,7 @@ local globalKeys =
     "XF86AudioNext",
     function()
       print("Next song")
-      awful.spawn("playerctl next")
+      awful.spawn("playerctl next", false)
     end,
     {description = i18n.translate("go to the next song"), group = i18n.translate("hardware")}
   ),
@@ -512,7 +491,7 @@ local globalKeys =
     config.toggleMusic,
     function()
       print("toggeling music")
-      awful.spawn("playerctl play-pause")
+      awful.spawn("playerctl play-pause", false)
     end,
     {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
@@ -521,7 +500,7 @@ local globalKeys =
     config.prevMusic,
     function()
       print("Previous song")
-      awful.spawn("playerctl previous")
+      awful.spawn("playerctl previous", false)
     end,
     {description = i18n.translate("go to the previous song"), group = i18n.translate("hardware")}
   ),
@@ -530,7 +509,7 @@ local globalKeys =
     config.nextMusic,
     function()
       print("Next song")
-      awful.spawn("playerctl next")
+      awful.spawn("playerctl next", false)
     end,
     {description = i18n.translate("go to the next song"), group = i18n.translate("hardware")}
   ),
@@ -541,9 +520,9 @@ local globalKeys =
       print("Taking a full screenshot")
       if not send_notification_if_maim_missing() then
         if general["window_screen_mode"] == "none" then
-          awful.spawn(apps.bins().full_blank_screenshot)
+          awful.spawn(apps.bins().full_blank_screenshot, false)
         else
-          awful.spawn(apps.bins().full_screenshot)
+          awful.spawn(apps.bins().full_screenshot, false)
         end
       end
     end,
@@ -554,13 +533,15 @@ local globalKeys =
     config.snapArea,
     function()
       print("Taking an area screenshot")
-      if not send_notification_if_maim_missing() then
-        if general["window_screen_mode"] == "none" then
-          awful.spawn(apps.bins().area_blank_screenshot)
-        else
-          awful.spawn(apps.bins().area_screenshot)
+      send_notification_if_maim_missing(function (missing)
+        if not missing then
+          if general["window_screen_mode"] == "none" then
+            awful.spawn(apps.bins().area_blank_screenshot, false)
+          else
+            awful.spawn(apps.bins().area_screenshot, false)
+          end
         end
-      end
+      end)
     end,
     {description = i18n.translate("area/selected screenshot"), group = i18n.translate("Utility")}
   ),
@@ -569,13 +550,15 @@ local globalKeys =
     config.windowSnapArea,
     function()
       print("Taking a screenshot of a window")
-      if not send_notification_if_maim_missing() then
-        if general["window_screen_mode"] == "none" then
-          awful.spawn(apps.bins().window_blank_screenshot)
-        else
-          awful.spawn(apps.bins().window_screenshot)
+      send_notification_if_maim_missing(function (missing)
+        if not missing then
+          if general["window_screen_mode"] == "none" then
+            awful.spawn(apps.bins().window_blank_screenshot, false)
+          else
+            awful.spawn(apps.bins().window_screenshot, false)
+          end
         end
-      end
+      end)
     end,
     {description = i18n.translate("window screenshot"), group = i18n.translate("Utility")}
   ),

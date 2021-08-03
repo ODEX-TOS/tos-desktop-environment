@@ -61,24 +61,7 @@
 -- @tdemod lib-tde.file
 ---------------------------------------------------------------------------
 
--- check if a file or directory exists
-local function exists(file)
-  if not (type(file) == "string") then
-    return false
-  end
-  -- we can't os.rename root but it exists (always)
-  if file == "/" then
-    return true
-  end
-  local ok, _, code = os.rename(file, file)
-  if not ok then
-    if code == 13 then
-      -- Permission denied, but it exists
-      return true
-    end
-  end
-  return ok
-end
+local fs = require("gears.filesystem")
 
 --- Check if a file exists
 -- @tparam string file The path to the file, can be both absolute or relative.
@@ -90,7 +73,7 @@ local function file_exists(file)
   if type(file) ~= "string" then
     return false
   end
-  return exists(file) and not exists(file .. "/")
+  return fs.file_readable(file)
 end
 
 -- TODO: unit test the file writing
@@ -140,10 +123,7 @@ local function dir_exists(dir)
   if type(dir) ~= "string" then
     return false
   end
-  if dir:sub(-1) == "/" then
-    return exists(dir)
-  end
-  return exists(dir)
+  return fs.is_dir(dir)
 end
 
 --- Recursively create a directory
@@ -346,19 +326,18 @@ end
 
 local function rm(filename)
   -- make sure we don't destroy the root :-)
-  if filename == "/" then
+  if filename == "/" or filename == "" then
     return
   end
 
-  if dir_exists(filename) then
-    local execute = require("lib-tde.hardware-check").execute
-    -- TODO: lua implementation for rm
-    local _, exitcode = execute("rm -rf " .. filename)
-    return exitcode == 0
+  if file_exists(filename) then
+    local suc, _ = os.remove(filename)
+    return suc
   end
 
-  local suc, _ = os.remove(filename)
-  return suc
+  -- TODO: lua implementation for rm
+  awful.spawn("rm -rf " .. filename, false)
+  return true
 end
 
 --- Make a copy of a file

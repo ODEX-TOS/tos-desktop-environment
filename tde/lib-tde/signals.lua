@@ -44,6 +44,10 @@
 
 local connections = {}
 
+local weak = {}
+setmetatable(connections, weak)
+weak.__mode = "k"
+
 --- Notify other TDE components that the exit_screen should be hidden
 -- @tparam function func The callback function that will be called when the event happens
 -- @staticfct emit_module_exit_screen_hide
@@ -839,6 +843,7 @@ end
 -- @usage -- Notify other TDE components that the primary theme changed
 -- lib-tde.signals.emit_primary_theme_changed()
 connections.emit_primary_theme_changed = function(pallet)
+    setmetatable(pallet, weak)
     awesome.emit_signal("TDE::primary::theme::changed", pallet)
 end
 
@@ -860,6 +865,7 @@ end
 -- @usage -- Notify other TDE components that the background theme changed
 -- lib-tde.signals.emit_background_theme_changed()
 connections.emit_background_theme_changed = function(pallet)
+    setmetatable(pallet, weak)
     awesome.emit_signal("TDE::background::theme::changed", pallet)
 end
 
@@ -876,7 +882,7 @@ connections.connect_background_theme_changed = function(func)
 end
 
 --- Notify when the oled brightness mode changed
--- @tparam table theme The new theme pallet
+-- @tparam bool bIsOledMode True if oled mode is enabled
 -- @staticfct emit_oled_mode
 -- @usage -- Notify other TDE components that the oled brightness mode changed
 -- lib-tde.signals.emit_oled_mode(true)

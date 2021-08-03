@@ -93,6 +93,11 @@ end
 local function getPluginSection(section)
     print(section .. " plugin loading started")
     local iterator = {}
+
+    local weak = {}
+    setmetatable(iterator, weak)
+    weak.__mode = "k"
+
     local item = getItem(section)
     if item == nil then
         return iterator

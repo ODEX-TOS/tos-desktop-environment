@@ -360,7 +360,6 @@ translations["wireless"] = "draadloos"
 translations["year"] = "jaar"
 translations["years"] = "jaren"
 translations["yellow"] = "geel"
-
 translations["in"] = "in"
 translations["out"] = "uit"
 translations["allow"] = "toegestaan"

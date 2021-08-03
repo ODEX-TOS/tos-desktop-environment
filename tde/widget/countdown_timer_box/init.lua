@@ -176,7 +176,7 @@ awful.screen.connect_for_each_screen(
 
         countdownOverlay.kill_sound = function()
           if pid ~= -1 and type(pid) == "number" and filehandle.dir_exists('/proc/' .. tostring(pid)) then
-            awful.spawn('kill ' .. tostring(pid))
+            awful.spawn('kill ' .. tostring(pid), false)
           end
           pid = -1
         end

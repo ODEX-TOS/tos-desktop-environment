@@ -73,7 +73,7 @@ local mic_test_pid=-1
 local function kill_mic_pid()
   local cmd = "pkill -P " .. tostring(mic_test_pid)
   print(cmd)
-  awful.spawn(cmd)
+  awful.spawn(cmd, false)
   mic_test_pid=-1
   refresh()
 end
@@ -251,6 +251,9 @@ return function()
 
   local function generate_sink_setting_body(sinks, sources, _, _)
     body.children = {}
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(body.children, weak)
 
     local sink_children = wibox.layout.fixed.vertical()
     local source_children = wibox.layout.fixed.vertical()
@@ -299,7 +302,7 @@ return function()
         -- we use a buffer size of 10 ms for recording and playback as that has almost no delay, but still allows recording
         local cmd = "arecord -f cd - -B 10000 | aplay -B 10000"
         -- start the process and get the pid
-        mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'")
+        mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'", false)
         refresh()
       end, active_pallet),m, m, m))
     else
@@ -374,10 +377,14 @@ return function()
   -- returns a widget with all application volume sliders
   local function populate_applications()
     applications_body.children = {}
-    local applications = volume.get_applications()
-    for _, app in ipairs(applications) do
-      applications_body:add(wibox.container.margin(create_volume_from_application(app), m, m, m, m))
-    end
+    local weak = {}
+    weak.__mode = "k"
+    setmetatable(applications_body.children, weak)
+    volume.get_applications(function (applications)
+      for _, app in ipairs(applications) do
+        applications_body:add(wibox.container.margin(create_volume_from_application(app), m, m, m, m))
+      end
+    end)
   end
 
   local function normal_mode(sinks, sources, sink, source)
@@ -391,35 +398,34 @@ return function()
   end
 
   refresh = function()
-    local sink = volume.get_default_sink()
-    local source = volume.get_default_source()
-    local sinks = volume.get_sinks()
-    local sources = volume.get_sources()
+    volume.get_default_sink(function (sink, sinks)
+      volume.get_default_source(function (source, sources)
+        if not (sink.name == nil) then
+          vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. ' - ' .. sink.port .. "</span>"
+        end
+        if not (source.name == nil) then
+          mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. ' - ' .. source.port .. "</span>"
+        end
 
-    if not (sink.name == nil) then
-      vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. ' - ' .. sink.port .. "</span>"
-    end
-    if not (source.name == nil) then
-      mic_footer.markup = 'Input: <span font="' .. beautiful.font .. '">' .. source.name .. ' - ' .. source.port .. "</span>"
-    end
+        -- TODO: Find a nicer api for detecting if audio is not working
+        -- for example when no audio driver is found
+        if sinks == nil or sources == nil or sink == nil or source == nil then
+          scrollbox_body.reset()
+          return
+        end
 
-    -- TODO: Find a nicer api for detecting if audio is not working
-    -- for example when no audio driver is found
-    if sinks == nil or sources == nil or sink == nil or source == nil then
-      scrollbox_body.reset()
-      return
-    end
+        if DISPLAY_MODE == NORMAL_MODE then
+          normal_mode(sinks, sources, sink, source)
+        elseif DISPLAY_MODE == PORT_MODE then
+          port_mode(sinks, sources, sink, source)
+        else
+          DISPLAY_MODE = NORMAL_MODE
+          normal_mode(sinks, sources, sink, source)
+        end
 
-    if DISPLAY_MODE == NORMAL_MODE then
-      normal_mode(sinks, sources, sink, source)
-    elseif DISPLAY_MODE == PORT_MODE then
-      port_mode(sinks, sources, sink, source)
-    else
-      DISPLAY_MODE = NORMAL_MODE
-      normal_mode(sinks, sources, sink, source)
-    end
-
-    scrollbox_body.reset()
+        scrollbox_body.reset()
+      end)
+    end)
   end
 
   view.refresh = refresh

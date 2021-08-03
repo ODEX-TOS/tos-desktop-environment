@@ -31,9 +31,7 @@ local common = require("lib-tde.function.common")
 
 local desktopLocation = os.getenv("HOME") .. "/Desktop"
 local offset = -1
-if IsreleaseMode and installed("installer") then
-    offset = 1
-end
+
 
 local function name_to_config(name)
     return string.lower(name:gsub(" ", "-"):gsub(".desktop", ""))
@@ -94,55 +92,62 @@ local function find_pos_by_name(name)
     return {x = nil, y = nil}
 end
 
--- TODO: run filesystem event listener each time the desktop changes
-if filehandle.dir_exists(desktopLocation) then
-    for index, file in ipairs(filehandle.list_dir(desktopLocation)) do
-        -- initialize x and y to nil, find the stored location otherwise use the default location
-        local pos = find_pos_by_name(filehandle.basename(file))
-        local x = pos.x
-        local y = pos.y
-        local position = index + offset
-        if x and y then
-            position = nil
-        end
-
-        desktop_icon.from_file(
-            file,
-            position,
-            x,
-            y,
-            function(name)
-                update_entry(filehandle.basename(file), name)
-            end
-        )
+installed("installer", function (bIsInstalled)
+    if IsreleaseMode and bIsInstalled then
+        offset = 1
     end
-end
 
-local handle = inotify.init({blocking = false})
-handle:addwatch(desktopLocation .. "/", inotify.IN_CREATE, inotify.IN_DELETE)
-
-gears.timer {
-    timeout = 1,
-    call_now = true,
-    autostart = true,
-    callback = function()
-        for ev in handle:events() do
-            print("file event:")
-            print(ev.name)
-            local file = desktopLocation .. "/" .. ev.name
-            if filehandle.exists(file) then
-                desktop_icon.from_file(
-                    file,
-                    desktop_icon.count() + offset + 1,
-                    function(name)
-                        update_entry(name)
-                    end
-                )
-            else
-                print(ev.name .. " deleted")
-                desktop_icon.delete(ev.name)
-                delete_entry(ev.name)
+    -- TODO: run filesystem event listener each time the desktop changes
+    if filehandle.dir_exists(desktopLocation) then
+        for index, file in ipairs(filehandle.list_dir(desktopLocation)) do
+            -- initialize x and y to nil, find the stored location otherwise use the default location
+            local pos = find_pos_by_name(filehandle.basename(file))
+            local x = pos.x
+            local y = pos.y
+            local position = index + offset
+            if x and y then
+                position = nil
             end
+
+            desktop_icon.from_file(
+                file,
+                position,
+                x,
+                y,
+                function(name)
+                    update_entry(filehandle.basename(file), name)
+                end
+            )
         end
     end
-}
+
+    local handle = inotify.init({blocking = false})
+    handle:addwatch(desktopLocation .. "/", inotify.IN_CREATE, inotify.IN_DELETE)
+
+    gears.timer {
+        timeout = 1,
+        call_now = true,
+        autostart = true,
+        callback = function()
+            for ev in handle:events() do
+                print("file event:")
+                print(ev.name)
+                local file = desktopLocation .. "/" .. ev.name
+                if filehandle.exists(file) then
+                    desktop_icon.from_file(
+                        file,
+                        desktop_icon.count() + offset + 1,
+                        function(name)
+                            update_entry(name)
+                        end
+                    )
+                else
+                    print(ev.name .. " deleted")
+                    desktop_icon.delete(ev.name)
+                    delete_entry(ev.name)
+                end
+            end
+        end
+    }
+
+end)

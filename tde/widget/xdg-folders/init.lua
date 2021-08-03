@@ -27,17 +27,6 @@ local dpi = require("beautiful").xresources.apply_dpi
 local has_package_installed = require("lib-tde.hardware-check").has_package_installed
 local seperator_widget = require("lib-widget.separator")
 
-local function show_widget_or_default(widget, show)
-  if show then
-    return widget
-  end
-  return wibox.widget {
-    text = "",
-    visible = false,
-    widget = wibox.widget.textbox
-  }
-end
-
 local separator_horizontal = wibox.container.margin(seperator_widget(dpi(1), "horizontal", 0.2), 0, 0, dpi(10), dpi(10))
 
 local separator_vertical =
@@ -56,33 +45,48 @@ local separator_vertical =
 
 return function(position)
   if position == "left" then
-    return wibox.widget {
-      layout = wibox.layout.align.vertical,
-      {
-        separator_horizontal,
-        require("widget.xdg-folders.home"),
-        require("widget.xdg-folders.documents"),
-        require("widget.xdg-folders.downloads"),
-        -- require("widget.xdg-folders.pictures"),
-        -- require("widget.xdg-folders.videos"),
-        separator_horizontal,
-        show_widget_or_default(require("widget.xdg-folders.trash"), has_package_installed("gvfs")),
-        layout = wibox.layout.fixed.vertical
-      }
-    }
-  end
-  return wibox.widget {
-    layout = wibox.layout.align.horizontal,
-    {
-      separator_vertical,
+    local _layout = wibox.widget {
+      separator_horizontal,
       require("widget.xdg-folders.home"),
       require("widget.xdg-folders.documents"),
       require("widget.xdg-folders.downloads"),
-      -- require("widget.xdg-folders.pictures"),
-      -- require("widget.xdg-folders.videos"),
-      separator_vertical,
-      show_widget_or_default(require("widget.xdg-folders.trash"), has_package_installed("gvfs")),
-      layout = wibox.layout.fixed.horizontal
+      require("widget.xdg-folders.pictures"),
+      layout = wibox.layout.fixed.vertical
     }
+
+    has_package_installed("gvfs", function (installed)
+      if installed then
+        _layout:add(separator_horizontal)
+        _layout:add(require("widget.xdg-folders.trash"))
+      end
+    end)
+
+    local widget = wibox.widget {
+      layout = wibox.layout.align.vertical,
+      _layout
+    }
+    return widget
+  end
+
+  local _layout = wibox.widget {
+    separator_vertical,
+    require("widget.xdg-folders.home"),
+    require("widget.xdg-folders.documents"),
+    require("widget.xdg-folders.downloads"),
+    require("widget.xdg-folders.pictures"),
+    layout = wibox.layout.fixed.horizontal
   }
+
+  has_package_installed("gvfs", function (installed)
+    if installed then
+      _layout:add(separator_vertical)
+      _layout:add(require("widget.xdg-folders.trash"))
+    end
+  end)
+
+  local widget = wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      _layout
+    }
+  return widget
 end

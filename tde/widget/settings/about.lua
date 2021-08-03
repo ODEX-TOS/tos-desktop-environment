@@ -24,12 +24,15 @@
 ]]
 local wibox = require("wibox")
 local beautiful = require("beautiful")
-local execute = require("lib-tde.hardware-check").execute
-local bytes_to_grandness = require("lib-tde.function.common").bytes_to_grandness
+local common = require("lib-tde.function.common")
+local trim = common.trim
+local bytes_to_grandness = common.bytes_to_grandness
 local signals = require("lib-tde.signals")
 local hardware = require("lib-tde.hardware-check")
 local seperator_widget = require("lib-widget.separator")
 local card = require("lib-widget.card")
+
+local uname = require("posix.sys.utsname").uname()
 
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
@@ -118,11 +121,10 @@ return function()
 
   local graphics_name, graphics_text = generate_setting_panel(i18n.translate("Graphics"))
   -- gathered from https://github.com/dylanaraps/neofetch/blob/master/neofetch#L2401
-  local value, _ =
-    execute(
-    'lspci -mm | awk -F \'\\"|\\" \\"|\\\\(\' \'/"Display|"3D|"VGA/ {a[$0] = $1 " " $3 " " $4} END {for(i in a) {if(!seen[a[i]]++) print a[i]}}\' | head -n1'
-  )
-  graphics_text.text = value
+  awful.spawn.easy_async_with_shell('lspci -mm | awk -F \'\\"|\\" \\"|\\\\(\' \'/"Display|"3D|"VGA/ {a[$0] = $1 " " $3 " " $4} END {for(i in a) {if(!seen[a[i]]++) print a[i]}}\' | head -n1',
+  function (value)
+    graphics_text.text = trim(value)
+  end)
 
   local disk_name, disk_text = generate_setting_panel(i18n.translate("Disk capacity"))
 
@@ -135,7 +137,9 @@ return function()
 
   local display_freq_name, display_freq_text = generate_setting_panel(i18n.translate("Display refresh rate"))
 
-  display_freq_text.text = tostring(hardware.getDisplayFrequency()) .. " Hz"
+  hardware.getDisplayFrequency(function (freq)
+    display_freq_text.text = tostring(freq) .. " Hz"
+  end)
 
   local os_name_name, os_name_text = generate_setting_panel(i18n.translate("OS Name"))
   os_name_text.text = "TOS Linux"
@@ -147,8 +151,7 @@ return function()
   )
 
   local os_type_name, os_type_text = generate_setting_panel(i18n.translate("OS Type"))
-  local out, _ = execute("uname -m")
-  os_type_text.text = out
+  os_type_text.text = uname.machine
 
   local tde_version_name, tde_version_text = generate_setting_panel(i18n.translate("TDE Version"))
   tde_version_text.text = awesome.version .. " (" .. awesome.release .. ")"
@@ -204,6 +207,10 @@ return function()
 
   view.refresh = function ()
     tde_uptime_text.text = get_uptime()
+
+    hardware.getDisplayFrequency(function (freq)
+      display_freq_text.text = tostring(freq) .. " Hz"
+    end)
   end
 
   return view

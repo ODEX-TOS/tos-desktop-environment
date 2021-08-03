@@ -62,6 +62,14 @@ return function()
     local _list = {}
     local _index = 0
 
+    local weak = {}
+    setmetatable(_list, weak)
+    weak.__mode = "k"
+
+    local weak2 = {}
+    setmetatable(_set, weak2)
+    weak.__mode = "k"
+
 
     --- Add an element to the set, if it was successfully added return true (didn't exist yet)
     -- @tparam object value The value to put into the set

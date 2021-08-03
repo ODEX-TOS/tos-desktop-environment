@@ -52,6 +52,11 @@ end
 local devices = {}
 local paired_devices = {}
 
+local weak = {}
+weak.__mode = "k"
+setmetatable(devices, weak)
+setmetatable(paired_devices, weak)
+
 local connections = wibox.layout.fixed.vertical()
 
 local loader = loading_widget()
@@ -167,7 +172,7 @@ local function make_bluetooth_widget(tbl)
               if not (code == 0) then
                 notify("Pairing failed", out)
               end
-              awful.spawn("bluetoothctl trust '" .. mac .. "'")
+              awful.spawn("bluetoothctl trust '" .. mac .. "'", false)
               refresh()
             end
           )
@@ -308,7 +313,7 @@ return function()
       bluetoothctl scan off;
       bluetoothctl pairable off;
       bluetoothctl discoverable off;
-      ']])
+      ']], false)
     end
 
   end
@@ -356,7 +361,7 @@ return function()
     end
     if bIsTimer == nil then
       print("Starting bluetooth advertisment")
-      awful.spawn("sh -c 'bluetoothctl scan on; bluetoothctl pairable on; bluetoothctl discoverable on'")
+      awful.spawn("sh -c 'bluetoothctl scan on; bluetoothctl pairable on; bluetoothctl discoverable on'", false)
     elseif timer.started == nil then
       timer:start()
     end
@@ -367,6 +372,10 @@ return function()
     connections.children = {}
     devices = {}
     paired_devices = {}
+
+    setmetatable(connections.children, weak)
+    setmetatable(devices, weak)
+    setmetatable(paired_devices, weak)
 
     awful.spawn.easy_async_with_shell(
       "bluetoothctl devices",

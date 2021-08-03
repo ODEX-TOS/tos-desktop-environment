@@ -51,6 +51,10 @@
 return function()
     local _data = {}
 
+    local weak = {}
+    setmetatable(_data, weak)
+    weak.__mode = "k"
+
     --- Add a key value pair to the hashmap
     -- @tparam string key The key used to identify the value
     -- @tparam object value Any possible object that can be hold in the hashmap (string, number, table, etc)

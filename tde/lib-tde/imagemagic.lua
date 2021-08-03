@@ -43,7 +43,11 @@
 ---------------------------------------------------------------------------
 local hardware = require("lib-tde.hardware-check")
 
-local is_installed = hardware.has_package_installed("imagemagick")
+local is_installed
+
+hardware.has_package_installed("imagemagick", function(installed)
+    is_installed = installed
+end)
 
 local LOG_ERROR = "\27[0;31m[ ERROR "
 

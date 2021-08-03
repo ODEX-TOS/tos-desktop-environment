@@ -32,7 +32,6 @@
 -- @tdemod lib-tde.mouse
 -----------------
 
-local execute = require("lib-tde.hardware-check").execute
 local split = require("lib-tde.function.common").split
 local signals = require("lib-tde.signals")
 
@@ -79,12 +78,12 @@ local function _extractInfoFromXinputLine(line)
 end
 
 --- Returns a table of all mouse input devices ranging from trackpads, to mouses to trackpoints
--- @treturn table The table containing a field with the id and canonical name
+-- @treturn function A function with parameter the table containing a field with the id and canonical name
 -- @staticfct getInputDevices
 -- @usage -- Returns for example {{"id": 11, "name": "HID-compliant Mouse Trust Gaming Mouse"}}
 --    local devices = getInputDevices()
 --    print("The first device is called: " .. devices[1].name .. " and has ID: " .. devices[1].id)
-local function getInputDevices()
+local function getInputDevices(callback)
     local identifier = {
         "virtual",
         "keyboard",
@@ -95,25 +94,34 @@ local function getInputDevices()
         -- TODO: find other pointer that should not be in the list, find them using xinput --list
     }
 
-    local xinput = execute("xinput --list")
-    xinput = split(xinput, "\n")
+    awful.spawn.easy_async("xinput --list", function (xinput)
+        xinput = split(xinput, "\n")
 
-    local bIsCorePointer = false
-    local result = {}
-    for _, line in ipairs(xinput) do
-        if string.find(line, "Virtual core pointer") then
-            bIsCorePointer = true
-        elseif string.find(line, "Virtual core keyboard") then
-            bIsCorePointer = false
-        elseif bIsCorePointer then
-            local out = _extractInfoFromXinputLine(line)
-            if _isValidInput(out.name, identifier) then
-                table.insert(result, out)
+        local bIsCorePointer = false
+        local result = {}
+
+
+        local weak = {}
+        setmetatable(result, weak)
+        weak.__mode = "k"
+
+        for _, line in ipairs(xinput) do
+            if string.find(line, "Virtual core pointer") then
+                bIsCorePointer = true
+            elseif string.find(line, "Virtual core keyboard") then
+                bIsCorePointer = false
+            elseif bIsCorePointer then
+                local out = _extractInfoFromXinputLine(line)
+                if _isValidInput(out.name, identifier) then
+                    table.insert(result, out)
+                end
             end
         end
-    end
 
-    return result
+        if callback then
+            callback(result)
+        end
+    end)
 end
 
 --- Set the acceleration of a specific input device through xinput
@@ -138,7 +146,7 @@ local function setAcceleration(id, speed)
 
     local cmd = string.format("xinput set-prop %d 'libinput Accel Speed' %.1f", id, speed)
     print("Setting mouse acceleration speed: " .. cmd)
-    execute(cmd)
+    awful.spawn(cmd, false)
 
     signals.emit_mouse_acceleration(
         {
@@ -171,7 +179,7 @@ local function setMouseSpeed(id, speed)
     local cmd =
         string.format("xinput set-prop %d 'Coordinate Transformation Matrix' %.1f 0 0 0 %.1f 0 0 0 1", id, speed, speed)
     print("Setting mouse speed: " .. cmd)
-    execute(cmd)
+    awful.spawn(cmd, false)
 
     signals.emit_mouse_speed(
         {
@@ -202,7 +210,7 @@ local function setNaturalScrolling(id, bIsNaturalScrolling)
 
     local cmd = string.format("xinput set-prop %d 'libinput Natural Scrolling Enabled' %d", id, naturalScrolling)
     print("Setting mouse natural scrolling: " .. cmd)
-    execute(cmd)
+    awful.spawn(cmd, false)
 
     signals.emit_mouse_natural_scrolling(
         {

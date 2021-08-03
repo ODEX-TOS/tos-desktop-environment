@@ -74,6 +74,8 @@ keys = {}
 
 awful = require("tests.tde.mock.awful")
 
+require("tde.lib-tde.lib-lua.strace")
+
 -- some generic counter for tables to make sure the user didn't forget to add a unit test
 -- it is a simple way to force people to test
 function tablelength(T)

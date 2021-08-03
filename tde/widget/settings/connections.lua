@@ -53,6 +53,12 @@ local active_text = ""
 local static_connections = {}
 local password_fields = {}
 
+local weak = {}
+weak.__mode = "k"
+setmetatable(static_connections, weak)
+setmetatable(password_fields, weak)
+
+
 local scrollbox_body
 
 local refresh = function()
@@ -406,6 +412,8 @@ return function()
 
   refresh = function()
     password_fields = {}
+    setmetatable(password_fields, weak)
+
     local interface = file.string("/tmp/interface.txt")
 
     if scrollbox_body then
