@@ -22,115 +22,146 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local top_panel = require("layout.top-panel")
-
-local signals = require("lib-tde.signals")
-
+local top_panel = require('layout.top-panel')
+local control_center = require('layout.control-center')
+local info_center = require('layout.info-center')
 local hide = require("lib-widget.auto_hide")
+
+local bottom_panel = require('layout.bottom-panel')
+local left_panel = require('layout.left-panel')
+local right_panel = require('layout.right-panel')
+
+
+local signals = require('lib-tde.signals')
 
 local topBarDraw = general["top_bar_draw"] or "all"
 local tagBarDraw = general["tag_bar_draw"] or "main"
 local anchorTag = general["tag_bar_anchor"] or "bottom"
 
 local function anchor(s)
-  if anchorTag == "bottom" then
-    -- Create the bottom bar
-    s.bottom_panel = hide(require("layout.bottom-panel")(s))
-  elseif anchorTag == "right" then
-    s.bottom_panel = hide(require("layout.right-panel")(s))
-  else
-    s.bottom_panel = hide(require("layout.left-panel")(s, topBarDraw == "none"))
-  end
+	if tagBarDraw == "none" then
+		return
+	end
+
+	if tagBarDraw == "main" and s.index ~= 1 then
+		return
+	end
+
+	if anchorTag == "bottom" then
+	  -- Create the bottom bar
+	  s.bottom_panel = hide(bottom_panel(s))
+	elseif anchorTag == "right" then
+	  s.bottom_panel = hide(right_panel(s))
+	else
+	  s.bottom_panel = hide(left_panel(s, topBarDraw == "none"))
+	end
 end
 
--- Create a wibox for each screen and add it
-awful.screen.connect_for_each_screen(
-  function(s)
-    if topBarDraw == "all" then
-      -- Create the Top bar
-      s.top_panel = hide(top_panel(s, false, false))
-    elseif topBarDraw == "main" and s.index == 1 then
-      -- Create the Top bar
-      s.top_panel = hide(top_panel(s, false, false))
-    else
-      -- don't draw anything but render the left_panel
-      s.top_panel = hide(top_panel(s, false, true))
-    end
+local function panel(s)
+	if topBarDraw == "none" then
+		return
+	end
 
-    if tagBarDraw == "all" then
-      anchor(s)
-    elseif tagBarDraw == "main" and s.index == 1 then
-      anchor(s)
-    end
-  end
-)
+	if topBarDraw == "main" and s.index ~= 1 then
+		return
+	end
 
-signals.connect_anchor_changed(function (new_anchor)
-  print("Bottom panel Anchor changed")
-  if type(new_anchor) ~= "string" then
-    return
-  end
-  general["tag_bar_anchor"] = new_anchor
-  anchorTag = new_anchor
+	s.top_panel = hide(top_panel(s))
+end
 
-  for s in screen do
-    -- disable the old widgets
-    if s.bottom_panel.auto_hider ~= nil then
-      s.bottom_panel.auto_hider.remove()
-    end
-    if s.bottom_panel ~= nil then
-      s.bottom_panel.visible = false
-      s.bottom_panel = nil
-    end
+signals.connect_anchor_changed(function(_anchor)
+	-- we don't need to recreate the wiboxes
+	if _anchor == anchorTag then
+		return
+	end
 
-    if tagBarDraw == "all" then
-      anchor(s)
-    elseif tagBarDraw == "main" and s.index == 1 then
-      anchor(s)
-    end
+	anchorTag = _anchor or "bottom"
 
-  end
+	for s in screen do
+		if s.bottom_panel and s.bottom_panel.auto_hider then
+			s.bottom_panel.auto_hider.remove()
+			s.bottom_panel.auto_hider = nil
+		end
+		s.bottom_panel.visible = false
+		s.bottom_panel = nil
+		collectgarbage("collect")
+		anchor(s)
+	end
 end)
 
+-- Create a wibox panel for each screen and add it
+screen.connect_signal(
+	'request::desktop_decoration',
+		function(s)
+		s.control_center = control_center(s)
+		s.info_center = info_center(s)
+		s.control_center_show_again = false
+		s.info_center_show_again = false
+
+		panel(s)
+
+		anchor(s)
+	end
+)
+
 -- Hide bars when app go fullscreen
-local function updateBarsVisibility()
-  for s in screen do
-    if s.selected_tag then
-      local fullscreen = s.selected_tag.fullscreenMode
-      -- Order matter here for shadow
-      if s.top_panel then
-        s.top_panel.visible = not fullscreen
-      end
-      if s.bottom_panel then
-        s.bottom_panel.visible = not fullscreen
-      end
-    end
-  end
+local function update_bars_visibility()
+	for s in screen do
+		if s.selected_tag then
+			local fullscreen = s.selected_tag.fullscreen_mode
+			-- Order matter here for shadow
+			if s.top_panel ~= nil then
+				s.top_panel.visible = not fullscreen
+			end
+
+			if s.bottom_panel ~= nil then
+				s.bottom_panel.visible = not fullscreen
+			end
+			if s.control_center then
+				if fullscreen and s.control_center.visible then
+					s.control_center:toggle()
+					s.control_center_show_again = true
+				elseif not fullscreen and not s.control_center.visible and s.control_center_show_again then
+					s.control_center:toggle()
+					s.control_center_show_again = false
+				end
+			end
+			if s.info_center then
+				if fullscreen and s.info_center.visible then
+					s.info_center:toggle()
+					s.info_center_show_again = true
+				elseif not fullscreen and not s.info_center.visible and s.info_center_show_again then
+					s.info_center:toggle()
+					s.info_center_show_again = false
+				end
+			end
+		end
+	end
 end
 
-_G.tag.connect_signal(
-  "property::selected",
-  function(_)
-    updateBarsVisibility()
-  end
+tag.connect_signal(
+	'property::selected',
+	function(_)
+		update_bars_visibility()
+	end
 )
 
-_G.client.connect_signal(
-  "property::fullscreen",
-  function(c)
-    if c.first_tag then
-      c.first_tag.fullscreenMode = c.fullscreen
-    end
-    updateBarsVisibility()
-  end
+client.connect_signal(
+	'property::fullscreen',
+	function(c)
+		if c.first_tag then
+			c.first_tag.fullscreen_mode = c.fullscreen
+		end
+		update_bars_visibility()
+	end
 )
 
-_G.client.connect_signal(
-  "unmanage",
-  function(c)
-    if c.fullscreen then
-      c.screen.selected_tag.fullscreenMode = false
-      updateBarsVisibility()
-    end
-  end
+client.connect_signal(
+	'unmanage',
+	function(c)
+		if c.fullscreen then
+			c.screen.selected_tag.fullscreen_mode = false
+			update_bars_visibility()
+		end
+	end
 )

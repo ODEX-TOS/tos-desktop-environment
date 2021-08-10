@@ -610,6 +610,7 @@ return function()
 
   hub.close = function()
     bIsDragging = false
+    scrn = screen.primary
     if root.elements.settings_views[INDEX].view.stop_view then
       root.elements.settings_views[INDEX].view.stop_view()
     end

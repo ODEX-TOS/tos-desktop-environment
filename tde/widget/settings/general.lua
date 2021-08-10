@@ -279,7 +279,19 @@ return function()
       general["draw_mode"] == "fast",
       "draw_mode",
       "fast",
-      "none"
+      "none",
+      function (checked)
+        -- save the state
+        local configOption = "none"
+        if checked then
+          configOption = "fast"
+        end
+        configWriter.update_entry(configFile, "draw_mode", configOption)
+
+        general["draw_mode"] = configOption
+
+        signals.emit_titlebar_redraw(checked)
+      end
     ),
     create_checkbox(
       i18n.translate("Screen timeout"),

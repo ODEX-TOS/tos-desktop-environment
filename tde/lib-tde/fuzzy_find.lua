@@ -101,10 +101,15 @@ end
 local function escape_magic(s)
     return (s:gsub('[%^%$%(%)%%%.%[%]%*%+%-%?]','%%%1'))
   end
--- count the amount of matches
+-- count the amount of times a match occurs in a string
 local function count_matches(text, match)
     local _, count = string.gsub(text, escape_magic(match), match)
     return count
+end
+
+local function begin_location(text, match)
+    local start,_,_ = string.find(text, escape_magic(match))
+    return start or #text
 end
 
 --- Generate a score for how well the text matches the search query
@@ -114,7 +119,7 @@ end
 -- @tparam[opt] number max_permutation_length The maximum length of a permuted substring of the search string (Used to compute the score)
 -- @tparam[opt] number max_permutation_entries The maximum amount to calculate the permuted search string in
 -- @treturn number The score assigned to the fuzzy search
--- @staticfct fuzzy_score
+-- @staticfct score
 -- @usage -- This true
 -- lib-tde.fuzzy_find.score("/etc", "/etc/passwd") -- returns 7.63636 (the higher the better)
 -- lib-tde.fuzzy_find.score("/etc/passwd", "/etc/passwd") -- returns 290 (the higher the better)
@@ -122,6 +127,10 @@ local function fuzzy_score(search, text, max_permutation_length, max_permutation
     local score = 0
     max_permutation_length = max_permutation_length or 20
     max_permutation_entries = max_permutation_entries or 1000
+
+    if search == "" or search == nil or text == "" or text == nil then
+        return score
+    end
 
     local splitted_search = {}
     for letter in search:gmatch(".") do table.insert(splitted_search, letter) end
@@ -133,7 +142,11 @@ local function fuzzy_score(search, text, max_permutation_length, max_permutation
     local permutations = create_permutations(splitted_search, max_permutation_length, max_permutation_entries)
 
     for _, permutation in ipairs(permutations) do
-        score = score + (count_matches(text, permutation) * #permutation)
+        local permutation_count = (count_matches(text, permutation) * #permutation)
+        local index_delta = #text - begin_location(text, permutation)
+
+        score = score + permutation_count
+        score = score + index_delta
     end
 
     -- now we reduce the score by the length of the search query / length of the text

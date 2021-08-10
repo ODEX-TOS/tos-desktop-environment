@@ -32,10 +32,6 @@ local theme = require("theme.icons.dark-light")
 local icon = require("theme.icons").warning
 local signals = require("lib-tde.signals")
 
--- acpi sample outputs
--- Battery 0: Discharging, 75%, 01:51:38 remaining
--- Battery 0: Charging, 53%, 00:57:43 until charged
-
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/package-updater/icons/"
 local updateAvailable = false
 local numOfUpdatesAvailable

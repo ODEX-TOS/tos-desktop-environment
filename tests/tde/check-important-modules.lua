@@ -46,10 +46,6 @@ function Test_configuration_mod_key_tde_layout_init_lua()
     assert(exists("tde/layout/init.lua"), "Check that tde/layout/init.lua exists")
 end
 
-function Test_configuration_mod_key_tde_layout_right_panel_action_bar_lua()
-    assert(exists("tde/layout/right-panel/action-bar.lua"), "Check that tde/layout/right-panel/action-bar.lua exists")
-end
-
 function Test_configuration_mod_key_tde_layout_right_panel_init_lua()
     assert(exists("tde/layout/right-panel/init.lua"), "Check that tde/layout/right-panel/init.lua exists")
 end
@@ -143,20 +139,9 @@ function Test_configuration_mod_key_tde_module_auto_start_lua()
 end
 
 function Test_configuration_mod_key_tde_module_titlebar_init_lua()
-    assert(exists("tde/module/titlebar/init.lua"), "Check that tde/module/titlebar/init.lua exists")
+    assert(exists("tde/module/titlebar.lua"), "Check that tde/module/titlebar.lua exists")
 end
 
-function Test_configuration_mod_key_tde_module_titlebar_color_lua()
-    assert(exists("tde/module/titlebar/colors.lua"), "Check that tde/module/titlebar/colors.lua exists")
-end
-
-function Test_configuration_mod_key_tde_module_titlebar_shape_lua()
-    assert(exists("tde/module/titlebar/shapes.lua"), "Check that tde/module/titlebar/shapes.lua exists")
-end
-
-function Test_configuration_mod_key_tde_module_titlebar_table_lua()
-    assert(exists("tde/module/titlebar/table.lua"), "Check that tde/module/titlebar/table.lua exists")
-end
 
 function Test_configuration_mod_key_tde_module_screen_changed()
     assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/screen_changed.lua exists")
@@ -205,31 +190,6 @@ function Test_configuration_mod_key_tde_theme_icons_dark_light_lua()
     assert(exists("tde/theme/icons/dark-light.lua"), "Check that tde/theme/icons/dark-light.lua exists")
 end
 
-function Test_configuration_mod_key_tde_widget_control_center_init_lua()
-    assert(exists("tde/widget/control-center/init.lua"), "Check that tde/widget/control-center/init.lua exists")
-end
-
-function Test_configuration_mod_key_tde_widget_control_center_dashboard_quick_settings_lua()
-    assert(
-        exists("tde/widget/control-center/dashboard/quick-settings.lua"),
-        "Check that tde/widget/control-center/dashboard/quick-settings.lua exists"
-    )
-end
-
-function Test_configuration_mod_key_tde_widget_control_center_dashboard_hardware_monitor_lua()
-    assert(
-        exists("tde/widget/control-center/dashboard/hardware-monitor.lua"),
-        "Check that tde/widget/control-center/dashboard/hardware-monitor.lua exists"
-    )
-end
-
-function Test_configuration_mod_key_tde_widget_control_center_dashboard_action_center_lua()
-    assert(
-        exists("tde/widget/control-center/dashboard/action-center.lua"),
-        "Check that tde/widget/control-center/dashboard/action-center.lua exists"
-    )
-end
-
 function Test_configuration_mod_key_tde_widget_material_clickable_container_lua()
     assert(
         exists("tde/widget/material/clickable-container.lua"),
@@ -253,30 +213,6 @@ function Test_configuration_mod_key_tde_widget_material_icon_button_lua()
     assert(exists("tde/widget/material/icon-button.lua"), "Check that tde/widget/material/icon-button.lua exists")
 end
 
-function Test_configuration_mod_key_tde_widget_action_center_init_lua()
-    assert(exists("tde/widget/action-center/init.lua"), "Check that tde/widget/action-center/init.lua exists")
-end
-
-function Test_configuration_mod_key_tde_widget_notification_center_panel_rules_lua()
-    assert(
-        exists("tde/widget/notification-center/panel-rules.lua"),
-        "Check that tde/widget/notification-center/panel-rules.lua exists"
-    )
-end
-
-function Test_configuration_mod_key_tde_widget_notification_center_init_lua()
-    assert(
-        exists("tde/widget/notification-center/init.lua"),
-        "Check that tde/widget/notification-center/init.lua exists"
-    )
-end
-
-function Test_configuration_mod_key_tde_widget_notification_center_right_panel_lua()
-    assert(
-        exists("tde/widget/notification-center/right-panel.lua"),
-        "Check that tde/widget/notification-center/right-panel.lua exists"
-    )
-end
 
 function Test_configuration_mod_key_tde_widget_about_init_lua()
     assert(exists("tde/widget/about/init.lua"), "Check that tde/widget/about/init.lua exists")
@@ -392,11 +328,6 @@ end
 
 function Test_module_init()
     local file = "tde/module/init.lua"
-    assert(exists(file), "Check that " .. file .. " exists")
-end
-
-function Test_module_lazy_load()
-    local file = "tde/module/lazy_load_boot.lua"
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
@@ -585,11 +516,6 @@ function Test_memory_management()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
-function Test_tde_reloader()
-    local file = "tde/module/tde-reloader.lua"
-    assert(exists(file), "Check that " .. file .. " exists")
-end
-
 function Test_fuzzy_find()
     local file = "tde/lib-tde/fuzzy_find.lua"
     assert(exists(file), "Check that " .. file .. " exists")
@@ -658,7 +584,7 @@ end
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 117
+    local amount = 114
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

@@ -274,8 +274,13 @@ function Test_theme_icon_firewall_large()
 end
 
 
+function Test_theme_icon_dir()
+    assert(file_exists(icons.dir), "Check that the dir icon exists")
+end
+
+
 function Test_that_all_icons_are_tested()
-    local amount = 62
+    local amount = 63
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

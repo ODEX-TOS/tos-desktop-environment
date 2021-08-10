@@ -81,7 +81,8 @@ read_globals = {
     "clear_desktop_selection",
     "wibox",
     "rawlen",
-    "get_completion"
+    "get_completion",
+    "utf8"
 }
 
 -- screen may not be read-only, because newer luacheck versions complain about

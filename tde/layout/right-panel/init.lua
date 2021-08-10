@@ -50,16 +50,6 @@ local bottom_panel = function(s)
     end
   )
 
-  screen.connect_signal(
-    "removed",
-    function(removed)
-      if panel.screen == removed then
-        panel.visible = false
-        panel = nil
-      end
-    end
-  )
-
   -- this is called when we need to update the screen
   signals.connect_refresh_screen(
     function()

@@ -22,35 +22,52 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-require("lib-tde.luapath")
-require("lib-tde.logger")
-require("strace")
 
-print("Booting up...")
+local gears = require('gears')
+local beautiful = require('beautiful')
+awful = require('awful')
+
+require("lib-tde.luapath")
+require('awful.autofocus')
+
+awful.util.shell = 'sh'
+
 
 require("global_var")
-
-require("awful.autofocus")
-
--- We load in the notifications before loading in the plugins, this is because if an error occurred during plugin loading it will be displayed correctly
-require("module.notifications")
-
-require("module.titlebar")()
-
-require("module.backdrop")
-
--- restore the last state
 require("module.state")
 
--- Layout
-require("layout")
 
-require("module")
+require("collision")()
+require('layout')
 
--- Setup all configurations
-require("configuration.client")
-require("configuration.tags")
-_G.root.keys(require("configuration.keys.global"))
 
-require("module.bootup_configuration")
-require("module.lazy_load_boot")
+require('configuration.client')
+require('configuration.tags')
+root.keys(require('configuration.keys.global'))
+
+require('module')
+
+screen.connect_signal(
+	'request::wallpaper',
+	function(s)
+		-- If wallpaper is a function, call it with the screen
+		if beautiful.wallpaper then
+			if type(beautiful.wallpaper) == 'string' then
+
+				-- Check if beautiful.wallpaper is color/image
+				if beautiful.wallpaper:sub(1, #'#') == '#' then
+					-- If beautiful.wallpaper is color
+					gears.wallpaper.set(beautiful.wallpaper)
+
+				elseif beautiful.wallpaper:sub(1, #'/') == '/' then
+					-- If beautiful.wallpaper is path/image
+					gears.wallpaper.maximized(beautiful.wallpaper, s)
+				end
+			else
+				beautiful.wallpaper(s)
+			end
+		end
+	end
+)
+
+require('module.version_update_news')

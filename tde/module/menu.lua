@@ -67,18 +67,28 @@ local myawesomemenu = {
 	}
 }
 
--- Screenshot menu
-local screenshot = {
-	{
-		i18n.translate("Full"),
-		function()
+
+local mymainmenu
+
+local function gen_menu()
+	local freedesktop = require("freedesktop")
+	local menubar = require("menubar")
+
+	local photo = menubar.utils.lookup_icon("camera-photo")
+
+	-- Screenshot menu
+	local screenshot = {
+		{
+			i18n.translate("Full"),
+			function()
 			awful.spawn.easy_async_with_shell(
 				apps.bins().full_screenshot,
 				function(out)
 					print("Full screenshot\n" .. out)
 				end
 			)
-		end
+		end,
+		photo
 	},
 	{
 		i18n.translate("Area"),
@@ -89,16 +99,11 @@ local screenshot = {
 					print("Area screenshot\n" .. out)
 				end
 			)
-		end
+		end,
+		photo
 	}
 }
 
-
-local mymainmenu
-
-local function gen_menu()
-	local freedesktop = require("freedesktop")
-	local menubar = require("menubar")
 
 	mymainmenu = freedesktop.menu.build(
 		{
@@ -113,7 +118,7 @@ local function gen_menu()
 			},
 			after = {
 				{"TDE", myawesomemenu, icons.logo},
-				{i18n.translate("Screenshot"), screenshot},
+				{i18n.translate("Screenshot"), screenshot, photo},
 				{
 					i18n.translate("End Session"),
 					function()

@@ -27,6 +27,8 @@ local client_buttons = require("configuration.client.buttons")
 local config = tags
 local config_float = floating
 
+local ruled = require("ruled")
+
 local function getItem(item)
   return config[item] or nil
 end
@@ -81,10 +83,10 @@ end
 
 local floater = getFloatingWindow()
 local no_titlebar = getTitlebarWindow()
--- Rules
-awful.rules.rules = {
-  -- All clients will match this rule.
-  {
+
+ruled.client.connect_signal("request::rules", function()
+
+  ruled.client.append_rule {
     rule = {},
     except_any = {
       instance = {
@@ -114,51 +116,52 @@ awful.rules.rules = {
       maximized_vertical = false,
       titlebars_enabled = false
     }
-  },
-  {
+  }
+
+  -- All clients will match this rule.
+  ruled.client.append_rule {
     rule_any = {name = {"QuakeTerminal"}},
     properties = {skip_decoration = true, titlebars_enabled = false}
-  },
+  }
   -- Terminals
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(2)
     },
     properties = {
       tag = "2",
     }
-  },
+  }
   -- Browsers
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(1)
     },
     properties = {tag = "1"}
-  },
+  }
   -- Editors
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(3)
     },
     properties = {tag = "3"}
-  },
+  }
   -- File Managers
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(4)
     },
     properties = {tag = "4"}
-  },
+  }
   -- Multimedia
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(5)
     },
     properties = {tag = "5"}
-  },
+  }
   -- Games
-
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(6)
       --s  instance = { 'SuperTuxKart' }
@@ -167,16 +170,16 @@ awful.rules.rules = {
       screen = 1,
       tag = "6",
     }
-  },
+  }
   -- Multimedia Editing
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = getApplicationsPerTag(7)
     },
     properties = {tag = "7"}
-  },
+  }
   -- Custom
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = {
         "feh",
@@ -190,9 +193,9 @@ awful.rules.rules = {
       placement = awful.placement.centered,
       ontop = true
     }
-  },
+  }
   -- Dialogs
-  {
+  ruled.client.append_rule {
     rule_any = {type = {"dialog"}, class = {"Wicd-client.py", "calendar.google.com"}},
     except_any = {
       class = {
@@ -207,10 +210,10 @@ awful.rules.rules = {
       drawBackdrop = false, -- TRUE if you want to add blur backdrop
       skip_decoration = true
     }
-  },
+  }
   -- Instances
   -- Network Manager Editor
-  {
+  ruled.client.append_rule {
     rule = {
       instance = "nm-connection-editor"
     },
@@ -224,9 +227,9 @@ awful.rules.rules = {
       keys = client_keys,
       buttons = client_buttons
     }
-  },
+  }
   -- For nemo progress bar when copying or moving
-  {
+  ruled.client.append_rule {
     rule = {
       instance = "file_progress"
     },
@@ -240,10 +243,10 @@ awful.rules.rules = {
       keys = client_keys,
       buttons = client_buttons
     }
-  },
+  }
   -- General settings for applications who should be floating.
   -- TODO: add a config file where users can add custom applications as floating
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = floater
     },
@@ -254,8 +257,8 @@ awful.rules.rules = {
       ontop = false,
       titlebars_enabled = true
     }
-  },
-  {
+  }
+  ruled.client.append_rule {
     rule_any = {
       class = {"Xephyr"}
     },
@@ -265,8 +268,8 @@ awful.rules.rules = {
       placement = awful.placement.centered,
       ontop = true
     }
-  },
-  {
+  }
+  ruled.client.append_rule {
     rule_any = {
       class = {"Toolkit"},
       name = {"Picture-in-Picture", "Picture in picture"}
@@ -278,16 +281,16 @@ awful.rules.rules = {
       ontop = true,
       sticky = true
     }
-  },
-  {
+  }
+  ruled.client.append_rule {
     rule_any = {
       class = no_titlebar,
       properties = {
         titlebars_enabled = false
       }
     }
-  },
-  {
+  }
+  ruled.client.append_rule {
     rule_any = {
       class = {"Onboard", "onboard"},
       properties = {
@@ -299,10 +302,10 @@ awful.rules.rules = {
         sticky = true
       }
     }
-  },
+  }
   -- Polkit
   -- TODO: Detect the polkit type automatically
-  {
+  ruled.client.append_rule {
     rule_any = {class = {"lxpolkit", "Lxpolkit"}},
     except_any = {type = {"dialog"}},
     properties = {
@@ -312,9 +315,9 @@ awful.rules.rules = {
       ontop = true,
       drawBackdrop = true
     }
-  },
+  }
   -- Dialog with blurred background
-  {
+  ruled.client.append_rule {
     rule_any = {
       class = {
         "Pinentry-gtk",
@@ -328,8 +331,8 @@ awful.rules.rules = {
       ontop = true,
       drawBackdrop = true
     }
-  },
-  {
+  }
+  ruled.client.append_rule {
     rule_any = {
       class = {
         "Pinentry-gtk-2",
@@ -343,26 +346,9 @@ awful.rules.rules = {
       drawBackdrop = true, -- TRUE if you want to add blur backdrop
       skip_decoration = false
     }
-  },
-  {
-    {
-      rule = {class = "Xfdesktop"},
-      properties = {
-        sticky = true,
-        skip_taskbar = true,
-        border_width = 0,
-        floating = true,
-        below = true,
-        fullscreen = true,
-        maximized = true,
-        titlebars_enabled = false
-        --keys = {}
-        --tag = '7'
-      }
-    }
-  },
+  }
   -- For Firefox Popup when you install extension and others
-  {
+  ruled.client.append_rule {
     rule_any = {
       role = "Popup",
       class = {
@@ -385,4 +371,5 @@ awful.rules.rules = {
       buttons = client_buttons
     }
   }
-}
+end)
+

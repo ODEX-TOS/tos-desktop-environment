@@ -88,7 +88,7 @@ return function(screen, action_bar_width)
     {
       -- Right widgets
       layout = wibox.layout.fixed.horizontal,
-      LayoutBox()
+      LayoutBox(screen)
     }
   }
 end

@@ -45,6 +45,7 @@
 local wibox = require("wibox")
 local rounded = require("lib-tde.widget.rounded")
 local theme = require("theme.icons.dark-light")
+local dpi = require("beautiful.xresources").apply_dpi
 
 --- Create a slider widget
 -- @tparam string picture The picture to set in the profilebox
@@ -58,6 +59,9 @@ local theme = require("theme.icons.dark-light")
 --     print("Clicked with button: " .. button)
 -- end)
 return function(picture, diameter, clicked_callback, tooltip_callback)
+    picture = picture or "/etc/xdg/tde/widget/user-profile/icons/user.svg"
+    diameter = diameter or dpi(30)
+
     local widget =
         wibox.widget {
         widget = wibox.widget.imagebox,

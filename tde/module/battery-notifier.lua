@@ -22,8 +22,6 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- Dependencies:
--- acpid, upower, acpi_listens
 
 local naughty = require("naughty")
 

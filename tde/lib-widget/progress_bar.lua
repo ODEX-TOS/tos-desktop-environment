@@ -89,7 +89,7 @@ end
 
 function mat_slider:layout(_, width, height)
   local layout = {}
-  local size_field = 32
+  local size_field = 16
   local calc_height = height - dpi(size_field)
   if calc_height < 0 then
     calc_height = 0

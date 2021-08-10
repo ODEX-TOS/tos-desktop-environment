@@ -2476,7 +2476,7 @@ end
 
 function TextOutput:startSuite()
     if self.verbosity > M.VERBOSITY_DEFAULT then
-        print("Started on " .. self.result.startDate)
+        io.stdout:write("Started on " .. self.result.startDate  .. '\n')
     end
 end
 
@@ -2513,16 +2513,16 @@ function TextOutput:endTest(node)
 end
 
 function TextOutput:displayOneFailedTest(index, fail)
-    print(index .. ") " .. fail.testName)
-    print(fail.msg)
-    print(fail.stackTrace)
-    print()
+    io.stdout:write(index .. ") " .. fail.testName .. '\n')
+    io.stdout:write(fail.msg .. '\n')
+    io.stdout:write(fail.stackTrace .. '\n')
+    io.stdout:write('\n')
 end
 
 function TextOutput:displayErroredTests()
     if #self.result.errorTests ~= 0 then
-        print("Tests with errors:")
-        print("------------------")
+        io.stdout:write("Tests with errors:\n")
+        io.stdout:write("------------------\n")
         for i, v in ipairs(self.result.errorTests) do
             self:displayOneFailedTest(i, v)
         end
@@ -2531,8 +2531,8 @@ end
 
 function TextOutput:displayFailedTests()
     if #self.result.failedTests ~= 0 then
-        print("Failed tests:")
-        print("-------------")
+        io.stdout:write("Failed tests:\n")
+        io.stdout:write("-------------\n")
         for i, v in ipairs(self.result.failedTests) do
             self:displayOneFailedTest(i, v)
         end
@@ -2541,15 +2541,15 @@ end
 
 function TextOutput:endSuite()
     if self.verbosity > M.VERBOSITY_DEFAULT then
-        print("=========================================================")
+        io.stdout:write("=========================================================\n")
     else
-        print()
+        io.stdout:write()
     end
     self:displayErroredTests()
     self:displayFailedTests()
-    print(M.LuaUnit.statusLine(self.result))
+    io.stdout:write(M.LuaUnit.statusLine(self.result))
     if self.result.notSuccessCount == 0 then
-        print("OK")
+        io.stdout:write("OK\n")
     end
 end
 

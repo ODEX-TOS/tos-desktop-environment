@@ -295,7 +295,6 @@ local function set_volume(value)
     else
         awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 100%", false)
     end
-    set_muted_state(false)
 end
 
 --- Get a list of all audio sinks back (A sink is an audio player such as headphones, speakers or monitors)

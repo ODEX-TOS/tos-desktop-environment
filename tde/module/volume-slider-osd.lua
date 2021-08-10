@@ -120,7 +120,7 @@ awful.screen.connect_for_each_screen(
         return
       end
 
-      if (not _G.menuopened) then
+      if (not fetch_scrn().control_center.visible) then
         -- don't perform the toggle off if it is already off
         if ((not bool) and (not volumeOverlay.visible)) then
           return

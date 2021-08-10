@@ -985,5 +985,26 @@ connections.connect_showed_news = function(func)
     awesome.connect_signal("TDE::update::news::showed", func)
 end
 
+--- Notify TDE components that the titlebar state should change
+-- @tparam bool bShouldDraw If we should draw the titlebar or not
+-- @staticfct emit_titlebar_redraw
+-- @usage
+-- lib-tde.signals.emit_titlebar_redraw()
+connections.emit_titlebar_redraw = function(bShouldDraw)
+    awesome.emit_signal("TDE::update::news::showed", bShouldDraw)
+end
+
+--- Trigger a callback function that the titlebar drawing changed
+-- @tparam function func The callback function that will be called when the titlebar state changed
+-- @staticfct connect_titlebar_redraw
+-- @usage
+-- lib-tde.signals.connect_titlebar_redraw(
+--    function (draw)
+--      print("Will we draw the titlebars: " .. draw)
+--    end)
+connections.connect_titlebar_redraw = function(func)
+    awesome.connect_signal("TDE::update::news::showed", func)
+end
+
 
 return connections

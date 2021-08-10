@@ -231,6 +231,8 @@ _G.root.prompt = function()
 
     promptPage.visible = true
 
+    local prev_text = ""
+
     awful.prompt.run{
         prompt = "<b>" .. i18n.translate("Search") .. "</b>: ",
         bg = beautiful.bg_modal,
@@ -251,6 +253,7 @@ _G.root.prompt = function()
         end,
         changed_callback = function(input_text)
             if not input_text or #input_text == 0 then return end
+            prev_text = input_text
             if prompt.text ~= previous_search then
               _results = delegator.get_completions(input_text)
               previous_search = prompt.text
@@ -296,6 +299,10 @@ _G.root.prompt = function()
             _selected_list_index = 0
 
             -- if the delegator returned a response then we display it back to the user
+            if type(response) == "function" then
+              response = tostring(response(prev_text))
+            end
+
             if type(response) == "string" and response ~= "" then
 
               _results = {

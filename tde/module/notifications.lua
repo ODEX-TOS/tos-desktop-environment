@@ -22,28 +22,25 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local gears = require("gears")
-local wibox = require("wibox")
-local awful = require("awful")
-local ruled = require("ruled")
-local naughty = require("naughty")
-local menubar = require("menubar")
-local beautiful = require("beautiful")
-local icons = require("theme.icons")
+local gears = require('gears')
+local wibox = require('wibox')
+local awful = require('awful')
+local ruled = require('ruled')
+local naughty = require('naughty')
+local menubar = require('menubar')
+local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
-local signals = require("lib-tde.signals")
-local clickable_container = require("widget.clickable-container")
-local queue = require("lib-tde.datastructure.queue")()
-
+local clickable_container = require('widget.clickable-container')
 
 -- Defaults
 naughty.config.defaults.ontop = true
 naughty.config.defaults.icon_size = dpi(32)
+naughty.config.padding = dpi(10)
 naughty.config.defaults.timeout = 5
-naughty.config.defaults.title = i18n.translate("System Notification")
+naughty.config.defaults.title = 'System Notification'
 naughty.config.defaults.margin = dpi(16)
 naughty.config.defaults.border_width = 0
-naughty.config.defaults.position = "top_left"
+naughty.config.defaults.position = 'top_right'
 naughty.config.defaults.shape = function(cr, w, h)
 	gears.shape.rounded_rect(cr, w, h, dpi(6))
 end
@@ -52,118 +49,86 @@ end
 naughty.config.padding = dpi(8)
 naughty.config.spacing = dpi(8)
 naughty.config.icon_dirs = {
-	"/usr/share/icons/Papirus-Dark",
-	"/usr/share/icons/Papirus/",
-	"/usr/share/icons/Tela",
-	"/usr/share/icons/Tela-blue-dark",
-	"/usr/share/icons/la-capitaine-icon-theme/",
-	"/usr/share/icons/gnome/",
-	"/usr/share/icons/hicolor/",
-	"/usr/share/pixmaps/"
+	'/usr/share/icons/Tela',
+	'/usr/share/icons/Tela-blue-dark',
+	'/usr/share/icons/Papirus/',
+	'/usr/share/icons/la-capitaine-icon-theme/',
+	'/usr/share/icons/gnome/',
+	'/usr/share/icons/hicolor/',
+	'/usr/share/pixmaps/'
 }
-naughty.config.icon_formats = {"svg", "png", "jpg", "gif"}
+naughty.config.icon_formats = { 'svg', 'png', 'jpg', 'gif' }
 
-local theme = beautiful.primary
-
-signals.connect_primary_theme_changed(
-	function(new_theme)
-		theme = new_theme
-	end
-)
 
 -- Presets / rules
 
 ruled.notification.connect_signal(
-	"request::rules",
+	'request::rules',
 	function()
-		-- Critical notifications
+
+		-- Critical notifs
 		ruled.notification.append_rule {
-			rule = {urgency = "critical"},
+			rule       = { urgency = 'critical' },
 			properties = {
-				font = "SF Pro Text Regular 10",
-				bg = "#ff0000",
-				fg = "#ffffff",
-				margin = dpi(16),
-				position = "top_right",
-				implicit_timeout = 10
+				font        		= 'Inter Bold 10',
+				bg 					= '#ff0000',
+				fg 					= '#ffffff',
+				margin 				= dpi(16),
+				position 			= 'top_right',
+				implicit_timeout	= 0
 			}
 		}
 
-		-- Normal notifications
+		-- Normal notifs
 		ruled.notification.append_rule {
-			rule = {urgency = "normal"},
+			rule       = { urgency = 'normal' },
 			properties = {
-				font = "SF Pro Text Regular 10",
-				bg = beautiful.transparent,
-				fg = beautiful.fg_normal,
-				margin = dpi(16),
-				position = "top_right",
-				implicit_timeout = 5
+				font        		= 'Inter Regular 10',
+				bg      			= beautiful.transparent,
+				fg 					= beautiful.fg_normal,
+				margin 				= dpi(16),
+				position 			= 'top_right',
+				implicit_timeout 	= 5
 			}
 		}
 
-		-- Low notifications
+		-- Low notifs
 		ruled.notification.append_rule {
-			rule = {urgency = "low"},
+			rule       = { urgency = 'low' },
 			properties = {
-				font = "SF Pro Text Regular 10",
-				bg = beautiful.transparent,
-				fg = beautiful.fg_normal,
-				margin = dpi(16),
-				position = "top_right",
-				implicit_timeout = 5
+				font        		= 'Inter Regular 10',
+				bg     				= beautiful.transparent,
+				fg 					= beautiful.fg_normal,
+				margin 				= dpi(16),
+				position 			= 'top_right',
+				implicit_timeout	= 5
 			}
 		}
 	end
-)
+	)
 
 -- Error handling
 naughty.connect_signal(
-	"request::display_error",
+	'request::display_error',
 	function(message, startup)
 		naughty.notification {
-			urgency = "critical",
-			title = i18n.translate("Oops, an error happened") .. (startup and " " .. i18n.translate("during startup!") or "!"),
+			urgency = 'critical',
+			title   = 'Oops, an error happened'..(startup and ' during startup!' or '!'),
 			message = message,
-			app_name = i18n.translate("System Notification"),
-			icon = icons.logo
-		}
-	end
-)
-
-awesome.connect_signal(
-	"startup",
-	function()
-		gears.timer {
-			single_shot = true,
-			autostart = true,
-			timeout = 5,
-			callback = function()
-				print("TDE startup cycle finished, playback queued items")
-				while queue.next() ~= nil do
-					local n = queue.pop()
-					naughty.notification {
-						urgency = n.urgency or "normal",
-						title = n.title or "",
-						message = n.message or "",
-						app_name = n.app_name or "",
-						icon = n.icon or "dialog-warning"
-					}
-				end
-			end
+			app_name = 'System Notification',
+			icon = beautiful.awesome_icon
 		}
 	end
 )
 
 -- XDG icon lookup
 naughty.connect_signal(
-	"request::icon",
+	'request::icon',
 	function(n, context, hints)
-		if context ~= "app_icon" then
-			return
-		end
+		if context ~= 'app_icon' then return end
 
-		local path = menubar.utils.lookup_icon(hints.app_icon) or menubar.utils.lookup_icon(hints.app_icon:lower())
+		local path = menubar.utils.lookup_icon(hints.app_icon) or
+		menubar.utils.lookup_icon(hints.app_icon:lower())
 
 		if path then
 			n.icon = path
@@ -173,70 +138,46 @@ naughty.connect_signal(
 
 -- Connect to naughty on display signal
 naughty.connect_signal(
-	"request::display",
+	'request::display',
 	function(n)
-		if _G.dont_disturb then
-			return
-		end
-		if screen.count() < 1 or awesome.startup then
-			print("Enqueueing: " .. n.title)
-			queue.push(n)
-			return
-		end
-		local screen = awful.screen.focused() or awful.screen.primary
-		if (screen == nil) then
-			print("Enqueueing: " .. n.title)
-			queue.push(n)
-			return
-		end
 
 		-- Actions Blueprint
-		local actions_template =
-			wibox.widget {
+		local actions_template = wibox.widget {
 			notification = n,
 			base_layout = wibox.widget {
-				spacing = dpi(0),
-				layout = wibox.layout.flex.horizontal
+				spacing        = dpi(0),
+				layout         = wibox.layout.flex.horizontal
 			},
 			widget_template = {
 				{
 					{
 						{
 							{
-								id = "text_role",
-								font = "SF Pro Text Regular 10",
+								id     = 'text_role',
+								font   = 'Inter Regular 10',
 								widget = wibox.widget.textbox
 							},
 							widget = wibox.container.place
 						},
 						widget = clickable_container
 					},
-					bg = beautiful.groups_bg,
-					shape = gears.shape.rounded_rect,
-					forced_height = dpi(30),
-					widget = wibox.container.background
+					bg                 = beautiful.groups_bg,
+					shape              = gears.shape.rounded_rect,
+					forced_height      = dpi(30),
+					widget             = wibox.container.background
 				},
 				margins = dpi(4),
-				widget = wibox.container.margin
+				widget  = wibox.container.margin
 			},
-			style = {underline_normal = false, underline_selected = true},
+			style = { underline_normal = false, underline_selected = true },
 			widget = naughty.list.actions
 		}
 
-		local _title = n.title
-		if _title == nil or _title == "" then
-			_title = n.app_name
-		end
-
-		if _title == nil or _title == "" then
-			_title = i18n.translate("System Notification")
-		end
-
-		-- Notification box Blueprint
+		-- Notifbox Blueprint
 		naughty.layout.box {
 			notification = n,
-			type = "notification",
-			screen = awful.screen.focused(),
+			type = 'notification',
+			screen = awful.screen.preferred(),
 			shape = gears.shape.rectangle,
 			widget_template = {
 				{
@@ -249,72 +190,80 @@ naughty.connect_signal(
 											{
 												{
 													{
-														text = _title,
-														font = "SF Pro Text Regular 10",
-														align = "center",
-														valign = "center",
+														markup = n.app_name or 'System Notification',
+														font = 'Inter Bold 10',
+														align = 'center',
+														valign = 'center',
 														widget = wibox.widget.textbox
+
 													},
 													margins = beautiful.notification_margin,
-													widget = wibox.container.margin
+													widget  = wibox.container.margin,
 												},
-												bg = theme.hue_900 .. beautiful.background_transparency,
-												widget = wibox.container.background
+												bg = beautiful.primary.hue_800 .. beautiful.background_transparency,
+												widget  = wibox.container.background,
 											},
 											{
 												{
 													{
-														resize_strategy = "center",
-														widget = naughty.widget.icon
+														resize_strategy = 'center',
+														widget = naughty.widget.icon,
 													},
 													margins = beautiful.notification_margin,
-													widget = wibox.container.margin
+													widget  = wibox.container.margin,
 												},
 												{
 													{
 														layout = wibox.layout.align.vertical,
-														expand = "inside",
+														expand = 'none',
 														nil,
 														{
-															align = "left",
-															widget = naughty.widget.message
+															{
+																align = 'left',
+																widget = naughty.widget.title
+															},
+															{
+																align = 'left',
+																widget = naughty.widget.message,
+															},
+															layout = wibox.layout.fixed.vertical
 														},
 														nil
 													},
 													margins = beautiful.notification_margin,
-													widget = wibox.container.margin
+													widget  = wibox.container.margin,
 												},
-												layout = wibox.layout.fixed.horizontal
+												layout = wibox.layout.fixed.horizontal,
 											},
 											fill_space = true,
 											spacing = beautiful.notification_margin,
-											layout = wibox.layout.fixed.vertical
+											layout  = wibox.layout.fixed.vertical,
 										},
 										-- Margin between the fake background
 										-- Set to 0 to preserve the 'titlebar' effect
 										margins = dpi(0),
-										widget = wibox.container.margin
+										widget  = wibox.container.margin,
 									},
 									bg = beautiful.transparent,
-									widget = wibox.container.background
+									widget  = wibox.container.background,
 								},
 								-- Actions
 								actions_template,
 								spacing = dpi(4),
-								layout = wibox.layout.fixed.vertical
+								layout  = wibox.layout.fixed.vertical,
 							},
-							bg = beautiful.transparent,
-							id = "background_role",
-							widget = naughty.container.background
+							bg     = beautiful.transparent,
+							id     = 'background_role',
+							widget = naughty.container.background,
 						},
-						strategy = "min",
-						width = dpi(250),
-						widget = wibox.container.constraint
+						strategy = 'min',
+						width    = dpi(250),
+						widget   = wibox.container.constraint,
 					},
-					strategy = "max",
-					height = dpi(250),
-					width = dpi(250),
-					widget = wibox.container.constraint
+					strategy = 'max',
+					height    = dpi(250),
+					width    = dpi(250),
+					widget   = wibox.container.constraint
 				},
 				bg = beautiful.background.hue_800 .. beautiful.background_transparency,
 				shape = gears.shape.rounded_rect,
@@ -322,11 +271,11 @@ naughty.connect_signal(
 			}
 		}
 
-		-- Destroy popups if dont_disturb mode is on
-		-- Or if the right_panel is visible
+		-- Destroy popups if dont_disturb_state mode is on
+		-- Or if the info_center is visible
 		local focused = awful.screen.focused()
-		if _G.dont_disturb or (focused.right_panel and focused.right_panel.visible) then
-			naughty.destroy_all_notifications()
+		if _G.save_state.do_not_disturb or (focused.info_center and focused.info_center.visible) then
+			naughty.destroy_all_notifications(nil, 1)
 		end
 	end
 )

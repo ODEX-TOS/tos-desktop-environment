@@ -56,6 +56,7 @@ local lu = LuaUnit.new()
 if not (os.getenv("RUNNER") == nil) then
     lu:setOutputType(os.getenv("RUNNER"), os.getenv("FILE"))
 else
-    lu:setOutputType("text")
+    lu:setOutputType("TEXT")
 end
+
 os.exit(lu:runSuite())

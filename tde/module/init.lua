@@ -22,32 +22,47 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- Init all modules
-require("module.settings")
+require('module.notifications')
+require('module.auto-start')
+require('module.exit-screen')
+require('module.quake-terminal')
+require('module.menu')
+require('module.titlebar')
+require('module.volume_manager')
+require('module.brightness-slider-osd')
+require('module.volume-slider-osd')
+require('module.info-gather')
+require('module.screen_changed')
+require('module.battery-notifier')
+require('module.prompt')
+require('module.settings')
+require('module.backdrop')
+require('module.menu')
+_G.switcher = require('module.application-switch')
 
-if IsreleaseMode then
-    require("module.auto-start")
-end
-
-require("module.exit-screen")
-require("module.quake-terminal")
-require("module.brightness-slider-osd")
-require("module.volume-slider-osd")
-require("module.plugin-module")
-require("module.volume_manager")
-_G.switcher = require("module.application-switch")
+require('module.dev-widget-update')
+require('module.plugin-module')
+require('module.bootup_configuration')
 
 -- Only activate the break timer if users what it
 -- The default implementation of TOS doesn't use it
+-- TODO: A signal should activate/deactivate it
 if general["break"] == "1" then
     require("module.break-timer")
 end
 
-require("module.battery-notifier")
-_G.collision = require("collision")()
+if not (general["disable_desktop"] == "1") then
+    if IsreleaseMode then
+        require("module.installer")
+    end
 
-require("module.info-gather")
+    require("module.desktop")
+end
 
-require("module.tde-reloader")
+if IsreleaseMode then
+    require("tutorial")
 
-require("module.version_update_news")
+    require("module.dev-widget-update")
+
+    require("module.lua-completion")
+end

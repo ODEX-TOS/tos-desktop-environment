@@ -161,6 +161,8 @@ theme.accent = loadtheme(theme.accent, config, "accent_")
 theme.background = loadtheme(theme.background, config, "background_")
 theme.text = color(config["text"]) or "#FFFFFF"
 
+theme.groups_radius = dpi(10)
+
 -- system stat charts in settings app
 theme.cpu_bar = color(config["cpu_bar"]) or "#f90273"
 theme.ram_bar = color(config["ram_bar"]) or "#017AFC"
@@ -216,7 +218,7 @@ local awesome_overrides = function(awesome_theme)
 
   awesome_theme.groups_title_bg = awesome_theme.bg_modal_title
   awesome_theme.groups_bg = awesome_theme.bg_modal
-  awesome_theme.groups_radius = dpi(9)
+  awesome_theme.groups_radius = dpi(10)
 
   -- Menu
 

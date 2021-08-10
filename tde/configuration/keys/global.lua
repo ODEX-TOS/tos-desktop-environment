@@ -32,8 +32,9 @@ local modkey = config.modKey
 local altkey = config.altKey
 local apps = require("configuration.apps")
 local xrandr = require("lib-tde.xrandr")
-local signals = require("lib-tde.signals")
 local volume = require("lib-tde.volume")
+
+local focused_screen = require("lib-tde.function.common").focused_screen
 
 -- returns true if we cannot create a screenshot
 local function send_notification_if_maim_missing(callback)
@@ -205,7 +206,9 @@ local globalKeys =
     config.configPanel,
     function()
       print("Showing action center")
-      _G.screen.primary.left_panel:toggle(true)
+      if focused_screen().control_center then
+        focused_screen().control_center:toggle()
+      end
     end,
     {description = i18n.translate("Open Control panel"), group = i18n.translate("Launcher")}
   ),
@@ -236,8 +239,8 @@ local globalKeys =
     config.notificationPanel,
     function()
       print("Toggeling right panel")
-      if _G.screen.primary.right_panel ~= nil then
-        _G.screen.primary.right_panel:toggle()
+      if focused_screen().info_center then
+        focused_screen().info_center:toggle()
       end
     end,
     {description = i18n.translate("Open Notification Center"), group = i18n.translate("Launcher")}
@@ -409,7 +412,6 @@ local globalKeys =
     function()
       print("Toggeling volume")
       volume.toggle_master()
-      signals.emit_volume_update()
     end,
     {description = i18n.translate("toggle mute"), group = i18n.translate(i18n.translate("hardware"))}
   ),
@@ -518,13 +520,15 @@ local globalKeys =
     config.printscreen,
     function()
       print("Taking a full screenshot")
-      if not send_notification_if_maim_missing() then
-        if general["window_screen_mode"] == "none" then
-          awful.spawn(apps.bins().full_blank_screenshot, false)
-        else
-          awful.spawn(apps.bins().full_screenshot, false)
+      send_notification_if_maim_missing(function (missing)
+        if not missing then
+          if general["window_screen_mode"] == "none" then
+            awful.spawn(apps.bins().full_blank_screenshot, false)
+          else
+            awful.spawn(apps.bins().full_screenshot, false)
+          end
         end
-      end
+      end)
     end,
     {description = i18n.translate("fullscreen screenshot"), group = i18n.translate("Utility")}
   ),

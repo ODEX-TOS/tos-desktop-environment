@@ -112,13 +112,7 @@ local tags = {
     master_count = getMasterCountPerTag(3),
     master_width_factor =  getMasterWidthPerTag(3)
   },
-  --
-  --[[ {
-    icon = icons.social,
-    type = 'social',
-    defaultApp = 'station',
-    screen = 1
-  },]] {
+  {
     icon = icon("system-file-manager") or icons.folder,
     type = "files",
     defaultApp = "thunar",

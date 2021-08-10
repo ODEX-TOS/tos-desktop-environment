@@ -485,8 +485,38 @@ function Test_connect_showed_news()
     assert(type(signals.connect_showed_news) == "function", "Make sure connect_showed_news is a signal and a function")
 end
 
+function Test_emit_volume_update()
+    assert(signals.emit_volume_update, "Make sure the signal emit_volume_update exists")
+    assert(type(signals.emit_volume_update) == "function", "Make sure emit_volume_update is a signal and a function")
+end
+
+function Test_connect_volume_update()
+    assert(signals.connect_volume_update, "Make sure the signal connect_volume_update exists")
+    assert(type(signals.connect_volume_update) == "function", "Make sure connect_volume_update is a signal and a function")
+end
+
+function Test_emit_volume_muted()
+    assert(signals.emit_volume_is_muted, "Make sure the signal emit_volume_is_muted exists")
+    assert(type(signals.emit_volume_is_muted) == "function", "Make sure emit_volume_is_muted is a signal and a function")
+end
+
+function Test_connect_volume_muted()
+    assert(signals.connect_volume_is_muted, "Make sure the signal connect_volume_is_muted exists")
+    assert(type(signals.connect_volume_is_muted) == "function", "Make sure connect_volume_is_muted is a signal and a function")
+end
+
+function Test_emit_volume_is_controlled_in_software()
+    assert(signals.emit_volume_is_controlled_in_software, "Make sure the signal emit_volume_is_controlled_in_software exists")
+    assert(type(signals.emit_volume_is_controlled_in_software) == "function", "Make sure emit_volume_is_controlled_in_software is a signal and a function")
+end
+
+function Test_connect_volume_is_controlled_in_software()
+    assert(signals.connect_volume_is_controlled_in_software, "Make sure the signal connect_volume_is_controlled_in_software exists")
+    assert(type(signals.connect_volume_is_controlled_in_software) == "function", "Make sure connect_volume_is_controlled_in_software is a signal and a function")
+end
+
 function Test_signals_api_unit_tested()
-    local amount = 89
+    local amount = 91
     local result = tablelength(signals)
     assert(
         result == amount,

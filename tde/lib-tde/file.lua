@@ -279,6 +279,10 @@ local function list_dir(str)
   if not (type(str) == "string") then
     return {}
   end
+
+  if string.sub(str, #str, #str) == "/" then
+    str = string.sub(str, 1, #str-1)
+  end
   -- use posix compliant checks
   local M = require("posix.dirent")
   local ok, files = pcall(M.dir, str)

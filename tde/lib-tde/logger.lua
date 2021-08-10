@@ -54,8 +54,6 @@
 
 local filehandle = require("lib-tde.file")
 local time = require("socket").gettime
--- store the old print variable into echo
-echo = print
 
 -- color coded log messages
 
@@ -76,12 +74,34 @@ local LOG_DEBUG = "\27[0;35m[ DEBUG "
 -- @param string
 local LOG_INFO = "\27[0;32m[ INFO "
 
+if _G.echo ~= nil then
+	-- this module was already been called
+	return {
+		warn = LOG_WARN,
+		error = LOG_ERROR,
+		debug = LOG_DEBUG,
+		info = LOG_INFO
+	}
+end
+
+-- store the old print variable into echo
+echo = print
+
+
 local dir = os.getenv("HOME") .. "/.cache/tde"
 local filename = dir .. "/stdout.log"
 local filename_error = dir .. "/error.log"
 
 filehandle.overwrite(filename, "")
 filehandle.overwrite(filename_error, "")
+
+local stdout_fd = io.open(filename, "a")
+local error_fd = io.open(filename_error, "a")
+
+local prev_time = time()
+
+-- how often we should flush to disk
+local flush_time_delta = 60
 
 -- helper function to convert a table to a string
 -- WARN: For internal use only, this should never be exposed to the end user
@@ -138,31 +158,31 @@ print = function(arg, log_type, depth)
 
 	local log = log_type or LOG_INFO
 
-	-- effective logging
-	local file = io.open(filename, "a")
-	local file_error
-	if log == LOG_ERROR then
-		file_error = io.open(filename_error, "a")
-	end
+	local __time = time()
 
-	local out = os.date("%H:%M:%S") .. "." .. math.floor(time() * 10000) % 10000
+	local out = os.date("%H:%M:%S") .. string.format(".%.04d", math.floor(__time * 10000) % 10000)
 	local statement = log .. out:gsub("\n", "") .. " ]\27[0m "
 	for line in arg:gmatch("[^\r\n]+") do
 		-- print it to stdout
 		echo(statement .. line)
 		-- append it to the log file
-		if file ~= nil then
-			file:write(statement .. line .. "\n")
+		if stdout_fd ~= nil then
+			stdout_fd:write(statement .. line .. "\n")
 		end
-		if file_error ~= nil and log == LOG_ERROR then
-			file_error:write(statement .. line .. "\n")
+		if error_fd ~= nil and log == LOG_ERROR then
+			error_fd:write(statement .. line .. "\n")
 		end
 	end
-	if file ~= nil then
-		file:close()
-	end
-	if file_error ~= nil then
-		file_error:close()
+
+	-- flush to the file every 5 seconds
+	if __time - prev_time > flush_time_delta then
+		if stdout_fd ~= nil then
+			stdout_fd:flush()
+		end
+		if error_fd ~= nil then
+			error_fd:flush()
+		end
+		prev_time = __time
 	end
 end
 

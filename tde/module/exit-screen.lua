@@ -320,7 +320,6 @@ screen.connect_signal(
 				print("Showing exit screen")
 
 				-- turn of the left panel so we can consume the keygrabber
-				_G.screen.primary.left_panel:HideDashboard()
 
 				_G.exit_screen_show()
 			end
