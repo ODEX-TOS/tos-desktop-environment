@@ -287,19 +287,28 @@ local control_center = function(s)
 	}
 
 	local open_panel = function()
-		local focused = awful.screen.focused()
+		s.backdrop_control_center .visible = true
+		s.control_center.visible = true
 
-		focused.backdrop_control_center.visible = true
-		focused.control_center.visible = true
+
+		awful.placement.top_right(
+			panel,
+			{
+				honor_workarea = true,
+				parent = s,
+				margins = {
+					top = dpi(33),
+					right = dpi(5)
+				}
+			}
+		)
 
 		panel:emit_signal('opened')
 	end
 
 	local close_panel = function()
-		local focused = awful.screen.focused()
-
-		focused.control_center.visible = false
-		focused.backdrop_control_center.visible = false
+		s.control_center.visible = false
+		s.backdrop_control_center.visible = false
 
 		panel:emit_signal('closed')
 	end

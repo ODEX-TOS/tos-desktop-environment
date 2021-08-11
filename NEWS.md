@@ -32,14 +32,20 @@ This draft is not a final version of what will be introduced in the next patch, 
 
 ### Release Notes
 
+A major refactor went into the codebase to cleanup several leaking processes. This 1.0 release is still a beta version of TDE
+
 ### New Features
 - Restart crashed daemon processes
+- New action and control centers
+- Allow changing the blur strength of the compositor
+- Reworked the notification center notifications
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
 - The prompt now opens on the monitor with focus, instead of the primary monitor
 - Brightness and volume osd sliders now show on the focussed screen
 - Client popup windows now appear on the correct screen instead of the primary screen
+- Always recalculate screen space location of the control center and info center
 
 ### Dev Notes
 - The inputfield now allows editing of the field

@@ -123,19 +123,27 @@ local info_center = function(s)
 	}
 
 	local open_panel = function()
-		local focused = awful.screen.focused()
+		s.backdrop_info_center.visible = true
+		s.info_center.visible = true
 
-		focused.backdrop_info_center.visible = true
-		focused.info_center.visible = true
+		awful.placement.top_right(
+			panel,
+			{
+				honor_workarea = true,
+				parent = s,
+				margins = {
+					top = dpi(33),
+					right = dpi(5)
+				}
+			}
+		)
 
 		panel:emit_signal('opened')
 	end
 
 	local close_panel = function()
-		local focused = awful.screen.focused()
-
-		focused.info_center.visible = false
-		focused.backdrop_info_center.visible = false
+		s.info_center.visible = false
+		s.backdrop_info_center.visible = false
 
 		panel:emit_signal('closed')
 	end

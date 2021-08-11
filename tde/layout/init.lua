@@ -59,10 +59,12 @@ end
 
 local function panel(s)
 	if topBarDraw == "none" then
+		top_panel(s, true)
 		return
 	end
 
 	if topBarDraw == "main" and s.index ~= 1 then
+		top_panel(s, true)
 		return
 	end
 
