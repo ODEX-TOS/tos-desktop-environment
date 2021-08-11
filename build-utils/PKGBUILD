@@ -15,8 +15,8 @@ _LUA_VER="5.3"
 
 # The branch to build
 # TODO: Change this branch to release once it support this build
-BRANCH="v1.0"
-VERSION="v1.0"
+BRANCH="release"
+VERSION="v0.9.1"
 
 # This is an force rebuild number in case the pkgbuild changed slightly (similar to pkgrel
 _TVER=41
