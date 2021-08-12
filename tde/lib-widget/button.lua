@@ -26,7 +26,8 @@
 -- Create a new button widget
 --
 --
---    local button = lib-widget.button(dpi(20))
+--    local button = lib-widget.button("Button text")
+--    local button2 = lib-widget.button(wibox.widget.imagebox("/path/to/image"))
 --
 -- ![Button](../images/button.png)
 --

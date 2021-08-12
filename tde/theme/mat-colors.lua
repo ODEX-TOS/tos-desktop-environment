@@ -22,7 +22,7 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-return {
+local pallets = {
   -- Red
   red = {
     hue_50 = "#FFEBEE",
@@ -397,3 +397,46 @@ return {
     hue_A700 = "#FFFFFF"
   }
 }
+
+local function gen_gradient_line(left_color, right_color, angle, length)
+  local function format(startx, starty, endx, endy, color1, color2)
+    startx = math.floor(startx)
+    starty = math.floor(starty)
+    endx = math.floor(endx)
+    endy = math.floor(endy)
+    return string.format("linear:%d,%d:%d,%d:0,%s:1,%s", startx, starty, endx, endy, color1, color2)
+  end
+
+  local startx = 0
+  local starty =  0
+
+  local endx = length * math.cos(math.rad(angle))
+  local endy = length * math.sin(math.rad(angle))
+
+
+  return format(startx, starty, endx, endy, left_color, right_color)
+end
+
+-- create a gardient from left_pallet to right_pallet, with a given angle and length
+local function gen_gradient(left_pallet, right_pallet, angle, length)
+    local new_pallet = {}
+
+    for k, _ in pairs(left_pallet) do
+      -- make sure that the right and left pallet both have a color for the same key
+      if right_pallet[k] ~= nil and k ~= "hue_500" then
+        new_pallet[k] = gen_gradient_line(left_pallet[k], right_pallet[k], angle, length)
+      end
+
+      if k == "hue_500" then
+        new_pallet[k] = left_pallet[k]
+      end
+    end
+
+    return new_pallet
+end
+
+-- special gradient colors
+pallets.gen_gradient = gen_gradient
+
+
+return pallets
