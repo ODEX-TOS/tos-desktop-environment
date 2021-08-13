@@ -34,12 +34,21 @@ function log() {
   len="$((${#2} - 1))"
   columns=$(tput cols)
   echo -en "$2 "
-  printf '.%.0s' $(seq $((columns - len - 15)))
+
+  if [[ "$1" == "$WARNING" ]]; then
+    echo -en "\e[30m\e[33m"
+  elif [[ ! "$1" -eq "0" ]]; then
+    echo -en "\e[30m\e[31m"
+  else
+    echo -en "\e[30m\e[32m"
+  fi
+
+  printf '.%.0s' $(seq $(( columns - len - 15)))
 
   if [[ "$1" == "$WARNING" ]]; then
     echo -e " \e[30m\e[43m WARNING \e[49m\e[39m"
   elif [[ ! "$1" -eq "0" ]]; then
-    echo -e " \e[30m\e[41m FAILED  \e[49m\e[39m"
+    echo -e " \e[30m\e[41m FAILED \e[49m\e[39m"
   else
     echo -e " \e[30m\e[42m SUCCESS \e[49m\e[39m"
   fi
