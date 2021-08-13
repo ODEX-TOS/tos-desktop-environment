@@ -54,29 +54,49 @@ local info_center = function(s)
 		plugin_layout:add(plugin)
 	end
 
-	local _widget = wibox.widget {
-		wibox.widget {
-			{
+	local _widget
+
+	print("Info center plugins: " .. tostring(#plugins))
+
+	if #plugins > 0 then
+		_widget = wibox.widget {
+			wibox.widget {
+				{
+					notif_layout,
+					margins = dpi(10),
+					widget = wibox.container.margin
+				},
+				nil,
+				{
+					plugin_layout,
+					margins = dpi(10),
+					widget = wibox.container.margin
+				},
+				spacing = dpi(10),
+				layout = wibox.layout.fixed.horizontal
+			},
+			id = 'info_center',
+			bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+			shape = function(cr, w, h)
+				gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
+			end,
+			widget = wibox.container.background
+		}
+	else
+		_widget = wibox.widget {
+			wibox.widget {
 				notif_layout,
 				margins = dpi(10),
 				widget = wibox.container.margin
 			},
-			nil,
-			{
-				plugin_layout,
-				margins = dpi(10),
-				widget = wibox.container.margin
-			},
-			spacing = dpi(10),
-			layout = wibox.layout.fixed.horizontal
-		},
-		id = 'info_center',
-		bg = beautiful.background.hue_800 .. beautiful.background_transparency,
-		shape = function(cr, w, h)
-			gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
-		end,
-		widget = wibox.container.background
-	}
+			id = 'info_center',
+			bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+			shape = function(cr, w, h)
+				gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
+			end,
+			widget = wibox.container.background
+		}
+	end
 
 
 	signals.connect_background_theme_changed(function(pallet)

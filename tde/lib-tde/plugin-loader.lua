@@ -60,6 +60,34 @@ local function prequire(library)
     return nil
 end
 
+-- make sure the plugin returns a table with the __plugin_name property set
+local function pluginify(plugin, name)
+    if name == nil then
+        name = "Generic plugin"
+    end
+
+    name = name:gsub("-", "_"):gsub('%.', '_') or "Generic plugin"
+
+    if type(plugin) == "table" then
+        plugin["__plugin_name"] = name
+        return plugin
+    end
+
+    if plugin == nil then
+        return {
+            __plugin_name = name
+        }
+    end
+
+    print("Plugin type is unknown:", ERROR)
+    print("Name: " .. name .. " = " .. type(plugin))
+
+    return {
+        plugin = plugin,
+        __plugin_name = name
+    }
+end
+
 local function handle_plugin(value, name)
     -- system plugins are also accepted and start with widget.
     if value:sub(1, 7) == "widget." then
@@ -71,13 +99,13 @@ local function handle_plugin(value, name)
         else
             -- only require plugin if it exists
             -- otherwise the user entered a wrong plugin
-            return true, require(value)
+            return true, pluginify(require(value), value:sub(8, #value))
         end
     elseif dirExists(os.getenv("HOME") .. "/.config/tde/" .. value) then
         local plugin = prequire(value)
         if (plugin) then
             print("Plugin " .. name .. " is loaded in!")
-            return true, plugin
+            return true, pluginify(plugin, value)
         else
             inValidPlugin(
                 name,

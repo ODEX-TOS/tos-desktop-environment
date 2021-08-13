@@ -101,7 +101,7 @@ local error_fd = io.open(filename_error, "a")
 local prev_time = time()
 
 -- how often we should flush to disk
-local flush_time_delta = 60
+local flush_time_delta = 0.5
 
 -- helper function to convert a table to a string
 -- WARN: For internal use only, this should never be exposed to the end user
@@ -174,7 +174,7 @@ print = function(arg, log_type, depth)
 		end
 	end
 
-	-- flush to the file every 5 seconds
+	-- flush to the file every flush_time_delta seconds
 	if __time - prev_time > flush_time_delta then
 		if stdout_fd ~= nil then
 			stdout_fd:flush()

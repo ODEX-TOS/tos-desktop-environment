@@ -52,7 +52,9 @@ function Test_loader_section_mock_test()
     local result = plugin_loader("test")
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
     assert(#result == 1, "The plugin loader should return 1 plugin")
-    assert(result[1] == require("widget.mock-plugin"), "The plugin loader should return 1 plugin")
+    assert(result[1].plugin == require("widget.mock-plugin"), "The plugin loader should return 1 plugin")
+    assert(result[1].__plugin_name == "mock_plugin", "The plugin loader should return 1 plugin")
+
     print = echo
 end
 
@@ -66,9 +68,9 @@ function Test_loader_section_multi_plugin()
     assert(#result == 3, "The plugin loader should return 3 plugins")
 
     local mock = require("widget.mock-plugin")
-    assert(result[1] == mock, "The first plugin in the table should be the mock plugin")
-    assert(result[2] == mock, "The second plugin in the table should be the mock plugin")
-    assert(result[3] == mock, "The third plugin in the table should be the mock plugin")
+    assert(result[1].plugin == mock, "The first plugin in the table should be the mock plugin")
+    assert(result[2].plugin == mock, "The second plugin in the table should be the mock plugin")
+    assert(result[3].plugin == mock, "The third plugin in the table should be the mock plugin")
 
     print = echo
 end
@@ -89,8 +91,8 @@ function Test_loader_section_multi_plugin2()
     assert(#resultMock == 1, "The plugin loader should return 1 plugin")
 
     local mock = require("widget.mock-plugin")
-    assert(result[1] == mock, "The first plugin in the table should be the mock plugin")
-    assert(resultMock[1] == mock, "The first plugin in the table should be the mock plugin")
+    assert(result[1].plugin == mock, "The first plugin in the table should be the mock plugin")
+    assert(resultMock[1].plugin == mock, "The first plugin in the table should be the mock plugin")
 
     print = echo
 end
@@ -112,11 +114,11 @@ function Test_loader_section_multi_multi_plugin()
     assert(#resultMock == 2, "The plugin loader should return 2 plugins")
 
     local mock = require("widget.mock-plugin")
-    assert(result[1] == mock, "The first plugin in the table should be the mock plugin")
-    assert(result[2] == mock, "The second plugin in the table should be the mock plugin")
+    assert(result[1].plugin == mock, "The first plugin in the table should be the mock plugin")
+    assert(result[2].plugin == mock, "The second plugin in the table should be the mock plugin")
 
-    assert(resultMock[1] == mock, "The first plugin in the table should be the mock plugin")
-    assert(resultMock[2] == mock, "The second plugin in the table should be the mock plugin")
+    assert(resultMock[1].plugin == mock, "The first plugin in the table should be the mock plugin")
+    assert(resultMock[2].plugin == mock, "The second plugin in the table should be the mock plugin")
 
     print = echo
 end
@@ -133,9 +135,9 @@ function Test_loader_section_inconsistent_flow_state()
     assert(#result == 3, "The plugin loader should return 3 plugins but got: " .. tostring(#result))
 
     local mock = require("widget.mock-plugin")
-    assert(result[1] == mock, "The first plugin in the table should be the mock plugin")
-    assert(result[2] == mock, "The second plugin in the table should be the mock plugin")
-    assert(result[3] == mock, "The third plugin in the table should be the mock plugin")
+    assert(result[1].plugin == mock, "The first plugin in the table should be the mock plugin")
+    assert(result[2].plugin == mock, "The second plugin in the table should be the mock plugin")
+    assert(result[3].plugin == mock, "The third plugin in the table should be the mock plugin")
     assert(result[5] == nil, "The fifth plugin shouldn't exist")
     assert(type(plugins["test"][5]) == "string")
 

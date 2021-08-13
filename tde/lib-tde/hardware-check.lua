@@ -191,9 +191,9 @@ end
 --- Check to see if ffmpeg is installed
 -- @tparam callback function  The function to call when we know if the package exists
 -- @treturn bool True if ffmpeg is installed, false otherwise
--- @staticfct hasFfmpeg
+-- @staticfct hasFFMPEG
 -- @usage -- This True if ffmpeg is installed (a video processor)
--- lib-tde.hardware-check.hasFfmpeg(function(bIsInstalled) print(bIsInstalled) end)
+-- lib-tde.hardware-check.hasFFMPEG(function(bIsInstalled) print(bIsInstalled) end)
 local function ffmpeg(callback)
     has_package_installed("ffmpeg", callback)
 end
