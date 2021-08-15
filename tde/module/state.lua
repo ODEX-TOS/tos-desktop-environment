@@ -150,19 +150,9 @@ local function save(table)
 end
 
 local function setup_keymap(keyboard)
-
-    local layout_str = keyboard.active
-
-    for _, layout in ipairs(keyboard.layouts) do
-        if layout ~= keyboard.active then
-            layout_str = layout_str .. ',' .. layout
-        end
-    end
-
-    local cmd = "setxkbmap -layout " .. layout_str
-    print("Setting keyboard layouts to: " .. layout_str)
+    local cmd = "setxkbmap '" .. keyboard.active .. "'"
+    print("Setting keyboard layouts to: " .. keyboard.active)
     awful.spawn(cmd, false)
-
 end
 
 local function setup_state(state)

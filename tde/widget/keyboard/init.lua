@@ -138,25 +138,12 @@ local function gen_panel(s, layouts)
             return
         end
 
-        local layouts_str = selected_layouts[1]
+        awesome.emit_signal("xkb::map_changed")
+        awesome.emit_signal("xkb::group_changed")
 
-        for i, layout in ipairs(selected_layouts) do
-            if i > 1 then
-                layouts_str = layouts_str .. ',' .. layout
-            end
+        if panel ~= nil then
+            panel:close()
         end
-
-        local cmd = "setxkbmap -layout " .. layouts_str
-        print("Setting up keyboard:")
-        print(cmd)
-        awful.spawn.easy_async(cmd, function()
-            awesome.emit_signal("xkb::map_changed")
-            awesome.emit_signal("xkb::group_changed")
-
-            if panel ~= nil then
-                panel:close()
-            end
-        end)
     end)
 
     local scroll = scrollbox(_widget)
@@ -269,9 +256,33 @@ return function(s)
 
     local sorted = quicksort(layout_codes)
 
-    selected_layouts = keyboard_layout._layout
+    selected_layouts = _G.save_state.keyboard.layouts
 
     local panel = gen_panel(s, sorted)
+
+    local function next_layout()
+        if #selected_layouts < 2 then
+            return
+        end
+
+        -- shift the entire list by one
+        local new_list = {}
+        print(selected_layouts)
+        for index, value in ipairs(selected_layouts) do
+            if index ~= 1 then
+                table.insert(new_list, value)
+            end
+        end
+        table.insert(new_list, selected_layouts[1])
+        selected_layouts = new_list
+        print(selected_layouts)
+
+        -- update the text and change the layout
+        keyboard_layout.widget:set_text(selected_layouts[1])
+        print("Changed layout to: " .. selected_layouts[1])
+        awful.spawn("setxkbmap " .. selected_layouts[1])
+    end
+
 
     local widget_button = clickable_container(wibox.container.margin(keyboard_layout.widget, dpi(14), dpi(14), dpi(7), dpi(7)))
 			widget_button:buttons(
@@ -281,7 +292,7 @@ return function(s)
 				1,
 				nil,
 				function()
-					keyboard_layout:next_layout()
+					next_layout()
 				end
 				),
                 awful.button(
@@ -296,14 +307,14 @@ return function(s)
 	)
 
     signals.connect_keyboard_layout(function()
-        keyboard_layout:next_layout()
+        next_layout()
     end)
 
     awesome.connect_signal("xkb::map_changed", function()
-        signals.emit_keyboard_layout_updated(selected_layouts, keyboard_layout.widget.text)
+        signals.emit_keyboard_layout_updated(selected_layouts, common.trim(keyboard_layout.widget.text))
     end)
     awesome.connect_signal("xkb::group_changed", function()
-        signals.emit_keyboard_layout_updated(selected_layouts, keyboard_layout.widget.text)
+        signals.emit_keyboard_layout_updated(selected_layouts, common.trim(keyboard_layout.widget.text))
     end)
 
     return widget_button
