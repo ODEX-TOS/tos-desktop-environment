@@ -29,6 +29,7 @@ local dpi = beautiful.xresources.apply_dpi
 local signals = require('lib-tde.signals')
 local clickable_container = require("widget.material.clickable-container")
 local common = require("lib-tde.function.common")
+local flags_dir = "/etc/xdg/tde/widget/keyboard/flags/"
 
 local scrollbox = require("lib-widget.scrollbox")
 local button = require("lib-widget.button")
@@ -50,13 +51,26 @@ local function make_layout_entry(layout)
 
     local textbox = wibox.widget {
         text = common.capitalize(layout),
-        align  = 'center',
+        align  = 'left',
         valign = 'center',
         font = beautiful.font,
         widget = wibox.widget.textbox
     }
 
-    local margin = wibox.container.margin(textbox, dpi(7), dpi(7), dpi(7), dpi(7))
+
+    local _layout = wibox.widget {
+        layout = wibox.layout.align.horizontal,
+        textbox,
+        wibox.widget.base.empty_widget(),
+        wibox.widget {
+            image = flags_dir .. layout .. '.svg',
+            resize = true,
+            forced_height = dpi(15),
+            widget = wibox.widget.imagebox
+        },
+    }
+
+    local margin = wibox.container.margin(_layout, dpi(15), dpi(7), dpi(7), dpi(7))
 
     local bg = wibox.widget {
         margin,
@@ -260,6 +274,12 @@ return function(s)
 
     local panel = gen_panel(s, sorted)
 
+    local image = wibox.widget {
+        resize = true,
+        image = flags_dir .. selected_layouts[1] .. ".svg",
+        widget = wibox.widget.imagebox
+    }
+
     local function next_layout()
         if #selected_layouts < 2 then
             return
@@ -279,12 +299,21 @@ return function(s)
 
         -- update the text and change the layout
         keyboard_layout.widget:set_text(selected_layouts[1])
+        image:set_image(flags_dir .. selected_layouts[1] .. ".svg")
         print("Changed layout to: " .. selected_layouts[1])
         awful.spawn("setxkbmap " .. selected_layouts[1])
     end
 
 
-    local widget_button = clickable_container(wibox.container.margin(keyboard_layout.widget, dpi(14), dpi(14), dpi(7), dpi(7)))
+    local _widget = wibox.widget {
+        layout = wibox.layout.fixed.horizontal,
+        spacing = dpi(5),
+        wibox.container.place(image),
+        nil,
+        keyboard_layout.widget
+    }
+
+    local widget_button = clickable_container(wibox.container.margin(_widget, dpi(14), dpi(14), dpi(7), dpi(7)))
 			widget_button:buttons(
 			gears.table.join(
 				awful.button(

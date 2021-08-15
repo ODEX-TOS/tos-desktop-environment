@@ -137,7 +137,6 @@ local top_panel = function(s)
 	end)
 
 	add_to_panel("tray_toggler")
-	add_to_panel("keyboard_layout")
 
 	for _, plugin in ipairs(plugins) do
 		if type(plugin) == "table" and plugin.__plugin_name ~= nil and plugin.plugin ~= nil then
@@ -149,6 +148,7 @@ local top_panel = function(s)
 		add_to_panel(plugin.__plugin_name)
 	end
 
+	add_to_panel("keyboard_layout")
 	add_to_panel("updater")
 	add_to_panel("about")
 	add_to_panel("control_center_toggle")
@@ -159,25 +159,25 @@ local top_panel = function(s)
 	hardware.hasBluetooth(function(bHasBluetooth)
 		if  bHasBluetooth then
 			s.bluetooth   = require('widget.bluetooth')
-			add_to_panel("bluetooth", #plugins + 3)
+			add_to_panel("bluetooth", #plugins + 4)
 		end
 	end)
 
 
 	if hardware.hasWifi() then
 		s.network  = require('widget.wifi')
-		add_to_panel("network", #plugins + 3)
+		add_to_panel("network", #plugins + 4)
 	end
 
 	if hardware.hasBattery() then
 		s.battery = require('widget.battery')()
-		add_to_panel("battery", #plugins + 3)
+		add_to_panel("battery", #plugins + 4)
 	end
 
 	hardware.hasFFMPEG(function (hasFFMPEG)
 		if hasFFMPEG and hardware.hasSound() then
 			s.music = require('widget.music')
-			add_to_panel("music", #plugins + 3)
+			add_to_panel("music", #plugins + 4)
 		end
 	end)
 
