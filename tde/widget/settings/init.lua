@@ -313,7 +313,7 @@ local function make_view(i, t, v, a)
   return {link = btn, view = view, title = _title}
 end
 
-local function make_nav()
+local function make_nav(load_callback)
   local nav = wibox.container.background()
   nav.bg = beautiful.bg_modal_title
   nav.forced_width = settings_nw
@@ -376,6 +376,15 @@ local function make_nav()
   nav_container:add(header)
   nav_container:add(rule)
 
+  local function nav_container_populate()
+    gears.table.map(
+        function(v)
+          nav_container:add(v.link)
+        end,
+        root.elements.settings_views
+    )
+  end
+
   table.insert(
     root.elements.settings_views,
     make_view(icons.settings, i18n.translate("General"), require("widget.settings.general")())
@@ -391,11 +400,17 @@ local function make_nav()
 
   hardware.hasBluetooth(function(bHasBT)
     if bHasBT then
+      local view = make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
       table.insert(
         root.elements.settings_views,
-        make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
+        4,
+        view
       )
-      nav_container:add(root.elements.settings_views[#root.elements.settings_views])
+      view.link.bg = beautiful.transparent
+      view.link.active = false
+
+      nav_container_populate()
+      load_callback()
     end
   end)
 
@@ -451,13 +466,6 @@ local function make_nav()
     end
   end
 
-  gears.table.map(
-    function(v)
-      nav_container:add(v.link)
-    end,
-    root.elements.settings_views
-  )
-
   local red = require("theme.mat-colors").red
   local power =
     button(
@@ -512,14 +520,16 @@ return function()
     end
   )
 
-  local nav = make_nav()
   local view_container = wibox.layout.stack()
-  gears.table.map(
-    function(v)
-      view_container:add(v.view)
-    end,
-    root.elements.settings_views
-  )
+
+  local nav = make_nav(function()
+    gears.table.map(
+      function(v)
+        view_container:add(v.view)
+      end,
+      root.elements.settings_views
+    )
+  end)
 
   hub:buttons(
     gears.table.join(
