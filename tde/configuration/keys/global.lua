@@ -34,6 +34,8 @@ local apps = require("configuration.apps")
 local xrandr = require("lib-tde.xrandr")
 local volume = require("lib-tde.volume")
 
+local signals = require('lib-tde.signals')
+
 local focused_screen = require("lib-tde.function.common").focused_screen
 
 -- returns true if we cannot create a screenshot
@@ -592,6 +594,15 @@ local globalKeys =
       root.elements.settings.enable_view_by_index(-1, mouse.screen)
     end,
     {description = i18n.translate("Open settings application"), group = "Launcher"}
+  ),
+  awful.key(
+    {modkey},
+    config.keyboard_layout,
+    function()
+      print("Going to the next layout")
+      signals.emit_keyboard_layout()
+    end,
+    {description = i18n.translate("Go to the next keyboard layout"), group = i18n.translate("Utility")}
   )
 )
 

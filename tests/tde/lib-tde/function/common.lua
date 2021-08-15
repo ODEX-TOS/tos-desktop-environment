@@ -169,6 +169,17 @@ function Test_trim_whitespace()
     assert(common.trim("  abc   ") == "abc", "trimming trailing tabs whitespace is not working")
 end
 
+function Test_capitalize()
+    assert(type(common.capitalize) == "function", "the string capitalize api needs to exist and be a function")
+    assert(common.capitalize("abc") == "Abc", "Capitalizing not working")
+    assert(common.capitalize("Hello") == "Hello", "Capitalizing not working")
+    assert(common.capitalize("hEllO") == "HEllO", "Capitalizing not working")
+    assert(common.capitalize("test") == "Test", "Capitalizing not working")
+    assert(common.capitalize("  test") == "  test", "Capitalizing not working")
+
+end
+
+
 function Test_imagemagic_api_unit_tested()
     local amount = 5
     local result = tablelength(common)

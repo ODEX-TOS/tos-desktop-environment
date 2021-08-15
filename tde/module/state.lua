@@ -43,7 +43,17 @@ local function gen_default_tag()
     }
 end
 
+local default_keyboard_layout = function()
+    local keymap = filehandle.lines('/etc/vconsole.conf')
+
+    local map = string.match(keymap[1], "KEYMAP=(.*)")
+    return map or "us"
+end
+
 local function load()
+
+    local fetch_default_layout = default_keyboard_layout()
+
     local table = {
         volume = 50,
         mic_volume = 50,
@@ -65,6 +75,10 @@ local function load()
             gen_default_tag(),
             gen_default_tag(),
             gen_default_tag(),
+        },
+        keyboard = {
+            active = fetch_default_layout,
+            layouts = {fetch_default_layout}
         }
     }
     if not filehandle.exists(file) then
@@ -85,6 +99,8 @@ local function load()
     result.tags = result.tags or table.tags
 
     result.last_version = result.last_version or table.last_version
+
+    result.keyboard = result.keyboard or table.keyboard
 
     -- For some reason we downgraded tos, in this case we should also trigger the news section
     -- We do this by making the last_version smaller
@@ -112,6 +128,22 @@ local function save(table)
     serialize.serialize_to_file(file, table)
 end
 
+local function setup_keymap(keyboard)
+
+    local layout_str = keyboard.active
+
+    for _, layout in ipairs(keyboard.layouts) do
+        if layout ~= keyboard.active then
+            layout_str = layout_str .. ',' .. layout
+        end
+    end
+
+    local cmd = "setxkbmap -layout " .. layout_str
+    print("Setting keyboard layouts to: " .. layout_str)
+    awful.spawn(cmd, false)
+
+end
+
 local function setup_state(state)
     -- set volume mute state
     volume.set_muted_state(state.volume_muted)
@@ -133,6 +165,10 @@ local function setup_state(state)
     signals.emit_brightness(math.max(state.brightness, 5))
     signals.emit_do_not_disturb(state.do_not_disturb or false)
     signals.emit_oled_mode(state.oled_mode or false)
+
+
+    setup_keymap(state.keyboard)
+
     -- execute xrandr script
     awesome.connect_signal(
         "startup",
@@ -393,5 +429,12 @@ signals.connect_showed_news(function()
         return
     end
     save_state.last_version = major_version()
-    save()
+    save(save_state)
+end)
+
+signals.connect_keyboard_layout_updated(function (layouts, active_layout)
+    save_state.keyboard.active = active_layout
+    save_state.keyboard.layouts = layouts
+
+    save(save_state)
 end)

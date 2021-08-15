@@ -1006,5 +1006,46 @@ connections.connect_titlebar_redraw = function(func)
     awesome.connect_signal("TDE::update::news::showed", func)
 end
 
+--- Signals to notify to move to the next layout of the keyboards
+-- @staticfct emit_keyboard_layout
+-- @usage
+-- lib-tde.signals.emit_keyboard_layout()
+connections.emit_keyboard_layout = function()
+    awesome.emit_signal("TDE::keyboard::layout::next")
+end
+
+--- Trigger a callback function to change to the next keyboard layout
+-- @tparam function func The callback function that will be called when the keyboard layout should change
+-- @staticfct connect_keyboard_layout
+-- @usage
+-- lib-tde.signals.connect_keyboard_layout(
+--    function ()
+--      print("Changing to the next layout")
+--    end)
+connections.connect_keyboard_layout = function(func)
+    awesome.connect_signal("TDE::keyboard::layout::next", func)
+end
+
+--- Signals to notify that the keyboard layout has changed
+-- @staticfct emit_keyboard_layout_updated
+-- @usage
+-- lib-tde.signals.emit_keyboard_layout_updated({'us', 'be', 'ru'}, 'us')
+connections.emit_keyboard_layout_updated = function(layouts, active)
+    awesome.emit_signal("TDE::keyboard::layout::updated", layouts, active)
+end
+
+--- Trigger a callback function to change to the next keyboard layout
+-- @tparam function func The callback function that will be called when the keyboard layout should change
+-- @staticfct connect_keyboard_layout_updated
+-- @usage
+-- lib-tde.signals.connect_keyboard_layout_updated(
+--    function (layouts, active)
+--      print("Changing to the next layout was succesfull")
+--    end)
+connections.connect_keyboard_layout_updated = function(func)
+    awesome.connect_signal("TDE::keyboard::layout::updated", func)
+end
+
+
 
 return connections

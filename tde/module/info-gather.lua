@@ -36,7 +36,7 @@ local function get_username()
     local username = os.getenv("USER")
 
     -- make the first letter capital
-    local name = username:sub(1, 1):upper() .. username:sub(2)
+    local name = common.capitalize(username)
 
     signals.emit_username(name)
 

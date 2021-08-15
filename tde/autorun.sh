@@ -36,7 +36,7 @@ function run() {
   fi
 }
 
-setxkbmap "$(cut -d= -f2 /etc/vconsole.conf | cut -d- -f1)"
+#setxkbmap "$(cut -d= -f2 /etc/vconsole.conf | cut -d- -f1)"
 
 if grep -q "bluetooth=false" ~/.config/tos/theme; then
         pgrep bluetoothctl &>/dev/null || bluetoothctl power off

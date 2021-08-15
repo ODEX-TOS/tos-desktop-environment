@@ -182,6 +182,17 @@ local function major_version()
     return tonumber(string.match(awesome.version, "v(%d+%.%d+)")) or 0
 end
 
+--- Capitalize the first character of a given string
+-- @staticfct capitalize
+-- @usage -- returns capitalized string
+-- lib-tde.function.capitalize("abc") -- returns 'Abc'
+local function capitalize(str)
+    if type(str) ~= "string" then
+        return str
+    end
+    return str:sub(1, 1):upper() .. str:sub(2)
+end
+
 return {
     split = split,
     sleep = sleep,
@@ -190,5 +201,6 @@ return {
     num_to_str = num_to_str,
     trim = trim,
     focused_screen = focused_screen,
-    major_version = major_version
+    major_version = major_version,
+    capitalize = capitalize
 }

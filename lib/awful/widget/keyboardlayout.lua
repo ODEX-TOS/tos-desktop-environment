@@ -122,7 +122,7 @@ local function update_status (self)
         -- is lower by one than the group numbers reported by xkb_get_group_names.
         local name = self._layout[self._current+1]
         if name then
-            text = " " .. name .. " "
+            text = name
         end
     end
     self.widget:set_text(text)
@@ -249,7 +249,6 @@ local function update_layout(self)
     for _, v in ipairs(layouts) do
         self._layout[v.group_idx] = self.layout_name(v)
     end
-    update_status(self)
 end
 
 --- Select the next layout.
@@ -260,15 +259,20 @@ end
 -- It shows current keyboard layout name in a textbox.
 --
 -- @constructorfct awful.widget.keyboardlayout
+-- @tparam table args Widget arguments.
+-- @tparam bool args.mouse_binding "mouse_binding" is if we should add a button to the textbox to cycle between keyboard layouts.
 -- @return A keyboard layout widget.
-function keyboardlayout.new()
+function keyboardlayout.new(args)
+
+    local mouse_binding = args.mouse_binding
+
     local widget = textbox()
     local self = widget_base.make_widget(widget, nil, {enable_properties=true})
 
     self.widget = widget
 
     self.layout_name = function(v)
-        local name = v.file
+        local name = v.file or "Unknown"
         if v.section ~= nil then
             name = name .. "(" .. v.section .. ")"
         end
@@ -280,15 +284,16 @@ function keyboardlayout.new()
     end
 
     self.set_layout = function(group_number)
-        if (0 > group_number) or (group_number > #self._layout) then
-            error("Invalid group number: " .. group_number ..
-                    "expected number from 0 to " .. #self._layout)
+        if (0 >= group_number) or (group_number > #self._layout) then
+            print("Invalid group number: " .. group_number ..
+                    " expected number from 0 to " .. #self._layout)
             return;
         end
-        awesome.xkb_set_layout_group(group_number);
+        capi.awesome.xkb_set_layout_group(group_number);
     end
 
     update_layout(self);
+    update_status(self)
 
     -- callback for processing layout changes
     capi.awesome.connect_signal("xkb::map_changed",
@@ -297,9 +302,11 @@ function keyboardlayout.new()
                                 function () update_status(self) end);
 
     -- Mouse bindings
-    self.buttons = {
-        button({ }, 1, self.next_layout)
-    }
+    self.buttons = {}
+
+    if mouse_binding or mouse_binding == nil then
+        table.insert(self.buttons, button({ }, 1, self.next_layout))
+    end
 
     return self
 end

@@ -59,5 +59,6 @@ return {
     windowSnapArea = config["window_screenshot"] or "Print",
     emoji = config["emoji"] or "m",
     clipboard = config["clipboard"] or "p",
-    settings = config["settings"] or "s"
+    settings = config["settings"] or "s",
+    keyboard_layout = config["keyboard_layout"] or "i"
 }

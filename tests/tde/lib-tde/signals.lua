@@ -515,8 +515,29 @@ function Test_connect_volume_is_controlled_in_software()
     assert(type(signals.connect_volume_is_controlled_in_software) == "function", "Make sure connect_volume_is_controlled_in_software is a signal and a function")
 end
 
+function Test_emit_keyboard_layout()
+    assert(signals.emit_keyboard_layout, "Make sure the signal emit_keyboard_layout exists")
+    assert(type(signals.emit_keyboard_layout) == "function", "Make sure emit_keyboard_layout is a signal and a function")
+end
+
+function Test_connect_keyboard_layout()
+    assert(signals.connect_keyboard_layout, "Make sure the signal connect_keyboard_layout exists")
+    assert(type(signals.connect_keyboard_layout) == "function", "Make sure connect_keyboard_layout is a signal and a function")
+end
+
+function Test_emit_keyboard_layout_updated()
+    assert(signals.emit_keyboard_layout_updated, "Make sure the signal emit_keyboard_layout_updated exists")
+    assert(type(signals.emit_keyboard_layout_updated) == "function", "Make sure emit_keyboard_layout_updated is a signal and a function")
+end
+
+function Test_connect_keyboard_layout_updated()
+    assert(signals.connect_keyboard_layout_updated, "Make sure the signal connect_keyboard_layout_updated exists")
+    assert(type(signals.connect_keyboard_layout_updated) == "function", "Make sure connect_keyboard_layout_updated is a signal and a function")
+end
+
+
 function Test_signals_api_unit_tested()
-    local amount = 91
+    local amount = 95
     local result = tablelength(signals)
     assert(
         result == amount,

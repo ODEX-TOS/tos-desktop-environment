@@ -199,8 +199,13 @@ function Test_configuration_mod_key_ontop()
     assert(type(mod.ontop) == "string")
 end
 
+function Test_configuration_mod_key_ontop()
+    assert(mod.keyboard_layout)
+    assert(type(mod.keyboard_layout) == "string")
+end
+
 function Test_configuration_mod_key_api_unit_tested()
-    local amount = 35
+    local amount = 36
     local result = tablelength(mod)
     assert(
         result == amount,

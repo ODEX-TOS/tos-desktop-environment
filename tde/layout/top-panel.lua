@@ -28,6 +28,7 @@ local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 local task_list = require('widget.task-list')
 local hardware = require('lib-tde.hardware-check')
+local keyboard_layout = require("widget.keyboard")
 
 local plugins = require("lib-tde.plugin-loader")("topbar-right")
 
@@ -89,19 +90,15 @@ local top_panel = function(s)
 	s.global_search			= require('widget.global-search')()
 	s.info_center_toggle 	= require('widget.info-center-toggle')()
 	s.about 				= require('widget.about')(s)
+	s.keyboard_layout		= keyboard_layout(s)
 
 
 	local right_widget = wibox.widget {
 			layout = wibox.layout.fixed.horizontal,
-			spacing = dpi(5),
-			{
-				s.systray,
-				margins = dpi(5),
-				widget = wibox.container.margin
-			}
+			spacing = dpi(5)
 	}
 
-	local function add_to_panel(name, index)
+	local function add_to_panel(name, index, callback)
 		index = index or #right_widget.children
 
 		if index > #right_widget.children then
@@ -112,16 +109,34 @@ local top_panel = function(s)
 			index = 1
 		end
 
-		if s[name] ~= nil and index ~= nil then
-			right_widget:insert(index, s[name])
+
+		local widget = s[name]
+
+		if widget == nil then
+			return
 		end
 
-		if s[name] ~= nil and index == nil then
-			right_widget:add(s[name])
+		if callback then
+			widget = callback(widget)
+		end
+
+		if index ~= nil then
+			right_widget:insert(index, widget)
+		else
+			right_widget:add(widget)
 		end
 	end
 
+	add_to_panel("systray", nil, function(widget)
+		return wibox.widget {
+			widget,
+			margins = dpi(5),
+			widget = wibox.container.margin
+		}
+	end)
+
 	add_to_panel("tray_toggler")
+	add_to_panel("keyboard_layout")
 
 	for _, plugin in ipairs(plugins) do
 		if type(plugin) == "table" and plugin.__plugin_name ~= nil and plugin.plugin ~= nil then
