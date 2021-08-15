@@ -1046,6 +1046,27 @@ connections.connect_keyboard_layout_updated = function(func)
     awesome.connect_signal("TDE::keyboard::layout::updated", func)
 end
 
+--- Signals to notify that the developer settings should be saved
+-- @staticfct emit_save_developer_settings
+-- @usage
+-- lib-tde.signals.emit_save_developer_settings()
+connections.emit_save_developer_settings = function(layouts, active)
+    awesome.emit_signal("TDE::save::developer::settings", layouts, active)
+end
+
+--- Trigger a callback function to save the current developer settings
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_save_developer_settings
+-- @usage
+-- lib-tde.signals.connect_save_developer_settings(
+--    function ()
+--      print("Saving developer settings")
+--    end)
+connections.connect_save_developer_settings = function(func)
+    awesome.connect_signal("TDE::save::developer::settings", func)
+end
+
+
 
 
 return connections

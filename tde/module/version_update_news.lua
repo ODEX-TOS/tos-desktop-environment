@@ -106,7 +106,12 @@ local function create_news_widget(news)
 
     for name, part in pairs(news) do
         -- Dev Notes are not intended to be shown in the release notes
-        if name ~= "Dev Notes" and name ~= "Release Notes" then
+        -- Unless developer settings is enabled
+        local bShouldShow = true
+        if (not _G.save_state.developer.enabled) and name == "Dev Notes" then
+            bShouldShow = false
+        end
+        if bShouldShow and name ~= "Release Notes" then
             layout:add(wibox.widget{
                 text = name,
                 font = beautiful.title_font,

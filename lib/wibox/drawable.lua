@@ -510,6 +510,12 @@ capi.awesome.connect_signal("wallpaper_changed", function()
     end
 end)
 
+capi.awesome.connect_signal("full_redraw", function()
+    for d in pairs(visible_drawables) do
+        d:_do_complete_repaint()
+    end
+end)
+
 -- Give drawables a chance to react to screen changes
 local function draw_all()
     for d in pairs(visible_drawables) do

@@ -50,6 +50,17 @@ local default_keyboard_layout = function()
     return map or "us"
 end
 
+local function ensure_valid_dev_settings(state, disabled_dev_settings)
+    if general["developer"] == "1" then
+        state.developer.enabled = true
+        return state
+    end
+
+    state.developer = disabled_dev_settings
+
+    return state
+end
+
 local function load()
 
     local fetch_default_layout = default_keyboard_layout()
@@ -79,6 +90,13 @@ local function load()
         keyboard = {
             active = fetch_default_layout,
             layouts = {fetch_default_layout}
+        },
+        -- settings that should only be changed by developers
+        developer = {
+            note = "ONLY DEVELOPERS SHOULD SAVE THESE SETTINGS",
+            enabled = false,
+            draw_debug = false,
+            draw_debug_colors = false
         }
     }
     if not filehandle.exists(file) then
@@ -101,6 +119,9 @@ local function load()
     result.last_version = result.last_version or table.last_version
 
     result.keyboard = result.keyboard or table.keyboard
+
+    result.developer = result.developer or table.developer
+    result = ensure_valid_dev_settings(result, table.developer)
 
     -- For some reason we downgraded tos, in this case we should also trigger the news section
     -- We do this by making the last_version smaller
@@ -213,6 +234,12 @@ local function setup_state(state)
                 end
             end
         end)
+    end
+
+
+    if state.developer.enabled then
+        -- force a hierarcy redraw so that the draw settings are enforced
+        awesome.emit_signal("full_redraw")
     end
 end
 
@@ -436,5 +463,10 @@ signals.connect_keyboard_layout_updated(function (layouts, active_layout)
     save_state.keyboard.active = active_layout
     save_state.keyboard.layouts = layouts
 
+    save(save_state)
+end)
+
+
+signals.connect_save_developer_settings(function()
     save(save_state)
 end)

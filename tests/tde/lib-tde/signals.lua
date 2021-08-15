@@ -535,9 +535,19 @@ function Test_connect_keyboard_layout_updated()
     assert(type(signals.connect_keyboard_layout_updated) == "function", "Make sure connect_keyboard_layout_updated is a signal and a function")
 end
 
+function Test_emit_save_developer_settings()
+    assert(signals.emit_save_developer_settings, "Make sure the signal emit_save_developer_settings exists")
+    assert(type(signals.emit_save_developer_settings) == "function", "Make sure emit_save_developer_settings is a signal and a function")
+end
+
+function Test_connect_save_developer_settings()
+    assert(signals.connect_save_developer_settings, "Make sure the signal connect_save_developer_settings exists")
+    assert(type(signals.connect_save_developer_settings) == "function", "Make sure connect_save_developer_settings is a signal and a function")
+end
+
 
 function Test_signals_api_unit_tested()
-    local amount = 95
+    local amount = 97
     local result = tablelength(signals)
     assert(
         result == amount,

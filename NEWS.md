@@ -39,6 +39,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - New action and control centers
 - Allow changing the blur strength of the compositor
 - Reworked the notification center notifications
+- Added a keyboard layout changing widget
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
@@ -50,6 +51,8 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 ### Dev Notes
 - The inputfield now allows editing of the field
 - You can now use printf syntax for the i18n.translate api
+- You can now enable developer settings by adding the line `developer="1"` in general.conf, this will add a developer tab in settings
+- You can now see drawboxes around widget if you enable it in the settings state
 
 
 ## Patch 0.9

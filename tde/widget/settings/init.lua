@@ -432,6 +432,13 @@ local function make_nav()
     make_view(icons.about, i18n.translate("About"), require("widget.settings.about")())
   )
 
+  if general["developer"] == "1" then
+    table.insert(
+      root.elements.settings_views,
+      make_view(icons.developer, i18n.translate("Developer"), require("widget.settings.developer")())
+    )
+  end
+
   for _, value in ipairs(plugins) do
     if value.icon == nil then
       send_plugin_error("Settings app plugin is missing icon")

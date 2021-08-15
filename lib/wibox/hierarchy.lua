@@ -14,6 +14,7 @@ local cairo = require("lgi").cairo
 local base = require("wibox.widget.base")
 local no_parent = base.no_parent_I_know_what_I_am_doing
 
+
 local hierarchy = {}
 
 local widgets_to_count = setmetatable({}, { __mode = "k" })
@@ -25,6 +26,16 @@ local widgets_to_count = setmetatable({}, { __mode = "k" })
 -- @staticfct wibox.hierarchy.count_widget
 function hierarchy.count_widget(widget)
     widgets_to_count[widget] = true
+end
+
+local function gen_debug_color()
+    -- select randomly from this pallet
+    local pallet = {
+        {1, 0, 0}, -- red
+        {0, 1, 0}, -- green
+        {0, 0, 1}, -- blue
+    }
+    return pallet[math.ceil(math.random() * #pallet)]
 end
 
 local function hierarchy_new(redraw_callback, layout_callback, callback_arg)
@@ -41,6 +52,7 @@ local function hierarchy_new(redraw_callback, layout_callback, callback_arg)
             width = nil,
             height = nil
         },
+        _debug_color = gen_debug_color(),
         _draw_extents = {
             x = 0,
             y = 0,
@@ -278,6 +290,11 @@ function hierarchy:get_draw_extents()
     return ext.x, ext.y, ext.width, ext.height
 end
 
+function hierarchy:get_debug_color()
+    local ext = self._debug_color
+    return ext[1], ext[2], ext[3]
+end
+
 --- Get the size that this hierarchy logically covers (in the current coordinate space).
 -- @return width, height
 -- @method get_size
@@ -308,6 +325,35 @@ local function empty_clip(cr)
     return x2 - x1 == 0 or y2 - y1 == 0
 end
 
+
+function hierarchy:draw_debug(cr, x, y, width, height)
+    if _G.save_state == nil or _G.save_state.developer == nil or _G.save_state.developer.draw_debug ~= true then
+        return
+    end
+
+    cr:save()
+
+    if _G.save_state.developer.draw_debug_colors then
+        cr:set_source_rgb(self:get_debug_color())
+    else
+        cr:set_source_rgb(1,0,0)
+    end
+
+    cr:move_to(x, y)
+
+    cr:line_to(x, y + height)
+    cr:line_to(x, y + height)
+    cr:line_to(x + width, y + height)
+    cr:line_to(x + width, y)
+    cr:line_to(x, y)
+
+    cr:set_line_width(2)
+    cr:stroke()
+
+
+    cr:restore()
+end
+
 --- Draw a hierarchy to some cairo context.
 -- This function draws the widgets in this widget hierarchy to the given cairo
 -- context. The context's clip is used to skip parts that aren't visible.
@@ -326,6 +372,9 @@ function hierarchy:draw(context, cr)
     -- Clip to the draw extents
     cr:rectangle(self:get_draw_extents())
     cr:clip()
+
+    local width, height = self:get_size()
+    self:draw_debug(cr, 0, 0, width, height)
 
     -- Draw if needed
     if not empty_clip(cr) then

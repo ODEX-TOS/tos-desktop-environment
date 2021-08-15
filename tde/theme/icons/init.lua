@@ -91,6 +91,7 @@ return {
   arrow_down = theme(dir .. "/arrow_down.svg"),
   firewall = theme(dir .. "/firewall.svg"),
   dir = theme(dir .. "/folder.svg"),
+  developer = theme(dir .. "/developer.svg"),
 
   --png's
   unknown = theme(dir .. "/noicon.png"),
