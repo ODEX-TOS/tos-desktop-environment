@@ -144,20 +144,25 @@ function functionState(name, bFailed, bSkipped)
     local failed_background = "\27[30m\27[41m"
     local success_background = "\27[30m\27[42m"
     local skipped_background = "\27[30m\27[43m"
+
+    local failed_background_fg = "\27[30m\27[31m"
+    local success_background_fg = "\27[30m\27[32m"
+    local skipped_background_fg = "\27[30m\27[33m"
+
     local clear_background = "\27[49m\27[39m"
     local failed = " FAILED  "
     local success = " SUCCESS "
     local skipped = " SKIPPED "
 
     if bSkipped == true then
-        return clear_background .. name .. filler_str .. skipped_background .. skipped .. clear_background .. "\n"
+        return clear_background .. name .. skipped_background_fg .. filler_str .. skipped_background .. skipped .. clear_background .. "\n"
     end
 
     if bFailed then
-        return clear_background .. name .. filler_str .. failed_background .. failed .. clear_background .. "\n"
+        return clear_background .. failed_background_fg .. name .. filler_str .. failed_background .. failed .. clear_background .. "\n"
     end
 
-    return clear_background .. name .. filler_str .. success_background .. success .. clear_background .. "\n"
+    return clear_background  .. name .. success_background_fg .. filler_str .. success_background .. success .. clear_background .. "\n"
 end
 
 local function pcall_or_abort(func, ...)
