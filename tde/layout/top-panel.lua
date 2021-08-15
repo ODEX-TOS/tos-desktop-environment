@@ -95,7 +95,8 @@ local top_panel = function(s)
 
 	local right_widget = wibox.widget {
 			layout = wibox.layout.fixed.horizontal,
-			spacing = dpi(5)
+			spacing = dpi(5),
+			wibox.widget.base.empty_widget(),
 	}
 
 	local function add_to_panel(name, index, callback)
