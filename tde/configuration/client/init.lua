@@ -22,4 +22,24 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
+
 require("configuration.client.rules")
+
+
+local function draw_client_border(c)
+    if _G.save_state.developer.draw_debug then
+        c.border_width = dpi(2)
+    else
+        c.border_width = 0
+    end
+end
+
+client.connect_signal("request::manage", draw_client_border)
+
+client.connect_signal("draw_debug", function()
+    for _, c in ipairs(client.get()) do
+        draw_client_border(c)
+    end
+end)

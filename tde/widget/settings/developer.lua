@@ -87,12 +87,18 @@ return function()
   local function ensure_developer_settings()
     -- make sure that the developer settings should have an effect
     _G.save_state.developer.enabled = general["developer"] == "1"
-   end
+  end
+
+  local function update_client_draw_mode()
+    client.emit_signal("draw_debug")
+  end
 
   local debug_check = create_checkbox("Draw debug", _G.save_state.developer.draw_debug, function(checked)
     ensure_developer_settings()
 
     _G.save_state.developer.draw_debug = checked
+
+    update_client_draw_mode()
 
     -- force a full redraw of everything to paint the debug lines
     awesome.emit_signal("full_redraw")
@@ -108,6 +114,8 @@ return function()
     -- when we enable colors debugging, this should always be enabled
     _G.save_state.developer.draw_debug = true
     debug_check_callback(_G.save_state.developer.draw_debug)
+
+    update_client_draw_mode()
 
     -- force a full redraw of everything to paint the debug lines
     awesome.emit_signal("full_redraw")
