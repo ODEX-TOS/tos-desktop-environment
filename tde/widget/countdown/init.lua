@@ -32,6 +32,7 @@ local gears = require("gears")
 local beautiful = require("beautiful")
 local gfs = require("gears.filesystem")
 local dpi = require("beautiful").xresources.apply_dpi
+local common = require("lib-tde.function.common")
 local datetime = require('lib-tde.function.datetime')
 local toHHMMSS = datetime.numberInSecToHMS
 local toseconds = datetime.toSeconds
@@ -164,7 +165,7 @@ local popup = awful.popup{
     border_width = dpi(1),
     border_color = beautiful.primary.hue_800,
     maximum_width = dpi(400),
-    offset = { y = dpi(20), x = dpi(200) },
+    offset = { y = dpi(5), x = dpi(200) },
     widget = {}
 }
 
@@ -436,6 +437,7 @@ local function worker(user_args)
         update_widget()
     end)
 
+
     countdown_widget.widget:buttons(
             gears.table.join(
                     awful.button({}, 1, function()
@@ -448,13 +450,11 @@ local function worker(user_args)
                             popup.visible = not popup.visible
                         else
                             countdown_widget.widget.bg = beautiful.groups_bg
-                            local geometry = {
-                                x = mouse.coords().x,
-                                y = mouse.screen.geometry.y + dpi(20),
-                                width = 10,
-                                height = 10
-                            }
-                            popup:move_next_to(geometry)
+
+                            -- find the widget geometry in the top_panel
+                            local s = mouse.screen
+                            popup:move_next_to(common.widget_geometry(s.top_panel, countdown_widget.widget))
+                            awful.placement.no_offscreen(popup)
                         end
                     end)
             )

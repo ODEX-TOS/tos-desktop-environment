@@ -33,6 +33,8 @@ local beautiful = require("beautiful")
 local gfs = require("gears.filesystem")
 local dpi = require("beautiful").xresources.apply_dpi
 
+local common = require("lib-tde.function.common")
+
 local icons = require("theme.icons")
 local serialize = require("lib-tde.serialize")
 
@@ -105,7 +107,7 @@ local popup = awful.popup{
     border_width = dpi(1),
     border_color = beautiful.primary.hue_800,
     maximum_width = dpi(400),
-    offset = { y = dpi(20), x = dpi(200) },
+    offset = { y = dpi(5), x = dpi(200) },
     widget = {}
 }
 
@@ -394,13 +396,10 @@ local function worker(user_args)
                             popup.visible = not popup.visible
                         else
                             todo_widget.widget.bg = beautiful.groups_bg
-                            local geometry = {
-                                x = mouse.coords().x,
-                                y = mouse.screen.geometry.y + dpi(20),
-                                width = 10,
-                                height = 10
-                            }
-                            popup:move_next_to(geometry)
+
+                            local s = mouse.screen
+                            popup:move_next_to(common.widget_geometry(s.top_panel, todo_widget.widget))
+                            awful.placement.no_offscreen(popup)
                         end
                     end)
             )

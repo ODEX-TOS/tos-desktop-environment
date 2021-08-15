@@ -193,6 +193,41 @@ local function capitalize(str)
     return str:sub(1, 1):upper() .. str:sub(2)
 end
 
+local function find_widget_in_wibox(wb, widget)
+    local function find_widget_in_hierarchy(h, _widget)
+      if h:get_widget() == _widget then
+        return h
+      end
+      local result
+      for _, ch in ipairs(h:get_children()) do
+        result = result or find_widget_in_hierarchy(ch, _widget)
+      end
+      return result
+    end
+    local h = wb._drawable._widget_hierarchy
+    return h and find_widget_in_hierarchy(h, widget)
+end
+
+--- Return the geometry of a given widget inside of a wibox
+-- Since widgets can have different sizes depending on the space given, you can't directly access the geometry
+-- This helper function searches for the widget inside of a wibox and calculates it's size
+-- @tparam wibox wibox The wibox in which the widget is displayed
+-- @tparam widget widget The widget to calculate the geometry for
+-- @staticfct widget_geometry
+local function widget_geometry(wibox, widget)
+    local h = find_widget_in_wibox(wibox, widget)
+    local x, y, width, height = h:get_matrix_to_device():transform_rectangle(0, 0, h:get_size())
+    local geo = wibox:geometry()
+    x, y = x + geo.x, y + geo.y
+
+    return {
+        x = x,
+        y = y,
+        width = width,
+        height = height
+    }
+end
+
 return {
     split = split,
     sleep = sleep,
@@ -202,5 +237,6 @@ return {
     trim = trim,
     focused_screen = focused_screen,
     major_version = major_version,
-    capitalize = capitalize
+    capitalize = capitalize,
+    widget_geometry = widget_geometry
 }
