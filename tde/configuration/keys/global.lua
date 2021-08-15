@@ -163,7 +163,7 @@ local globalKeys =
     "=",
     function()
       print("Toggeling systray visibility")
-      awful.screen.focused().systray.visible = not awful.screen.focused().systray.visible
+      awesome.emit_signal("widget::systray:toggle")
     end,
     {description = i18n.translate("Toggle systray visibility"), group = i18n.translate("custom")}
   ),
