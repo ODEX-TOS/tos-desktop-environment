@@ -108,12 +108,12 @@ local function handle_plugin(value, name)
             return true, pluginify(plugin, value)
         else
             inValidPlugin(
-                name,
+                value,
                 "Errored out while loading. Make sure your plugins is the latest version and supports the latest TDE build."
             )
         end
     else
-        inValidPlugin(name, "Not found. Make sure it is present in  ~/.config/tde/" .. name .. "/init.lua")
+        inValidPlugin(value, "Not found. Make sure it is present in  ~/.config/tde/" .. value .. "/init.lua")
     end
     return false
 end

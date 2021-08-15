@@ -33,6 +33,7 @@ local flags_dir = "/etc/xdg/tde/widget/keyboard/flags/"
 
 local scrollbox = require("lib-widget.scrollbox")
 local button = require("lib-widget.button")
+local card = require("lib-widget.card")
 
 local quicksort = require("lib-tde.sort.quicksort")
 
@@ -133,6 +134,7 @@ local function gen_panel(s, layouts)
     local panel_width = dpi(350)
 
     local panel
+    local body = card("Keyboard Layout")
 
     local _widget = wibox.widget {
         layout = wibox.layout.fixed.vertical,
@@ -172,8 +174,10 @@ local function gen_panel(s, layouts)
 
     ratio:adjust_ratio(2, 0.90, 0.02, 0.08)
 
+    body.update_body(wibox.container.margin(ratio, dpi(7), dpi(7), dpi(7), dpi(7)))
+
     panel = awful.popup {
-		widget = wibox.container.margin(ratio, dpi(7), dpi(7), dpi(7), dpi(7)),
+		widget = wibox.container.margin(body, dpi(7), dpi(7), dpi(7), dpi(7)),
 		screen = s,
 		type = 'dock',
 		visible = false,
