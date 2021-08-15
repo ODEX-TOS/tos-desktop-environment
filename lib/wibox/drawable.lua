@@ -503,18 +503,16 @@ function drawable.new(d, widget_context_skeleton, drawable_name)
     })
 end
 
--- Redraw all drawables when the wallpaper changes
-capi.awesome.connect_signal("wallpaper_changed", function()
-    for d in pairs(visible_drawables) do
-        d:_do_complete_repaint()
-    end
-end)
 
-capi.awesome.connect_signal("full_redraw", function()
+local function __full_repaint()
     for d in pairs(visible_drawables) do
         d:_do_complete_repaint()
     end
-end)
+end
+-- Redraw all drawables when the wallpaper changes
+capi.awesome.connect_signal("wallpaper_changed", __full_repaint)
+
+capi.awesome.connect_signal("full_redraw", __full_repaint)
 
 -- Give drawables a chance to react to screen changes
 local function draw_all()

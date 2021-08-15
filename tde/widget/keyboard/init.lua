@@ -272,8 +272,6 @@ return function(s)
 
     selected_layouts = _G.save_state.keyboard.layouts
 
-    local panel = gen_panel(s, sorted)
-
     local image = wibox.widget {
         resize = true,
         image = flags_dir .. selected_layouts[1] .. ".svg",
@@ -313,6 +311,8 @@ return function(s)
         keyboard_layout.widget
     }
 
+    local panel
+
     local widget_button = clickable_container(wibox.container.margin(_widget, dpi(14), dpi(14), dpi(7), dpi(7)))
 			widget_button:buttons(
 			gears.table.join(
@@ -329,6 +329,11 @@ return function(s)
 				3,
 				nil,
 				function()
+                    -- generate the panel on the first opening
+                    -- Since we load in a lot of country images, it is best to wait until we need to load them into memory
+                    if panel == nil then
+                        panel = gen_panel(s, sorted)
+                    end
 					panel.toggle()
 				end
 				)
