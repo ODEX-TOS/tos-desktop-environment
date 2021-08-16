@@ -54,7 +54,7 @@ setmetatable(root.elements.settings_views, weak)
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
-local settings_height = dpi(900)
+local settings_height = dpi(1000)
 local settings_nw = dpi(260)
 
 -- This gets populated by the scrollbox

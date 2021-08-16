@@ -98,6 +98,16 @@ local function load()
             draw_debug = false,
             draw_debug_colors = false,
             paint_refresh = false,
+        },
+        theming = {
+            custom_primary_theme = false,
+            custom_background_theme = false,
+            primary_theme = {
+
+            },
+            background_theme = {
+
+            }
         }
     }
     if not filehandle.exists(file) then
@@ -123,6 +133,8 @@ local function load()
 
     result.developer = result.developer or table.developer
     result = ensure_valid_dev_settings(result, table.developer)
+
+    result.theming = result.theming or table.theming
 
     -- For some reason we downgraded tos, in this case we should also trigger the news section
     -- We do this by making the last_version smaller
@@ -459,5 +471,22 @@ end)
 
 
 signals.connect_save_developer_settings(function()
+    save(save_state)
+end)
+
+signals.connect_save_theming_settings(function(bIsPrimaryGradient, bIsBackgroundGradient)
+    local beautiful = require("beautiful")
+
+    if bIsPrimaryGradient ~= nil then
+        save_state.theming.custom_primary_theme = bIsPrimaryGradient
+    end
+
+    if bIsBackgroundGradient ~= nil then
+        save_state.theming.custom_background_theme = bIsBackgroundGradient
+    end
+
+    save_state.theming.background_theme = beautiful.background
+    save_state.theming.primary_theme = beautiful.primary
+
     save(save_state)
 end)

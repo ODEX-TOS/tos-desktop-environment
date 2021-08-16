@@ -87,7 +87,10 @@ local function color(value)
   end
 end
 
-local function loadtheme(standard, override, prefix)
+local function loadtheme(standard, override, prefix, bFromSettingState, settings_state_pallet)
+  if bFromSettingState then
+    return settings_state_pallet
+  end
   standard["hue_50"] = color(override[prefix .. "hue_50"]) or standard["hue_50"]
   standard["hue_100"] = color(override[prefix .. "hue_100"]) or standard["hue_100"]
   standard["hue_200"] = color(override[prefix .. "hue_200"]) or standard["hue_200"]
@@ -156,9 +159,9 @@ theme.accent = mat_colors[config["accent"]] or mat_colors.hue_purple
 -- Background
 theme.background = mat_colors[config["background"]] or mat_colors.grey
 
-theme.primary = loadtheme(theme.primary, config, "primary_")
-theme.accent = loadtheme(theme.accent, config, "accent_")
-theme.background = loadtheme(theme.background, config, "background_")
+theme.primary = loadtheme(theme.primary, config, "primary_", _G.save_state.theming.custom_primary_theme, _G.save_state.theming.primary_theme)
+theme.accent = loadtheme(theme.accent, config, "accent_", _G.save_state.theming.custom_primary_theme, _G.save_state.theming.primary_theme)
+theme.background = loadtheme(theme.background, config, "background_", _G.save_state.theming.custom_background_theme, _G.save_state.theming.background_theme)
 theme.text = color(config["text"]) or "#FFFFFF"
 
 theme.groups_radius = dpi(10)

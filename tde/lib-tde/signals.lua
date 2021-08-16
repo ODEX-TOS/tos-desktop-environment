@@ -1066,6 +1066,26 @@ connections.connect_save_developer_settings = function(func)
     awesome.connect_signal("TDE::save::developer::settings", func)
 end
 
+--- Signals to notify that the theming settings should be saved
+-- @staticfct emit_save_theming_settings
+-- @usage
+-- lib-tde.signals.emit_save_theming_settings()
+connections.emit_save_theming_settings = function(bIsPrimaryGradient, bIsBackgroundGradient)
+    awesome.emit_signal("TDE::save::theming::settings", bIsPrimaryGradient, bIsBackgroundGradient)
+end
+
+--- Trigger a callback function to save the current theming settings
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_save_theming_settings
+-- @usage
+-- lib-tde.signals.connect_save_theming_settings(
+--    function ()
+--      print("Saving theming settings")
+--    end)
+connections.connect_save_theming_settings = function(func)
+    awesome.connect_signal("TDE::save::theming::settings", func)
+end
+
 
 
 

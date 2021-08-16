@@ -34,7 +34,6 @@ awful.util.shell = 'sh'
 
 
 require("global_var")
-require("module.state")
 
 
 require("collision")()

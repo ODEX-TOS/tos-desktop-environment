@@ -545,9 +545,19 @@ function Test_connect_save_developer_settings()
     assert(type(signals.connect_save_developer_settings) == "function", "Make sure connect_save_developer_settings is a signal and a function")
 end
 
+function Test_emit_save_theming_settings()
+    assert(signals.emit_save_theming_settings, "Make sure the signal emit_save_theming_settings exists")
+    assert(type(signals.emit_save_theming_settings) == "function", "Make sure emit_save_theming_settings is a signal and a function")
+end
+
+function Test_connect_save_theming_settings()
+    assert(signals.connect_save_theming_settings, "Make sure the signal connect_save_theming_settings exists")
+    assert(type(signals.connect_save_theming_settings) == "function", "Make sure connect_save_theming_settings is a signal and a function")
+end
+
 
 function Test_signals_api_unit_tested()
-    local amount = 97
+    local amount = 99
     local result = tablelength(signals)
     assert(
         result == amount,

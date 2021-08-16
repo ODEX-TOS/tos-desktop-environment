@@ -169,11 +169,13 @@ local function make_color_entry(name, slide, font_black)
         activePrimary = pallet
         activePrimaryName = name
         signals.emit_primary_theme_changed(activePrimary)
+        signals.emit_save_theming_settings(false)
       else
         activeBackground = pallet
         activeBackgroundName = name
         print(activeBackground)
         signals.emit_background_theme_changed(activeBackground)
+        signals.emit_save_theming_settings(nil, false)
       end
       refresh()
     end,
@@ -291,7 +293,7 @@ return function()
       m,
       m,
       m
-    )
+    ),
   }
 
   local function new_gradient_pallet_fnc()
@@ -375,10 +377,13 @@ return function()
     if colorModeIsPrimary then
       activePrimary = new_gradient
       signals.emit_primary_theme_changed(activePrimary)
+      signals.emit_save_theming_settings(true)
     else
       activeBackground = new_gradient
       signals.emit_background_theme_changed(activeBackground)
+      signals.emit_save_theming_settings(nil, true)
     end
+
     refresh()
   end), m, m, m, m)
 }
@@ -390,7 +395,11 @@ return function()
     left_gradient_btn.bg = left_gradient.hue_800
   end)
 
-  theme_card.update_body(theme_settings_body)
+  theme_card.update_body(wibox.widget{
+    layout = wibox.layout.fixed.vertical,
+    theme_settings_body,
+    wibox.container.margin(save, dpi(5), dpi(5), dpi(5), dpi(5))
+  })
   gradient_card.update_body(theme_gradient_settings_body)
 
   primaryButton = create_primary_button()
@@ -407,7 +416,6 @@ return function()
       },
       wibox.container.margin(theme_card, 0, 0, dpi(10), dpi(10)),
       wibox.container.margin(gradient_card, 0, 0, dpi(10), dpi(10)),
-      save
     }
   }
 
