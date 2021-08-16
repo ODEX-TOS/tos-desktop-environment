@@ -123,12 +123,23 @@ return function()
     signals.emit_save_developer_settings()
   end)
 
+  local debug_paint_refresh = create_checkbox("Paint refresh", _G.save_state.developer.paint_refresh, function (checked)
+    ensure_developer_settings()
+
+    _G.save_state.developer.paint_refresh = checked
+
+    -- force a full redraw of everything to paint the debug lines
+    awesome.emit_signal("full_redraw")
+    signals.emit_save_developer_settings()
+  end)
+
 
   local checkbox_widget =
     wibox.widget {
     layout = wibox.layout.flex.vertical,
     debug_check,
-    debug_color_check
+    debug_color_check,
+    debug_paint_refresh
   }
 
   local checkbox_card = card()

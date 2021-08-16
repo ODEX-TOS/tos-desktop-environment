@@ -4,7 +4,7 @@
 require("lgi")
 
 -- Always show deprecated messages
-_G.awesome = {version = "v9999"}
+_G.awesome = {version = "v9999", connect_signal = function() end}
 
 -- "fix" some intentional beautiful breakage done by .travis.yml
 require("beautiful").init{a_key="a_value"}

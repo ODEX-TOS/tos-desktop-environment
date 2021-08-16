@@ -96,7 +96,8 @@ local function load()
             note = "ONLY DEVELOPERS SHOULD SAVE THESE SETTINGS",
             enabled = false,
             draw_debug = false,
-            draw_debug_colors = false
+            draw_debug_colors = false,
+            paint_refresh = false,
         }
     }
     if not filehandle.exists(file) then

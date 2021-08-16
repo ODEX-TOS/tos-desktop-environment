@@ -10,6 +10,7 @@
 
 local matrix = require("gears.matrix")
 local protected_call = require("gears.protected_call")
+local timer = require("gears.timer")
 local cairo = require("lgi").cairo
 local base = require("wibox.widget.base")
 local no_parent = base.no_parent_I_know_what_I_am_doing
@@ -326,8 +327,52 @@ local function empty_clip(cr)
 end
 
 
+
+
 function hierarchy:draw_debug(cr, x, y, width, height)
-    if _G.save_state == nil or _G.save_state.developer == nil or _G.save_state.developer.draw_debug ~= true then
+    if _G.save_state == nil or _G.save_state.developer == nil then
+        return
+    end
+
+    if _G.save_state.developer.paint_refresh then
+        if self.__is_in_debug_refresh_mode ~= true then
+            cr:save()
+
+            if _G.save_state.developer.draw_debug_colors then
+                cr:set_source_rgb(self:get_debug_color())
+            else
+                cr:set_source_rgb(1,0,0)
+            end
+
+            cr:rectangle(x, y, width, height)
+
+            cr:fill()
+            cr:restore()
+
+            self.__is_in_debug_refresh_mode = true
+
+            local function delayed_call(count, end_callback)
+                if count > 0 then
+                    timer.delayed_call(function ()
+                        delayed_call(count - 1, end_callback)
+                    end)
+                else
+                    end_callback()
+                end
+            end
+
+            timer.delayed_call(function ()
+                -- redraw without repainting the debug triangle
+                self:_redraw()
+
+                delayed_call(20, function()
+                    self.__is_in_debug_refresh_mode = false
+                end)
+            end)
+        end
+    end
+
+    if _G.save_state.developer.draw_debug ~= true then
         return
     end
 
@@ -349,7 +394,6 @@ function hierarchy:draw_debug(cr, x, y, width, height)
 
     cr:set_line_width(2)
     cr:stroke()
-
 
     cr:restore()
 end
