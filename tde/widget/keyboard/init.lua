@@ -185,7 +185,7 @@ local function gen_panel(s, layouts)
 		width = dpi(panel_width),
 		maximum_width = dpi(panel_width),
 		maximum_height = s.geometry.height/2,
-		bg = beautiful.transparent,
+		bg = beautiful.background.hue_800 .. beautiful.background_transparency,
 		fg = beautiful.fg_normal,
 		shape = function(cr, width, height)
             gears.shape.rounded_rect(cr, width, height, dpi(10))
@@ -204,6 +204,7 @@ local function gen_panel(s, layouts)
 	}
 
     signals.connect_background_theme_changed(function(pallet)
+        panel.bg = pallet.hue_800 .. beautiful.background_transparency
 		_widget.bg = pallet.hue_800 .. beautiful.background_transparency
 	end)
 
@@ -269,7 +270,9 @@ return function(s)
     local layout_codes = {}
 
     for k, _ in pairs(awful.widget.keyboardlayout.xkeyboard_country_code) do
-        table.insert(layout_codes, k)
+        if #k == 2 then
+            table.insert(layout_codes, k)
+        end
     end
 
     local sorted = quicksort(layout_codes)
