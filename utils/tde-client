@@ -277,6 +277,9 @@ then
             exec_loop
             echo "$res"
             exit 0
+        elif [[ "$1" == "--plugin" ]]; then
+            a_dbus_send "return require('lib-tde.plugin-loader').live_add_plugin('$3', '$2')"
+            exit 0
         else
             ARGS="$ARGS $1"
         fi

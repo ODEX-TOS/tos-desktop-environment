@@ -313,6 +313,20 @@ local function make_view(i, t, v, a)
   return {link = btn, view = view, title = _title}
 end
 
+local function validate_plugin(plugin)
+  if plugin.icon == nil then
+    send_plugin_error("Settings app plugin is missing icon")
+  elseif plugin.name == nil then
+    send_plugin_error("Settings app plugin is missing name")
+  elseif plugin.wibox == nil then
+    send_plugin_error("Settings app plugin is missing widget")
+  else
+    local view = make_view(plugin.icon, plugin.name, plugin.wibox)
+    table.insert(root.elements.settings_views, view)
+    return view
+  end
+end
+
 local function make_nav(load_callback)
   local nav = wibox.container.background()
   nav.bg = beautiful.bg_modal_title
@@ -409,9 +423,9 @@ local function make_nav(load_callback)
       view.link.bg = beautiful.transparent
       view.link.active = false
 
-      nav_container_populate()
-      load_callback()
     end
+    nav_container_populate()
+    load_callback()
   end)
 
   table.insert(
@@ -454,16 +468,8 @@ local function make_nav(load_callback)
     )
   end
 
-  for _, value in ipairs(plugins) do
-    if value.icon == nil then
-      send_plugin_error("Settings app plugin is missing icon")
-    elseif value.name == nil then
-      send_plugin_error("Settings app plugin is missing name")
-    elseif value.wibox == nil then
-      send_plugin_error("Settings app plugin is missing widget")
-    else
-      table.insert(root.elements.settings_views, make_view(value.icon, value.name, value.wibox))
-    end
+  for _, plugin in ipairs(plugins) do
+    validate_plugin(plugin)
   end
 
   local red = require("theme.mat-colors").red
@@ -493,7 +499,7 @@ local function make_nav(load_callback)
     }
   }
 
-  return nav
+  return nav, nav_container
 end
 
 return function()
@@ -522,13 +528,27 @@ return function()
 
   local view_container = wibox.layout.stack()
 
-  local nav = make_nav(function()
+  local nav, nav_container = make_nav(function()
     gears.table.map(
       function(v)
         view_container:add(v.view)
       end,
       root.elements.settings_views
     )
+  end)
+
+  signals.connect_add_plugin(function(location, plugin)
+    if location ~= "settings" then
+      return
+    end
+
+    local view = validate_plugin(plugin)
+    if view == nil then
+      return
+    end
+
+    view_container:add(view.view)
+    nav_container:add(view.link)
   end)
 
   hub:buttons(

@@ -24,6 +24,16 @@
 ]]
 local plugins = require("lib-tde.plugin-loader")("prompt")
 
+local signals = require("lib-tde.signals")
+
+signals.connect_add_plugin(function (location, plugin)
+    if location ~= "prompt" then
+        return
+    end
+
+    table.insert(plugins, plugin)
+end)
+
 local function get_completions(query)
     local res = {}
 

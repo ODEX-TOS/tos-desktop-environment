@@ -76,7 +76,7 @@ end
 
 naughty.connect_signal('added', function(n)
     local notifbox_color = beautiful.transparent
-    if n.urgency == 'critical' then notifbox_color = n.bg .. '66' end
+    if n.urgency == 'critical' then notifbox_color = (n.bg or "#FF0000") .. '66' end
 
     local notif_icon = n.icon or n.app_icon
     if not notif_icon then

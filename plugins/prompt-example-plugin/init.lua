@@ -33,9 +33,12 @@ local icons = require("theme.icons")
 -- payload -> a custom object that will be passed to the `perform_action` function when this item is selected
 local function get_completions(query)
     return {
-        {icon = icons.unknown,
-        text = "Plugin completion for: " .. tostring(query),
-        payload = query}
+        {
+            icon = icons.unknown,
+            text = "Plugin completion for: " .. tostring(query),
+            payload = query,
+            __score = math.huge -- optional argument to override the place in the prompt to appear
+        }
     }
 end
 

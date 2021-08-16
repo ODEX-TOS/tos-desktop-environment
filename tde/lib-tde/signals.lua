@@ -1067,6 +1067,8 @@ connections.connect_save_developer_settings = function(func)
 end
 
 --- Signals to notify that the theming settings should be saved
+-- @tparam bool bIsPrimaryGradient If we should save the primary color pallet
+-- @tparam bool bIsBackgroundGradient If we should save the background color pallet
 -- @staticfct emit_save_theming_settings
 -- @usage
 -- lib-tde.signals.emit_save_theming_settings()
@@ -1085,6 +1087,31 @@ end
 connections.connect_save_theming_settings = function(func)
     awesome.connect_signal("TDE::save::theming::settings", func)
 end
+
+--- Signals to notify that we want to make a plugin appear in a given location
+-- @tparam string location If we should save the primary color pallet
+-- @tparam widget plugin The plugin we wish to load in on that location
+-- @staticfct emit_add_plugin
+-- @usage
+-- lib-tde.signals.emit_add_plugin()
+connections.emit_add_plugin = function(location, plugin)
+    awesome.emit_signal("TDE::add_plugin", location, plugin)
+end
+
+--- Trigger a callback function to add a plugin to your location
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_add_plugin
+-- @usage
+-- lib-tde.signals.connect_add_plugin(
+--    function (location, plugin)
+--      if location == "your_location" then
+--          print("Adding plugin: " .. tostring(plugin))
+--      end
+--    end)
+connections.connect_add_plugin = function(func)
+    awesome.connect_signal("TDE::add_plugin", func)
+end
+
 
 
 

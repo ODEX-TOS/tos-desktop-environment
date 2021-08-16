@@ -54,50 +54,37 @@ local info_center = function(s)
 		plugin_layout:add(plugin)
 	end
 
-	local _widget
 
 	print("Info center plugins: " .. tostring(#plugins))
 
+	local _layout = wibox.widget {
+		wibox.widget {
+			notif_layout,
+			margins = dpi(10),
+			widget = wibox.container.margin
+		},
+		nil,
+		spacing = dpi(10),
+		layout = wibox.layout.fixed.horizontal
+	}
+
 	if #plugins > 0 then
-		_widget = wibox.widget {
-			wibox.widget {
-				{
-					notif_layout,
-					margins = dpi(10),
-					widget = wibox.container.margin
-				},
-				nil,
-				{
-					plugin_layout,
-					margins = dpi(10),
-					widget = wibox.container.margin
-				},
-				spacing = dpi(10),
-				layout = wibox.layout.fixed.horizontal
-			},
-			id = 'info_center',
-			bg = beautiful.background.hue_800 .. beautiful.background_transparency,
-			shape = function(cr, w, h)
-				gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
-			end,
-			widget = wibox.container.background
-		}
-	else
-		_widget = wibox.widget {
-			wibox.widget {
-				notif_layout,
-				margins = dpi(10),
-				widget = wibox.container.margin
-			},
-			id = 'info_center',
-			bg = beautiful.background.hue_800 .. beautiful.background_transparency,
-			shape = function(cr, w, h)
-				gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
-			end,
-			widget = wibox.container.background
-		}
+		_layout:add(wibox.widget{
+			plugin_layout,
+			margins = dpi(10),
+			widget = wibox.container.margin
+		})
 	end
 
+	local _widget = wibox.widget {
+		_layout,
+		id = 'info_center',
+		bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+		shape = function(cr, w, h)
+			gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
+		end,
+		widget = wibox.container.background
+	}
 
 	signals.connect_background_theme_changed(function(pallet)
 		_widget.bg = pallet.hue_800 .. beautiful.background_transparency
@@ -109,7 +96,7 @@ local info_center = function(s)
 		type = 'dock',
 		visible = false,
 		ontop = true,
-		width = dpi(panel_width*2),
+		--width = dpi(panel_width*2),
 		maximum_width = dpi(panel_width*2),
 		maximum_height = s.geometry.height -  dpi(38),
 		bg = beautiful.transparent,
@@ -181,6 +168,24 @@ local info_center = function(s)
 			close_panel()
 		end
 	end
+
+	signals.connect_add_plugin(function (location, plugin)
+		if location ~= "notification" then
+			return
+		end
+
+		plugin_layout:add(plugin)
+
+		-- add the plugin_latout in case it exists
+		if #plugin_layout.children == 1 then
+			-- we need to modify _widget to be one bar wider
+			_layout:add(wibox.widget{
+				plugin_layout,
+				margins = dpi(10),
+				widget = wibox.container.margin
+			})
+		end
+	end)
 
 	s.backdrop_info_center:buttons(
 		awful.util.table.join(

@@ -145,4 +145,26 @@ local function getPluginSection(section)
     return iterator
 end
 
-return getPluginSection
+local function live_add_plugin(section, plugin_name)
+    local signals = require("lib-tde.signals")
+
+    local valid, plugin = handle_plugin(plugin_name, section)
+    if valid then
+        signals.emit_add_plugin(section, plugin)
+    end
+end
+
+local plugin_tbl = {
+    getPluginSection = getPluginSection,
+    load_plugin = handle_plugin,
+    live_add_plugin = live_add_plugin,
+}
+
+setmetatable(
+    plugin_tbl,
+    {__call = function(_, section)
+        return getPluginSection(section)
+    end}
+)
+
+return plugin_tbl

@@ -25,17 +25,14 @@
 -- This is an example of a little bit more complex widgets
 
 local os = require("os")
-local awful = require("awful")
 local beautiful = require("beautiful")
 local rounded = require("lib-tde.widget.rounded")
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local wibox = require("wibox")
-local gears = require("gears")
 
 -- general settings for how big the
 local m = dpi(10)
-local settings_index = dpi(40)
 local settings_width = dpi(800)
 local settings_nw = dpi(200)
 
@@ -43,26 +40,6 @@ local function create()
   local view = wibox.container.margin()
   view.left = m
   view.right = m
-
-  local title = wibox.widget.textbox("Calendar")
-  title.font = beautiful.title_font
-  title.forced_height = settings_index + m + m
-
-  local close = wibox.widget.imagebox(icons.close)
-  close.forced_height = settings_index
-  close:buttons(
-    gears.table.join(
-      awful.button(
-        {},
-        1,
-        function()
-          if root.elements.settings then
-            root.elements.settings.close()
-          end
-        end
-      )
-    )
-  )
 
   local cal_container = wibox.container.background()
   cal_container.bg = beautiful.bg_modal
@@ -116,28 +93,10 @@ local function create()
   }
 
   view:setup {
-    layout = wibox.container.background,
-    {
-      layout = wibox.layout.align.vertical,
-      {
-        layout = wibox.layout.align.horizontal,
-        nil,
-        wibox.container.margin(
-          {
-            layout = wibox.container.place,
-            title
-          },
-          settings_index * 2
-        ),
-        close
-      },
-      {
-        layout = wibox.container.place,
-        valign = "top",
-        halign = "center",
-        cal_container
-      }
-    }
+    layout = wibox.container.place,
+    valign = "center",
+    halign = "center",
+    cal_container
   }
 
   return view

@@ -555,9 +555,18 @@ function Test_connect_save_theming_settings()
     assert(type(signals.connect_save_theming_settings) == "function", "Make sure connect_save_theming_settings is a signal and a function")
 end
 
+function Test_emit_add_plugin()
+    assert(signals.emit_add_plugin, "Make sure the signal emit_add_plugin exists")
+    assert(type(signals.emit_add_plugin) == "function", "Make sure emit_add_plugin is a signal and a function")
+end
+
+function Test_connect_add_plugin()
+    assert(signals.connect_add_plugin, "Make sure the signal connect_add_plugin exists")
+    assert(type(signals.connect_add_plugin) == "function", "Make sure connect_add_plugin is a signal and a function")
+end
 
 function Test_signals_api_unit_tested()
-    local amount = 99
+    local amount = 101
     local result = tablelength(signals)
     assert(
         result == amount,

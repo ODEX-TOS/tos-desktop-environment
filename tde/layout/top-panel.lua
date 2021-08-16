@@ -30,7 +30,7 @@ local task_list = require('widget.task-list')
 local hardware = require('lib-tde.hardware-check')
 local keyboard_layout = require("widget.keyboard")
 
-local plugins = require("lib-tde.plugin-loader")("topbar-right")
+local plugins = require("lib-tde.plugin-loader")("topbar")
 
 local top_panel = function(s)
 
@@ -138,15 +138,28 @@ local top_panel = function(s)
 
 	add_to_panel("tray_toggler")
 
-	for _, plugin in ipairs(plugins) do
+	local function add_plugin(plugin, index)
 		if type(plugin) == "table" and plugin.__plugin_name ~= nil and plugin.plugin ~= nil then
 			s[plugin.__plugin_name] = plugin.plugin
 		elseif type(plugin) == "table" and plugin.__plugin_name ~= nil then
 			s[plugin.__plugin_name] = plugin
 		end
 
-		add_to_panel(plugin.__plugin_name)
+		add_to_panel(plugin.__plugin_name, index)
 	end
+
+
+	for _, plugin in ipairs(plugins) do
+		add_plugin(plugin)
+	end
+
+	signals.connect_add_plugin(function(location, plugin)
+		if location ~= "topbar" then
+			return
+		end
+
+		add_plugin(plugin, 3)
+	end)
 
 	add_to_panel("keyboard_layout")
 	add_to_panel("updater")
