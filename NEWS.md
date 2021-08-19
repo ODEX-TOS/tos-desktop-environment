@@ -56,6 +56,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - You can now enable developer settings by adding the line `developer="1"` in general.conf, this will add a developer tab in settings
 - You can now see drawboxes around widget if you enable it in the settings state
 - You can now see paint refreshes in the developer settings
+- Don't draw backdrops for invalidated clients
 
 
 ## Patch 0.9
