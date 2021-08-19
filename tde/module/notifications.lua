@@ -115,7 +115,7 @@ naughty.connect_signal(
 			urgency = 'critical',
 			title   = 'Oops, an error happened'..(startup and ' during startup!' or '!'),
 			message = message,
-			app_name = 'System Notification',
+			app_name = i18n.translate('System Notification'),
 			icon = beautiful.awesome_icon
 		}
 	end
@@ -190,7 +190,7 @@ naughty.connect_signal(
 											{
 												{
 													{
-														markup = n.app_name or 'System Notification',
+														markup = n.app_name or i18n.translate('System Notification'),
 														font = 'Inter Bold 10',
 														align = 'center',
 														valign = 'center',

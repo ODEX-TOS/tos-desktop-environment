@@ -63,7 +63,7 @@ theme.background_light = '#f2f2f266'
 theme.transparent = '#00000000'
 
 -- Awesome icon
-theme.awesome_icon = theme.icons .. 'awesome.svg'
+theme.awesome_icon = theme.icons .. 'logo.svg'
 
 return {
 	theme = theme,
