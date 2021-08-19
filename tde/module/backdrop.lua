@@ -24,9 +24,9 @@
 ]]
 local wibox = require("wibox")
 local gears = require("gears")
+local cairo = require("lgi").cairo
 
 local function update_backdrop(w, c)
-  local cairo = require("lgi").cairo
   local geo = c.screen.geometry
 
   w.x = geo.x
@@ -57,6 +57,9 @@ end
 
 local function backdrop(c)
   local function update()
+    if not c.valid then
+      return
+    end
     update_backdrop(c.backdrop, c)
   end
   if not c.backdrop then
@@ -99,6 +102,10 @@ end
 _G.client.connect_signal(
   "manage",
   function(c)
+    if not c.valid then
+      return
+    end
+
     if c.drawBackdrop == true then
       backdrop(c)
     end
