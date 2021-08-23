@@ -63,6 +63,7 @@ local function createBox(x, y, width, height)
             border_color = theme.hue_600,
             width = width,
             height = height,
+            shape = gears.shape.rounded_rect,
             screen = mouse.screen
         }
     )

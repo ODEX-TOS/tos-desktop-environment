@@ -22,6 +22,7 @@ local object = require("gears.object")
 local surface = require("gears.surface")
 local protected_call = require("gears.protected_call")
 local cairo = require("lgi").cairo
+local shape = require("gears.shape")
 local setmetatable = setmetatable
 local tonumber = tonumber
 local string = string
@@ -750,6 +751,9 @@ function menu.new(args, parent)
         bg = _menu.theme.bg_normal,
         border_color = _menu.theme.border,
         border_width = _menu.theme.border_width,
+        shape = function (cr, w, h)
+            return shape.rounded_rect(cr, w, h, dpi(10))
+        end,
         type = "popup_menu" })
     _menu.wibox.visible = false
     _menu.wibox:set_widget(_menu.layout)
