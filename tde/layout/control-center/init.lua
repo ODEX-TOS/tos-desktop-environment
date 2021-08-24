@@ -31,7 +31,7 @@ local signals = require("lib-tde.signals")
 local profile_pic = require('lib-widget.profilebox')
 
 local format_item = function(widget)
-	return wibox.widget {
+	local _widget = wibox.widget {
 		{
 			{
 				layout = wibox.layout.align.vertical,
@@ -46,14 +46,22 @@ local format_item = function(widget)
 		forced_height = dpi(88),
 		bg = beautiful.groups_bg,
 		shape = function(cr, width, height)
-			gears.shape.rounded_rect(cr, width, height, beautiful.groups_radius)
+			gears.shape.rounded_rect(cr, width, height, _G.save_state.rounded_corner/2)
 		end,
 		widget = wibox.container.background
 	}
+
+	signals.connect_change_rounded_corner_dpi(function(radius)
+		_widget.shape = function(cr, width, height)
+			gears.shape.rounded_rect(cr, width, height, radius/2)
+		end
+	end)
+
+	return _widget
 end
 
 local format_item_no_fix_height = function(widget)
-	return wibox.widget {
+	local _widget = wibox.widget {
 		{
 			{
 				layout = wibox.layout.align.vertical,
@@ -67,10 +75,18 @@ local format_item_no_fix_height = function(widget)
 		},
 		bg = beautiful.groups_bg,
 		shape = function(cr, width, height)
-			gears.shape.rounded_rect(cr, width, height, beautiful.groups_radius)
+			gears.shape.rounded_rect(cr, width, height, _G.save_state.rounded_corner/2)
 		end,
 		widget = wibox.container.background
 	}
+
+	signals.connect_change_rounded_corner_dpi(function(radius)
+		_widget.shape = function(cr, width, height)
+			gears.shape.rounded_rect(cr, width, height, radius/2)
+		end
+	end)
+
+	return _widget
 end
 
 local vertical_separator =  wibox.widget {

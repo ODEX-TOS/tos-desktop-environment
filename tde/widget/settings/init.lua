@@ -515,10 +515,16 @@ return function()
       height = settings_height,
       screen = scrn,
       shape = function(cr, shapeWidth, shapeHeight)
-        gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, dpi(20))
+        gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, _G.save_state.rounded_corner)
       end,
     }
   )
+
+  signals.connect_change_rounded_corner_dpi(function(radius)
+    hub.shape = function(cr, shapeWidth, shapeHeight)
+      gears.shape.rounded_rect(cr, shapeWidth, shapeHeight, radius)
+    end
+  end)
 
   signals.connect_background_theme_changed(
     function(theme)

@@ -81,10 +81,16 @@ local info_center = function(s)
 		id = 'info_center',
 		bg = beautiful.background.hue_800 .. beautiful.background_transparency,
 		shape = function(cr, w, h)
-			gears.shape.rounded_rect(cr, w, h, beautiful.groups_radius)
+			gears.shape.rounded_rect(cr, w, h, _G.save_state.rounded_corner/2)
 		end,
 		widget = wibox.container.background
 	}
+
+	signals.connect_change_rounded_corner_dpi(function (radius)
+		_widget.shape = function(cr, w, h)
+			gears.shape.rounded_rect(cr, w, h, radius/2)
+		end
+	end)
 
 	signals.connect_background_theme_changed(function(pallet)
 		_widget.bg = pallet.hue_800 .. beautiful.background_transparency

@@ -157,10 +157,18 @@ client.connect_signal("request::titlebars", function(c)
         layout = wibox.layout.align.horizontal
     }
 
-    awful.titlebar(c, {
-        size      = dpi(25),
+    local bar = awful.titlebar(c, {
+        size      = _G.save_state.rounded_corner,
         bg = beautiful.background.hue_800 .. 'aa',}
-    ).widget = widget
+    )
+
+    signals.connect_change_rounded_corner_dpi(function(radius)
+        bar.shape = function(cr, w, h)
+          gears.shape.rounded_rect(cr, w, h, radius)
+        end
+    end)
+
+    bar.widget = widget
 end)
 
 local function update_titlebar(c)

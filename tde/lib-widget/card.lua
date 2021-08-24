@@ -41,6 +41,7 @@
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local gears = require("gears")
+local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 
 local header_font = "SFNS Display Regular 14"
@@ -62,7 +63,7 @@ local titled_card = function(title, height)
         wibox.widget.base.empty_widget(),
         bg = bg,
         shape = function(cr, rect_width, rect_height)
-            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, dpi(10))
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, _G.save_state.rounded_corner/2)
         end,
         widget = wibox.container.background,
         forced_height = height
@@ -77,7 +78,7 @@ local titled_card = function(title, height)
                 wibox.container.margin(header, dpi(10), dpi(10), dpi(10), dpi(10)),
                 bg = bg_title,
                 shape = function(cr, rect_width, rect_height)
-                    gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, dpi(10))
+                    gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, _G.save_state.rounded_corner/2)
                 end,
                 widget = wibox.container.background
             },
@@ -87,6 +88,16 @@ local titled_card = function(title, height)
         nil,
         bg = bg
     }
+
+    signals.connect_change_rounded_corner_dpi(function(radius)
+        body_widget.shape = function(cr, rect_width, rect_height)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, false, false, true, true, radius/2)
+        end
+
+        widget.shape = function(cr, rect_width, rect_height)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, false, false, radius/2)
+        end
+    end)
 
     --- Update the title of the card (Build in translation)
     -- @tparam string title The title of the card
@@ -149,10 +160,16 @@ local bare_card = function()
         wibox.widget.base.empty_widget(),
         bg = bg,
         shape = function(cr, rect_width, rect_height)
-            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, dpi(10))
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, _G.save_state.rounded_corner/2)
         end,
         widget = wibox.container.background
     }
+
+    signals.connect_change_rounded_corner_dpi(function(radius)
+        body_widget.shape = function(cr, rect_width, rect_height)
+            gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, radius/2)
+        end
+    end)
 
     --- Update the body of the card
     -- @tparam widget body The widget to put in the body of the card

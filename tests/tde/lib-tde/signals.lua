@@ -565,8 +565,18 @@ function Test_connect_add_plugin()
     assert(type(signals.connect_add_plugin) == "function", "Make sure connect_add_plugin is a signal and a function")
 end
 
+function Test_emit_change_rounded_corner_dpi()
+    assert(signals.emit_change_rounded_corner_dpi, "Make sure the signal emit_change_rounded_corner_dpi exists")
+    assert(type(signals.emit_change_rounded_corner_dpi) == "function", "Make sure emit_change_rounded_corner_dpi is a signal and a function")
+end
+
+function Test_connect_change_rounded_corner_dpi()
+    assert(signals.connect_change_rounded_corner_dpi, "Make sure the signal connect_change_rounded_corner_dpi exists")
+    assert(type(signals.connect_change_rounded_corner_dpi) == "function", "Make sure connect_change_rounded_corner_dpi is a signal and a function")
+end
+
 function Test_signals_api_unit_tested()
-    local amount = 101
+    local amount = 103
     local result = tablelength(signals)
     assert(
         result == amount,

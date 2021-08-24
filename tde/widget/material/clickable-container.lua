@@ -25,7 +25,7 @@
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local gears = require("gears")
-local dpi = require("beautiful.xresources").apply_dpi
+local signals = require("lib-tde.signals")
 
 local function build(widget)
 	local container =
@@ -33,9 +33,16 @@ local function build(widget)
 		widget,
 		widget = wibox.container.background,
 		shape = function(cr, width, height)
-			gears.shape.rounded_rect(cr, width, height, dpi(4))
+			gears.shape.rounded_rect(cr, width, height, _G.save_state.rounded_corner/3)
 		end,
 	}
+
+	signals.connect_change_rounded_corner_dpi(function(radius)
+        container.shape = function(cr, w, h)
+          gears.shape.rounded_rect(cr, w, h, radius/3)
+        end
+    end)
+
 	local old_cursor, old_wibox
 
 	container:connect_signal(

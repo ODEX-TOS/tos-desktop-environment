@@ -63,10 +63,19 @@ local function createBox(x, y, width, height)
             border_color = theme.hue_600,
             width = width,
             height = height,
-            shape = gears.shape.rounded_rect,
+            shape = function(cr, w, h)
+                gears.shape.rounded_rect(cr, w, h, _G.save_state.rounded_corner)
+              end,
             screen = mouse.screen
         }
     )
+
+    signals.connect_change_rounded_corner_dpi(function(radius)
+        _box.shape = function(cr, w, h)
+          gears.shape.rounded_rect(cr, w, h, radius)
+        end
+    end)
+
     return _box
 end
 

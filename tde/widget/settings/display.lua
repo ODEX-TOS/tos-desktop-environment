@@ -391,6 +391,19 @@ return function()
     end
   )
 
+
+  local rounded_corner =
+    slider(
+    0,
+    dpi(50),
+    1,
+    _G.save_state.rounded_corner or dpi(10),
+    function(value)
+      print("Setting rounded corner radius: " .. tostring(dpi(value)) .. "px")
+     signals.emit_change_rounded_corner_dpi(dpi(value))
+    end
+  )
+
   local function gen_dpi_body()
     local v_layout = wibox.layout.fixed.vertical()
     local h_layout = wibox.layout.fixed.horizontal()
@@ -496,6 +509,7 @@ return function()
 
   local brightness_card = card()
   local screen_time_card = card()
+  local rounded_corner_card = card()
   local dpi_card = card()
 
   local dpi_button_to = button("Change Application Scaling", function ()
@@ -547,6 +561,28 @@ return function()
         right = m,
         bottom = m,
         screen_time
+      }
+    }
+  )
+
+  rounded_corner_card.update_body(
+    wibox.widget {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = m,
+        {
+          font = beautiful.font,
+          text = i18n.translate("Rounded corners"),
+          widget = wibox.widget.textbox
+        }
+      },
+      {
+        layout = wibox.container.margin,
+        left = m,
+        right = m,
+        bottom = m,
+        rounded_corner
       }
     }
   )
@@ -605,6 +641,7 @@ return function()
 
   brightness_card.forced_height = (m * 6) + dpi(30)
   screen_time_card.forced_height = (m * 6) + dpi(30)
+  rounded_corner_card.forced_height = (m * 6) + dpi(30)
   dpi_card.forced_height = (m * 6) + dpi(30)
   monitors.forced_height = dpi(400)
 
@@ -619,6 +656,11 @@ return function()
           layout = wibox.container.margin,
           top = m,
           screen_time_card
+        },
+        {
+          layout = wibox.container.margin,
+          top = m,
+          rounded_corner_card
         },
         {
           layout = wibox.container.margin,

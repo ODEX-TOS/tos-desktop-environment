@@ -1112,7 +1112,26 @@ connections.connect_add_plugin = function(func)
     awesome.connect_signal("TDE::add_plugin", func)
 end
 
+--- Signals to notify that the rounded corners should change
+-- @tparam number dpi The amount of pixels (radius) that the corner should have
+-- @staticfct emit_change_rounded_corner_dpi
+-- @usage
+-- lib-tde.signals.emit_change_rounded_corner_dpi(dpi(10))
+connections.emit_change_rounded_corner_dpi = function(location, plugin)
+    awesome.emit_signal("TDE::change::rounded::corners", location, plugin)
+end
 
+--- Trigger a callback function when the rounded corner should change
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_change_rounded_corner_dpi
+-- @usage
+-- lib-tde.signals.connect_change_rounded_corner_dpi(
+--    function (radius)
+--     print("The new corner radius: " .. tostring(radius))
+--    end)
+connections.connect_change_rounded_corner_dpi = function(func)
+    awesome.connect_signal("TDE::change::rounded::corners", func)
+end
 
 
 

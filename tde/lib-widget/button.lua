@@ -41,7 +41,6 @@
 -- TODO: refactor codebase to use this
 
 local wibox = require("wibox")
-local rounded = require("lib-tde.widget.rounded")
 local beautiful = require("beautiful")
 local gears = require("gears")
 local signals = require("lib-tde.signals")
@@ -66,8 +65,18 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
     local color = pallet or beautiful.primary
     local bIsHovered = false
     button.bg = color.hue_600
-    button.shape = rounded()
+    button.shape = function(cr, w, h)
+        gears.shape.rounded_rect(cr, w, h, _G.save_state.rounded_corner/2)
+    end
+
     button.forced_height = dpi(40)
+
+    signals.connect_change_rounded_corner_dpi(function(radius)
+        button.shape = function(cr, w, h)
+          gears.shape.rounded_rect(cr, w, h, radius/2)
+        end
+    end)
+
 
     if type(body) == "string" then
         body = wibox.widget.textbox(i18n.translate(body))

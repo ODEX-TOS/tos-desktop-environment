@@ -752,9 +752,19 @@ function menu.new(args, parent)
         border_color = _menu.theme.border,
         border_width = _menu.theme.border_width,
         shape = function (cr, w, h)
+            if _G.save_state then
+                return shape.rounded_rect(cr, w, h, _G.save_state.rounded_corner or dpi(10))
+            end
             return shape.rounded_rect(cr, w, h, dpi(10))
         end,
         type = "popup_menu" })
+
+    awesome.connect_signal("TDE::change::rounded::corners", function (radius)
+        _menu.wibox.shape = function (cr, w, h)
+            return shape.rounded_rect(cr, w, h, radius)
+        end
+    end)
+
     _menu.wibox.visible = false
     _menu.wibox:set_widget(_menu.layout)
     set_size(_menu)

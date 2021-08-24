@@ -77,6 +77,7 @@ local function load()
         auto_hide = false,
         hardware_only_volume = false,
         last_version = major_version(),
+        rounded_corner = 10,
         tags = {
             gen_default_tag(),
             gen_default_tag(),
@@ -126,6 +127,7 @@ local function load()
     result.auto_hide = result.auto_hide or table.auto_hide
     result.hardware_only_volume = result.hardware_only_volume or table.hardware_only_volume
     result.tags = result.tags or table.tags
+    result.rounded_corner = result.rounded_corner or table.rounded_corner
 
     result.last_version = result.last_version or table.last_version
 
@@ -488,5 +490,18 @@ signals.connect_save_theming_settings(function(bIsPrimaryGradient, bIsBackground
     save_state.theming.background_theme = beautiful.background
     save_state.theming.primary_theme = beautiful.primary
 
+    save(save_state)
+end)
+
+signals.connect_change_rounded_corner_dpi(function(dpi)
+    if type(dpi) ~= "number" then
+        return
+    end
+
+    if dpi == _G.save_state.rounded_corner then
+        return
+    end
+
+    _G.save_state.rounded_corner = dpi
     save(save_state)
 end)
