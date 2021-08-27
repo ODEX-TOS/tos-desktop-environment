@@ -285,6 +285,8 @@ return function(s)
         widget = wibox.widget.imagebox
     }
 
+    keyboard_layout.widget:set_text(selected_layouts[1])
+
     local function next_layout()
         if #selected_layouts < 2 then
             return
@@ -352,10 +354,10 @@ return function(s)
     end)
 
     awesome.connect_signal("xkb::map_changed", function()
-        signals.emit_keyboard_layout_updated(selected_layouts, common.trim(keyboard_layout.widget.text))
+        signals.emit_keyboard_layout_updated(selected_layouts, selected_layouts[1])
     end)
     awesome.connect_signal("xkb::group_changed", function()
-        signals.emit_keyboard_layout_updated(selected_layouts, common.trim(keyboard_layout.widget.text))
+        signals.emit_keyboard_layout_updated(selected_layouts, selected_layouts[1])
     end)
 
     return widget_button
