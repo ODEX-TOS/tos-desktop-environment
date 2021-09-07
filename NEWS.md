@@ -41,6 +41,8 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Reworked the notification center notifications
 - Added a keyboard layout changing widget
 - Save custom gradient themes
+- Added a basic chess plugin
+- Added ability to change the wallpaper based on time of day
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
