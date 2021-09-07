@@ -1,0 +1,18 @@
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="26" width="26" version="1.0" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(0,-18.999998)">
+  <path stroke-linejoin="miter" d="m14,29.5c0.222,1.68-3.09,4.06-4.5,5-1.73,1.16-1.74,2.7-3,2.5-0.602-0.545,0.817-2.02,0-2-0.58,0,0.19,1.1-0.5,1.5-0.58,0-2.5,0.4-2.5-2.5,0-1.2,3.5-6.5,3.5-6.5s0.934-1.08,1-2c-0.419-0.575-0.258-1.48,0-2,0.365-0.731,1.5,1.5,1.5,1.5h1s0.5-1.5,1.5-2c0.517-0.258,0.5,2,0.5,2,6.07,0.578,9.29,4.37,9,16.5h-12.5c0-4.9,4.8-3.7,4.5-10.5" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-dasharray="none" stroke-miterlimit="4" stroke-width="1" fill="#000"/>
+  <path d="m9,23.5a0.5,0.5,0,1,1,-1,0,0.5,0.5,0,1,1,1,0z" transform="translate(-3.4999999,10)" stroke="#FFF" fill="#000"/>
+  <path stroke-linejoin="miter" d="M20.5,41.5c0.6-11.5-3.2-15.5-7-16" stroke="#FFF" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="1" fill="none"/>
+  <path fill="#FFF" d="M9.1878,29.377a0.74402,1.0659,30,1,1,-1.2886,-0.744,0.74402,1.0659,30,0,1,1.2886,0.744z"/>
+ </g>
+</svg>

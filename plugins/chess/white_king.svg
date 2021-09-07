@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.0" width="64" height="64" viewBox="0 0 700 700">
+<path d="M 350,152 C 248,152 298,331 350,405 403,336 436,152 350,152 z" style="fill:#ffffff;stroke:#000000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round" />
+<path d="M 570,493 C 570,493 570,636 570,636 434,697 266,693 130,636 130,636 130,493 130,493 66,415 -44,239 119,218 251,200 326,332 350,460 370,331 449,194 581,218 750,247 623,410 570,493 z" style="fill:#ffffff;stroke:#000000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round" />
+<path d="M 130,493 C 271,448 429,451 570,493" style="fill:#ffffff;stroke:#000000;stroke-width:24" />
+<path d="M 130,570 C 271,525 429,528 570,570" style="fill:#ffffff;stroke:#000000;stroke-width:24" />
+<path d="M 130,636 C 271,591 429,594 570,636" style="fill:#ffffff;stroke:#000000;stroke-width:24" />
+<path d="M 350,31 L 350,152" style="stroke:#000000;stroke-width:24" />
+<path d="M 284,86 L 416,86" style="stroke:#000000;stroke-width:24" />
+</svg>
