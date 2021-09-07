@@ -240,7 +240,15 @@ local function make_screen_layout(wall, label)
   )
 end
 
-local cycles = _G.save_state.wallpaper.cycles
+local cycles = {}
+
+-- Make sure we have different references ti cycles and _G.save_state
+for _, v in ipairs(_G.save_state.wallpaper.cycles) do
+  table.insert(cycles, {
+    hour = v.hour,
+    image = v.image
+  })
+end
 
 local function make_cycle_hour_selection(value)
   local image = wibox.widget.imagebox(value.small)
@@ -278,7 +286,7 @@ local function make_cycle_hour_selection(value)
   -- find the active cycle and update the hour value
   for i, v in ipairs(cycles) do
     if value.image == v.image then
-      field.update_text(tostring(cycles[i].hour))
+      field.update_text(string.format("%d", cycles[i].hour))
     end
   end
 
@@ -349,9 +357,19 @@ local function make_mon(wall, id, fullwall, disable_number)
     }
   )
 
+  local function show_num(num)
+    if num == nil then
+      bg.bg = beautiful.transparent
+      text.text = ""
+    else
+      bg.bg = beautiful.bg_settings_display_number
+      text.text = tostring(num)
+    end
+  end
+
+
   if disable_number then
-    text.text = ""
-    bg.bg = beautiful.transparent
+    show_num()
   end
 
   if Display_Mode == WALLPAPER_CYCLE_MODE then
@@ -361,6 +379,10 @@ local function make_mon(wall, id, fullwall, disable_number)
       if value.image == fullwall then
         text.text = tostring(index)
         bg.bg = beautiful.bg_settings_display_number
+
+        cycles[index].show_num = show_num
+        cycles[index].small = wall
+
       end
     end
   end
@@ -401,7 +423,8 @@ local function make_mon(wall, id, fullwall, disable_number)
         table.insert(cycles, {
           hour = 0,
           image = fullwall,
-          small = wall
+          small = wall,
+          show_num = show_num
         })
 
         print(cycles)
@@ -415,6 +438,10 @@ local function make_mon(wall, id, fullwall, disable_number)
           if v.image == fullwall then
             table.remove(cycles, index)
           end
+        end
+
+        for index, v in ipairs(cycles) do
+          v.show_num(index)
         end
 
         -- TODO: Also update the text for all other monitors, since this one needs to dissapear
