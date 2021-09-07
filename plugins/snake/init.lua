@@ -51,7 +51,23 @@ local yoffset = 0
 local timer = nil
 
 -- size of the player and fruit
-local size = dpi(20)
+local size = dpi(60)
+
+
+local function even(num)
+    if num % 2 == 0 then
+        return num
+    end
+
+    return num + 1
+end
+
+
+local width_sections = math.ceil(screen_width / size)
+local height_sections = math.ceil(screen_height / size)
+
+width_sections = even(width_sections)
+height_sections = even(height_sections)
 
 -- check if a number is 'close' to another number
 -- eg 7 and 10 have a margin of error of 3
@@ -76,7 +92,7 @@ end
 -- check if 2 rectangles are intersecting (rectangles of equal size)
 local function intersecting(source, target)
     -- target left top point is in the source circle
-    return margin_of_error(source.x, target.x, size) and margin_of_error(source.y, target.y, size)
+    return margin_of_error(source.x, target.x, dpi(1)) and margin_of_error(source.y, target.y, dpi(1))
 end
 
 -- create one "section" of the snake at a specific x and y position
@@ -94,8 +110,8 @@ local function createPart(x, y, head, fruit_in)
             bg = bg .. "44",
             border_width = dpi(1),
             border_color = bg,
-            width = size,
-            height = size,
+            width = size - dpi(2),
+            height = size - dpi(2),
             screen = mouse.screen
         }
     )
@@ -108,16 +124,16 @@ local function add_snake_part()
     if #parts == 0 then
         local box =
             createPart(
-            math.floor((screen_width - size) / size) * size * 0.5,
-            math.floor((screen_height - size) / size) * size * 0.5,
+            mouse.screen.workarea.x + (width_sections / 2) * size,
+            mouse.screen.workarea.y + (height_sections / 2) * size,
             beautiful.accent.hue_600
         )
         table.insert(parts, box)
     else
         -- find the location of the last element and append it after that position
         local head = parts[#parts]
-        local x = head.x - (xoffset * size * 1.7)
-        local y = head.y - (yoffset * size * 1.7)
+        local x = head.x - (xoffset * size)
+        local y = head.y - (yoffset * size)
         local box = createPart(x, y)
         table.insert(parts, box)
     end
@@ -125,10 +141,13 @@ end
 
 -- create a fruit (should be called only once)
 local function create_fruit()
+    local x_off = math.random(1, width_sections)
+    local y_off = math.random(1, height_sections)
+
     fruit =
         createPart(
-        math.random(size, math.floor((screen_width - size) / size)) * size,
-        math.random(size, math.floor((screen_height - size) / size)) * size,
+            mouse.screen.workarea.x + x_off * size,
+            mouse.screen.workarea.y + y_off * size,
         nil,
         "#FF033E"
     )
@@ -136,8 +155,11 @@ end
 
 -- move the fruit to a new position (randomly)
 local function update_fruit()
-    fruit.x = math.random(size, math.floor((screen_width - size) / size)) * size
-    fruit.y = math.random(size, math.floor((screen_height - size) / size)) * size
+    local x_off = math.random(1, width_sections - 1 )
+    local y_off = math.random(1, height_sections - 1 )
+
+    fruit.x = mouse.screen.workarea.x + x_off * size
+    fruit.y =  mouse.screen.workarea.y + y_off * size
 end
 
 -- stop the game
@@ -166,8 +188,8 @@ end
 -- If we are out of bounds we wrap to the other side
 -- Much like a torus
 local function move_head(widget)
-    widget.x = widget.x + (xoffset * size * 1.2)
-    widget.y = widget.y + (yoffset * size * 1.2)
+    widget.x = widget.x + (xoffset * size)
+    widget.y = widget.y + (yoffset * size)
     if widget.x < 0 then
         widget.x = screen_width
     elseif widget.x > screen_width then
@@ -274,7 +296,7 @@ local input =
     },
     -- Stop the game when we press Escape
     stop_key = "Escape",
-    stop_event = "release",
+    stop_event = "press",
     stop_callback = stop
 }
 
