@@ -581,10 +581,16 @@ function Test_lib_tde_daemonize()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function Test_module_wallpaper()
+    local file = "tde/module/wallpaper-changer.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 114
+    local amount = 115
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

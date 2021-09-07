@@ -39,6 +39,7 @@ local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
+local inputfield = require("lib-widget.inputfield")
 local sort = require('lib-tde.sort.quicksort')
 local split = require('lib-tde.function.common').split
 local xrandr = require('lib-tde.xrandr')
@@ -107,6 +108,8 @@ local WALLPAPER_MODE = 2
 local XRANDR_MODE = 3
 local REFRESH_MODE = 4
 local DPI_MODE = 5
+local WALLPAPER_CYCLE_MODE = 6
+local WALLPAPER_CYCLE_HOUR_MODE = 7
 
 local Display_Mode = NORMAL_MODE
 
@@ -237,6 +240,57 @@ local function make_screen_layout(wall, label)
   )
 end
 
+local cycles = _G.save_state.wallpaper.cycles
+
+local function make_cycle_hour_selection(value)
+  local image = wibox.widget.imagebox(value.small)
+
+  local ratio = wibox.layout.ratio.horizontal()
+
+  local field
+  field = inputfield(nil, nil, nil, false, function(key, text)
+    local valid = tonumber(key) ~= nil
+
+    local hour = tonumber(text .. key) or 0
+
+    local isHour = hour >= 0 and hour <= 24
+
+    if hour > 24 then
+      field.update_text("24")
+      hour = 24
+    end
+
+    if hour < 0 then
+      field.update_text("0")
+      hour = 0
+    end
+
+    -- find the active cycle and update the hour value
+    for i, v in ipairs(cycles) do
+      if value.image == v.image then
+        cycles[i].hour = hour
+      end
+    end
+
+    return valid and isHour
+  end)
+
+  -- find the active cycle and update the hour value
+  for i, v in ipairs(cycles) do
+    if value.image == v.image then
+      field.update_text(tostring(cycles[i].hour))
+    end
+  end
+
+  ratio:add(field)
+  ratio:add(wibox.widget.base.empty_widget())
+  ratio:add(wibox.container.place(image))
+
+  ratio:adjust_ratio(2, 0.70, 0.05, 0.25)
+
+  return ratio
+end
+
 -- wall is the scaled wallpaper (To reduce render times and memory consumption)
 -- fullwall is a fullscreen (or original wallpaper)
 -- the disable_number argument tells use if we should show the number in the center of the monitor
@@ -260,33 +314,75 @@ local function make_mon(wall, id, fullwall, disable_number)
     }
   end
 
+  local place = wibox.container.place(monitor)
+
+  local text = wibox.widget {
+    widget = wibox.widget.textbox,
+    font = beautiful.monitor_font,
+    text = id
+  }
+
+  local bg = wibox.widget {
+    layout = wibox.container.background,
+    fg = beautiful.fg_normal,
+    bg = beautiful.bg_settings_display_number,
+    shape = rounded(dpi(100)),
+    forced_width = dpi(100),
+    forced_height = dpi(100),
+    wibox.container.place(
+      text
+    )
+  }
+
+  local widget = wibox.container.place(
+    wibox.widget {
+      layout = wibox.layout.stack,
+      forced_width = mon_size.w,
+      forced_height = mon_size.h,
+      place,
+      {
+        layout = wibox.container.place,
+        valign = "center",
+        halign = "center",
+        bg
+      }
+    }
+  )
+
+  if disable_number then
+    text.text = ""
+    bg.bg = beautiful.transparent
+  end
+
+  if Display_Mode == WALLPAPER_CYCLE_MODE then
+    -- check that this wallpaper is in the cycles list
+
+    for index, value in ipairs(cycles) do
+      if value.image == fullwall then
+        text.text = tostring(index)
+        bg.bg = beautiful.bg_settings_display_number
+      end
+    end
+  end
+
   monitor:connect_signal(
     "button::press",
     function(_, _, _, btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
       if Display_Mode == WALLPAPER_MODE and btn == 1 then
-        awful.spawn.easy_async(
-          "tos theme set " .. fullwall,
-          function()
-            Display_Mode = NORMAL_MODE
-            refresh()
-            local themeFile = os.getenv("HOME") .. "/.config/tos/theme"
-            -- our theme file exists
-            if filesystem.exists(themeFile) then
-              local newContent = ""
-              for _, line in ipairs(filesystem.lines(themeFile)) do
-                -- if the line is a file then it is a picture, otherwise it is a configuration option
-                if not filesystem.exists(line) then
-                  newContent = newContent .. line .. "\n"
-                end
-              end
-              newContent = newContent .. fullwall
-              filesystem.overwrite(themeFile, newContent)
-            end
-            -- collect the garbage to remove the image cache from memory
-            collectgarbage("collect")
-          end
-        )
+
+        for s in screen do
+          gears.wallpaper.maximized(fullwall, s)
+        end
+
+        _G.save_state.wallpaper.default_image = fullwall
+        signals.emit_enable_wallpaper_changer(false, nil, fullwall)
+
+        Display_Mode = NORMAL_MODE
+        refresh()
+
+        collectgarbage("collect")
+        return
       end
 
       -- In this case someone wants to change a specific screen
@@ -295,39 +391,40 @@ local function make_mon(wall, id, fullwall, disable_number)
         Display_Mode = REFRESH_MODE
         refresh(id)
       end
+
+
+      if Display_Mode == WALLPAPER_CYCLE_MODE and text.text == "" and btn == 1 then
+        -- Add this wallpaper to the cycles
+        bg.bg = beautiful.bg_settings_display_number
+        text.text = #cycles + 1
+
+        table.insert(cycles, {
+          hour = 0,
+          image = fullwall,
+          small = wall
+        })
+
+        print(cycles)
+      elseif Display_Mode == WALLPAPER_CYCLE_MODE and btn == 1 then
+
+        bg.bg = beautiful.transparent
+        text.text = ""
+
+        -- remove the entry from the table
+        for index, v in ipairs(cycles) do
+          if v.image == fullwall then
+            table.remove(cycles, index)
+          end
+        end
+
+        -- TODO: Also update the text for all other monitors, since this one needs to dissapear
+
+        print(cycles)
+      end
     end
   )
-  if disable_number then
-    return wibox.container.place(monitor)
-  end
-  return wibox.container.place(
-    wibox.widget {
-      layout = wibox.layout.stack,
-      forced_width = mon_size.w,
-      forced_height = mon_size.h,
-      wibox.container.place(monitor),
-      {
-        layout = wibox.container.place,
-        valign = "center",
-        halign = "center",
-        {
-          layout = wibox.container.background,
-          fg = beautiful.fg_normal,
-          bg = beautiful.bg_settings_display_number,
-          shape = rounded(dpi(100)),
-          forced_width = dpi(100),
-          forced_height = dpi(100),
-          wibox.container.place(
-            {
-              widget = wibox.widget.textbox,
-              font = beautiful.monitor_font,
-              text = id
-            }
-          )
-        }
-      }
-    }
-  )
+
+  return widget
 end
 
 return function()
@@ -482,6 +579,35 @@ return function()
   )
   changewall.top = m
   changewall.bottom = m
+
+  local changewallcycle =
+  button(
+  "Wallpaper Cycle Mode",
+  function()
+    if not (Display_Mode == WALLPAPER_CYCLE_MODE or Display_Mode == WALLPAPER_CYCLE_HOUR_MODE) then
+      Display_Mode = WALLPAPER_CYCLE_MODE
+    elseif Display_Mode == WALLPAPER_CYCLE_HOUR_MODE then
+
+      local new_cycles = {}
+
+      for _, value in ipairs(cycles) do
+        table.insert(new_cycles, {
+          hour = value.hour,
+          image = value.image
+        })
+      end
+
+      signals.emit_enable_wallpaper_changer(#new_cycles > 0, new_cycles)
+
+      Display_Mode = NORMAL_MODE
+    else
+      Display_Mode = WALLPAPER_CYCLE_HOUR_MODE
+    end
+    refresh()
+  end
+)
+changewallcycle.top = m
+changewallcycle.bottom = m
 
   local screenLayoutBtn =
     button(
@@ -643,7 +769,7 @@ return function()
   screen_time_card.forced_height = (m * 6) + dpi(30)
   rounded_corner_card.forced_height = (m * 6) + dpi(30)
   dpi_card.forced_height = (m * 6) + dpi(30)
-  monitors.forced_height = dpi(400)
+  monitors.forced_height = dpi(350)
 
   view:setup {
     layout = wibox.container.background,
@@ -669,6 +795,7 @@ return function()
         },
         {layout = wibox.container.margin, top = m, monitors},
         {layout = wibox.container.margin, top = m, changewall},
+        {layout = wibox.container.margin, top = m, changewallcycle},
         {layout = wibox.container.margin, top = m, screenLayoutBtn}
       },
       nil
@@ -703,7 +830,8 @@ return function()
           height,
           scaledImage,
           function()
-            if filesystem.exists(scaledImage) and Display_Mode == WALLPAPER_MODE then
+            local valid_mode = Display_Mode == WALLPAPER_MODE or Display_Mode == WALLPAPER_CYCLE_MODE
+            if filesystem.exists(scaledImage) and valid_mode then
               layout:add(make_mon(scaledImage, k, v, true))
             else
               print("Something went wrong scaling " .. v)
@@ -742,56 +870,50 @@ return function()
     end
   end
 
-  local wallpaper_img = ''
-
   local function render_normal_mode()
     changewall.visible = true
+    changewallcycle.visible = true
     screenLayoutBtn.visible = true
-    awful.spawn.with_line_callback(
-      "tos theme active",
-      {
-        stdout = function(o)
-          wallpaper_img = o
-        end,
-        output_done = function()
-          -- TODO: get all screens
-          local screens = xrandr.outputs ()
 
-          if #screens < 4 then
-            layout.forced_num_cols = #screens
+    local function set_wallpaper()
+        -- TODO: get all screens
+        local screens = xrandr.outputs ()
+
+        if #screens < 4 then
+          layout.forced_num_cols = #screens
+        else
+          layout.forced_num_cols = 4
+        end
+
+        -- generate the wallpaper (scaled)
+        local base = filesystem.basename(_G.save_state.wallpaper.default_image)
+        -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
+        local width = dpi(600) / #screens
+        local height = (width / 16) * 9
+        monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
+
+        for _, display_name in ipairs(screens) do
+
+          if filesystem.exists(monitorScaledImage) then
+            layout:add(make_mon(monitorScaledImage, display_name, _G.save_state.wallpaper.default_image))
           else
-            layout.forced_num_cols = 4
-          end
-
-          -- generate the wallpaper (scaled)
-          local base = filesystem.basename(wallpaper_img)
-          -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
-          local width = dpi(600) / #screens
-          local height = (width / 16) * 9
-          monitorScaledImage = tempDisplayDir .. "/monitor-" .. base
-
-          for _, display_name in ipairs(screens) do
-
-            if filesystem.exists(monitorScaledImage) then
-              layout:add(make_mon(monitorScaledImage, display_name, wallpaper_img))
-            else
-              -- We use imagemagick to generate a "thumbnail"
-              -- This is done to save memory consumption
-              -- However note that our cache (tempDisplayDir) is stored in ram
-              imagemagic.scale(
-                wallpaper_img,
-                width,
-                height,
-                monitorScaledImage,
-                function()
-                  layout:add(make_mon(monitorScaledImage, display_name, wallpaper_img))
-                end
-              )
-            end
+            -- We use imagemagick to generate a "thumbnail"
+            -- This is done to save memory consumption
+            -- However note that our cache (tempDisplayDir) is stored in ram
+            imagemagic.scale(
+              _G.save_state.wallpaper.default_image,
+              width,
+              height,
+              monitorScaledImage,
+              function()
+                layout:add(make_mon(monitorScaledImage, display_name, _G.save_state.wallpaper.default_image))
+              end
+            )
           end
         end
-      }
-    )
+      end
+
+      set_wallpaper()
   end
 
   local timer =
@@ -805,14 +927,39 @@ return function()
 
   local function render_wallpaper_mode()
     changewall.visible = true
+    changewallcycle.visible = false
     screenLayoutBtn.visible = false
     -- do an asynchronous render of all wallpapers
     timer:start()
     layout.forced_num_cols = 4
   end
 
+  local function render_wallpaper_cycle_mode()
+    changewall.visible = false
+    changewallcycle.visible = true
+    screenLayoutBtn.visible = false
+    -- do an asynchronous render of all wallpapers
+    timer:start()
+    layout.forced_num_cols = 4
+  end
+
+  local function render_wallpaper_cycle_hour_mode()
+    changewall.visible = false
+    changewallcycle.visible = true
+    screenLayoutBtn.visible = false
+
+    layout.forced_num_cols = 1
+
+    layout.min_rows_size = dpi(30)
+
+    for _, value in ipairs(cycles) do
+      layout:add(make_cycle_hour_selection(value))
+    end
+  end
+
   local function render_xrandr_mode()
     changewall.visible = false
+    changewallcycle.visible = false
     screenLayoutBtn.visible = true
 
     local permutated_screens = xrandr_menu()
@@ -946,6 +1093,10 @@ return function()
 
     if Display_Mode == WALLPAPER_MODE then
       render_wallpaper_mode()
+    elseif Display_Mode == WALLPAPER_CYCLE_MODE then
+      render_wallpaper_cycle_mode()
+    elseif Display_Mode == WALLPAPER_CYCLE_HOUR_MODE then
+      render_wallpaper_cycle_hour_mode()
     elseif Display_Mode == XRANDR_MODE then
       render_xrandr_mode()
     elseif Display_Mode == REFRESH_MODE and monitor_id ~= nil then

@@ -1133,6 +1133,27 @@ connections.connect_change_rounded_corner_dpi = function(func)
     awesome.connect_signal("TDE::change::rounded::corners", func)
 end
 
+--- Signals to notify that the we should cycle multiple wallpapers
+-- @tparam bool bIsEnabled If we should show one wallpaper or multiple
+-- @tparam table wallpapers A list of a table in the form {hour, image}
+-- @staticfct emit_enable_wallpaper_changer
+-- @usage
+-- lib-tde.signals.emit_enable_wallpaper_changer(true, {{hour = 12, image = "/path/to/wallpaper.png"}, {hour = 0, image = "/path/to/wallpaper_2.png"}})
+connections.emit_enable_wallpaper_changer = function(bIsEnabled, wallpapers, default)
+    awesome.emit_signal("TDE::change::wallpaper::mode", bIsEnabled, wallpapers, default)
+end
 
+--- Trigger a callback function when the wallpaper mode changed
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_enable_wallpaper_changer
+-- @usage
+-- lib-tde.signals.connect_enable_wallpaper_changer(
+--    function (bIsEnabled, wallpapers)
+--     print("Is the wallpaper enabled? " .. bIsEnabled)
+--     print(wallpapers)
+--    end)
+connections.connect_enable_wallpaper_changer = function(func)
+    awesome.connect_signal("TDE::change::wallpaper::mode", func)
+end
 
 return connections

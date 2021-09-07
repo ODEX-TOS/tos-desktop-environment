@@ -66,3 +66,6 @@ if IsreleaseMode then
 
     require("module.lua-completion")
 end
+
+
+require("module.wallpaper-changer")

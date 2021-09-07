@@ -32,8 +32,6 @@ local dpi = beautiful.xresources.apply_dpi
 local gtk = beautiful.gtk
 local config = require("theme.config")
 local darklight = require("theme.icons.dark-light")
-local filehandle = require("lib-tde.file")
-local file_exists = filehandle.exists
 local signals = require('lib-tde.signals')
 
 local theme = {}
@@ -44,19 +42,6 @@ theme.monitor_font = "Roboto medium 16"
 theme.font_type = "Roboto medium"
 theme.gtk = gtk.get_theme_variables()
 theme.background_transparency = config["background_transparent"] or "66"
-
--- get all lines from a file, returns an empty
--- list/table if the file does not exist
-local function lines_from(file)
-  if not file_exists(file) then
-    return "/usr/share/backgrounds/tos/default.jpg"
-  end
-  local lines = {}
-  for line in io.lines(file) do
-    lines[#lines + 1] = line
-  end
-  return lines
-end
 
 local function color(value)
   if value == nil then
@@ -177,8 +162,7 @@ local awesome_overrides = function(awesome_theme)
 
   awesome_theme.icons = awesome_theme.dir .. "/icons/"
 
-  local resultset = lines_from(os.getenv("HOME") .. "/.config/tos/theme")
-  awesome_theme.wallpaper = resultset[#resultset] or "/usr/share/backgrounds/tos/default.jpg"
+  awesome_theme.wallpaper = "/usr/share/backgrounds/tos/default.jpg"
   awesome_theme.font = "Roboto medium 10"
   awesome_theme.title_font = "Roboto medium 14"
 

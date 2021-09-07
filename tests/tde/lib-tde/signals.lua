@@ -575,8 +575,18 @@ function Test_connect_change_rounded_corner_dpi()
     assert(type(signals.connect_change_rounded_corner_dpi) == "function", "Make sure connect_change_rounded_corner_dpi is a signal and a function")
 end
 
+function Test_emit_enable_wallpaper_changer()
+    assert(signals.emit_enable_wallpaper_changer, "Make sure the signal emit_enable_wallpaper_changer exists")
+    assert(type(signals.emit_enable_wallpaper_changer) == "function", "Make sure emit_enable_wallpaper_changer is a signal and a function")
+end
+
+function Test_connect_enable_wallpaper_changer()
+    assert(signals.connect_enable_wallpaper_changer, "Make sure the signal connect_enable_wallpaper_changer exists")
+    assert(type(signals.connect_enable_wallpaper_changer) == "function", "Make sure connect_enable_wallpaper_changer is a signal and a function")
+end
+
 function Test_signals_api_unit_tested()
-    local amount = 103
+    local amount = 105
     local result = tablelength(signals)
     assert(
         result == amount,

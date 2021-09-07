@@ -31,6 +31,8 @@ local filehandle = require("lib-tde.file")
 local mouse = require("lib-tde.mouse")
 local volume = require("lib-tde.volume")
 local major_version = require("lib-tde.function.common").major_version
+local gears = require("gears")
+
 
 local file = os.getenv("HOME") .. "/.cache/tde/settings_state.json"
 
@@ -109,6 +111,11 @@ local function load()
             background_theme = {
 
             }
+        },
+        wallpaper = {
+            default_image = "/usr/share/backgrounds/tos/default.jpg",
+            cycle_mode = false,
+            cycles = {}
         }
     }
     if not filehandle.exists(file) then
@@ -128,6 +135,7 @@ local function load()
     result.hardware_only_volume = result.hardware_only_volume or table.hardware_only_volume
     result.tags = result.tags or table.tags
     result.rounded_corner = result.rounded_corner or table.rounded_corner
+    result.wallpaper = result.wallpaper or table.wallpaper
 
     result.last_version = result.last_version or table.last_version
 
@@ -202,12 +210,6 @@ local function setup_state(state)
             awful.spawn.easy_async(
                 "sh -c 'which autorandr && ( autorandr --load tde || true )'",
                 function()
-                end
-            )
-            signals.connect_refresh_screen(
-                function()
-                    -- update our wallpaper
-                    awful.spawn("sh -c 'tos theme set $(tos theme active)'", false)
                 end
             )
         end
@@ -503,5 +505,23 @@ signals.connect_change_rounded_corner_dpi(function(dpi)
     end
 
     _G.save_state.rounded_corner = dpi
+    save(save_state)
+end)
+
+
+signals.connect_enable_wallpaper_changer(function(bIsCycles, cycles, default)
+    _G.save_state.wallpaper.cycle_mode = bIsCycles
+    _G.save_state.wallpaper.cycles = cycles or {}
+
+    if default ~= nil then
+        _G.save_state.wallpaper.default_image = default
+    end
+
+    if not bIsCycles then
+        for s in screen do
+            gears.wallpaper.maximized(_G.save_state.wallpaper.default_image, s)
+        end
+    end
+
     save(save_state)
 end)

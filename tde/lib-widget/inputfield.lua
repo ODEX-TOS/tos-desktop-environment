@@ -156,11 +156,12 @@ end
 -- @tparam[opt] function done_callback This callback gets triggered when the user finished typing
 -- @tparam[opt] function start_callback This callback gets triggered when focus is received
 -- @tparam[opt] bool hidden This option tells us if we need to mask the input (with * instead of the real text)
+-- @tparam[opt] function isvalid Passes in the name of the key, it should return if the key is valid or not for the given inputfield
 -- @treturn widget The inputfield widget
 -- @staticfct inputfield
 -- @usage -- This will create a basic inputfield
 -- local inputfield = lib-widget.inputfield()
-return function(typing_callback, done_callback, start_callback, hidden)
+return function(typing_callback, done_callback, start_callback, hidden, isvalid)
     local active_text = ""
     local prev_keygrabber
 
@@ -169,6 +170,12 @@ return function(typing_callback, done_callback, start_callback, hidden)
     textbox.font = "SF Pro Display Bold 16"
     textbox.align = "left"
     textbox.valign = "center"
+
+    if isvalid == nil then
+        isvalid = function(_, _)
+            return true
+        end
+    end
 
     local widget =
         wibox.widget {
@@ -222,7 +229,7 @@ return function(typing_callback, done_callback, start_callback, hidden)
                     cursor_index = string.len(active_text)
                 end
                 update_text(active_text, textbox, hidden)
-            elseif #key == 1 then
+            elseif #key == 1 and isvalid(key, active_text) then
                 active_text = write_to_textbox(textbox, key, active_text, hidden)
             end
             if typing_callback then
