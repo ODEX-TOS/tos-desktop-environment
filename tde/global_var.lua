@@ -24,6 +24,16 @@
 ]]
 os.start_time = os.time()
 
+-- overwrite the original os.clock() function
+os.clock_at_start = os.clock()
+
+local __clock = os.clock
+
+-- make sure that after a awesome.restart() that the clock() returns cpu cycles since the restart and not since the original start
+os.clock = function()
+    return __clock() - os.clock_at_start
+end
+
 local hardware = require("lib-tde.hardware-check")
 local is_weak = hardware.isWeakHardware()
 local beautiful = require("beautiful")

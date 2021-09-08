@@ -113,7 +113,8 @@ globals = {
     "desktop_icons",
     "IsreleaseMode",
     "docs", -- this is to quickly open the local documentation from tde-client
-    "os.start_time"
+    "os.start_time",
+    "os.clock_at_start"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).
