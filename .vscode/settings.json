@@ -15,8 +15,7 @@
     "Lua.runtime.version": "Lua 5.3",
     "Lua.workspace.ignoreSubmodules": false,
     "Lua.workspace.library": [
-        "/usr/share/tde/lib",
-        "/etc/xdg/tde"
+        "/usr/share/tde/lib"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global",
@@ -30,5 +29,6 @@
         "root",
         "awful",
         "mouse"
-    ]
+    ],
+    "Lua.workspace.maxPreload": 2000
 }
