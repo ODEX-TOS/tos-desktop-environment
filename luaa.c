@@ -19,17 +19,17 @@
  *
  */
 
-/** AwesomeWM lifecycle API.
+/** TDE lifecycle API.
  *
  * This module contains the functions and signal to manage the lifecycle of the
- * AwesomeWM process. It allows to execute code at specific point from the early
+ * TDE process. It allows to execute code at specific point from the early
  * initialization all the way to the last events before exiting or restarting.
  *
  * Additionally it handles signals for spawn and keyboard related events.
  *
  * @author Julien Danjou &lt;julien@danjou.info&gt;
  * @copyright 2008-2009 Julien Danjou
- * @coreclassmod awesome
+ * @coreclassmod tde
  */
 
 /** Register a new xproperty.
@@ -162,15 +162,15 @@ signal_array_t global_signals;
  * @signal refresh
  */
 
-/** AwesomeWM is about to enter the event loop.
+/** TDE is about to enter the event loop.
  *
  * This means all initialization has been done.
  * @signal startup
  */
 
-/** AwesomeWM is exiting / about to restart.
+/** TDE is exiting / about to restart.
  *
- * This signal is emitted in the `atexit` handler as well when awesome
+ * This signal is emitted in the `atexit` handler as well when tde
  * restarts.
  * @param reason_restart Boolean value is true if the signal was sent
  * because of a restart.
@@ -226,7 +226,7 @@ composite_manager_running(void)
     return result;
 }
 
-/** Quit awesome.
+/** Quit tde.
  * @tparam[opt=0] integer code The exit code to use when exiting.
  * @staticfct quit
  */
@@ -242,7 +242,7 @@ luaA_quit(lua_State *L)
 }
 
 /** Execute another application, probably a window manager, to replace
- * awesome.
+ * tde.
  *
  * @param cmd The command line to execute.
  * @staticfct exec
@@ -258,7 +258,7 @@ luaA_exec(lua_State *L)
     return 0;
 }
 
-/** Restart awesome.
+/** Restart tde.
  * @staticfct restart
  */
 static int
@@ -272,7 +272,7 @@ luaA_restart(lua_State *L)
  * @tparam integer pid Process identifier.  0 and negative values have special
  *   meaning.  See `man 3 kill`.
  * @tparam integer sig Signal number.
- *   See `awesome.unix_signal` for a list of signals.
+ *   See `tde.unix_signal` for a list of signals.
  * @treturn boolean true if the signal was successfully sent, else false
  * @staticfct kill
  */
@@ -328,7 +328,7 @@ static int
 luaA_load_image(lua_State *L)
 {
     /* TODO: Deprecate this function, Lua can use GdkPixbuf directly plus
-     * awesome.pixbuf_to_surface
+     * tde.pixbuf_to_surface
      */
 
     GError *error = NULL;
@@ -373,7 +373,7 @@ luaA_mbstrlen(lua_State *L)
     return 1;
 }
 
-/** Enhanced type() function which recognize awesome objects.
+/** Enhanced type() function which recognize tde objects.
  * \param L The Lua VM state.
  * \return The number of arguments pushed on the stack.
  */
@@ -435,7 +435,7 @@ one_utf8_to_utf32(const char* input, const size_t length) {
     return character;
 }
 
-/* Get X11 keysym and a one-character representation from an Awesome keycode.
+/* Get X11 keysym and a one-character representation from an tde keycode.
  *
  * A "one-character representation" is a single UTF-8 representing the typical
  * output from that keysym in a text editor (e.g. " " for space, "ñ" for
@@ -517,7 +517,7 @@ luaA_get_key_name(lua_State *L)
  * modifier entry has a `keysym` and `keycode` entry. For the US PC 105
  * keyboard, it looks like:
  *
- *    awesome.modifiers = {
+ *    tde.modifiers = {
  *         Shift = {
  *              {keycode = 50 , keysym = 'Shift_L'    },
  *              {keycode = 62 , keysym = 'Shift_R'    },
@@ -637,21 +637,21 @@ static int luaA_get_active_modifiers(lua_State *L)
 }
 
 /**
- * The AwesomeWM version.
+ * The TDE version.
  * @tfield string version
  */
 
 /**
- * The AwesomeWM release name.
+ * The TDE release name.
  * @tfield string release
  */
 
 /**
- * The AwesomeWM API level.
+ * The TDE API level.
  *
  * By default, this matches the major version (first component of the version).
  *
- * API levels are used to allow newer version of AwesomeWM to alter the behavior
+ * API levels are used to allow newer version of TDE to alter the behavior
  * and subset deprecated APIs. Using an older API level than the current major
  * version allows to use legacy `rc.lua` with little porting. However, they wont
  * be able to use all the new features. Attempting to use a newer feature along
@@ -662,7 +662,7 @@ static int luaA_get_active_modifiers(lua_State *L)
  * advantage of experimental feature. It will also be much harsher when it comes
  * to deprecation. Setting the API level value beyond `current+3` will treat
  * using APIs currently pending deprecation as fatal errors. All new code
- * submitted to the upstream AwesomeWM codebase is forbidden to use deprecated
+ * submitted to the upstream TDE codebase is forbidden to use deprecated
  * APIs. Testing your patches with mode and the default config is recommended
  * before submitting a patch.
  *
@@ -857,7 +857,7 @@ luaA_panic(lua_State *L)
     buffer_t buf;
     backtrace_get(&buf);
     warn("dumping backtrace\n%s", buf.s);
-    warn("restarting awesome");
+    warn("restarting tde");
     awesome_restart();
     return 0;
 }
@@ -1018,10 +1018,10 @@ setup_awesome_signals(lua_State *L)
 
 #undef SETUP_SIGNAL
 
-    /* Set awesome.signal to the table we just created, key was already pushed */
+    /* Set tde.signal to the table we just created, key was already pushed */
     lua_rawset(L, -3);
 
-    /* Pop "awesome" */
+    /* Pop "tde" */
     lua_pop(L, 1);
 }
 
@@ -1061,7 +1061,7 @@ add_to_search_path(lua_State *L, string_array_t *searchpath, bool for_lua)
         lua_concat(L, components + 1); /* concatenate with string on top of the stack */
     }
 
-    /* add Lua lib path (/usr/share/awesome/lib by default) */
+    /* add Lua lib path (/usr/share/tde/lib by default) */
     if (for_lua)
     {
         lua_pushliteral(L, ";" AWESOME_LUA_LIB_PATH "/?.lua");
@@ -1122,7 +1122,7 @@ luaA_init(xdgHandle* xdg, string_array_t *searchpath)
 
     luaA_object_setup(L);
 
-    /* Export awesome lib */
+    /* Export tde lib */
     luaA_openlib(L, "awesome", awesome_lib, awesome_lib);
     setup_awesome_signals(L);
 
