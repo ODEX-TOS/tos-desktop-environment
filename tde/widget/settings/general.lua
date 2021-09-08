@@ -242,7 +242,7 @@ return function()
     function()
       print("Saving general settings")
       -- reload TDE
-      awesome.restart()
+      tde.restart()
     end
   )
 

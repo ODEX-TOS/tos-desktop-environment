@@ -54,7 +54,7 @@ weak.__mode = "k"
 -- @usage -- notify other components
 -- lib-tde.signals.emit_module_exit_screen_hide()
 connections.emit_module_exit_screen_hide = function()
-    awesome.emit_signal("module::exit_screen_hide")
+    tde.emit_signal("module::exit_screen_hide")
 end
 
 --- Trigger a callback function when the exit screen goes hidden
@@ -66,7 +66,7 @@ end
 --      print("exit screen hidden")
 --    end)
 connections.connect_module_exit_screen_hide = function(func)
-    awesome.connect_signal("module::exit_screen_hide", func)
+    tde.connect_signal("module::exit_screen_hide", func)
 end
 
 --- Notify other TDE components that the battery has updated its value
@@ -74,7 +74,7 @@ end
 -- @usage -- notify other components
 -- lib-tde.signals.emit_module_exit_screen_show()
 connections.emit_module_exit_screen_show = function()
-    awesome.emit_signal("module::exit_screen_show")
+    tde.emit_signal("module::exit_screen_show")
 end
 
 --- Trigger a callback function when the exit screen is being show
@@ -86,7 +86,7 @@ end
 --      print("exit screen shown")
 --    end)
 connections.connect_module_exit_screen_show = function(func)
-    awesome.connect_signal("module::exit_screen_show", func)
+    tde.connect_signal("module::exit_screen_show", func)
 end
 
 --- Notify other TDE components that the battery has updated its value
@@ -95,7 +95,7 @@ end
 -- @usage -- notify other components when the battery is updated
 -- lib-tde.signals.emit_battery()
 connections.emit_battery = function(value)
-    awesome.emit_signal("module::battery", value)
+    tde.emit_signal("module::battery", value)
 end
 
 --- Trigger a callback function when the battery is updated
@@ -107,7 +107,7 @@ end
 --      print("Battery is: " .. tostring(value))
 --    end)
 connections.connect_battery = function(func)
-    awesome.connect_signal("module::battery", func)
+    tde.connect_signal("module::battery", func)
 end
 
 --- Notify other TDE components that the battery charging has changed
@@ -116,7 +116,7 @@ end
 -- @usage -- notify other components when the battery charging changed
 -- lib-tde.signals.emit_battery_charging()
 connections.emit_battery_charging = function(value)
-    awesome.emit_signal("module::charger", value)
+    tde.emit_signal("module::charger", value)
 end
 
 --- Trigger a callback function when the battery charging changed
@@ -128,7 +128,7 @@ end
 --      print("Battery charging state: " .. tostring(value))
 --    end)
 connections.connect_battery_charging = function(func)
-    awesome.connect_signal("module::charger", func)
+    tde.connect_signal("module::charger", func)
 end
 
 --- Notify other TDE components that the screen brightness has changed
@@ -137,7 +137,7 @@ end
 -- @usage -- notify other components when the brightness changed
 -- lib-tde.signals.emit_brightness(100)
 connections.emit_brightness = function(value)
-    awesome.emit_signal("brightness::update", value)
+    tde.emit_signal("brightness::update", value)
 end
 
 --- Trigger a callback function when the brightness changed
@@ -149,7 +149,7 @@ end
 --      print("Current brightness: " .. tostring(value))
 --    end)
 connections.connect_brightness = function(func)
-    awesome.connect_signal("brightness::update", func)
+    tde.connect_signal("brightness::update", func)
 end
 
 --- Notify other TDE components that the screen volume has changed
@@ -158,7 +158,7 @@ end
 -- @usage -- notify other components when the volume changed
 -- lib-tde.signals.emit_volume(100)
 connections.emit_volume = function(value)
-    awesome.emit_signal("volume::update", value)
+    tde.emit_signal("volume::update", value)
 end
 
 --- Trigger a callback function when the volume changed
@@ -170,7 +170,7 @@ end
 --      print("Current volume: " .. tostring(value))
 --    end)
 connections.connect_volume = function(func)
-    awesome.connect_signal("volume::update", func)
+    tde.connect_signal("volume::update", func)
 end
 
 --- Notify other TDE components that the microphone volume changed
@@ -179,7 +179,7 @@ end
 -- @usage -- notify other components when the microphone volume changed
 -- lib-tde.signals.emit_mic_volume(100)
 connections.emit_mic_volume = function(value)
-    awesome.emit_signal("mic::volume::update", value)
+    tde.emit_signal("mic::volume::update", value)
 end
 
 --- Trigger a callback function when the microphone volume changed
@@ -191,7 +191,7 @@ end
 --      print("Current microphone volume: " .. tostring(value))
 --    end)
 connections.connect_mic_volume = function(func)
-    awesome.connect_signal("mic::volume::update", func)
+    tde.connect_signal("mic::volume::update", func)
 end
 
 --- Request an update to check to volume value
@@ -199,7 +199,7 @@ end
 -- @usage -- Notify that you changed the state of volume
 -- lib-tde.signals.emit_volume_update()
 connections.emit_volume_update = function(value)
-    awesome.emit_signal("volume::update::request", value or 0)
+    tde.emit_signal("volume::update::request", value or 0)
 end
 
 --- Trigger a callback function when a client requests a volume update
@@ -211,7 +211,7 @@ end
 --      print("Request to search for latest volume state")
 --    end)
 connections.connect_volume_update = function(func)
-    awesome.connect_signal("volume::update::request", func)
+    tde.connect_signal("volume::update::request", func)
 end
 
 --- Notify other TDE components that the volume mute state changed
@@ -220,7 +220,7 @@ end
 -- @usage -- notify other components when the volume mute state changed
 -- lib-tde.signals.emit_volume_is_muted(true)
 connections.emit_volume_is_muted = function(value)
-    awesome.emit_signal("volume::update::muted", value)
+    tde.emit_signal("volume::update::muted", value)
 end
 
 --- Trigger a callback function when the volume mute state changed
@@ -232,7 +232,7 @@ end
 --      print("Is volume enabled? " .. tostring(isMuted))
 --    end)
 connections.connect_volume_is_muted = function(func)
-    awesome.connect_signal("volume::update::muted", func)
+    tde.connect_signal("volume::update::muted", func)
 end
 
 --- Notify other TDE components that the volume should only be controlled from the hardware
@@ -241,7 +241,7 @@ end
 -- @usage -- notify other components that software is allowed to control the volume
 -- lib-tde.signals.emit_volume_is_controlled_in_software(true)
 connections.emit_volume_is_controlled_in_software = function(bIsControlledInSoftware)
-    awesome.emit_signal("volume::controlled::software", bIsControlledInSoftware)
+    tde.emit_signal("volume::controlled::software", bIsControlledInSoftware)
 end
 
 --- Trigger a callback function when the volume is controlled in software or not
@@ -253,7 +253,7 @@ end
 --      print("Is volume controlled in software? " .. tostring(bIsControlledInSoftware))
 --    end)
 connections.connect_volume_is_controlled_in_software = function(func)
-    awesome.connect_signal("volume::controlled::software", func)
+    tde.connect_signal("volume::controlled::software", func)
 end
 
 --- Notify other TDE components that the weather updated
@@ -264,7 +264,7 @@ end
 -- @usage -- notify other components when the weather is updated
 -- lib-tde.signals.emit_weather("14°C", "Cloudy with a change of meatballs", "99")
 connections.emit_weather = function(temp, desc, icon)
-    awesome.emit_signal("widget::weather", temp, desc, icon)
+    tde.emit_signal("widget::weather", temp, desc, icon)
 end
 
 --- Trigger a callback function when the weather info changed
@@ -277,7 +277,7 @@ end
 --      print("Current description: " .. tostring(desc))
 --    end)
 connections.connect_weather = function(func)
-    awesome.connect_signal("widget::weather", func)
+    tde.connect_signal("widget::weather", func)
 end
 
 --- Notify other TDE components that the username changed
@@ -286,7 +286,7 @@ end
 -- @usage -- notify other components when the user changed
 -- lib-tde.signals.emit_user("user_1")
 connections.emit_username = function(value)
-    awesome.emit_signal("user::changed", value)
+    tde.emit_signal("user::changed", value)
 end
 
 --- Trigger a callback function when the user changed
@@ -298,7 +298,7 @@ end
 --      print("Current user: " .. value)
 --    end)
 connections.connect_username = function(func)
-    awesome.connect_signal("user::changed", func)
+    tde.connect_signal("user::changed", func)
 end
 
 ---Request the user data
@@ -307,7 +307,7 @@ end
 -- @usage -- notify other components that you want to know the user data
 -- lib-tde.signals.emit_request_user()
 connections.emit_request_user = function()
-    awesome.emit_signal("user::request", true)
+    tde.emit_signal("user::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the user data
@@ -319,7 +319,7 @@ end
 --      print("Someone wants to know the user data")
 --    end)
 connections.connect_request_user = function(func)
-    awesome.connect_signal("user::request", func)
+    tde.connect_signal("user::request", func)
 end
 
 --- Notify other TDE components that the distro name changed
@@ -328,7 +328,7 @@ end
 -- @usage -- notify other components when the distro changed
 -- lib-tde.signals.emit_distro("TOS Linux")
 connections.emit_distro = function(value)
-    awesome.emit_signal("distro::changed", value)
+    tde.emit_signal("distro::changed", value)
 end
 
 --- Trigger a callback function when the distro changed
@@ -340,7 +340,7 @@ end
 --      print("Current distro: " .. value)
 --    end)
 connections.connect_distro = function(func)
-    awesome.connect_signal("distro::changed", func)
+    tde.connect_signal("distro::changed", func)
 end
 
 ---Request the distro data
@@ -349,7 +349,7 @@ end
 -- @usage -- notify other components that you want to know the distor data
 -- lib-tde.signals.emit_request_distro()
 connections.emit_request_distro = function()
-    awesome.emit_signal("distro::request", true)
+    tde.emit_signal("distro::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the distro data
@@ -361,7 +361,7 @@ end
 --      print("Someone wants to know the distro data")
 --    end)
 connections.connect_request_distro = function(func)
-    awesome.connect_signal("distro::request", func)
+    tde.connect_signal("distro::request", func)
 end
 
 --- Notify other TDE components that the uptime changed
@@ -370,7 +370,7 @@ end
 -- @usage -- notify other components when the uptime changed
 -- lib-tde.signals.emit_uptime("10 seconds")
 connections.emit_uptime = function(value)
-    awesome.emit_signal("uptime::changed", value)
+    tde.emit_signal("uptime::changed", value)
 end
 
 --- Trigger a callback function when the uptime changed
@@ -382,7 +382,7 @@ end
 --      print("Current uptime: " .. value)
 --    end)
 connections.connect_uptime = function(func)
-    awesome.connect_signal("uptime::changed", func)
+    tde.connect_signal("uptime::changed", func)
 end
 
 ---Request the uptime data
@@ -391,7 +391,7 @@ end
 -- @usage -- notify other components that you want to know the uptime
 -- lib-tde.signals.emit_request_uptime()
 connections.emit_request_uptime = function()
-    awesome.emit_signal("uptime::request", true)
+    tde.emit_signal("uptime::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the uptime data
@@ -403,7 +403,7 @@ end
 --      print("Someone wants to know the uptime data")
 --    end)
 connections.connect_request_uptime = function(func)
-    awesome.connect_signal("uptime::request", func)
+    tde.connect_signal("uptime::request", func)
 end
 
 --- Notify other TDE components what the current kernel version is
@@ -412,7 +412,7 @@ end
 -- @usage -- notify other components what the current kernel is
 -- lib-tde.signals.emit_kernel("v5.0.0-tos1")
 connections.emit_kernel = function(value)
-    awesome.emit_signal("kernel::changed", value)
+    tde.emit_signal("kernel::changed", value)
 end
 
 --- Trigger a callback function when the kernel changed
@@ -424,7 +424,7 @@ end
 --      print("Current kernel: " .. value)
 --    end)
 connections.connect_kernel = function(func)
-    awesome.connect_signal("kernel::changed", func)
+    tde.connect_signal("kernel::changed", func)
 end
 
 ---Request the kernel data
@@ -433,7 +433,7 @@ end
 -- @usage -- notify other components that you want to know the kernel data
 -- lib-tde.signals.emit_request_kernel()
 connections.emit_request_kernel = function()
-    awesome.emit_signal("kernel::request", true)
+    tde.emit_signal("kernel::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the kernel data
@@ -445,7 +445,7 @@ end
 --      print("Someone wants to know the kernel data")
 --    end)
 connections.connect_request_kernel = function(func)
-    awesome.connect_signal("kernel::request", func)
+    tde.connect_signal("kernel::request", func)
 end
 
 --- Notify other TDE components how many packages should be updated
@@ -454,7 +454,7 @@ end
 -- @usage -- notify other components how much packages need to be updated
 -- lib-tde.signals.emit_kernel("7")
 connections.emit_packages_to_update = function(value)
-    awesome.emit_signal("packages::changed:update", value)
+    tde.emit_signal("packages::changed:update", value)
 end
 
 --- Trigger a callback function when packages to update changed
@@ -466,7 +466,7 @@ end
 --      print("Packages to update: " .. value)
 --    end)
 connections.connect_packages_to_update = function(func)
-    awesome.connect_signal("packages::changed:update", func)
+    tde.connect_signal("packages::changed:update", func)
 end
 
 --- Notify other TDE components about the current cpu usage
@@ -475,7 +475,7 @@ end
 -- @usage -- notify other components of the current cpu usage
 -- lib-tde.signals.emit_cpu_usage("32")
 connections.emit_cpu_usage = function(value)
-    awesome.emit_signal("cpu::usage", value)
+    tde.emit_signal("cpu::usage", value)
 end
 
 --- Trigger a callback function when the cpu usage has been updated
@@ -487,7 +487,7 @@ end
 --      print("CPU usage: " .. tostring(value) .. "%")
 --    end)
 connections.connect_cpu_usage = function(func)
-    awesome.connect_signal("cpu::usage", func)
+    tde.connect_signal("cpu::usage", func)
 end
 
 ---Request the cpu data
@@ -496,7 +496,7 @@ end
 -- @usage -- notify other components that you want to know the cpu data
 -- lib-tde.signals.emit_request_cpu()
 connections.emit_request_cpu = function()
-    awesome.emit_signal("cpu::request", true)
+    tde.emit_signal("cpu::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the cpu data
@@ -508,7 +508,7 @@ end
 --      print("Someone wants to know the cpu usage")
 --    end)
 connections.connect_request_cpu = function(func)
-    awesome.connect_signal("cpu::request", func)
+    tde.connect_signal("cpu::request", func)
 end
 
 --- Notify other TDE components about the current disk usage
@@ -517,7 +517,7 @@ end
 -- @usage -- notify other components of the current disk usage
 -- lib-tde.signals.emit_disk_usage("32")
 connections.emit_disk_usage = function(value)
-    awesome.emit_signal("disk::usage", value)
+    tde.emit_signal("disk::usage", value)
 end
 
 --- Trigger a callback function when the disk usage has been updated
@@ -529,7 +529,7 @@ end
 --      print("DISK usage: " .. tostring(value) .. "%")
 --    end)
 connections.connect_disk_usage = function(func)
-    awesome.connect_signal("disk::usage", func)
+    tde.connect_signal("disk::usage", func)
 end
 
 ---Request the disk data
@@ -538,7 +538,7 @@ end
 -- @usage -- notify other components that you want to know the disk data
 -- lib-tde.signals.emit_request_disk()
 connections.emit_request_disk = function()
-    awesome.emit_signal("disk::request", true)
+    tde.emit_signal("disk::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the disk data
@@ -550,7 +550,7 @@ end
 --      print("Someone wants to know the disk usage")
 --    end)
 connections.connect_request_disk = function(func)
-    awesome.connect_signal("disk::request", func)
+    tde.connect_signal("disk::request", func)
 end
 
 --- Notify other TDE components about the total disk space
@@ -559,7 +559,7 @@ end
 -- @usage -- notify other components of the total disk space
 -- lib-tde.signals.emit_disk_space("467G")
 connections.emit_disk_space = function(value)
-    awesome.emit_signal("disk::space", value)
+    tde.emit_signal("disk::space", value)
 end
 
 --- Trigger a callback function when the disk space has been updated
@@ -571,7 +571,7 @@ end
 --      print("DISK space: " .. tostring(value) .. "%")
 --    end)
 connections.connect_disk_space = function(func)
-    awesome.connect_signal("disk::space", func)
+    tde.connect_signal("disk::space", func)
 end
 
 --- Notify other TDE components about the current ram usage
@@ -580,7 +580,7 @@ end
 -- @usage -- notify other components of the current ram usage
 -- lib-tde.signals.emit_ram_usage("32")
 connections.emit_ram_usage = function(value)
-    awesome.emit_signal("ram::usage", value)
+    tde.emit_signal("ram::usage", value)
 end
 
 --- Trigger a callback function when the ram usage has been updated
@@ -592,7 +592,7 @@ end
 --      print("RAM usage: " .. tostring(value) .. "%")
 --    end)
 connections.connect_ram_usage = function(func)
-    awesome.connect_signal("ram::usage", func)
+    tde.connect_signal("ram::usage", func)
 end
 
 --- Notify other TDE components about the total ram
@@ -601,7 +601,7 @@ end
 -- @usage -- notify other components of the total ram in kilobytes
 -- lib-tde.signals.emit_ram_total("14000000")
 connections.emit_ram_total = function(value)
-    awesome.emit_signal("ram::total", value)
+    tde.emit_signal("ram::total", value)
 end
 
 --- Trigger a callback function for the total ram amount
@@ -613,7 +613,7 @@ end
 --      print("RAM total: " .. tostring(value) .. "%")
 --    end)
 connections.connect_ram_total = function(func)
-    awesome.connect_signal("ram::total", func)
+    tde.connect_signal("ram::total", func)
 end
 
 ---Request the ram data
@@ -622,7 +622,7 @@ end
 -- @usage -- notify other components that you want to know the ram data
 -- lib-tde.signals.emit_request_ram()
 connections.emit_request_ram = function()
-    awesome.emit_signal("ram::request", true)
+    tde.emit_signal("ram::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the ram data
@@ -634,7 +634,7 @@ end
 --      print("Someone wants to know the ram data")
 --    end)
 connections.connect_request_ram = function(func)
-    awesome.connect_signal("ram::request", func)
+    tde.connect_signal("ram::request", func)
 end
 
 --- Notify other TDE components about the current bluetooth status
@@ -643,7 +643,7 @@ end
 -- @usage -- Notify other TDE components about the current bluetooth status
 -- lib-tde.signals.emit_bluetooth_status(true)
 connections.emit_bluetooth_status = function(value)
-    awesome.emit_signal("BLUETOOTH::status", value)
+    tde.emit_signal("BLUETOOTH::status", value)
 end
 
 --- Trigger a callback function for the current bluetooth status
@@ -655,7 +655,7 @@ end
 --      print("Bluetooth active?: " .. tostring(value))
 --    end)
 connections.connect_bluetooth_status = function(func)
-    awesome.connect_signal("BLUETOOTH::status", func)
+    tde.connect_signal("BLUETOOTH::status", func)
 end
 
 --- Notify other TDE components about the current wifi status
@@ -664,7 +664,7 @@ end
 -- @usage -- Notify other TDE components about the current wifi status
 -- lib-tde.signals.emit_wifi_status(true)
 connections.emit_wifi_status = function(value)
-    awesome.emit_signal("WIFI::status", value)
+    tde.emit_signal("WIFI::status", value)
 end
 
 --- Trigger a callback function for the current wifi status
@@ -676,7 +676,7 @@ end
 --      print("Wifi active?: " .. tostring(value))
 --    end)
 connections.connect_wifi_status = function(func)
-    awesome.connect_signal("WIFI::status", func)
+    tde.connect_signal("WIFI::status", func)
 end
 
 --- Trigger a callback function when we are about to shut down
@@ -688,7 +688,7 @@ end
 --      print("Goodbye")
 --    end)
 connections.connect_exit = function(func)
-    awesome.connect_signal("exit", func)
+    tde.connect_signal("exit", func)
 end
 
 --- Notify other TDE components about the change in mouse acceleration
@@ -697,7 +697,7 @@ end
 -- @usage -- Notify other TDE components about the change in mouse acceleration
 -- lib-tde.signals.emit_mouse_acceleration({id: 11, speed: 1.5})
 connections.emit_mouse_acceleration = function(value)
-    awesome.emit_signal("TDE::mouse::acceleration", value)
+    tde.emit_signal("TDE::mouse::acceleration", value)
 end
 
 --- Trigger a callback function when the mouse acceleration changed
@@ -709,7 +709,7 @@ end
 --      print("Mouse acceleration settings: " .. value.id .. " with speed:" .. value.speed)
 --    end)
 connections.connect_mouse_acceleration = function(func)
-    awesome.connect_signal("TDE::mouse::acceleration", func)
+    tde.connect_signal("TDE::mouse::acceleration", func)
 end
 
 --- Notify other TDE components about the change in mouse speed
@@ -718,7 +718,7 @@ end
 -- @usage -- Notify other TDE components about the change in mouse speed
 -- lib-tde.signals.emit_mouse_speed({id: 11, speed: 1.5})
 connections.emit_mouse_speed = function(value)
-    awesome.emit_signal("TDE::mouse::speed", value)
+    tde.emit_signal("TDE::mouse::speed", value)
 end
 
 --- Trigger a callback function when the mouse speed changed
@@ -730,7 +730,7 @@ end
 --      print("Mouse speed settings: " .. value.id .. " with speed:" .. value.speed)
 --    end)
 connections.connect_mouse_speed = function(func)
-    awesome.connect_signal("TDE::mouse::speed", func)
+    tde.connect_signal("TDE::mouse::speed", func)
 end
 
 --- Notify other TDE components about the change in mouse natural scrolling
@@ -739,7 +739,7 @@ end
 -- @usage -- Notify other TDE components about the change in mouse natural scrolling state
 -- lib-tde.signals.emit_mouse_speed({id: 11, state: true})
 connections.emit_mouse_natural_scrolling = function(value)
-    awesome.emit_signal("TDE::mouse::natural_scrolling", value)
+    tde.emit_signal("TDE::mouse::natural_scrolling", value)
 end
 
 --- Trigger a callback function when the mouse natural scrolling state changed
@@ -751,7 +751,7 @@ end
 --      print("Mouse natural scrolling state settings: " .. value.id .. " with state:" .. value.state)
 --    end)
 connections.connect_mouse_natural_scrolling = function(func)
-    awesome.connect_signal("TDE::mouse::natural_scrolling", func)
+    tde.connect_signal("TDE::mouse::natural_scrolling", func)
 end
 
 --- Notify wiboxes when the screen layout is updated (so they can update their position)
@@ -759,7 +759,7 @@ end
 -- @usage -- Notify other TDE components about the screen update
 -- lib-tde.signals.emit_refresh_screen()
 connections.emit_refresh_screen = function()
-    awesome.emit_signal("TDE::screen:refresh")
+    tde.emit_signal("TDE::screen:refresh")
 end
 
 --- Trigger a callback function when a wibox should update their position on the screen
@@ -771,7 +771,7 @@ end
 --      print("Some screen updated")
 --    end)
 connections.connect_refresh_screen = function(func)
-    awesome.connect_signal("TDE::screen:refresh", func)
+    tde.connect_signal("TDE::screen:refresh", func)
 end
 
 --- Notify when the user profile picture changed
@@ -780,7 +780,7 @@ end
 -- @usage -- Notify other TDE components when the user profile picture changed
 -- lib-tde.signals.emit_profile_picture_changed()
 connections.emit_profile_picture_changed = function(picture)
-    awesome.emit_signal("TDE::profile:picture::changed", picture)
+    tde.emit_signal("TDE::profile:picture::changed", picture)
 end
 
 --- Trigger a callback function when the user profile picture changed
@@ -792,7 +792,7 @@ end
 --      print("Changed profile picture to: " .. picture)
 --    end)
 connections.connect_profile_picture_changed = function(func)
-    awesome.connect_signal("TDE::profile:picture::changed", func)
+    tde.connect_signal("TDE::profile:picture::changed", func)
 end
 
 ---Request the user data
@@ -801,7 +801,7 @@ end
 -- @usage -- notify other components that you want to know the profile data
 -- lib-tde.signals.emit_request_profile_pic()
 connections.emit_request_profile_pic = function()
-    awesome.emit_signal("profile::pic::request", true)
+    tde.emit_signal("profile::pic::request", true)
 end
 
 --- Trigger a callback function some end users want's to know the profile picture data
@@ -813,7 +813,7 @@ end
 --      print("Someone wants to know the profile picture data")
 --    end)
 connections.connect_request_profile_pic = function(func)
-    awesome.connect_signal("profile::pic::request", func)
+    tde.connect_signal("profile::pic::request", func)
 end
 
 --- Notify when the notification disturb state changes
@@ -822,7 +822,7 @@ end
 -- @usage -- Notify other TDE components what the current do not disturb mode is
 -- lib-tde.signals.emit_do_not_disturb()
 connections.emit_do_not_disturb = function(bDoNotDisturb)
-    awesome.emit_signal("TDE::do_not_disturb::changed", bDoNotDisturb)
+    tde.emit_signal("TDE::do_not_disturb::changed", bDoNotDisturb)
 end
 
 --- Trigger a callback function when the do not disturb mode changed
@@ -834,7 +834,7 @@ end
 --      print("Do not disturb mode: " .. tostring(bDoNotDisturb))
 --    end)
 connections.connect_do_not_disturb = function(func)
-    awesome.connect_signal("TDE::do_not_disturb::changed", func)
+    tde.connect_signal("TDE::do_not_disturb::changed", func)
 end
 
 --- Notify when the primary theme changed
@@ -844,7 +844,7 @@ end
 -- lib-tde.signals.emit_primary_theme_changed()
 connections.emit_primary_theme_changed = function(pallet)
     setmetatable(pallet, weak)
-    awesome.emit_signal("TDE::primary::theme::changed", pallet)
+    tde.emit_signal("TDE::primary::theme::changed", pallet)
 end
 
 --- Trigger a callback function when the primary theme changed
@@ -856,7 +856,7 @@ end
 --      print("The hue_600 color of this theme: " .. theme.hue_600)
 --    end)
 connections.connect_primary_theme_changed = function(func)
-    awesome.connect_signal("TDE::primary::theme::changed", func)
+    tde.connect_signal("TDE::primary::theme::changed", func)
 end
 
 --- Notify when the background theme changed
@@ -866,7 +866,7 @@ end
 -- lib-tde.signals.emit_background_theme_changed()
 connections.emit_background_theme_changed = function(pallet)
     setmetatable(pallet, weak)
-    awesome.emit_signal("TDE::background::theme::changed", pallet)
+    tde.emit_signal("TDE::background::theme::changed", pallet)
 end
 
 --- Trigger a callback function when the background theme changed
@@ -878,7 +878,7 @@ end
 --      print("The hue_600 color of this theme: " .. theme.hue_600)
 --    end)
 connections.connect_background_theme_changed = function(func)
-    awesome.connect_signal("TDE::background::theme::changed", func)
+    tde.connect_signal("TDE::background::theme::changed", func)
 end
 
 --- Notify when the oled brightness mode changed
@@ -887,7 +887,7 @@ end
 -- @usage -- Notify other TDE components that the oled brightness mode changed
 -- lib-tde.signals.emit_oled_mode(true)
 connections.emit_oled_mode = function(bIsOledMode)
-    awesome.emit_signal("TDE::oled::mode::changed", bIsOledMode)
+    tde.emit_signal("TDE::oled::mode::changed", bIsOledMode)
 end
 
 --- Trigger a callback function when the oled brightness mode changed
@@ -899,7 +899,7 @@ end
 --      print("Is oled mode enabled?: " .. tostring(bIsOledMode))
 --    end)
 connections.connect_oled_mode = function(func)
-    awesome.connect_signal("TDE::oled::mode::changed", func)
+    tde.connect_signal("TDE::oled::mode::changed", func)
 end
 
 
@@ -909,7 +909,7 @@ end
 -- @usage -- Notify other TDE components that the screen panel should change
 -- lib-tde.signals.emit_anchor_changed("bottom")
 connections.emit_anchor_changed = function(anchor)
-    awesome.emit_signal("TDE::tag::anchor::changed", anchor)
+    tde.emit_signal("TDE::tag::anchor::changed", anchor)
 end
 
 --- Trigger a callback function when the anchor type changed of the panels (Bottom, left, right)
@@ -921,7 +921,7 @@ end
 --      print("Changing anchor to: " .. value)
 --    end)
 connections.connect_anchor_changed = function(func)
-    awesome.connect_signal("TDE::tag::anchor::changed", func)
+    tde.connect_signal("TDE::tag::anchor::changed", func)
 end
 
 --- Notify when we should save the tag state
@@ -929,7 +929,7 @@ end
 -- @usage -- Notify other TDE components that the tag state should be saved
 -- lib-tde.signals.emit_save_tag_state()
 connections.emit_save_tag_state = function()
-    awesome.emit_signal("TDE::tag::save::state")
+    tde.emit_signal("TDE::tag::save::state")
 end
 
 --- Trigger a callback function when the tag data has changed
@@ -941,7 +941,7 @@ end
 --      print("Saving the tag state")
 --    end)
 connections.connect_save_tag_state = function(func)
-    awesome.connect_signal("TDE::tag::save::state", func)
+    tde.connect_signal("TDE::tag::save::state", func)
 end
 
 --- Notify when the auto_hide property has changed of the wiboxes
@@ -950,7 +950,7 @@ end
 -- @usage -- Notify other TDE components that the auto hiding property of the wiboxes has changed
 -- lib-tde.signals.emit_auto_hide("bottom")
 connections.emit_auto_hide = function(bIsEnabled)
-    awesome.emit_signal("TDE::auto_hide::changed", bIsEnabled)
+    tde.emit_signal("TDE::auto_hide::changed", bIsEnabled)
 end
 
 --- Trigger a callback function when the auto_hide property has changed of the wiboxes
@@ -962,7 +962,7 @@ end
 --      print("Current auto hiding status: " .. tostring(value))
 --    end)
 connections.connect_auto_hide = function(func)
-    awesome.connect_signal("TDE::auto_hide::changed", func)
+    tde.connect_signal("TDE::auto_hide::changed", func)
 end
 
 --- Notify TDE components that the latest news has been showed
@@ -970,7 +970,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_showed_news()
 connections.emit_showed_news = function()
-    awesome.emit_signal("TDE::update::news::showed")
+    tde.emit_signal("TDE::update::news::showed")
 end
 
 --- Trigger a callback function the updated news has been shown
@@ -982,7 +982,7 @@ end
 --      print("The user has seen the latest updates")
 --    end)
 connections.connect_showed_news = function(func)
-    awesome.connect_signal("TDE::update::news::showed", func)
+    tde.connect_signal("TDE::update::news::showed", func)
 end
 
 --- Notify TDE components that the titlebar state should change
@@ -991,7 +991,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_titlebar_redraw()
 connections.emit_titlebar_redraw = function(bShouldDraw)
-    awesome.emit_signal("TDE::update::news::showed", bShouldDraw)
+    tde.emit_signal("TDE::update::news::showed", bShouldDraw)
 end
 
 --- Trigger a callback function that the titlebar drawing changed
@@ -1003,7 +1003,7 @@ end
 --      print("Will we draw the titlebars: " .. draw)
 --    end)
 connections.connect_titlebar_redraw = function(func)
-    awesome.connect_signal("TDE::update::news::showed", func)
+    tde.connect_signal("TDE::update::news::showed", func)
 end
 
 --- Signals to notify to move to the next layout of the keyboards
@@ -1011,7 +1011,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_keyboard_layout()
 connections.emit_keyboard_layout = function()
-    awesome.emit_signal("TDE::keyboard::layout::next")
+    tde.emit_signal("TDE::keyboard::layout::next")
 end
 
 --- Trigger a callback function to change to the next keyboard layout
@@ -1023,7 +1023,7 @@ end
 --      print("Changing to the next layout")
 --    end)
 connections.connect_keyboard_layout = function(func)
-    awesome.connect_signal("TDE::keyboard::layout::next", func)
+    tde.connect_signal("TDE::keyboard::layout::next", func)
 end
 
 --- Signals to notify that the keyboard layout has changed
@@ -1031,7 +1031,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_keyboard_layout_updated({'us', 'be', 'ru'}, 'us')
 connections.emit_keyboard_layout_updated = function(layouts, active)
-    awesome.emit_signal("TDE::keyboard::layout::updated", layouts, active)
+    tde.emit_signal("TDE::keyboard::layout::updated", layouts, active)
 end
 
 --- Trigger a callback function to change to the next keyboard layout
@@ -1043,7 +1043,7 @@ end
 --      print("Changing to the next layout was succesfull")
 --    end)
 connections.connect_keyboard_layout_updated = function(func)
-    awesome.connect_signal("TDE::keyboard::layout::updated", func)
+    tde.connect_signal("TDE::keyboard::layout::updated", func)
 end
 
 --- Signals to notify that the developer settings should be saved
@@ -1051,7 +1051,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_save_developer_settings()
 connections.emit_save_developer_settings = function(layouts, active)
-    awesome.emit_signal("TDE::save::developer::settings", layouts, active)
+    tde.emit_signal("TDE::save::developer::settings", layouts, active)
 end
 
 --- Trigger a callback function to save the current developer settings
@@ -1063,7 +1063,7 @@ end
 --      print("Saving developer settings")
 --    end)
 connections.connect_save_developer_settings = function(func)
-    awesome.connect_signal("TDE::save::developer::settings", func)
+    tde.connect_signal("TDE::save::developer::settings", func)
 end
 
 --- Signals to notify that the theming settings should be saved
@@ -1073,7 +1073,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_save_theming_settings()
 connections.emit_save_theming_settings = function(bIsPrimaryGradient, bIsBackgroundGradient)
-    awesome.emit_signal("TDE::save::theming::settings", bIsPrimaryGradient, bIsBackgroundGradient)
+    tde.emit_signal("TDE::save::theming::settings", bIsPrimaryGradient, bIsBackgroundGradient)
 end
 
 --- Trigger a callback function to save the current theming settings
@@ -1085,7 +1085,7 @@ end
 --      print("Saving theming settings")
 --    end)
 connections.connect_save_theming_settings = function(func)
-    awesome.connect_signal("TDE::save::theming::settings", func)
+    tde.connect_signal("TDE::save::theming::settings", func)
 end
 
 --- Signals to notify that we want to make a plugin appear in a given location
@@ -1095,7 +1095,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_add_plugin()
 connections.emit_add_plugin = function(location, plugin)
-    awesome.emit_signal("TDE::add_plugin", location, plugin)
+    tde.emit_signal("TDE::add_plugin", location, plugin)
 end
 
 --- Trigger a callback function to add a plugin to your location
@@ -1109,7 +1109,7 @@ end
 --      end
 --    end)
 connections.connect_add_plugin = function(func)
-    awesome.connect_signal("TDE::add_plugin", func)
+    tde.connect_signal("TDE::add_plugin", func)
 end
 
 --- Signals to notify that the rounded corners should change
@@ -1118,7 +1118,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_change_rounded_corner_dpi(dpi(10))
 connections.emit_change_rounded_corner_dpi = function(location, plugin)
-    awesome.emit_signal("TDE::change::rounded::corners", location, plugin)
+    tde.emit_signal("TDE::change::rounded::corners", location, plugin)
 end
 
 --- Trigger a callback function when the rounded corner should change
@@ -1130,7 +1130,7 @@ end
 --     print("The new corner radius: " .. tostring(radius))
 --    end)
 connections.connect_change_rounded_corner_dpi = function(func)
-    awesome.connect_signal("TDE::change::rounded::corners", func)
+    tde.connect_signal("TDE::change::rounded::corners", func)
 end
 
 --- Signals to notify that the we should cycle multiple wallpapers
@@ -1140,7 +1140,7 @@ end
 -- @usage
 -- lib-tde.signals.emit_enable_wallpaper_changer(true, {{hour = 12, image = "/path/to/wallpaper.png"}, {hour = 0, image = "/path/to/wallpaper_2.png"}})
 connections.emit_enable_wallpaper_changer = function(bIsEnabled, wallpapers, default)
-    awesome.emit_signal("TDE::change::wallpaper::mode", bIsEnabled, wallpapers, default)
+    tde.emit_signal("TDE::change::wallpaper::mode", bIsEnabled, wallpapers, default)
 end
 
 --- Trigger a callback function when the wallpaper mode changed
@@ -1153,7 +1153,7 @@ end
 --     print(wallpapers)
 --    end)
 connections.connect_enable_wallpaper_changer = function(func)
-    awesome.connect_signal("TDE::change::wallpaper::mode", func)
+    tde.connect_signal("TDE::change::wallpaper::mode", func)
 end
 
 return connections

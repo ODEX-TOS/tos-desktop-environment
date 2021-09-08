@@ -161,7 +161,7 @@ local function make_color_entry(name, slide, font_black)
         else
           right_gradient = pallet
         end
-        awesome.emit_signal('theme::redraw_gradient')
+        tde.emit_signal('theme::redraw_gradient')
         return
       end
 
@@ -245,7 +245,7 @@ return function()
       configWriter.update_entry(location, "accent", activePrimaryName)
       configWriter.update_entry(location, "background", activeBackgroundName)
       -- restart TDE
-      awesome.restart()
+      tde.restart()
     end
   )
 
@@ -388,7 +388,7 @@ return function()
   end), m, m, m, m)
 }
 
-  awesome.connect_signal('theme::redraw_gradient', function()
+  tde.connect_signal('theme::redraw_gradient', function()
     local new_gradient = new_gradient_pallet_fnc()
     root.elements.settings.bg = new_gradient.hue_600
     right_gradient_btn.bg = right_gradient.hue_800

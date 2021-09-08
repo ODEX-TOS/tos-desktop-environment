@@ -163,7 +163,7 @@ local globalKeys =
     "=",
     function()
       print("Toggeling systray visibility")
-      awesome.emit_signal("widget::systray:toggle")
+      tde.emit_signal("widget::systray:toggle")
     end,
     {description = i18n.translate("Toggle systray visibility"), group = i18n.translate("custom")}
   ),
@@ -251,13 +251,13 @@ local globalKeys =
   awful.key(
     {modkey, "Control"},
     config.restart,
-    _G.awesome.restart,
+    _G.tde.restart,
     {description = i18n.translate("reload TDE"), group = i18n.translate("TDE")}
   ),
   awful.key(
     {modkey, "Control"},
     config.quit,
-    _G.awesome.quit,
+    _G.tde.quit,
     {description = i18n.translate("quit TDE"), group = i18n.translate("TDE")}
   ),
   awful.key(
@@ -358,7 +358,7 @@ local globalKeys =
         awful.spawn("brightness -s 100 -F", false) -- reset pixel values when using backlight
         awful.spawn("brightness -a 5", false)
       end
-      awesome.emit_signal("widget::brightness")
+      tde.emit_signal("widget::brightness")
       if _G.toggleBriOSD ~= nil then
         _G.toggleBriOSD(true)
       end
@@ -379,7 +379,7 @@ local globalKeys =
         awful.spawn("brightness -s 100 -F", false) -- reset pixel values when using backlight
         awful.spawn("brightness -d 5", false)
       end
-      awesome.emit_signal("widget::brightness")
+      tde.emit_signal("widget::brightness")
       if _G.toggleBriOSD ~= nil then
         _G.toggleBriOSD(true)
       end

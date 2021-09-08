@@ -101,7 +101,7 @@ return function()
     update_client_draw_mode()
 
     -- force a full redraw of everything to paint the debug lines
-    awesome.emit_signal("full_redraw")
+    tde.emit_signal("full_redraw")
   end, function(callback)
     debug_check_callback = callback
   end)
@@ -118,7 +118,7 @@ return function()
     update_client_draw_mode()
 
     -- force a full redraw of everything to paint the debug lines
-    awesome.emit_signal("full_redraw")
+    tde.emit_signal("full_redraw")
 
     signals.emit_save_developer_settings()
   end)
@@ -129,7 +129,7 @@ return function()
     _G.save_state.developer.paint_refresh = checked
 
     -- force a full redraw of everything to paint the debug lines
-    awesome.emit_signal("full_redraw")
+    tde.emit_signal("full_redraw")
     signals.emit_save_developer_settings()
   end)
 

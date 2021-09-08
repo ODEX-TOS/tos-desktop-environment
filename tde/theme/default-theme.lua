@@ -100,34 +100,34 @@ local function darkLightSwitcher(dark, light)
   return dark
 end
 
-local function add_taglist(awesome_theme)
+local function add_taglist(tde_theme)
   taglist_occupied = color(config["taglist_occupied"]) or "#ffffff"
-  awesome_theme.taglist_bg_empty = "#00000000"
-  awesome_theme.taglist_bg_occupied =
+  tde_theme.taglist_bg_empty = "#00000000"
+  tde_theme.taglist_bg_occupied =
     "linear:0," ..
     dpi(48) ..
       ":0,0:0," ..
         taglist_occupied ..
           ":0.11," ..
             taglist_occupied .. ":0.11,#00000000:1,#00000000"
-  awesome_theme.taglist_bg_urgent =
+  tde_theme.taglist_bg_urgent =
     "linear:0," ..
     dpi(48) ..
       ":0,0:0," ..
-        awesome_theme.accent.hue_500 ..
+        tde_theme.accent.hue_500 ..
           ":0.11," ..
-            awesome_theme.accent.hue_500 ..
+            tde_theme.accent.hue_500 ..
               ":0.11,#00000000:1,#00000000"
-  awesome_theme.taglist_bg_focus =
+  tde_theme.taglist_bg_focus =
     "linear:0," ..
     dpi(48) ..
       ":0,0:0," ..
-        awesome_theme.primary.hue_500 ..
+        tde_theme.primary.hue_500 ..
           ":0.11," ..
-            awesome_theme.primary.hue_500 ..
+            tde_theme.primary.hue_500 ..
             ":0.11,#00000000:1,#00000000"
 
-  return awesome_theme
+  return tde_theme
 end
 
 -- Colors Pallets
@@ -156,116 +156,116 @@ theme.cpu_bar = color(config["cpu_bar"]) or "#f90273"
 theme.ram_bar = color(config["ram_bar"]) or "#017AFC"
 theme.disk_bar = color(config["disk_bar"]) or "#fdc400"
 
-local awesome_overrides = function(awesome_theme)
-  awesome_theme.dir = "/etc/xdg/tde/theme"
-  --theme.dir             = os.getenv("HOME") .. "/code/awesome-pro/themes/pro-dark"
+local tde_overrides = function(tde_theme)
+  tde_theme.dir = "/etc/xdg/tde/theme"
+  --theme.dir             = os.getenv("HOME") .. "/code/tde-pro/themes/pro-dark"
 
-  awesome_theme.icons = awesome_theme.dir .. "/icons/"
+  tde_theme.icons = tde_theme.dir .. "/icons/"
 
-  awesome_theme.wallpaper = "/usr/share/backgrounds/tos/default.jpg"
-  awesome_theme.font = "Roboto medium 10"
-  awesome_theme.title_font = "Roboto medium 14"
+  tde_theme.wallpaper = "/usr/share/backgrounds/tos/default.jpg"
+  tde_theme.font = "Roboto medium 10"
+  tde_theme.title_font = "Roboto medium 14"
 
-  awesome_theme.fg_white = "#ffffffde"
-  awesome_theme.fg_black = "#292929"
-  awesome_theme.fg_normal =
-    color(config["foreground_normal"]) or darkLightSwitcher(awesome_theme.fg_white, awesome_theme.fg_black)
+  tde_theme.fg_white = "#ffffffde"
+  tde_theme.fg_black = "#292929"
+  tde_theme.fg_normal =
+    color(config["foreground_normal"]) or darkLightSwitcher(tde_theme.fg_white, tde_theme.fg_black)
 
-  awesome_theme.fg_focus = color(config["foreground_focus"]) or darkLightSwitcher("#e4e4e4", "#343434")
-  awesome_theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")
-  awesome_theme.bat_fg_critical = color(config["foreground_critical"]) or darkLightSwitcher("#232323", "#BEBEBE3")
+  tde_theme.fg_focus = color(config["foreground_focus"]) or darkLightSwitcher("#e4e4e4", "#343434")
+  tde_theme.fg_urgent = color(config["foreground_urgent"]) or darkLightSwitcher("#CC9393", "#994545")
+  tde_theme.bat_fg_critical = color(config["foreground_critical"]) or darkLightSwitcher("#232323", "#BEBEBE3")
 
-  awesome_theme.bg_normal = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
-  awesome_theme.bg_focus = color(config["background_focus"]) or "#5a5a5a"
-  awesome_theme.bg_urgent = color(config["background_urgent"]) or "#3F3F3F"
-  awesome_theme.bg_systray = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
+  tde_theme.bg_normal = tde_theme.background.hue_800 .. tde_theme.background_transparency
+  tde_theme.bg_focus = color(config["background_focus"]) or "#5a5a5a"
+  tde_theme.bg_urgent = color(config["background_urgent"]) or "#3F3F3F"
+  tde_theme.bg_systray = tde_theme.background.hue_800 .. tde_theme.background_transparency
 
-  awesome_theme.bg_modal = color(config["background_modal"]) or darkLightSwitcher("#ffffff35", "#ffffffA0")
-  awesome_theme.bg_modal_title = color(config["background_modal_title"]) or darkLightSwitcher("#ffffff55", "#ffffffD0")
-  awesome_theme.bg_settings_display_number = "#00000070"
+  tde_theme.bg_modal = color(config["background_modal"]) or darkLightSwitcher("#ffffff35", "#ffffffA0")
+  tde_theme.bg_modal_title = color(config["background_modal_title"]) or darkLightSwitcher("#ffffff55", "#ffffffD0")
+  tde_theme.bg_settings_display_number = "#00000070"
   -- Borders
 
-  awesome_theme.border_width = dpi(2)
-  awesome_theme.border_normal = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
-  awesome_theme.border_focus = awesome_theme.primary.hue_300
-  awesome_theme.border_marked = color(config["border_marked"]) or "#CC9393"
+  tde_theme.border_width = dpi(2)
+  tde_theme.border_normal = tde_theme.background.hue_800 .. tde_theme.background_transparency
+  tde_theme.border_focus = tde_theme.primary.hue_300
+  tde_theme.border_marked = color(config["border_marked"]) or "#CC9393"
 
   -- Notification
-  awesome_theme.transparent = "#00000000"
-  awesome_theme.notification_position = "top_right"
-  awesome_theme.notification_bg = awesome_theme.transparent
-  awesome_theme.notification_margin = dpi(5)
-  awesome_theme.notification_border_width = dpi(0)
-  awesome_theme.notification_border_color = awesome_theme.transparent
-  awesome_theme.notification_spacing = dpi(0)
-  awesome_theme.notification_icon_resize_strategy = "center"
-  awesome_theme.notification_icon_size = dpi(32)
+  tde_theme.transparent = "#00000000"
+  tde_theme.notification_position = "top_right"
+  tde_theme.notification_bg = tde_theme.transparent
+  tde_theme.notification_margin = dpi(5)
+  tde_theme.notification_border_width = dpi(0)
+  tde_theme.notification_border_color = tde_theme.transparent
+  tde_theme.notification_spacing = dpi(0)
+  tde_theme.notification_icon_resize_strategy = "center"
+  tde_theme.notification_icon_size = dpi(32)
 
   -- UI Groups
 
-  awesome_theme.groups_title_bg = awesome_theme.bg_modal_title
-  awesome_theme.groups_bg = awesome_theme.bg_modal
-  awesome_theme.groups_radius = dpi(10)
+  tde_theme.groups_title_bg = tde_theme.bg_modal_title
+  tde_theme.groups_bg = tde_theme.bg_modal
+  tde_theme.groups_radius = dpi(10)
 
   -- Menu
 
-  awesome_theme.menu_height = dpi(16)
-  awesome_theme.menu_width = dpi(160)
+  tde_theme.menu_height = dpi(16)
+  tde_theme.menu_width = dpi(160)
 
   -- Tooltips
-  awesome_theme.tooltip_bg = (color(config["tooltip_bg"]) or awesome_theme.bg_normal)
-  --awesome_theme.tooltip_border_color = '#232323'
-  awesome_theme.tooltip_border_width = 0
-  awesome_theme.tooltip_shape = function(cr, w, h)
+  tde_theme.tooltip_bg = (color(config["tooltip_bg"]) or tde_theme.bg_normal)
+  --tde_theme.tooltip_border_color = '#232323'
+  tde_theme.tooltip_border_width = 0
+  tde_theme.tooltip_shape = function(cr, w, h)
     gears.shape.rounded_rect(cr, w, h, dpi(6))
   end
 
   -- Layout
 
-  awesome_theme.layout_max = darklight(awesome_theme.icons .. "layouts/arrow-expand-all.png")
-  awesome_theme.layout_tile = darklight(awesome_theme.icons .. "layouts/view-quilt.png")
-  awesome_theme.layout_dwindle = darklight(awesome_theme.icons .. "layouts/dwindle.png")
-  awesome_theme.layout_floating = darklight(awesome_theme.icons .. "layouts/floating.png")
-  awesome_theme.layout_fairv = darklight(awesome_theme.icons .. "layouts/fair.png")
-  awesome_theme.layout_fairh = darklight(awesome_theme.icons .. "layouts/fairh.png")
-  awesome_theme.layout_magnifier = darklight(awesome_theme.icons .. "layouts/magnifier.png")
+  tde_theme.layout_max = darklight(tde_theme.icons .. "layouts/arrow-expand-all.png")
+  tde_theme.layout_tile = darklight(tde_theme.icons .. "layouts/view-quilt.png")
+  tde_theme.layout_dwindle = darklight(tde_theme.icons .. "layouts/dwindle.png")
+  tde_theme.layout_floating = darklight(tde_theme.icons .. "layouts/floating.png")
+  tde_theme.layout_fairv = darklight(tde_theme.icons .. "layouts/fair.png")
+  tde_theme.layout_fairh = darklight(tde_theme.icons .. "layouts/fairh.png")
+  tde_theme.layout_magnifier = darklight(tde_theme.icons .. "layouts/magnifier.png")
 
   -- Taglist
   signals.connect_background_theme_changed(function (pallet)
     beautiful.background = pallet
-    awesome_theme.background = pallet
-    awesome_theme.bg_normal = awesome_theme.background.hue_800 .. awesome_theme.background_transparency
-    awesome_theme.tooltip_bg = (color(config["tooltip_bg"]) or awesome_theme.bg_normal)
-    awesome_theme = add_taglist(awesome_theme)
+    tde_theme.background = pallet
+    tde_theme.bg_normal = tde_theme.background.hue_800 .. tde_theme.background_transparency
+    tde_theme.tooltip_bg = (color(config["tooltip_bg"]) or tde_theme.bg_normal)
+    tde_theme = add_taglist(tde_theme)
   end)
 
   signals.connect_primary_theme_changed(function (pallet)
     beautiful.primary = pallet
     beautiful.accent = pallet
-    awesome_theme.primary = pallet
-    awesome_theme.accent = pallet
-    awesome_theme = add_taglist(awesome_theme)
+    tde_theme.primary = pallet
+    tde_theme.accent = pallet
+    tde_theme = add_taglist(tde_theme)
   end)
 
-  awesome_theme = add_taglist(awesome_theme)
+  tde_theme = add_taglist(tde_theme)
 
   -- Tasklist
 
-  awesome_theme.tasklist_font = "Roboto Regular 10"
-  awesome_theme.tasklist_bg_normal = awesome_theme.bg_modal .. "99"
-  awesome_theme.tasklist_bg_focus =
+  tde_theme.tasklist_font = "Roboto Regular 10"
+  tde_theme.tasklist_bg_normal = tde_theme.bg_modal .. "99"
+  tde_theme.tasklist_bg_focus =
     "linear:0,0:0," ..
     dpi(48) ..
       ":0," ..
-      awesome_theme.bg_modal ..
+      tde_theme.bg_modal ..
           ":0.95," ..
-          awesome_theme.bg_modal.. ":0.95," .. awesome_theme.fg_normal .. ":1," .. awesome_theme.fg_normal
-  awesome_theme.tasklist_bg_urgent = awesome_theme.primary.hue_800
-  awesome_theme.tasklist_fg_focus = awesome_theme.fg_focus
-  awesome_theme.tasklist_fg_urgent = awesome_theme.fg_urgent
-  awesome_theme.tasklist_fg_normal = awesome_theme.fg_normal
+          tde_theme.bg_modal.. ":0.95," .. tde_theme.fg_normal .. ":1," .. tde_theme.fg_normal
+  tde_theme.tasklist_bg_urgent = tde_theme.primary.hue_800
+  tde_theme.tasklist_fg_focus = tde_theme.fg_focus
+  tde_theme.tasklist_fg_urgent = tde_theme.fg_urgent
+  tde_theme.tasklist_fg_normal = tde_theme.fg_normal
 
-  awesome_theme.icon_theme = "Papirus-Dark"
+  tde_theme.icon_theme = "Papirus-Dark"
 
   -- TODO: use native functions instead of a shell script
   local out_f =
@@ -277,16 +277,16 @@ local awesome_overrides = function(awesome_theme)
   out_f:close()
 
   if out ~= nil then
-    awesome_theme.icon_theme = out
+    tde_theme.icon_theme = out
   end
   --Client
-  awesome_theme.border_width = dpi(0)
-  awesome_theme.border_focus = awesome_theme.primary.hue_500
-  awesome_theme.border_normal = awesome_theme.primary.hue_800
-  awesome_theme.border_color = awesome_theme.primary.hue_500
-  awesome_theme.snap_bg = awesome_theme.primary.hue_700
+  tde_theme.border_width = dpi(0)
+  tde_theme.border_focus = tde_theme.primary.hue_500
+  tde_theme.border_normal = tde_theme.primary.hue_800
+  tde_theme.border_color = tde_theme.primary.hue_500
+  tde_theme.snap_bg = tde_theme.primary.hue_700
 end
 return {
   theme = theme,
-  awesome_overrides = awesome_overrides
+  tde_overrides = tde_overrides
 }

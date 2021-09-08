@@ -204,7 +204,7 @@ local function setup_state(state)
     setup_keymap(state.keyboard)
 
     -- execute xrandr script
-    awesome.connect_signal(
+    tde.connect_signal(
         "startup",
         function()
             awful.spawn.easy_async(
@@ -246,7 +246,7 @@ local function setup_state(state)
 
     if state.developer.enabled then
         -- force a hierarcy redraw so that the draw settings are enforced
-        awesome.emit_signal("full_redraw")
+        tde.emit_signal("full_redraw")
     end
 end
 

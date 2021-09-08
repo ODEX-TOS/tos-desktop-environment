@@ -24,7 +24,7 @@
 ]]
 local default = require("tde.theme.default-theme")
 local theme = default.theme
-local awesomeOverride = default.awesome_overrides
+local tdeOverride = default.tde_overrides
 local filehandle = require("tde.lib-tde.file")
 local dir_exists = filehandle.dir_exists
 local file_exists = filehandle.exists
@@ -90,7 +90,7 @@ function Test_theme_dir()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(dir_exists(value.dir), "Make sure theme dir exists")
 end
 
@@ -101,7 +101,7 @@ function Test_theme_font()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(type(value.font) == "string", "Make sure theme font exists")
     assert(type(value.title_font) == "string", "Make sure theme title_font exists")
 end
@@ -113,7 +113,7 @@ function Test_theme_fg()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(is_color(value.fg_normal), "Make sure theme fg_normal exists")
     assert(is_color(value.fg_focus), "Make sure theme fg_focus exists")
     assert(is_color(value.fg_urgent), "Make sure theme fg_urgent exists")
@@ -127,7 +127,7 @@ function Test_theme_bg()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(is_color(value.bg_normal), "Make sure theme bg_normal exists")
     assert(is_color(value.bg_focus), "Make sure theme bg_focus exists")
     assert(is_color(value.bg_urgent), "Make sure theme bg_urgent exists")
@@ -143,7 +143,7 @@ function Test_theme_border()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(type(value.border_width) == "number", "Make sure theme border_widthexists")
     assert(is_color(value.border_normal), "Make sure theme border_normal exists")
     assert(is_color(value.border_focus), "Make sure theme border_focus exists")
@@ -157,7 +157,7 @@ function Test_theme_notification()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(is_color(value.transparent), "Make sure theme transparent exists")
     assert(is_color(value.notification_bg), "Make sure theme notification_bg exists")
     assert(is_color(value.notification_border_color), "Make sure theme notification_border_color exists")
@@ -180,7 +180,7 @@ function Test_theme_group()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(is_color(value.groups_title_bg), "Make sure theme groups_title_bg exists")
     assert(is_color(value.groups_bg), "Make sure theme groups_bg exists")
 
@@ -194,7 +194,7 @@ function Test_theme_menu()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(type(value.menu_height) == "number", "Make sure theme menu_height exists")
     assert(type(value.menu_width) == "number", "Make sure theme menu_width exists")
 end
@@ -206,7 +206,7 @@ function Test_theme_tooltip()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(is_color(value.tooltip_bg), "Make sure theme tooltip_bg exists")
 
     assert(type(value.tooltip_border_width) == "number", "Make sure theme tooltip_border_width exists")
@@ -219,7 +219,7 @@ function Test_theme_layout()
         accent = theme.accent,
         background_transparency = theme.background_transparency
     }
-    awesomeOverride(value)
+    tdeOverride(value)
     assert(file_exists(value.layout_max), "Make sure theme layout_max exists")
     assert(file_exists(value.layout_tile), "Make sure theme layout_tile exists")
     assert(file_exists(value.layout_dwindle), "Make sure theme layout_dwindle exists")

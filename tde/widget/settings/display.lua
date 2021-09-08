@@ -582,7 +582,7 @@ return function()
     filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
     awful.spawn({'xrdb', xresource_file}, false)
 
-    awesome.restart()
+    tde.restart()
   end)
 
   dpi_examples.update_body(

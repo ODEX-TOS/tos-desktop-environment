@@ -114,7 +114,8 @@ globals = {
     "IsreleaseMode",
     "docs", -- this is to quickly open the local documentation from tde-client
     "os.start_time",
-    "os.clock_at_start"
+    "os.clock_at_start",
+    "tde"
 }
 
 -- Enable cache (uses .luacheckcache relative to this rc file).

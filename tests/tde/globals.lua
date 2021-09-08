@@ -35,6 +35,8 @@ awesome = {
     version = "v0.0"
 }
 
+tde = awesome
+
 client = {
     connect_signal = function(location)
         print("Awesome signal connector: " .. location)

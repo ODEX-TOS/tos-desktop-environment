@@ -116,7 +116,7 @@ naughty.connect_signal(
 			title   = 'Oops, an error happened'..(startup and ' during startup!' or '!'),
 			message = message,
 			app_name = i18n.translate('System Notification'),
-			icon = beautiful.awesome_icon
+			icon = beautiful.tde_icon
 		}
 	end
 )

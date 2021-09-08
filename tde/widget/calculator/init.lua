@@ -386,18 +386,18 @@ local toggle_btn_keygrab = function()
 	if keygrab_running and not mouse_entered_started_keygrab then
 		-- started running keygrab by mouse hover
 		kb_imagebox.image = theme(widget_icon_dir .. "kb-off" .. ".svg")
-		awesome.emit_signal("widget::calc_stop_keygrab")
+		tde.emit_signal("widget::calc_stop_keygrab")
 		keygrab_running = false
 	elseif keygrab_running then
 		kb_imagebox.image = theme(widget_icon_dir .. "kb" .. ".svg")
 
 		-- now the button gets the main attention instead of the mouse hover
 		-- this happens because we clicked on the button
-		awesome.emit_signal("widget::calc_start_keygrab")
+		tde.emit_signal("widget::calc_start_keygrab")
 		mouse_entered_started_keygrab = false
 	else
 		kb_imagebox.image = theme(widget_icon_dir .. "kb" .. ".svg")
-		awesome.emit_signal("widget::calc_start_keygrab")
+		tde.emit_signal("widget::calc_start_keygrab")
 		keygrab_running = true
 		mouse_entered_started_keygrab = false
 	end
@@ -440,7 +440,7 @@ local calcu_keygrabber =
 		elseif key == "Escape" then
 			clear_screen()
 		elseif key == "x" then
-			awesome.emit_signal("widget::calc_stop_keygrab")
+			tde.emit_signal("widget::calc_stop_keygrab")
 		elseif key == "=" or key == "Return" then
 			-- Calculate
 			if not pcall(calculate) then
@@ -539,7 +539,7 @@ calculator_body:connect_signal(
 	end
 )
 
-awesome.connect_signal(
+tde.connect_signal(
 	"widget::calc_start_keygrab",
 	function()
 		-- Start keygrabbing
@@ -548,7 +548,7 @@ awesome.connect_signal(
 	end
 )
 
-awesome.connect_signal(
+tde.connect_signal(
 	"widget::calc_stop_keygrab",
 	function()
 		-- Stop keygrabbing
@@ -587,7 +587,7 @@ awful.tooltip {
 
 	<b>Note:</b>
 	While in keygrabbing mode, your keyboard's focus will be on the calculator.
-	So you're AwesomeWM keybinding will stop working. 
+	So you're tdeWM keybinding will stop working. 
 
 	<b>Stopping the keygrabbing mode:</b>
 	* Move away your cursor from the calculator. 

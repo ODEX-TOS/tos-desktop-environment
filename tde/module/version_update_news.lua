@@ -209,7 +209,7 @@ local function create_wiboxes(news)
             {
                 wibox.container.margin(wibox.container.place(news_image_box), 0, 0, 0, margin * 2),
                 wibox.widget{
-                    text = i18n.translate("News") .. ' TDE ' .. tostring(version) .. ' (' .. awesome.release .. ')',
+                    text = i18n.translate("News") .. ' TDE ' .. tostring(version) .. ' (' .. tde.release .. ')',
                     align = "center",
                     font = beautiful.title_font,
                     widget = wibox.widget.textbox

@@ -48,9 +48,9 @@ local sentry =
     release = release,
     environment = os.getenv("TDE_ENV") or "production",
     tags = {
-        version = awesome.version,
-        wmrelease = awesome.release,
-        hostname = awesome.hostname
+        version = tde.version,
+        wmrelease = tde.release,
+        hostname = tde.hostname
     }
 }
 
@@ -88,7 +88,7 @@ local function send(msg)
         exception,
         {
             tags = {
-                compositor = awesome.composite_manager_running
+                compositor = tde.composite_manager_running
             }
         }
     )
@@ -108,15 +108,15 @@ local function send_error(msg)
     in_error = false
 end
 
-awesome.connect_signal("debug::error_msg", send_error)
+tde.connect_signal("debug::error_msg", send_error)
 
-awesome.connect_signal(
+tde.connect_signal(
     "debug::warn_msg",
     function(msg)
         print(msg, warn)
     end
 )
 
-awesome.connect_signal("debug::error", send_error)
+tde.connect_signal("debug::error", send_error)
 
 return sentry

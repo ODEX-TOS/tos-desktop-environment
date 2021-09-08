@@ -51,7 +51,7 @@ local function update_screens()
 end
 
 -- listen for screen changes
-awesome.connect_signal(
+tde.connect_signal(
     "screen::change",
     function()
         print("screen::change")
@@ -94,7 +94,7 @@ local function perform_refresh()
     end
 end
 
-awesome.connect_signal(
+tde.connect_signal(
     "refresh",
     function()
         local time = gettime()

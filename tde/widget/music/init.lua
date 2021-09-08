@@ -217,7 +217,7 @@ local function updateInfo()
     _G.getTitle()
     _G.getArtist()
     print("Song changed")
-    awesome.emit_signal("song_changed")
+    tde.emit_signal("song_changed")
   end)
 end
 

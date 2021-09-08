@@ -154,7 +154,7 @@ return function()
   os_type_text.text = uname.machine
 
   local tde_version_name, tde_version_text = generate_setting_panel(i18n.translate("TDE Version"))
-  tde_version_text.text = awesome.version .. " (" .. awesome.release .. ")"
+  tde_version_text.text = tde.version .. " (" .. tde.release .. ")"
 
   local tde_uptime_name, tde_uptime_text = generate_setting_panel("TDE " .. i18n.translate("Uptime: "):gsub(':',''))
   tde_uptime_text.text = get_uptime()

@@ -11,5 +11,24 @@
         "*.ltp": "lua",
         "*.tde": "lua",
         "typeinfo": "c"
-    }
+    },
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.workspace.ignoreSubmodules": false,
+    "Lua.workspace.library": [
+        "/usr/share/tde/lib",
+        "/etc/xdg/tde"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global",
+        "undefined-global",
+    ],
+    "Lua.diagnostics.globals": [
+        "client",
+        "awesome",
+        "tde",
+        "screen",
+        "root",
+        "awful",
+        "mouse"
+    ]
 }

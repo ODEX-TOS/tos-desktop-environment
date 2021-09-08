@@ -35,7 +35,7 @@
 -- @tdedatamod lib-tde.xrandr
 ---------------------------------------------------------------------------
 
--- Separating Multiple Monitor functions as a separated module (taken from awesome wiki)
+-- Separating Multiple Monitor functions as a separated module (taken from tde wiki)
 local gtable = require("gears.table")
 
 local naughty = require("naughty")
@@ -186,7 +186,7 @@ local function naughty_destroy_callback(_)
          action,
          function()
             awful.spawn("sh -c 'which autorandr && autorandr --save tde --force'", false)
-            --_G.awesome.restart()
+            --_G.tde.restart()
          end
       )
       state.index = nil

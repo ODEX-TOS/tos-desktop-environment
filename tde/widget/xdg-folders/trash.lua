@@ -160,7 +160,7 @@ local check_trash_list = function()
 end
 
 if IsreleaseMode then
-	-- Check trash on awesome (re)-start
+	-- Check trash on tde (re)-start
 	check_trash_list()
 
 	-- Kill the old process of gio monitor trash:///

@@ -72,7 +72,7 @@ local update = function()
   end
 end
 
-awesome.connect_signal(
+tde.connect_signal(
   "widget::brightness",
   function(_)
     update()

@@ -62,8 +62,9 @@ theme.background_light = '#f2f2f266'
 -- Transparent
 theme.transparent = '#00000000'
 
--- Awesome icon
+-- tde icon
 theme.awesome_icon = theme.icons .. 'logo.svg'
+theme.tde_icon = theme.awesome_icon
 
 return {
 	theme = theme,

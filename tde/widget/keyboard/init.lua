@@ -154,8 +154,8 @@ local function gen_panel(s, layouts)
             return
         end
 
-        awesome.emit_signal("xkb::map_changed")
-        awesome.emit_signal("xkb::group_changed")
+        tde.emit_signal("xkb::map_changed")
+        tde.emit_signal("xkb::group_changed")
 
         if panel ~= nil then
             panel:close()
@@ -353,10 +353,10 @@ return function(s)
         next_layout()
     end)
 
-    awesome.connect_signal("xkb::map_changed", function()
+    tde.connect_signal("xkb::map_changed", function()
         signals.emit_keyboard_layout_updated(selected_layouts, selected_layouts[1])
     end)
-    awesome.connect_signal("xkb::group_changed", function()
+    tde.connect_signal("xkb::group_changed", function()
         signals.emit_keyboard_layout_updated(selected_layouts, selected_layouts[1])
     end)
 

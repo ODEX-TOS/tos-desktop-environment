@@ -56,14 +56,14 @@ widget_button:buttons(
 			1,
 			nil,
 			function()
-				awesome.emit_signal('widget::systray:toggle')
+				tde.emit_signal('widget::systray:toggle')
 			end
 		)
 	)
 )
 
 -- Listen to signal
-awesome.connect_signal(
+tde.connect_signal(
 	'widget::systray:toggle',
 	function()
 		if screen.primary.systray then

@@ -50,20 +50,20 @@ beautiful.menu_border_width = 20
 beautiful.menu_border_color = "#00000075"
 
 -- Create a launcher widget and a main menu
-local myawesomemenu = {
+local mytdemenu = {
 	{
 		i18n.translate("Hotkeys"),
 		function()
 			hotkeys_popup.show_help(nil, awful.screen.focused())
-		end
+		end, icons.logo
 	},
-	{i18n.translate("Open settings application"), function() root.elements.settings.enable_view_by_index(-1, mouse.screen) end},
-	{i18n.translate("Restart"), awesome.restart},
+	{i18n.translate("Open settings application"), function() root.elements.settings.enable_view_by_index(-1, mouse.screen) end, icons.logo},
+	{i18n.translate("Restart"), tde.restart, icons.logo},
 	{
 		i18n.translate("Quit"),
 		function()
-			awesome.quit()
-		end
+			tde.quit()
+		end, icons.logo
 	}
 }
 
@@ -117,7 +117,7 @@ local function gen_menu()
 				-- other triads can be put here
 			},
 			after = {
-				{"TDE", myawesomemenu, icons.logo},
+				{"TDE", mytdemenu, icons.logo},
 				{i18n.translate("Screenshot"), screenshot, photo},
 				{
 					i18n.translate("End Session"),
@@ -131,7 +131,7 @@ local function gen_menu()
 			}
 		}
 	)
-	awful.widget.launcher({image = beautiful.awesome_icon, menu = mymainmenu})
+	awful.widget.launcher({image = beautiful.tde_icon, menu = mymainmenu})
 end
 
 

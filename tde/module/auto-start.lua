@@ -23,7 +23,7 @@
 --SOFTWARE.
 ]]
 -- MODULE AUTO-START
--- Run all the apps listed in configuration/apps.lua as run_on_start_up only once when awesome start
+-- Run all the apps listed in configuration/apps.lua as run_on_start_up only once when tde start
 
 local apps = require("configuration.apps")
 local run_once = require("lib-tde.function.application_runner")

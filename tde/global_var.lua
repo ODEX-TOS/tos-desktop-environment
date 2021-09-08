@@ -29,10 +29,12 @@ os.clock_at_start = os.clock()
 
 local __clock = os.clock
 
--- make sure that after a awesome.restart() that the clock() returns cpu cycles since the restart and not since the original start
+-- make sure that after a tde.restart() that the clock() returns cpu cycles since the restart and not since the original start
 os.clock = function()
     return __clock() - os.clock_at_start
 end
+
+tde = awesome
 
 local hardware = require("lib-tde.hardware-check")
 local is_weak = hardware.isWeakHardware()

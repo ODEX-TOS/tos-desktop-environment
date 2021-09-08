@@ -179,7 +179,7 @@ end
 -- @usage -- returns the trimmed string
 -- lib-tde.function.major_version() -- returns '0.8'
 local function major_version()
-    return tonumber(string.match(awesome.version, "v(%d+%.%d+)")) or 0
+    return tonumber(string.match(tde.version, "v(%d+%.%d+)")) or 0
 end
 
 --- Capitalize the first character of a given string

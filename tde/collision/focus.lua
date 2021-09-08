@@ -101,7 +101,7 @@ local function init()
       widget = wibox.container.background
     }
 
-    if awesome.version >= "v4.1" then
+    if tde.version >= "v4.1" then
       wiboxes[v].shape = r_shape
     else
       surface.apply_shape_bounding(wiboxes[v], r_shape)
