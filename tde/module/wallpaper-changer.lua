@@ -46,6 +46,8 @@ local function set_wallpaper(time, cycles)
 end
 
 local function callback(mode, cycles)
+	print("Running wallpaper-changer set day module")
+
 	mode = mode or _G.save_state.wallpaper.cycle_mode
 	cycles = cycles or _G.save_state.wallpaper.cycles
 
@@ -57,17 +59,19 @@ end
 
 local timer = gears.timer{
 	timeout = 3600,
-	autostart = false,
-	call_now = true,
-	callback = callback
+	callback = function()
+		callback()
+	end
 }
 
-local delay =  3600 - (tonumber(os.date("%M")) * 60 + tonumber(os.date("%S")))
+local delay = 3600 - (tonumber(os.date("%M")) * 60 + tonumber(os.date("%S")))
 
 print(string.format("Enqueuing wallpaper changer module for %s seconds", delay))
 
 gears.timer.start_new (delay, function ()
 	print("Starting wallpaper changer module")
+	-- call it before running the timer
+	callback()
 	timer:start()
 end)
 
