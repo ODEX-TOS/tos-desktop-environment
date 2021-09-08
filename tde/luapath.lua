@@ -43,7 +43,7 @@ end
 --package.loaded["naughty.dbus"] = {}
 
 -- Used to enable custom widgets as a plugin mechanism for TDE
-package.path = home .. "/.config/tde/?/init.lua;" .. package.path
+package.path = home .. "/.config/tde/?/init.lua;" .. home .. "/.config/tde/?/?.lua;" .. package.path
 package.path = home .. "/.config/tde/?.lua;" .. package.path
 
 -- TODO: Correctly load path in when developing or when running integration tests
@@ -55,23 +55,25 @@ package.path = home .. "/.config/tde/?.lua;" .. package.path
 if exists(home .. "/.config/awesome") then
     package.path =
         home ..
-        "/.config/awesome/?.lua;" .. home .. "/.config/awesome/?/?.lua;" .. package.path
+        "/.config/awesome/?.lua;" .. home .. "/.config/awesome/?/init.lua;" .. package.path .. "/.config/awesome/?/?.lua;" .. package.path
 end
 
 if exists(home .. "/.config/awesome/lib-tde/lib-lua") then
     package.path =
         package.path ..
         ";" ..
-            home ..
-                "/.config/awesome/lib-tde/lib-lua/?/?.lua;" ..
-                    home .. "/.config/awesome/lib-tde/lib-lua/?.lua"
+        home ..
+                "/.config/awesome/lib-tde/lib-lua/?/init.lua;" ..
+        home ..
+            "/.config/awesome/lib-tde/lib-lua/?/?.lua;" ..
+        home .. "/.config/awesome/lib-tde/lib-lua/?.lua"
 end
 
 if exists(home .. "/.config/awesome/lib-tde/translations") then
     package.path = package.path .. ";" .. home .. "/.config/awesome/lib-tde/translations/?.lua"
 end
 
-package.path = package.path .. ";" .. pwd .. "/tde/lib-tde/lib-lua/?/?.lua;" .. pwd .. "/tde/lib-tde/lib-lua/?.lua"
+package.path = package.path .. ";" .. pwd .. "/tde/lib-tde/lib-lua/?/init.lua;" .. pwd .. "/tde/lib-tde/lib-lua/?/?.lua;" .. pwd .. "/tde/lib-tde/lib-lua/?.lua"
 package.path = package.path .. ";" .. pwd .. "/tde/lib-tde/translations/?.lua"
 
 
