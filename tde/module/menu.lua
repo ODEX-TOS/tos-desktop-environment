@@ -58,6 +58,17 @@ local mytdemenu = {
 		end, icons.logo
 	},
 	{i18n.translate("Open settings application"), function() root.elements.settings.enable_view_by_index(-1, mouse.screen) end, icons.logo},
+	{
+		i18n.translate("Tutorial"),
+		function()
+			local start_tutorial = require("tutorial")
+
+			if type(start_tutorial) == "function" then
+				start_tutorial()
+			end
+
+		end, icons.logo
+	},
 	{i18n.translate("Restart"), tde.restart, icons.logo},
 	{
 		i18n.translate("Quit"),

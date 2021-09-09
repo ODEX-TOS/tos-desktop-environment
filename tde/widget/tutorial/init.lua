@@ -22,40 +22,32 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
--- THIS FILE IS USED TO RUN ALL TESTS
+local wibox = require("wibox")
+local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
 
--- this function gets overridden by TDE
-local realPrint = print
+local image_height = dpi(150)
 
-print = function(data, logtype)
-    logtype = logtype or "\27[0;32m[ INFO "
-    realPrint(logtype .. " ]\27[0m " .. tostring(data or ""))
+return function(tip, tip_img)
+    local image_box = wibox.widget{
+        image = tip_img,
+        resize = true,
+        forced_height = image_height,
+        widget = wibox.widget.imagebox,
+    }
+
+    local tip_text = wibox.widget{
+        markup = tip,
+        align  = 'center',
+        valign = 'center',
+        widget = wibox.widget.textbox
+    }
+
+    return wibox.widget {
+        wibox.container.place(image_box),
+        nil,
+        wibox.container.place(tip_text),
+        spacing = dpi(100),
+        layout = wibox.layout.fixed.vertical
+    }
 end
-
-EXPORT_ASSERT_TO_GLOBALS = true
-UNIT_TESTING_ACTIVE = true
-require("tests.tde.luaunit")
-
-require("tests.tde.globals")
-
--- TESTS TO RUN
-require("tests.tde.check-important-modules")
-require("tests.tde.config")
-require("tests.tde.parser")
-require("tests.tde.theme")
-require("tests.tde.configuration")
-require("tests.tde.lib-tde")
-require("tests.tde.modules")
-
--- END OF LIST OF TESTS TO RUN
-
--- So we have to manually put it back in our test runner
-print = realPrint
-local lu = LuaUnit.new()
-if not (os.getenv("RUNNER") == nil) then
-    lu:setOutputType(os.getenv("RUNNER"), os.getenv("FILE"))
-else
-    lu:setOutputType("TEXT")
-end
-
-os.exit(lu:runSuite())
