@@ -52,6 +52,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Client popup windows now appear on the correct screen instead of the primary screen
 - Always recalculate screen space location of the control center and info center
 - When a faulty plugin is loaded you now get the correct name in the error message
+- Fetch wifi list now works when no connection is currently active
 
 ### Dev Notes
 - The inputfield now allows editing of the field

@@ -82,6 +82,8 @@ end
 function Test_hardware_check_api()
     assert(type(hardware.hasBattery) == "function", "Make sure the hardware api has a hasBattery function")
     assert(type(hardware.hasWifi) == "function", "Make sure the hardware api has a hasWifi function")
+    assert(type(hardware.hasWifiCard) == "function", "Make sure the hardware api has a hasWifiCard function")
+
     assert(type(hardware.hasBluetooth) == "function", "Make sure the hardware api has a hasBluetooth function")
     assert(type(hardware.hasFFMPEG) == "function", "Make sure the hardware api has a hasFFMPEG function")
     assert(type(hardware.hasSound) == "function", "Make sure the hardware api has a hasSound function")
@@ -108,7 +110,7 @@ function Test_hardware_check_api()
 end
 
 function Test_hardware_api_unit_tested()
-    local amount = 15
+    local amount = 16
     local result = tablelength(hardware)
     assert(
         result == amount,

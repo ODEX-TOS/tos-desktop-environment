@@ -108,12 +108,21 @@ local function battery()
 end
 
 --- Check to see the hardware has a network card
--- @treturn bool True if a network card exists, false otherwise
+-- @treturn bool True if an active wifi connection exists, false otherwise
 -- @staticfct hasWifi
--- @usage -- This True if a network card with wifi exists
+-- @usage -- This True if a network card with wifi exists and has an active connection
 -- lib-tde.hardware-check.hasWifi()
 local function wifi()
     return fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 2
+end
+
+--- Check to see the hardware has a network card
+-- @treturn bool True if a network card exists, false otherwise
+-- @staticfct hasWifiCard
+-- @usage -- This True if a network card with wifi exists
+-- lib-tde.hardware-check.hasWifiCard()
+local function wifiCard()
+    return fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 0
 end
 
 --- Check to see the hardware has a network card with bluetooth support
@@ -338,6 +347,7 @@ end
 return {
     hasBattery = battery,
     hasWifi = wifi,
+    hasWifiCard = wifiCard,
     hasBluetooth = bluetooth,
     hasFFMPEG = ffmpeg,
     hasSound = sound,

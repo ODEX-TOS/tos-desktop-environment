@@ -432,7 +432,7 @@ return function()
 
     -- Always try to populate network list, even when it is not possible
     -- This is to make networks more easily detectable in case your wifi card is not working properly, or when the pc never had a network before
-    if bIsShowingNetworkTab and hardware.hasWifi() then
+    if bIsShowingNetworkTab and hardware.hasWifiCard() then
       -- remove all wifi connections
       connections.children = static_connections
       setup_network_connections()
