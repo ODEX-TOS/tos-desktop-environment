@@ -230,18 +230,20 @@ local function setup_state(state)
 
 
     -- find all mouse peripheral that are currently attached to the machine
-    if state.mouse then
-        mouse.getInputDevices(function(devices)
-            for _, device in ipairs(devices) do
-                -- if they exist then set their properties
-                if state.mouse[device.name] ~= nil then
-                    mouse.setAcceleration(device.id, state.mouse[device.name].accel or 0)
-                    mouse.setMouseSpeed(device.id, state.mouse[device.name].speed or 1)
-                    mouse.setNaturalScrolling(device.id, state.mouse[device.name].natural_scroll or false)
-                end
+    print("Fetching mouse peripherals")
+    mouse.getInputDevices(function(devices)
+        print("Fetched mouse peripherals")
+        print(devices)
+
+        for _, device in ipairs(devices) do
+            -- if they exist then set their properties
+            if state.mouse[device.name] ~= nil then
+                mouse.setAcceleration(device.id, state.mouse[device.name].accel or 0)
+                mouse.setMouseSpeed(device.id, state.mouse[device.name].speed or 1)
+                mouse.setNaturalScrolling(device.id, state.mouse[device.name].natural_scroll or false)
             end
-        end)
-    end
+        end
+    end)
 
 
     if state.developer.enabled then
@@ -525,3 +527,5 @@ signals.connect_enable_wallpaper_changer(function(bIsCycles, cycles, default)
 
     save(save_state)
 end)
+
+

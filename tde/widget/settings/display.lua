@@ -486,6 +486,8 @@ return function()
         awful.spawn("brightness -s 100 -F", false) -- reset pixel values when using backlight
         awful.spawn("brightness -s " .. tostring(value), false)
       end
+
+      signals.emit_brightness(value)
     end
   )
 
