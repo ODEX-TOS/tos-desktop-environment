@@ -212,7 +212,7 @@ return function(typing_callback, done_callback, start_callback, hidden, isvalid)
         awful.keygrabber {
         auto_start = false,
         stop_event = "release",
-        keypressed_callback = function(_, _, key, _)
+        keypressed_callback = function(_, mod, key, _)
             if key == "BackSpace" then
                 active_text = delete_key(textbox, active_text, hidden)
             elseif key == "Delete" then
@@ -229,9 +229,17 @@ return function(typing_callback, done_callback, start_callback, hidden, isvalid)
                     cursor_index = string.len(active_text)
                 end
                 update_text(active_text, textbox, hidden)
+            elseif mod[1] == "Control" or mod[2] == "Control" and key == "v" then
+                local paste_text = selection()
+                print(paste_text)
+                for i = 1, #paste_text do
+                    local c = paste_text:sub(i,i)
+                    active_text = write_to_textbox(textbox, c, active_text, hidden)
+                end
             elseif #key == 1 and isvalid(key, active_text) then
                 active_text = write_to_textbox(textbox, key, active_text, hidden)
             end
+
             if typing_callback then
                 typing_callback(active_text)
             end
@@ -299,8 +307,13 @@ return function(typing_callback, done_callback, start_callback, hidden, isvalid)
     -- @usage -- Update the text in the inputfield
     -- inputfield.update_text("This is some new text")
     widget.update_text = function(text)
-        active_text = text
-        update_text(active_text, textbox, hidden, is_running)
+        widget.clear_text()
+        for i = 1, #text do
+            local c = text:sub(i,i)
+            active_text = write_to_textbox(textbox, c, active_text, hidden)
+        end
+
+        update_text(active_text, textbox, hidden, false)
     end
 
     --- Clear the text from the inputfield, but keep the focus
@@ -309,7 +322,7 @@ return function(typing_callback, done_callback, start_callback, hidden, isvalid)
     -- inputfield.clear_text()
     widget.clear_text = function()
         active_text = ""
-        cursor_index = 0
+        cursor_index = 1
         active_text = reset_textbox(textbox, active_text, hidden, is_running)
     end
 

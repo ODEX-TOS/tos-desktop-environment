@@ -90,6 +90,7 @@ return {
   arrow_up = theme(dir .. "/arrow_up.svg"),
   arrow_down = theme(dir .. "/arrow_down.svg"),
   firewall = theme(dir .. "/firewall.svg"),
+  vpn = theme(dir .. "/vpn.svg"),
   dir = theme(dir .. "/folder.svg"),
   developer = theme(dir .. "/developer.svg"),
 

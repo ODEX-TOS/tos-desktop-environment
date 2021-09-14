@@ -1117,8 +1117,8 @@ end
 -- @staticfct emit_change_rounded_corner_dpi
 -- @usage
 -- lib-tde.signals.emit_change_rounded_corner_dpi(dpi(10))
-connections.emit_change_rounded_corner_dpi = function(location, plugin)
-    tde.emit_signal("TDE::change::rounded::corners", location, plugin)
+connections.emit_change_rounded_corner_dpi = function(dpi)
+    tde.emit_signal("TDE::change::rounded::corners", dpi)
 end
 
 --- Trigger a callback function when the rounded corner should change
@@ -1154,6 +1154,28 @@ end
 --    end)
 connections.connect_enable_wallpaper_changer = function(func)
     tde.connect_signal("TDE::change::wallpaper::mode", func)
+end
+
+--- Signals to notify that the we should update the vpn data
+-- @tparam table vpns The metadata about the vpn
+-- @staticfct emit_vpn_connection_data
+-- @usage
+-- lib-tde.signals.emit_vpn_connection_data({ovpn_file: '/path/to/openvpn/file.ovpn', username: "name_of_the_user", password: 'password_of_the_user'})
+connections.emit_vpn_connection_data = function(vpns)
+    tde.emit_signal("TDE::update::vpn::data", vpns)
+end
+
+--- Trigger a callback function when extra openvpn data should be stored
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_vpn_connection_data
+-- @usage
+-- lib-tde.signals.connect_vpn_connection_data(
+--    function (vpn)
+--     print("Extra vpn data found")
+--     print(vpn)
+--    end)
+connections.connect_vpn_connection_data = function(func)
+    tde.connect_signal("TDE::update::vpn::data", func)
 end
 
 return connections

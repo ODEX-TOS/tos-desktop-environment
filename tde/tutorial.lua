@@ -30,6 +30,8 @@ local mat_colors = require("theme.mat-colors")
 local wibox = require("wibox")
 local menubar = require("menubar")
 
+local fat = require("lib-tde.function.common").highlight_text
+
 local focused = require("lib-tde.function.common").focused_screen
 
 local button = require("lib-widget.button")
@@ -45,10 +47,6 @@ local app_height = dpi(500)
 local m = dpi(10)
 
 local stop_tip = function () end
-
-local function fat(text)
-    return string.format("<span foreground='%s'>%s</span>", beautiful.primary.hue_600, text)
-end
 
 local terminal_icon = menubar.utils.lookup_icon("terminal") or icons.logo
 

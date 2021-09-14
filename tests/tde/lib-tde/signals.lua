@@ -585,8 +585,18 @@ function Test_connect_enable_wallpaper_changer()
     assert(type(signals.connect_enable_wallpaper_changer) == "function", "Make sure connect_enable_wallpaper_changer is a signal and a function")
 end
 
+function Test_emit_vpn_connection_data()
+    assert(signals.emit_vpn_connection_data, "Make sure the signal emit_vpn_connection_data exists")
+    assert(type(signals.emit_vpn_connection_data) == "function", "Make sure emit_vpn_connection_data is a signal and a function")
+end
+
+function Test_connect_vpn_connection_data()
+    assert(signals.connect_vpn_connection_data, "Make sure the signal connect_vpn_connection_data exists")
+    assert(type(signals.connect_vpn_connection_data) == "function", "Make sure connect_vpn_connection_data is a signal and a function")
+end
+
 function Test_signals_api_unit_tested()
-    local amount = 105
+    local amount = 107
     local result = tablelength(signals)
     assert(
         result == amount,

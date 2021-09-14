@@ -116,7 +116,8 @@ local function load()
             default_image = "/usr/share/backgrounds/tos/default.jpg",
             cycle_mode = false,
             cycles = {}
-        }
+        },
+        vpn_data = {}
     }
     if not filehandle.exists(file) then
         return table
@@ -136,6 +137,8 @@ local function load()
     result.tags = result.tags or table.tags
     result.rounded_corner = result.rounded_corner or table.rounded_corner
     result.wallpaper = result.wallpaper or table.wallpaper
+
+    result.vpn_data = result.vpn_data or table.vpn_data
 
     result.last_version = result.last_version or table.last_version
 
@@ -528,4 +531,9 @@ signals.connect_enable_wallpaper_changer(function(bIsCycles, cycles, default)
     save(save_state)
 end)
 
+signals.connect_vpn_connection_data(function(vpn)
 
+    save_state.vpn_data = vpn
+
+    save(save_state)
+end)

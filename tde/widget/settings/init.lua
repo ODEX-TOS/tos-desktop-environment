@@ -424,9 +424,22 @@ local function make_nav(load_callback)
       view.link.active = false
 
     end
-    nav_container_populate()
-    load_callback()
+    hardware.has_package_installed("openvpn",function(bHasVPN)
+      if bHasVPN then
+        local view = make_view(icons.vpn, i18n.translate("VPN"), require("widget.settings.vpn")())
+        table.insert(
+          root.elements.settings_views,
+          4,
+          view
+        )
+        view.link.bg = beautiful.transparent
+        view.link.active = false
+      end
+      nav_container_populate()
+      load_callback()
+    end)
   end)
+
 
   table.insert(
     root.elements.settings_views,

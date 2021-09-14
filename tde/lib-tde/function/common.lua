@@ -45,6 +45,7 @@
 ---------------------------------------------------------------------------
 
 local socket = require("socket")
+local beautiful = require("beautiful")
 
 --- split the input to a table based on the separator
 -- @tparam string inputstr The string to split.
@@ -228,6 +229,10 @@ local function widget_geometry(wibox, widget)
     }
 end
 
+local function highlight_text(text)
+    return string.format("<span foreground='%s'>%s</span>", beautiful.primary.hue_600, text)
+end
+
 return {
     split = split,
     sleep = sleep,
@@ -238,5 +243,6 @@ return {
     focused_screen = focused_screen,
     major_version = major_version,
     capitalize = capitalize,
-    widget_geometry = widget_geometry
+    widget_geometry = widget_geometry,
+    highlight_text = highlight_text
 }
