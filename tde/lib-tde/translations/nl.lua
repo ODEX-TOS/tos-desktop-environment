@@ -396,6 +396,7 @@ translations["Open up an application by using the keys %s or by pressing the sea
 translations["Open up an Terminal by pressing %s"] = "Open een terminal door op de toetsencombinatie %s te kliken"
 translations["Close the Terminal by pressing %s"] = "Sluit de terminal door op de toetsencombinatie %s te kliken"
 translations["Now open 3 terminals using %s"] = "Open nu 3 terminal door op de toetsencombinatie %s te kliken"
+translations["Now you can also open the settings using %s"] = "Je kan ook de settings applicatie openen door op %s te kliken"
 translations["Great job!!! Do you notice how they tile?"] = "Goed gedaan!!! Zie je nu hoe de applicaties zich plaatsen"
 translations["Try pressing %s a couple of times and notice how your applications change"] = "Probeer eens een aantal keer op %s te kliken, zie je hoe de applicaties zich verplaatsen?"
 translations["You can change the focus around using %s"] = "Je kan van focus veranderen door op de toetsencombinatie %s te kliken"

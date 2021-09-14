@@ -30,7 +30,9 @@ local mat_colors = require("theme.mat-colors")
 local wibox = require("wibox")
 local menubar = require("menubar")
 
-local fat = require("lib-tde.function.common").highlight_text
+local keys = require("configuration.keys.mod")
+
+local highlight_text = require("lib-tde.function.common").highlight_text
 
 local focused = require("lib-tde.function.common").focused_screen
 
@@ -51,6 +53,19 @@ local stop_tip = function () end
 local terminal_icon = menubar.utils.lookup_icon("terminal") or icons.logo
 local settings_icon = menubar.utils.lookup_icon("preferences-desktop-theme") or icons.logo
 
+local super = keys.modKey
+
+local function highlight_key(_keys)
+    local res = tde._get_key_name(_keys[1]) or super
+
+    for i, k in ipairs(_keys) do
+        if i > 1 then
+            res = res .. '+' .. (tde._get_key_name(k) or k)
+        end
+    end
+
+    return highlight_text(res)
+end
 
 local tips = {
     {
@@ -64,7 +79,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Open up an application by using the keys %s or by pressing the search icon in the top right", fat("Super + D (Windows key + D)")), img = icons.search, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Open up an application by using the keys %s or by pressing the search icon in the top right", highlight_key({super, keys.launcher})), img = icons.search, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -91,7 +106,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Open up an Terminal by pressing %s", fat("Super + Enter")), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Open up an Terminal by pressing %s", highlight_key({super, keys.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -118,7 +133,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close the Terminal by pressing %s", fat("Super + Q")), img = icons.close, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close the Terminal by pressing %s", highlight_key({super, keys.kill})), img = icons.close, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -151,7 +166,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Now open 3 terminals using %s", fat("Super + Enter")), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Now open 3 terminals using %s", highlight_key({super, keys.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -193,7 +208,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Try pressing %s a couple of times and notice how your applications change", fat("Super + Space")), img = beautiful.layout_tile or icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Try pressing %s a couple of times and notice how your applications change", highlight_key({super, keys.nextLayout})), img = beautiful.layout_tile or icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             local start_tile = awful.screen.focused().selected_tag.layout.name
@@ -227,7 +242,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("You can change the focus around using %s", fat("Super + ⬆/➡/⬇/⬅")), img = icons.mouse, cb = function(done_cb, stop_cb)
+        text = i18n.translate("You can change the focus around using %s", highlight_text("Super + ⬆/➡/⬇/⬅")), img = icons.mouse, cb = function(done_cb, stop_cb)
             local stopped = false
 
             if client.focus then
@@ -269,7 +284,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("You can move application around much like changing focus using the %s keys", fat("Super + Shift + ⬆/➡/⬇/⬅")), img = icons.mouse, cb = function(done_cb, stop_cb)
+        text = i18n.translate("You can move application around much like changing focus using the %s keys", highlight_text("Super + Shift + ⬆/➡/⬇/⬅")), img = icons.mouse, cb = function(done_cb, stop_cb)
             local stopped = false
 
             if client.focus then
@@ -302,7 +317,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close the terminals until you have one left using %s", fat("Super + Q")), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close the terminals until you have one left using %s", highlight_key({super, keys.kill})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -334,7 +349,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Let's move this terminal to a new %s by using the following key combination %s", fat("'tag'"), fat("Super + Shift + 2")), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Let's move this terminal to a new %s by using the following key combination %s", highlight_text("'tag'"), highlight_key({super, "Shift","2"})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -371,7 +386,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close all open Terminals by pressing %s", fat("Super + Q")), img = icons.close, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close all open Terminals by pressing %s", highlight_key({super, keys.kill})), img = icons.close, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -404,7 +419,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Now you can also open the settings using %s", fat("Super + D")), img = settings_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Now you can also open the settings using %s", highlight_key({super, keys.settings})), img = settings_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -462,7 +477,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Here is an extra tip, you can view the keyboard shortcuts using %s", fat("Super + F1")), img = icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Here is an extra tip, you can view the keyboard shortcuts using %s", highlight_key({super, "F1"})), img = icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             stop_cb(function() stopped = true end)
@@ -472,7 +487,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("You have learned the basics of %s", fat("TDE")), img = icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("You have learned the basics of %s", highlight_text("TDE")), img = icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             stop_cb(function() stopped = true end)
@@ -482,7 +497,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Good luck and have fun on your %s adventure %s", fat("TDE"), "💜"), img = icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Good luck and have fun on your %s adventure %s", highlight_text("TDE"), "💜"), img = icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             stop_cb(function() stopped = true end)
