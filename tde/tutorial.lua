@@ -49,6 +49,7 @@ local m = dpi(10)
 local stop_tip = function () end
 
 local terminal_icon = menubar.utils.lookup_icon("terminal") or icons.logo
+local settings_icon = menubar.utils.lookup_icon("preferences-desktop-theme") or icons.logo
 
 
 local tips = {
@@ -388,6 +389,31 @@ local tips = {
                     end
 
                     if not st_found and not stopped then
+                        done_cb()
+                    end
+                end
+            }
+
+            stop_cb(function()
+                stopped = true
+                timer:stop()
+            end)
+
+
+        end,
+        loading = true
+    },
+    {
+        text = i18n.translate("Now you can also open the settings using %s", fat("Super + D")), img = settings_icon, cb = function(done_cb, stop_cb)
+            local stopped = false
+            local timer = gears.timer {
+                timeout = 2,
+                autostart = true,
+                call_now = false,
+                callback = function()
+                    if stopped then return end
+
+                    if root.elements.settings.visible and not stopped then
                         done_cb()
                     end
                 end
