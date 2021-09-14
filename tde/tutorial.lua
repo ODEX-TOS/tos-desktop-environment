@@ -55,12 +55,31 @@ local settings_icon = menubar.utils.lookup_icon("preferences-desktop-theme") or 
 
 local super = keys.modKey
 
+local function get_key(key)
+
+    if string.sub(key, 1,1) ~= "#" then
+        return key
+    end
+
+    local long, utf8 = tde._get_key_name(key)
+
+    if utf8 ~= "" and utf8 ~= nil then
+        return utf8
+    end
+
+    if long ~= nil and long ~= "" then
+        return long
+    end
+
+    return key
+end
+
 local function highlight_key(_keys)
-    local res = tde._get_key_name(_keys[1]) or super
+    local res = get_key(_keys[1] or super)
 
     for i, k in ipairs(_keys) do
         if i > 1 then
-            res = res .. '+' .. (tde._get_key_name(k) or k)
+            res = res .. '+' .. (get_key(k) or k)
         end
     end
 
