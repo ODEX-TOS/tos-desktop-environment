@@ -56,6 +56,10 @@ local function fetch_open_vpn_files()
   return result
 end
 
+local function pid_exists(pid)
+  return file.exists('/proc/' .. tostring(pid))
+end
+
 
 local function connect_to_vpn(_file, user, pass)
   local tmp_file = file.mktemp()
@@ -159,7 +163,7 @@ local function create_openvpn_config(_file)
 
   local _btn_widget
 
-  if _G.save_state.vpn_data[_file] ~= nil and _G.save_state.vpn_data[_file].active then
+  if _G.save_state.vpn_data[_file] ~= nil and _G.save_state.vpn_data[_file].active and pid_exists(_G.save_state.vpn_data[_file].pid) then
     _btn_widget = wibox.container.margin(disconnect,m*2,m,m,m)
   else
     _btn_widget = wibox.container.margin(connect,m*2,m,m,m)
