@@ -153,10 +153,11 @@ local function create_openvpn_config(_file)
   local disconnect = button_widget("Disconnect", function()
     if _G.save_state.vpn_data[_file] ~= nil and _G.save_state.vpn_data[_file].pid ~= nil then
       root.elements.settings.close()
-      awful.spawn.easy_async("pkexec kill " .. tostring(_G.save_state.vpn_data[_file].pid), function(_,_,_, code)
+      awful.spawn.easy_async("pkexec kill " .. tostring(math.floor(_G.save_state.vpn_data[_file].pid)), function(_,_,_, code)
         if code == 0 then
           _G.save_state.vpn_data[_file].pid = nil
           _G.save_state.vpn_data[_file].active = false
+          refresh()
         end
       end)
     end
