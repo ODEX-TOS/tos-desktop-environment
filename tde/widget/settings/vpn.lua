@@ -57,7 +57,8 @@ local function fetch_open_vpn_files()
 end
 
 local function pid_exists(pid)
-  return file.exists('/proc/' .. tostring(pid))
+  pid = math.floor(pid)
+  return file.dir_exists('/proc/' .. tostring(pid))
 end
 
 
