@@ -197,7 +197,7 @@ local tde_overrides = function(tde_theme)
   tde_theme.notification_margin = dpi(5)
   tde_theme.notification_border_width = dpi(0)
   tde_theme.notification_border_color = tde_theme.transparent
-  tde_theme.notification_spacing = dpi(0)
+  tde_theme.notification_spacing = dpi(10)
   tde_theme.notification_icon_resize_strategy = "center"
   tde_theme.notification_icon_size = dpi(32)
 

@@ -42,7 +42,7 @@ naughty.config.defaults.margin = dpi(16)
 naughty.config.defaults.border_width = 0
 naughty.config.defaults.position = 'top_right'
 naughty.config.defaults.shape = function(cr, w, h)
-	gears.shape.rounded_rect(cr, w, h, dpi(6))
+	gears.shape.rounded_rect(cr, w, h, dpi(10))
 end
 
 -- Apply theme variables
@@ -200,7 +200,7 @@ naughty.connect_signal(
 													margins = beautiful.notification_margin,
 													widget  = wibox.container.margin,
 												},
-												bg = beautiful.primary.hue_800 .. beautiful.background_transparency,
+												bg = beautiful.primary.hue_600 .. beautiful.background_transparency,
 												widget  = wibox.container.background,
 											},
 											{
@@ -244,7 +244,7 @@ naughty.connect_signal(
 										margins = dpi(0),
 										widget  = wibox.container.margin,
 									},
-									bg = beautiful.transparent,
+									bg = beautiful.groups_bg,
 									widget  = wibox.container.background,
 								},
 								-- Actions
@@ -252,7 +252,7 @@ naughty.connect_signal(
 								spacing = dpi(4),
 								layout  = wibox.layout.fixed.vertical,
 							},
-							bg     = beautiful.transparent,
+							bg     = beautiful.groups_bg,
 							id     = 'background_role',
 							widget = naughty.container.background,
 						},
@@ -265,7 +265,7 @@ naughty.connect_signal(
 					width    = dpi(250),
 					widget   = wibox.container.constraint
 				},
-				bg = beautiful.background.hue_800 .. beautiful.background_transparency,
+				bg = beautiful.groups_bg .. beautiful.background_transparency,
 				shape = gears.shape.rounded_rect,
 				widget = wibox.container.background
 			}
