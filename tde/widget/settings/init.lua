@@ -210,10 +210,7 @@ local function enable_view_by_index(i, s, bNoAnimation)
     root.elements.settings_views[INDEX].view.visible = true
     root.elements.settings_views[INDEX].title.font = beautiful.title_font
     setActiveView(INDEX)
-    if root.elements.settings_views[INDEX].view.refresh then
-      collectgarbage("collect")
-      root.elements.settings_views[INDEX].view.refresh()
-    end
+
     if not s then
       return
     end
@@ -228,7 +225,14 @@ local function enable_view_by_index(i, s, bNoAnimation)
 
       if not (bNoAnimation == true) then
         root.elements.settings.y = s.geometry.y - settings_height
-        animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic")
+        animate(_G.anim_speed, root.elements.settings, {y = y_height}, "outCubic", function()
+          if root.elements.settings_views[INDEX].view.refresh then
+            root.elements.settings_views[INDEX].view.refresh()
+          end
+        end)
+      -- IN case there should be no animation
+      elseif root.elements.settings_views[INDEX].view.refresh then
+        root.elements.settings_views[INDEX].view.refresh()
       end
     end
   end
