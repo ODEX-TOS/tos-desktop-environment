@@ -36,7 +36,9 @@ depends=('cairo' 'dbus' 'gdk-pixbuf2' 'imlib2' 'libxdg-basedir' 'lua53' 'lua53-l
          'tde-touchegg' 'qrencode')
 makedepends=('asciidoc' 'pkgconf' 'cmake' 'docbook-xsl' 'doxygen' 'imagemagick' 'ldoc' 'xmlto')
 optdepends=('dex: autostart your desktop files'
-            'kdeconnect: Link your phone with TDE')
+            'kdeconnect: Link your phone with TDE'
+            'openvpn: Connect to vpn servers through the settings'
+            'ufw: Add/Manage simple firewall rules')
 provides=('notification-daemon' 'awesome-tos' 'tde')
 conflicts=('awesome' 'awesome-git' 'awesome-tos' 'tde')
 backup=('etc/xdg/tde/rc.lua')

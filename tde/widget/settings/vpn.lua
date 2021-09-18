@@ -144,7 +144,7 @@ local function create_openvpn_config(_file)
   password_ratio:adjust_ratio(2, 0.15, 0.05, 0.8)
 
 
-  local connect = button_widget("Save", function()
+  local connect = button_widget("Connect", function()
     print("Connecting vpn profile: ")
     print(_file)
     connect_to_vpn(_file, username_field.get_text(), password_field.get_text())
