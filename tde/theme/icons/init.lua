@@ -93,6 +93,7 @@ return {
   vpn = theme(dir .. "/vpn.svg"),
   dir = theme(dir .. "/folder.svg"),
   developer = theme(dir .. "/developer.svg"),
+  plugin = theme(dir .. "/plugin.svg"),
 
   --png's
   unknown = theme(dir .. "/noicon.png"),

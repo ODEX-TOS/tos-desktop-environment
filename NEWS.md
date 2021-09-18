@@ -18,8 +18,8 @@ This draft is not a final version of what will be introduced in the next patch, 
 - [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Useful for oled screen not having burn in)
 - [ ] `Default Applications` Allow setting the default application from the settings
 - [ ] `Key binding config` Allow setting the keybinding from the settings application
-- [ ] `Change keyboard layout` Allow changing the keyboard layout from within the settings and using a keyboard shortcut
-- [ ] `Firewall` Allow setting the firewall settings if ufw is installed and running
+- [X] `Change keyboard layout` Allow changing the keyboard layout from within the settings and using a keyboard shortcut
+- [X] `Firewall` Allow setting the firewall settings if ufw is installed and running
 
 ## Packaging
 
@@ -44,6 +44,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Added a basic chess plugin
 - Added ability to change the wallpaper based on time of day
 - Fully reworked tutorial
+- You can now enable/disable plugins from the settings
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel

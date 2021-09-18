@@ -79,7 +79,7 @@ local chart = function(x, y, width, height, title, fillFunc, timeout, _)
     progress_bar.step_width = ((width - (width * margin_ratio * 2)) / 100) + 1
 
     progress_bar.color = beautiful.primary.hue_500
-    progress_bar.background_color = beautiful.background.hue_900
+    progress_bar.background_color = beautiful.background.hue_900 .. beautiful.background_transparency
 
     box:setup {
         layout = wibox.layout.align.vertical,
@@ -172,7 +172,7 @@ local radial = function(x, y, width, height, title, fillFunc, timeout, bar_size)
     progress_bar.max_value = 100
     progress_bar.border_width = bar_size
     progress_bar.color = beautiful.primary.hue_500
-    progress_bar.border_color = beautiful.background.hue_900
+    progress_bar.border_color = beautiful.background.hue_900 .. beautiful.background_transparency
 
     box:setup {
         layout = wibox.layout.align.vertical,

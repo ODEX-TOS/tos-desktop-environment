@@ -117,7 +117,8 @@ local function load()
             cycle_mode = false,
             cycles = {}
         },
-        vpn_data = {}
+        vpn_data = {},
+        plugins = {},
     }
     if not filehandle.exists(file) then
         return table
@@ -139,6 +140,7 @@ local function load()
     result.wallpaper = result.wallpaper or table.wallpaper
 
     result.vpn_data = result.vpn_data or table.vpn_data
+    result.plugins = result.plugins or table.plugins
 
     result.last_version = result.last_version or table.last_version
 
@@ -534,6 +536,12 @@ end)
 signals.connect_vpn_connection_data(function(vpn)
 
     save_state.vpn_data = vpn
+
+    save(save_state)
+end)
+
+signals.connect_save_plugins(function(plugins)
+    save_state.plugins = plugins
 
     save(save_state)
 end)

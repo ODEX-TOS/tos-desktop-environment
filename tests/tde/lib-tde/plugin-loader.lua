@@ -27,6 +27,17 @@
 
 echo = print
 
+local function create_plugin(name, section)
+    return {
+        __name = name,
+        name = name,
+        active = true,
+        metadata = {
+            type = section
+        }
+    }
+end
+
 function Test_loader()
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     assert(plugin_loader, "Make sure that the plugin loader exists")
@@ -34,9 +45,9 @@ function Test_loader()
 end
 
 function Test_loader_section_test()
-    plugins = {
-        test = "mock-plugin"
-    }
+    _G.save_state.plugins = {}
+    _G.save_state.plugins["mock-plugin"] = create_plugin("mock-plugin", "test")
+
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
@@ -45,9 +56,9 @@ function Test_loader_section_test()
 end
 
 function Test_loader_section_mock_test()
-    plugins = {
-        test = "widget.mock-plugin"
-    }
+    _G.save_state.plugins = {}
+    _G.save_state.plugins["widget.mock-plugin"] = create_plugin("widget.mock-plugin", "test")
+
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
@@ -59,9 +70,11 @@ function Test_loader_section_mock_test()
 end
 
 function Test_loader_section_multi_plugin()
-    plugins = {
-        test = { "widget.mock-plugin", "widget.mock-plugin", "widget.mock-plugin"}
-    }
+    _G.save_state.plugins = {}
+    _G.save_state.plugins["widget.mock-plugin"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin2"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin3"] = create_plugin("widget.mock-plugin", "test")
+
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
@@ -76,16 +89,17 @@ function Test_loader_section_multi_plugin()
 end
 
 function Test_loader_section_multi_plugin2()
-    plugins = {
-        test = "widget.mock-plugin",
-        mock = "widget.mock-plugin"
-    }
+    _G.save_state.plugins = {}
+    _G.save_state.plugins["widget.mock-plugin"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin2"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin3"] = create_plugin("widget.mock-plugin", "mock")
+
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     local resultMock = plugin_loader("mock")
 
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
-    assert(#result == 1, "The plugin loader should return 1 plugin")
+    assert(#result == 2, "The plugin loader should return 1 plugin")
 
     assert(type(resultMock) == "table", "The plugin loader should return a table of plugins")
     assert(#resultMock == 1, "The plugin loader should return 1 plugin")
@@ -98,10 +112,12 @@ function Test_loader_section_multi_plugin2()
 end
 
 function Test_loader_section_multi_multi_plugin()
-    plugins = {
-        test = { "widget.mock-plugin", "widget.mock-plugin"},
-        mock = { "widget.mock-plugin", "widget.mock-plugin"}
-    }
+    _G.save_state.plugins = {}
+    _G.save_state.plugins["widget.mock-plugin"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin2"] = create_plugin("widget.mock-plugin", "test")
+
+    _G.save_state.plugins["widget.mock-plugin3"] = create_plugin("widget.mock-plugin", "mock")
+    _G.save_state.plugins["widget.mock-plugin4"] = create_plugin("widget.mock-plugin", "mock")
 
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
@@ -124,11 +140,11 @@ function Test_loader_section_multi_multi_plugin()
 end
 
 function Test_loader_section_inconsistent_flow_state()
-    plugins = {
-        test = { "widget.mock-plugin", "widget.mock-plugin", "widget.mock-plugin"},
-    }
+    _G.save_state.plugins = {}
+    _G.save_state.plugins["widget.mock-plugin"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin2"] = create_plugin("widget.mock-plugin", "test")
+    _G.save_state.plugins["widget.mock-plugin3"] = create_plugin("widget.mock-plugin", "test")
 
-    plugins["test"][5] = "widget.mock-plugin"
     local plugin_loader = require("tde.lib-tde.plugin-loader")
     local result = plugin_loader("test")
     assert(type(result) == "table", "The plugin loader should return a table of plugins")
@@ -139,7 +155,6 @@ function Test_loader_section_inconsistent_flow_state()
     assert(result[2].plugin == mock, "The second plugin in the table should be the mock plugin")
     assert(result[3].plugin == mock, "The third plugin in the table should be the mock plugin")
     assert(result[5] == nil, "The fifth plugin shouldn't exist")
-    assert(type(plugins["test"][5]) == "string")
 
     print = echo
 end

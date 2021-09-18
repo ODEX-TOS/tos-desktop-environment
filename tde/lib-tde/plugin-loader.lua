@@ -31,9 +31,38 @@ local dirExists = require("lib-tde.file").dir_exists
 local naughty = require("naughty")
 local icons = require("theme.icons")
 local ERROR = require("lib-tde.logger").error
+local filehandle = require("lib-tde.file")
+local serialize = require("lib-tde.serialize")
+
+local internal_plugins = {}
+
+internal_plugins["widget.todo"] = {
+    name = "Todo list",
+    metadata = {
+        type = "topbar",
+        internal_plugin = true
+    }
+}
+
+internal_plugins["widget.countdown"] = {
+    name = "Countdown Timer",
+    metadata = {
+        type = "topbar",
+        internal_plugin = true
+    }
+}
 
 local function getItem(item)
-    return plugins[item] or nil
+    local _plugins = {}
+
+    -- be compatible with the old plugin system
+    for k, v in pairs(_G.save_state.plugins) do
+        if v.metadata.type == item and v.active then
+            table.insert(_plugins, v.__name or k)
+        end
+    end
+
+    return _plugins
 end
 
 local function inValidPlugin(name, msg)
@@ -154,10 +183,52 @@ local function live_add_plugin(section, plugin_name)
     end
 end
 
+-- return a table of plugins paths and names
+local function list_plugins()
+    local res = {}
+
+    local sys_files = filehandle.list_dir("/etc/tde/plugins")
+
+    local user_plugins  = filehandle.list_dir(os.getenv("HOME") .. "/.config/tde/")
+
+    for _, value in ipairs(sys_files) do
+        if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') then
+            table.insert(res, {
+                path = value,
+                name = filehandle.basename(value),
+                __name = filehandle.basename(value),
+                metadata = serialize.deserialize_from_file(value .. "/data.json")
+            })
+        end
+    end
+
+    for _, value in ipairs(user_plugins) do
+        if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') then
+            table.insert(res, {
+                path = value,
+                name = filehandle.basename(value),
+                __name = filehandle.basename(value),
+                metadata = serialize.deserialize_from_file(value .. "/metadata.json")
+            })
+        end
+    end
+
+    for k, value in pairs(internal_plugins) do
+        table.insert(res, {
+            path = "",
+            name = value.name,
+            __name = k,
+            metadata = value.metadata
+        })
+    end
+    return res
+end
+
 local plugin_tbl = {
     getPluginSection = getPluginSection,
     load_plugin = handle_plugin,
     live_add_plugin = live_add_plugin,
+    list_plugins = list_plugins,
 }
 
 setmetatable(

@@ -42,6 +42,10 @@ end
 
 --package.loaded["naughty.dbus"] = {}
 
+-- system wide plugins
+package.path = "/etc/tde/plugins/?/init.lua;" .. "/etc/tde/plugins/?/?.lua;" .. package.path
+package.path = "/etc/tde/plugins/?.lua;" .. package.path
+
 -- Used to enable custom widgets as a plugin mechanism for TDE
 package.path = home .. "/.config/tde/?/init.lua;" .. home .. "/.config/tde/?/?.lua;" .. package.path
 package.path = home .. "/.config/tde/?.lua;" .. package.path

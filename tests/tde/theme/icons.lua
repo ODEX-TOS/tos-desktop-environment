@@ -286,9 +286,13 @@ function Test_theme_icon_developer()
     assert(file_exists(icons.vpn), "Check that the vpn icon exists")
 end
 
+function Test_theme_icon_plugin()
+    assert(file_exists(icons.plugin), "Check that the plugin icon exists")
+end
+
 
 function Test_that_all_icons_are_tested()
-    local amount = 65
+    local amount = 66
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

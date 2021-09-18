@@ -1178,4 +1178,26 @@ connections.connect_vpn_connection_data = function(func)
     tde.connect_signal("TDE::update::vpn::data", func)
 end
 
+--- Signals to notify that the we should update the plugin data
+-- @tparam table plugins The metadata about the plugins
+-- @staticfct emit_save_plugins
+-- @usage
+-- lib-tde.signals.emit_save_plugins({active = false, name = "example-plugin", metadata = {type = "module"}})
+connections.emit_save_plugins = function(plugins)
+    tde.emit_signal("TDE::update::plugin::data", plugins)
+end
+
+--- Trigger a callback function when extra plugin data should be stored
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_save_plugins
+-- @usage
+-- lib-tde.signals.connect_save_plugins(
+--    function (plugins)
+--     print("Extra plugin data found")
+--     print(plugins)
+--    end)
+connections.connect_save_plugins = function(func)
+    tde.connect_signal("TDE::update::plugin::data", func)
+end
+
 return connections

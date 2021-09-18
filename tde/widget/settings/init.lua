@@ -272,7 +272,7 @@ local function make_view(i, t, v, a)
   local btn_body =
     wibox.widget {
     layout = wibox.container.margin,
-    margins = m,
+    margins = m/2,
     {
       layout = wibox.layout.align.horizontal,
       wibox.container.margin(icon, dpi(7), dpi(7), dpi(7), dpi(7)),
@@ -308,7 +308,7 @@ local function make_view(i, t, v, a)
       end
     end
   )
-  btn.forced_height = m + settings_index + m
+  btn.forced_height = (m * 1.5) + settings_index
 
   btn.activate = function()
     btn.emulate_focus_loss()
@@ -416,6 +416,7 @@ local function make_nav(load_callback)
     make_view(icons.wifi, i18n.translate("Connections"), require("widget.settings.connections")())
   )
 
+
   hardware.hasBluetooth(function(bHasBT)
     if bHasBT then
       local view = make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
@@ -464,6 +465,10 @@ local function make_nav(load_callback)
   table.insert(
     root.elements.settings_views,
     make_view(icons.brush, i18n.translate("Theme"), require("widget.settings.theme")())
+  )
+  table.insert(
+    root.elements.settings_views,
+    make_view(icons.plugin, i18n.translate("Plugins"), require("widget.settings.plugins")())
   )
   table.insert(
     root.elements.settings_views,
@@ -570,8 +575,18 @@ return function()
       return
     end
 
+    if root.elements.settings_views[INDEX].view.stop_view then
+      root.elements.settings_views[INDEX].view.stop_view()
+    end
+
+    close_views()
+
     view_container:add(view.view)
     nav_container:add(view.link)
+
+    INDEX = #view_container.children
+
+    setActiveView(INDEX)
   end)
 
   hub:buttons(

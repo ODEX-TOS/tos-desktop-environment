@@ -595,8 +595,18 @@ function Test_connect_vpn_connection_data()
     assert(type(signals.connect_vpn_connection_data) == "function", "Make sure connect_vpn_connection_data is a signal and a function")
 end
 
+function Test_emit_save_plugins()
+    assert(signals.emit_save_plugins, "Make sure the signal emit_save_plugins exists")
+    assert(type(signals.emit_save_plugins) == "function", "Make sure emit_save_plugins is a signal and a function")
+end
+
+function Test_connect_save_plugins()
+    assert(signals.connect_save_plugins, "Make sure the signal connect_save_plugins exists")
+    assert(type(signals.connect_save_plugins) == "function", "Make sure connect_save_plugins is a signal and a function")
+end
+
 function Test_signals_api_unit_tested()
-    local amount = 107
+    local amount = 109
     local result = tablelength(signals)
     assert(
         result == amount,

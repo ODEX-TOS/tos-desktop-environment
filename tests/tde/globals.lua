@@ -81,6 +81,9 @@ require("tde.lib-tde.lib-lua.strace")
 save_state= {
     theming = {
 
+    },
+    plugins = {
+        
     }
 }
 
