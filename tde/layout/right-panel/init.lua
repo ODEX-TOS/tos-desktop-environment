@@ -27,8 +27,13 @@ local wibox = require("wibox")
 local dpi = require("beautiful").xresources.apply_dpi
 local signals = require("lib-tde.signals")
 
-local bottom_panel = function(s)
+local bottom_panel = function(s, offset)
   local action_bar_width = dpi(45) -- 48
+
+  local offsetY = dpi(26)
+  if offset then
+    offsetY = 0
+  end
 
   local panel =
     wibox {
@@ -37,7 +42,7 @@ local bottom_panel = function(s)
     width = action_bar_width,
     type = "dock",
     x = s.geometry.x + s.geometry.width - action_bar_width,
-    y = s.geometry.y + dpi(26),
+    y = s.geometry.y + offsetY,
     ontop = true,
     bg = beautiful.background.hue_800 .. beautiful.background_transparency,
     fg = beautiful.fg_normal,

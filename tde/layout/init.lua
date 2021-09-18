@@ -51,7 +51,7 @@ local function anchor(s)
 	  -- Create the bottom bar
 	  s.bottom_panel = hide(bottom_panel(s))
 	elseif anchorTag == "right" then
-	  s.bottom_panel = hide(right_panel(s))
+	  s.bottom_panel = hide(right_panel(s, topBarDraw == "none"))
 	else
 	  s.bottom_panel = hide(left_panel(s, topBarDraw == "none"))
 	end
@@ -84,9 +84,11 @@ signals.connect_anchor_changed(function(_anchor)
 			s.bottom_panel.auto_hider.remove()
 			s.bottom_panel.auto_hider = nil
 		end
-		s.bottom_panel.visible = false
-		s.bottom_panel = nil
-		collectgarbage("collect")
+		if s.bottom_panel ~= nil then
+			s.bottom_panel.visible = false
+			s.bottom_panel = nil
+			collectgarbage("collect")
+		end
 		anchor(s)
 	end
 end)
