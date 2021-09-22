@@ -61,9 +61,7 @@ local function create_multi_option_array(name, tooltip, options, default, config
   }
   awful.tooltip {
     objects = {name_widget},
-    timer_function = function()
-      return tooltip
-    end
+    text = tooltip
   }
   local layout = wibox.layout.flex.horizontal()
   layout.forced_width = settings_width - settings_nw

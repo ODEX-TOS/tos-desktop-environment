@@ -1,3 +1,4 @@
 {
-    "type": "prompt"
+    "type": "prompt",
+    "example": true
 }

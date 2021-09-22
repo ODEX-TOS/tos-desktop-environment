@@ -63,6 +63,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - You can now see drawboxes around widget if you enable it in the settings state
 - You can now see paint refreshes in the developer settings
 - Don't draw backdrops for invalidated clients
+- Plugins now have support for extended metadata
 
 
 ## Patch 0.9

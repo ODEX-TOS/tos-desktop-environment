@@ -1,3 +1,4 @@
 {
-    "type": "settings"
+    "type": "settings",
+    "example": true
 }

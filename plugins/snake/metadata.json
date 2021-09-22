@@ -1,3 +1,4 @@
 {
-    "type": "module"
+    "type": "module",
+    "icon": "snake.svg"
 }

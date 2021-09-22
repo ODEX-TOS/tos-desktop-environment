@@ -1,3 +1,4 @@
 {
-    "type": "topbar"
+    "type": "topbar",
+    "example": true
 }

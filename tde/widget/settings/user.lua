@@ -43,7 +43,7 @@ local body = nil
 
 local m = dpi(10)
 local settings_index = dpi(40)
-local settings_height = dpi(900)
+local settings_height = dpi(500)
 
 local tempUserDir = filehandle.mktempdir()
 

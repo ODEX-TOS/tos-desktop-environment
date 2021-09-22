@@ -40,7 +40,11 @@ internal_plugins["widget.todo"] = {
     name = "Todo list",
     metadata = {
         type = "topbar",
-        internal_plugin = true
+        internal_plugin = true,
+        icon = icons.check,
+        version = tde.version,
+        description = "A simple todo list in the topbar",
+        description_nl = "Een simpele todo lijst in de topbar",
     }
 }
 
@@ -48,7 +52,11 @@ internal_plugins["widget.countdown"] = {
     name = "Countdown Timer",
     metadata = {
         type = "topbar",
-        internal_plugin = true
+        internal_plugin = true,
+        icon = icons.clock_add,
+        version = tde.version,
+        description = "A timer to notify you when an event happens",
+        description_nl = "Een klok die u verwittigt wanneer er iets gebeurt"
     }
 }
 
