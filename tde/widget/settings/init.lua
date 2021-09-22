@@ -322,10 +322,10 @@ local function validate_plugin(plugin)
     send_plugin_error("Settings app plugin is missing icon")
   elseif plugin.name == nil then
     send_plugin_error("Settings app plugin is missing name")
-  elseif plugin.wibox == nil then
+  elseif plugin.widget == nil then
     send_plugin_error("Settings app plugin is missing widget")
   else
-    local view = make_view(plugin.icon, plugin.name, plugin.wibox)
+    local view = make_view(plugin.icon, plugin.name, plugin.widget)
     table.insert(root.elements.settings_views, view)
     return view
   end

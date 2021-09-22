@@ -31,7 +31,7 @@ local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
 local wibox = require("wibox")
 
--- general settings for how big the
+-- general settings for how big the settings app will be
 local m = dpi(10)
 local settings_width = dpi(800)
 local settings_nw = dpi(200)
@@ -106,5 +106,5 @@ return {
   icon = icons.warning,
   name = "hello-world",
   -- the settings menu expects a wibox
-  wibox = create()
+  widget = create()
 }

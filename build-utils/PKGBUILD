@@ -88,9 +88,13 @@ package() {
   
   mkdir -p "${pkgdir}/etc/xdg/awesome/theme"
   mkdir -p "${pkgdir}/etc/xdg/tde"
+  mkdir -p "${pkgdir}/etc/tde/plugins"
 
   cp -r "$srcdir/$_name/"/tde/* "${pkgdir}/etc/xdg/tde"
   cp -r "${pkgdir}/etc/xdg/tde/theme" "${pkgdir}/etc/xdg/awesome/"
+
+  # Copy over plugins
+  cp -r "$srcdir/$_name/"/plugins/* "${pkgdir}/etc/tde/plugins/"
 
   # setup images
   mkdir -p "$pkgdir"/usr/share/backgrounds/
