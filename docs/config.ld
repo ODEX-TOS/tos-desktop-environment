@@ -29,7 +29,7 @@ If you are a new user you should read our <a href="https://wiki.odex.be">wiki</a
 
 <div class="index_guides">
   <div>
-      <a href="documentation/07-my-first-awesome.md.html">Getting started</a>
+      <a href="documentation/plugin.md.html">Getting started with plugins</a>
       <a href="documentation/90-FAQ.md.html">FAQ</a>
       <a href="documentation/01-readme.md.html">Read me</a>
       <a href="documentation/89-NEWS.md.html">NEWS</a>
