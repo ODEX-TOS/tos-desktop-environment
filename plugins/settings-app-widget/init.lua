@@ -99,7 +99,7 @@ local function create()
     cal_container
   }
 
-  return view
+  return wibox.container.place(view)
 end
 
 return {
