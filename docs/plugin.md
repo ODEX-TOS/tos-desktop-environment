@@ -44,7 +44,7 @@ For the init.lua above (Which is a module (see below for more info)) this is the
 
 ```json
 {
-        "type: "module",
+        "type": "module",
   		"name": "My TDE Plugin",
         "icon": "/path/to/your/icon",
         "version": "v1.0.0",
