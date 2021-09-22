@@ -50,7 +50,7 @@ topics={
     '03-declarative-layout.md',
     '04-new-widgets.md',
     '06-appearance.md',
-    '07-my-first-awesome.md',
+    'plugin.md',
     '08-client-layout-system.md',
     '09-options.md',
     '10-building-and-testing.md',
