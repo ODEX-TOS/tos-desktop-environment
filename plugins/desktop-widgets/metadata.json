@@ -1,4 +1,7 @@
 {
     "type": "module",
-    "icon": "layout_tile"
+    "icon": "layout_tile",
+    "version": "v1.0.0",
+    "description": "Allow showing the RAM and CPU on the desktop",
+    "name": "Desktop Ram and CPU widgets"
 }

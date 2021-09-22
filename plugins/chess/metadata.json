@@ -1,4 +1,5 @@
 {
     "type": "module",
-    "icon": "white_horse.svg"
+    "icon": "white_horse.svg",
+    "version": "v0.1.0"
 }

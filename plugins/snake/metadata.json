@@ -1,4 +1,5 @@
 {
     "type": "module",
-    "icon": "snake.svg"
+    "icon": "snake.svg",
+    "version": "v1.0.0"
 }
