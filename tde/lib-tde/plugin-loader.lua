@@ -199,19 +199,30 @@ local function list_plugins()
 
     local user_plugins  = filehandle.list_dir(os.getenv("HOME") .. "/.config/tde/")
 
-    for _, value in ipairs(sys_files) do
+    for _, value in ipairs(user_plugins) do
         if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') then
             table.insert(res, {
                 path = value,
                 name = filehandle.basename(value),
                 __name = filehandle.basename(value),
-                metadata = serialize.deserialize_from_file(value .. "/data.json")
+                metadata = serialize.deserialize_from_file(value .. "/metadata.json")
             })
         end
     end
 
-    for _, value in ipairs(user_plugins) do
-        if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') then
+    local function is_unique_plugin(name)
+        for _, value in ipairs(res) do
+            if value.__name == name then
+                return false
+            end
+        end
+
+        return true
+    end
+
+    -- Add system plugins, but make sure that the user_plugin doesn't exist
+    for _, value in ipairs(sys_files) do
+        if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') and is_unique_plugin(filehandle.basename(value)) then
             table.insert(res, {
                 path = value,
                 name = filehandle.basename(value),
