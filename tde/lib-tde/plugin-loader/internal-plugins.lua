@@ -29,7 +29,7 @@ local internal_plugins = {}
 
 -- topbar plugins
 internal_plugins["widget.todo"] = {
-    name = "Todo list",
+    name = i18n.translate("Todo list"),
     metadata = {
         type = "topbar",
         internal_plugin = true,
@@ -41,7 +41,7 @@ internal_plugins["widget.todo"] = {
 }
 
 internal_plugins["widget.countdown"] = {
-    name = "Countdown Timer",
+    name = i18n.translate("Countdown Timer"),
     metadata = {
         type = "topbar",
         internal_plugin = true,
@@ -54,7 +54,7 @@ internal_plugins["widget.countdown"] = {
 
 -- notification plugins
 internal_plugins["widget.user-profile"] = {
-    name = "User profile",
+    name = i18n.translate("User profile"),
     metadata = {
         type = "notification",
         internal_plugin = true,
@@ -66,7 +66,7 @@ internal_plugins["widget.user-profile"] = {
 }
 
 internal_plugins["widget.social-media"] = {
-    name = "Social Media",
+    name = i18n.translate("Social Media"),
     metadata = {
         type = "notification",
         internal_plugin = true,
@@ -78,7 +78,7 @@ internal_plugins["widget.social-media"] = {
 }
 
 internal_plugins["widget.weather"] = {
-    name = "Weather",
+    name = i18n.translate("Weather & Temperature"),
     metadata = {
         type = "notification",
         internal_plugin = true,
@@ -90,7 +90,7 @@ internal_plugins["widget.weather"] = {
 }
 
 internal_plugins["widget.sars-cov-2"] = {
-    name = "Corona stats",
+    name = i18n.translate("Covid-19 stats"),
     metadata = {
         type = "notification",
         internal_plugin = true,
@@ -102,7 +102,7 @@ internal_plugins["widget.sars-cov-2"] = {
 }
 
 internal_plugins["widget.calculator"] = {
-    name = "Calculator",
+    name = i18n.translate("Calculator"),
     metadata = {
         type = "notification",
         internal_plugin = true,
