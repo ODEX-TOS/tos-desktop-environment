@@ -115,7 +115,7 @@ return {
     {cmd={"kdeconnectd"}, tbl= {restart = true, kill_previous = true}},
     {cmd={"udiskie"}, tbl= {restart = true, kill_previous = true}},
     {cmd={"psi-notify"}, tbl= {restart = true, kill_previous = true}},
-    {cmd={"numlockx", tbl = {restart = true, kill_previous=false}}},
+    {cmd={"numlockx"}, tbl = {restart = true, kill_previous=false}},
 
     -- touchegg is special as it requires 2 processes, one as root and one as the user
     -- we want to specifically only kill the user process
