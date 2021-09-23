@@ -229,8 +229,9 @@ local function widget_geometry(wibox, widget)
     }
 end
 
-local function highlight_text(text)
-    return string.format("<span foreground='%s'>%s</span>", beautiful.primary.hue_600, text)
+local function highlight_text(text, colorcode)
+    colorcode = colorcode or beautiful.primary.hue_600
+    return string.format("<span foreground='%s'>%s</span>", colorcode, text)
 end
 
 return {

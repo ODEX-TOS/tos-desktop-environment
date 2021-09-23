@@ -34,6 +34,12 @@ local checkbox = require("lib-widget.checkbox")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
 
+local mat_colors = require("theme.mat-colors")
+
+local common = require("lib-tde.function.common")
+local highlight_text = common.highlight_text
+local split = common.split
+
 local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
@@ -67,6 +73,19 @@ local function fetch_plugin_icon(plugin)
   return wibox.container.place(wibox.widget.imagebox(icon))
 end
 
+local function version_highlight(version)
+  local splitted = split(version,'.') or {}
+
+  if #splitted < 1  then
+    return version
+  end
+
+  if splitted[1] == "v0" or splitted[1] == "0" then
+    return highlight_text(version, mat_colors.red.hue_600)
+  end
+  return highlight_text(version, mat_colors.white.hue_600)
+end
+
 
 return function()
   local view = wibox.container.margin()
@@ -93,6 +112,15 @@ return function()
       is_active = _G.save_state.plugins[plugin.__name].active or false
     end
 
+    local version_ratio = wibox.widget {
+      layout = wibox.layout.ratio.horizontal,
+      wibox.widget.textbox(plugin.metadata.type),
+      wibox.widget.base.empty_widget(),
+      wibox.widget.textbox(version_highlight(plugin.metadata.version) or ""),
+    }
+
+    version_ratio:adjust_ratio(2, 0.4, 0.2, 0.4)
+
     local ratio = wibox.widget {
       layout = wibox.layout.ratio.horizontal,
       wibox.widget {
@@ -100,7 +128,7 @@ return function()
         text = plugin.name,
         font = beautiful.title_font,
       },
-      wibox.widget.textbox(plugin.metadata.version or ""),
+      version_ratio,
       checkbox(is_active, function(checked)
         if checked then
           plugin_loader.live_add_plugin(plugin.metadata.type, plugin.__name)
@@ -116,15 +144,15 @@ return function()
     }
 
 
-    ratio:adjust_ratio(2, 0.8, 0.15, 0.05)
+    ratio:adjust_ratio(2, 0.6, 0.35, 0.05)
 
     ratio.forced_height = m * 3
 
     if plugin.metadata.icon ~= nil then
       -- Add the image
       ratio:insert(1, fetch_plugin_icon(plugin))
-      ratio:adjust_ratio(2, 0.05, 0.75, 0.2)
-      ratio:adjust_ratio(3, 0.8, 0.15, 0.05)
+      ratio:adjust_ratio(2, 0.05, 0.55, 0.40)
+      ratio:adjust_ratio(3, 0.60, 0.35, 0.05)
     end
 
 
