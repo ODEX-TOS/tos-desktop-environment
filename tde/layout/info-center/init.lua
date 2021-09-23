@@ -68,7 +68,10 @@ local info_center = function(s)
 		layout = wibox.layout.fixed.horizontal
 	}
 
+	_layout.plugin_visible = false
+
 	if #plugins > 0 then
+		_layout.plugin_visible = true
 		_layout:add(wibox.widget{
 			plugin_layout,
 			margins = dpi(10),
@@ -183,13 +186,34 @@ local info_center = function(s)
 		plugin_layout:add(plugin)
 
 		-- add the plugin_latout in case it exists
-		if #plugin_layout.children == 1 then
+		if not plugin_layout.plugin_visible then
+			plugin_layout.plugin_visible = true
 			-- we need to modify _widget to be one bar wider
 			_layout:add(wibox.widget{
 				plugin_layout,
 				margins = dpi(10),
 				widget = wibox.container.margin
 			})
+
+			panel.visible = true
+
+			-- first do a redraw of the panel
+			_layout:emit_signal("widget::redraw_needed")
+
+			panel.visible = panel.opened
+
+			-- make sure the placement is correct
+			awful.placement.top_right(
+				panel,
+				{
+					honor_workarea = true,
+					parent = s,
+					margins = {
+						top = dpi(33),
+						right = dpi(5)
+					}
+				}
+			)
 		end
 	end)
 

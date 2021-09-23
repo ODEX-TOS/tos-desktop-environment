@@ -121,9 +121,18 @@ end
 -- daemonize.run("picom", {restart = false}) -- Don't restart the compositor after a crash
 -- daemonize.run("echo hello", {max_restarts = 10}) -- Run the echo hello program 10 times then stop
 local function run(cmd, args)
-    local restart = args.restart or true
-    local max_restarts = -1 -- -1 means restart forever
+    local restart = args.restart
     local kill_previous = args.kill_previous or false
+
+    if restart == nil then
+        restart = true
+    end
+
+    if kill_previous == nil then
+        kill_previous = false
+    end
+
+    local max_restarts = -1 -- -1 means restart forever
     local kill_cmd = args.kill_cmd or "pkill '%s'"
     local command = get_command(cmd)
     __run(cmd, restart, max_restarts, kill_previous, string.format(kill_cmd, command))

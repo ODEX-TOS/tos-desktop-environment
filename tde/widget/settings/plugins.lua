@@ -173,19 +173,25 @@ return function()
       layout = wibox.layout.fixed.horizontal
     }
 
-    layout:add(button(body,
-    function()
-      b_show_examples = not b_show_examples
-
+    local function set_body()
       if b_show_examples then
         btn_image:set_image(icons.arrow_up)
         layout:add(_layout)
       else
         btn_image:set_image(icons.arrow_down)
-        layout:remove(#layout.children)
+        -- make sure we remove the correct element
+        layout:remove_widgets(_layout)
       end
     end
-  ))
+
+    layout:add(button(body,
+    function()
+      b_show_examples = not b_show_examples
+
+      set_body()
+    end))
+
+  set_body()
   end
 
   refresh = function()
