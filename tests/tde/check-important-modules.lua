@@ -86,10 +86,6 @@ function Test_configuration_mod_key_tde_lib_tde_file_lua()
     assert(exists("tde/lib-tde/file.lua"), "Check that tde/lib-tde/file.lua exists")
 end
 
-function Test_configuration_mod_key_tde_lib_tde_plugin_loader_lua()
-    assert(exists("tde/lib-tde/plugin-loader.lua"), "Check that tde/lib-tde/plugin-loader.lua exists")
-end
-
 function Test_configuration_mod_key_tde_lib_tde_sound_lua()
     assert(exists("tde/lib-tde/sound.lua"), "Check that tde/lib-tde/sound.lua exists")
 end
@@ -402,7 +398,12 @@ function Test_lib_tde_mouse()
 end
 
 function Test_lib_tde_plugin_loader()
-    local file = "tde/lib-tde/plugin-loader.lua"
+    local file = "tde/lib-tde/plugin-loader/init.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+function Test_lib_tde_plugin_loader_internal_plugins()
+    local file = "tde/lib-tde/plugin-loader/internal-plugins.lua"
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
@@ -590,7 +591,7 @@ end
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 115
+    local amount = 114
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

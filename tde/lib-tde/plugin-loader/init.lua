@@ -34,31 +34,10 @@ local ERROR = require("lib-tde.logger").error
 local filehandle = require("lib-tde.file")
 local serialize = require("lib-tde.serialize")
 
-local internal_plugins = {}
+local quicksort = require("lib-tde.sort.quicksort")
+local capitalize = require("lib-tde.function.common").capitalize
 
-internal_plugins["widget.todo"] = {
-    name = "Todo list",
-    metadata = {
-        type = "topbar",
-        internal_plugin = true,
-        icon = icons.check,
-        version = tde.version,
-        description = "A simple todo list in the topbar",
-        description_nl = "Een simpele todo lijst in de topbar",
-    }
-}
-
-internal_plugins["widget.countdown"] = {
-    name = "Countdown Timer",
-    metadata = {
-        type = "topbar",
-        internal_plugin = true,
-        icon = icons.clock_add,
-        version = tde.version,
-        description = "A timer to notify you when an event happens",
-        description_nl = "Een klok die u verwittigt wanneer er iets gebeurt"
-    }
-}
+local internal_plugins = require("lib-tde.plugin-loader.internal-plugins")
 
 local function getItem(item)
     local _plugins = {}
@@ -204,7 +183,7 @@ local function list_plugins()
             local metadata = serialize.deserialize_from_file(value .. "/metadata.json")
             table.insert(res, {
                 path = value,
-                name = metadata["name"] or filehandle.basename(value),
+                name = capitalize(metadata["name"] or filehandle.basename(value)),
                 __name = filehandle.basename(value),
                 metadata = metadata
             })
@@ -228,7 +207,7 @@ local function list_plugins()
 
             table.insert(res, {
                 path = value,
-                name = metadata["name"] or filehandle.basename(value),
+                name = capitalize(metadata["name"] or filehandle.basename(value)),
                 __name = filehandle.basename(value),
                 metadata = metadata
             })
@@ -238,12 +217,14 @@ local function list_plugins()
     for k, value in pairs(internal_plugins) do
         table.insert(res, {
             path = "",
-            name = value.name,
+            name = capitalize(value.name),
             __name = k,
             metadata = value.metadata
         })
     end
-    return res
+    return quicksort(res, function (smaller, bigger)
+        return smaller.name < bigger.name
+    end)
 end
 
 local plugin_tbl = {
