@@ -114,7 +114,7 @@ return function()
 
     local version_ratio = wibox.widget {
       layout = wibox.layout.ratio.horizontal,
-      wibox.widget.textbox(plugin.metadata.type),
+      wibox.widget.textbox(common.capitalize(plugin.metadata.type)),
       wibox.widget.base.empty_widget(),
       wibox.widget.textbox(version_highlight(plugin.metadata.version) or ""),
     }
