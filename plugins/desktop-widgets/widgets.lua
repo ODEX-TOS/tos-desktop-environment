@@ -84,7 +84,7 @@ local chart = function(x, y, width, height, title, fillFunc, timeout, _)
     box:setup {
         layout = wibox.layout.align.vertical,
         wibox.container.margin(
-            progress_bar,
+            wibox.container.mirror(progress_bar, {horizontal= true}),
             width * width_bar_margin_ratio,
             width * width_bar_margin_ratio,
             height * margin_ratio,
@@ -93,10 +93,18 @@ local chart = function(x, y, width, height, title, fillFunc, timeout, _)
         title_widget
     }
 
+    local initial_value = true
+
     delayed_timer(
         timeout,
         function()
             local res = math.floor(fillFunc())
+            if initial_value and res ~= 0 then
+                for _ = 1, progress_bar.forced_width/progress_bar.step_width do
+                    progress_bar:add_value(res)
+                end
+                initial_value = false
+            end
             progress_bar:add_value(res)
         end,
         0

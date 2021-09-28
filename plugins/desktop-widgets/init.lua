@@ -23,11 +23,11 @@
 --SOFTWARE.
 ]]
 local signal = require("lib-tde.signals")
-local hardware = require("lib-tde.hardware-check")
 local widget = require("desktop-widgets.widgets")
 local config = require("desktop-widgets.config")
 
 local cpu_value = 0
+local ram_value = 0
 
 signal.connect_cpu_usage(
     function(value)
@@ -35,13 +35,16 @@ signal.connect_cpu_usage(
     end
 )
 
+signal.connect_ram_usage(function(value)
+    ram_value = value
+end)
+
 local function getCPUValue()
     return cpu_value
 end
 
 local function getRAMValue()
-    local usage = hardware.getRamInfo()
-    return usage
+    return ram_value
 end
 
 local width = mouse.screen.workarea.width
