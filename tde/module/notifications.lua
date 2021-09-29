@@ -190,7 +190,7 @@ naughty.connect_signal(
 											{
 												{
 													{
-														markup = n.app_name or i18n.translate('System Notification'),
+														markup = n.title or n.app_name or i18n.translate('System Notification'),
 														font = 'Inter Bold 10',
 														align = 'center',
 														valign = 'center',
@@ -218,15 +218,8 @@ naughty.connect_signal(
 														expand = 'none',
 														nil,
 														{
-															{
-																align = 'left',
-																widget = naughty.widget.title
-															},
-															{
-																align = 'left',
-																widget = naughty.widget.message,
-															},
-															layout = wibox.layout.fixed.vertical
+															align = 'left',
+															widget = naughty.widget.message,
 														},
 														nil
 													},

@@ -36,6 +36,8 @@ local button = require("lib-widget.button")
 
 local mat_colors = require("theme.mat-colors")
 
+local naughty = require("naughty")
+
 local common = require("lib-tde.function.common")
 local highlight_text = common.highlight_text
 local split = common.split
@@ -222,8 +224,42 @@ return function()
   set_body()
   end
 
+  -- a simple function for people to get more information about plugins
+  local function plugin_description()
+
+    local marketplace = button("Marketplace", function ()
+      -- TODO: Implement some kind of plugin marketplace
+      naughty.notification(
+        {
+            title = i18n.translate("Marketplace"),
+            text = i18n.translate("The Plugin Marketplace is currently in the works, it will be implemented shortly"),
+            timeout = 5,
+            urgency = "normal",
+            icon = icons.plugin
+        }
+    )
+    end)
+
+    local build_your_own = button("Build your own plugin", function()
+      require('module.docs').open_doc("/usr/share/doc/tde/doc/documentation/plugin.md.html")
+    end)
+
+    local ratio = wibox.widget {
+      layout = wibox.layout.ratio.horizontal,
+      marketplace,
+      wibox.widget.base.empty_widget(),
+      build_your_own
+    }
+
+    ratio:adjust_ratio(2, 0.4, 0.2, 0.4)
+
+    return wibox.container.margin(ratio, m, m, m, m)
+  end
+
   refresh = function()
     layout.children = {}
+
+    layout:add(plugin_description())
 
     local plugins = plugin_loader.list_plugins()
 
@@ -237,7 +273,9 @@ return function()
       end
     end
 
+
     handle_examples(example_plugins)
+
   end
 
   view.refresh = refresh

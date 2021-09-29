@@ -30,7 +30,15 @@ local fuzzy = require("lib-tde.fuzzy_find")
 local function find_browser()
     local name = {"firefoxdeveloperedition", "firefox", "nightly", "Chromium", "Google-chrome", "Brave-browser", "Vivaldi-stable", "Opera"}
     for _, c in ipairs(client.get()) do
-        if c.urgent or name[c.class] ~= nil then
+
+        local match = mappers.reduce(name, function(accumulator, element, _)
+            if element == c.class then
+                return true
+            end
+            return accumulator
+        end, false)
+
+        if c.urgent or match then
             c.first_tag:view_only()
             return
         end
@@ -60,16 +68,13 @@ local function find_best_file_match(search_query, files)
 end
 
 local function open_doc(doc)
+    find_browser()
     if type(doc) == "string" then
-        awful.spawn.easy_async("xdg-open '" .. doc .. "'", function ()
-            find_browser()
-        end)
+        awful.spawn("xdg-open '" .. doc .. "'", false)
         return
     end
 
-    awful.spawn("xdg-open https://tos.odex.be/docs", false, function()
-        find_browser()
-    end)
+    awful.spawn("xdg-open https://tos.odex.be/docs", false)
 end
 
 if _G.docs == nil then
