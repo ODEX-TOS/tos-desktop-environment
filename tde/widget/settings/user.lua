@@ -35,11 +35,14 @@ local scrollbox = require("lib-widget.scrollbox")
 local profilebox = require("lib-widget.profilebox")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
+local loading = require("lib-widget.loading")()
+loading.stop()
 
 -- TODO: add option to modify the hostname and group management :)
 
 -- this will hold the scrollbox, used to reset it
 local body = nil
+local layout = nil
 
 local m = dpi(10)
 local settings_index = dpi(40)
@@ -55,6 +58,26 @@ local bSelectedProfilePicture = false
 local refresh = function(_)
 end
 
+
+local function start_loading()
+  layout:reset()
+  body:reset()
+  loading.start()
+  layout:add(wibox.container.place(loading))
+  root.elements.settings.ontop = false
+  root.elements.settings_grabber:stop()
+end
+
+local function stop_loading(wall)
+  loading.stop()
+  -- Regrab the focus back (unless we closed the settings)
+  if root.elements.settings.visible then
+    root.elements.settings.ontop = true
+    root.elements.settings_grabber:start()
+  end
+  refresh(wall)
+end
+
 -- wall is the scaled profilePicture
 -- fullwall is a fullscreen (or original profilePicture)
 local function make_mon(wall, _, fullwall, size)
@@ -66,13 +89,14 @@ local function make_mon(wall, _, fullwall, size)
     function(btn)
       -- we check if button == 1 for a left mouse button (this way scrolling still works)
       if bSelectedProfilePicture and btn == 1 then
+        start_loading()
         awful.spawn.easy_async(
           "tos -p " .. fullwall,
           function()
             bSelectedProfilePicture = false
             print("Change profile picture to: " .. fullwall)
             -- TODO: update all references to the profile picture
-            refresh(fullwall)
+            stop_loading(fullwall)
             signals.emit_profile_picture_changed(wall)
             -- collect the garbage to remove the image cache from memory
             collectgarbage("collect")
@@ -97,7 +121,7 @@ return function()
 
   local pictures = card()
 
-  local layout = wibox.layout.grid()
+  layout = wibox.layout.grid()
   layout.spacing = m
   layout.forced_num_cols = 4
   layout.homogeneous = true
@@ -215,6 +239,7 @@ return function()
     signals.emit_profile_picture_changed(picture)
     return picture
   end
+
 
   refresh = function(wall)
     layout:reset()
