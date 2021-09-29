@@ -59,9 +59,6 @@ local password_to_star = function(pass)
 end
 
 local update_text = function(text, widget, bIsPassword, draw_location)
-    print(text)
-    print(bIsPassword)
-    print(draw_location)
     if draw_location == nil then
         draw_location = true
     end
@@ -231,7 +228,6 @@ return function(typing_callback, done_callback, start_callback, hidden, isvalid)
                 update_text(active_text, textbox, hidden)
             elseif mod[1] == "Control" or mod[2] == "Control" and key == "v" then
                 local paste_text = selection()
-                print(paste_text)
                 for i = 1, #paste_text do
                     local c = paste_text:sub(i,i)
                     active_text = write_to_textbox(textbox, c, active_text, hidden)

@@ -178,7 +178,7 @@ local function make_network_widget(ssid, active)
           start_loading()
           if active_text == "" then
             awful.spawn.easy_async(
-              "tos network connect " .. ssid,
+              "tos network connect '" .. ssid .. "'",
               function(_)
                 stop_loading()
                 refresh()
@@ -186,7 +186,7 @@ local function make_network_widget(ssid, active)
             )
           else
             awful.spawn.easy_async(
-              "tos network connect " .. ssid .. " password " .. active_text,
+              "tos network connect '" .. ssid .. "' password '" .. active_text .. "'",
               function(_)
                 stop_loading()
                 password.clear_text()
