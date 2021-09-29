@@ -294,6 +294,7 @@ local function gen_panel(s, layouts)
     panel.close = function()
         backdrop.visible = false
         panel.visible = false
+        search.stop_grabbing()
     end
 
     panel.toggle = function()
