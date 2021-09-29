@@ -154,11 +154,12 @@ end
 -- @tparam[opt] function start_callback This callback gets triggered when focus is received
 -- @tparam[opt] bool hidden This option tells us if we need to mask the input (with * instead of the real text)
 -- @tparam[opt] function isvalid Passes in the name of the key, it should return if the key is valid or not for the given inputfield
+-- @tparam[opt] string icon An icon to display inside the inputfield
 -- @treturn widget The inputfield widget
 -- @staticfct inputfield
 -- @usage -- This will create a basic inputfield
 -- local inputfield = lib-widget.inputfield()
-return function(typing_callback, done_callback, start_callback, hidden, isvalid)
+return function(typing_callback, done_callback, start_callback, hidden, isvalid, icon)
     local active_text = ""
     local prev_keygrabber
 
@@ -174,11 +175,24 @@ return function(typing_callback, done_callback, start_callback, hidden, isvalid)
         end
     end
 
+    local ratio = textbox
+
+    if icon ~= nil then
+        ratio = wibox.widget {
+            layout = wibox.layout.ratio.horizontal,
+            wibox.container.place(wibox.widget.imagebox(icon), "left"),
+            wibox.widget.base.empty_widget(),
+            textbox,
+        }
+
+        ratio:adjust_ratio(2, 0.08, 0.02, 0.9)
+    end
+
     local widget =
         wibox.widget {
         {
             {
-                textbox,
+                ratio,
                 margins = dpi(5),
                 widget = wibox.container.margin
             },

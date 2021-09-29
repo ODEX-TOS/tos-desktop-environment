@@ -33,13 +33,22 @@ local flags_dir = "/etc/xdg/tde/widget/keyboard/flags/"
 
 local scrollbox = require("lib-widget.scrollbox")
 local button = require("lib-widget.button")
+local inputfield = require("lib-widget.inputfield")
 local card = require("lib-widget.card")
 
 local quicksort = require("lib-tde.sort.quicksort")
 
+local icons = require("theme.icons")
+
 local selected_layouts = {}
 
+local __country_cache = {}
+
 local function make_layout_entry(layout)
+
+    if __country_cache[layout] ~= nil then
+        return __country_cache[layout]
+    end
 
     local bIsSelected = false
 
@@ -50,8 +59,14 @@ local function make_layout_entry(layout)
         end
     end
 
+    local country_text = layout
+
+    if awful.widget.keyboardlayout.xkeyboard_code_to_country ~= nil then
+        country_text = awful.widget.keyboardlayout.xkeyboard_code_to_country[layout] or layout
+    end
+
     local textbox = wibox.widget {
-        text = common.capitalize(layout),
+        text = country_text,
         align  = 'left',
         valign = 'center',
         font = beautiful.font,
@@ -126,6 +141,9 @@ local function make_layout_entry(layout)
         end
     end)
 
+    bg.__layout_name = layout
+
+    __country_cache[layout] = bg
     return bg
 end
 
@@ -164,15 +182,57 @@ local function gen_panel(s, layouts)
 
     local scroll = scrollbox(_widget)
 
+    local function country_is_a_match(country_code, search)
+        if search == "" then
+            return true
+        end
+
+        search = search:lower()
+
+        local is_direct_match = string.find(country_code:lower(), search) ~= nil
+
+        if is_direct_match then
+            return true
+        end
+
+        -- we are not running under TDE/Twin but instead running under awesome
+        if awful.widget.keyboardlayout.xkeyboard_code_to_country == nil then
+            return false
+        end
+
+        -- Perhaps we are searching for a match to the country name instead of the country code
+        local country = awful.widget.keyboardlayout.xkeyboard_code_to_country[country_code] or ""
+        local is_country_match = string.find(country:lower(), search) ~= nil
+
+        if is_country_match then
+            return true
+        end
+
+        return false
+    end
+
+    local search = inputfield(function(text)
+        scroll.reset()
+
+        _widget.children = {}
+
+        -- filter out the widgets inside the _widget based on the countryname/code
+        for _, layout in ipairs(layouts) do
+            if country_is_a_match(layout, text) then
+                _widget:add(make_layout_entry(layout))
+            end
+        end
+    end, nil, nil, nil, nil, icons.search)
+
     local ratio = wibox.widget {
         scroll,
-        wibox.widget.base.empty_widget(),
+        wibox.container.margin(search, 0,0, dpi(10), dpi(10)),
         btn,
         forced_height = s.geometry.height/2,
         layout = wibox.layout.ratio.vertical
     }
 
-    ratio:adjust_ratio(2, 0.90, 0.02, 0.08)
+    ratio:adjust_ratio(2, 0.80, 0.10, 0.10)
 
     body.update_body(wibox.container.margin(ratio, dpi(7), dpi(7), dpi(7), dpi(7)))
 
@@ -305,7 +365,6 @@ return function(s)
 
         -- shift the entire list by one
         local new_list = {}
-        print(selected_layouts)
         for index, value in ipairs(selected_layouts) do
             if index ~= 1 then
                 table.insert(new_list, value)
@@ -313,7 +372,6 @@ return function(s)
         end
         table.insert(new_list, selected_layouts[1])
         selected_layouts = new_list
-        print(selected_layouts)
 
         -- update the text and change the layout
         keyboard_layout.widget:set_text(selected_layouts[1])
