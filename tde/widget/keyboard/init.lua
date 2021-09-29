@@ -287,6 +287,17 @@ return function(s)
 
     keyboard_layout.widget:set_text(selected_layouts[1])
 
+    -- some layout's are in the form <country_code>-<layout_type>
+    -- in that case we return only the country code, otherwise we return everything
+    local function country_code(layout)
+        local splitted_code = common.split(layout, '-')
+        if #splitted_code > 0 then
+            return splitted_code[1]
+        end
+
+        return layout
+    end
+
     local function next_layout()
         if #selected_layouts < 2 then
             return
@@ -306,7 +317,7 @@ return function(s)
 
         -- update the text and change the layout
         keyboard_layout.widget:set_text(selected_layouts[1])
-        image:set_image(flags_dir .. selected_layouts[1] .. ".svg")
+        image:set_image(flags_dir .. country_code(selected_layouts[1]) .. ".svg")
         print("Changed layout to: " .. selected_layouts[1])
         awful.spawn("setxkbmap " .. selected_layouts[1])
     end
