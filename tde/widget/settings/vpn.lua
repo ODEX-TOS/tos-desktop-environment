@@ -33,6 +33,7 @@ local inputfield = require("lib-widget.inputfield")
 local signals = require("lib-tde.signals")
 local scrollbox = require("lib-widget.scrollbox")
 local highlight_text = require("lib-tde.function.common").highlight_text
+local icons = require("theme.icons")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -107,7 +108,7 @@ local function create_openvpn_config(_file)
         password = ""
       }
     end
-  end)
+  end,nil,nil, nil, nil, icons.user)
 
   local password_field = inputfield(function(text)
     if _G.save_state.vpn_data[_file] ~= nil then
@@ -119,7 +120,7 @@ local function create_openvpn_config(_file)
         password = text
       }
     end
-  end,nil,nil, true)
+  end,nil,nil, true, nil, icons.password)
 
   if _G.save_state.vpn_data[_file] ~= nil then
     username_field.update_text(_G.save_state.vpn_data[_file].username)

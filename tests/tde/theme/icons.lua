@@ -290,9 +290,13 @@ function Test_theme_icon_plugin()
     assert(file_exists(icons.plugin), "Check that the plugin icon exists")
 end
 
+function Test_theme_icon_password()
+    assert(file_exists(icons.password), "Check that the password icon exists")
+end
+
 
 function Test_that_all_icons_are_tested()
-    local amount = 66
+    local amount = 67
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..
