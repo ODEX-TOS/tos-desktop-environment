@@ -34,6 +34,7 @@ local signals = require("lib-tde.signals")
 local scrollbox = require("lib-widget.scrollbox")
 local highlight_text = require("lib-tde.function.common").highlight_text
 local icons = require("theme.icons")
+local naughty = require("naughty")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -76,12 +77,23 @@ local function connect_to_vpn(_file, user, pass)
   root.elements.settings.close()
 
   local cmd = "pkexec openvpn --config " .. _file .. " --auth-user-pass" .. " " .. tmp_file
-  _G.save_state.vpn_data[_file].pid = awful.spawn.easy_async(cmd, function()
+  _G.save_state.vpn_data[_file].pid = awful.spawn.easy_async(cmd, function(_, _, _, code)
     _G.save_state.vpn_data[_file].active = false
     _G.save_state.vpn_data[_file].pid = nil
     signals.emit_vpn_connection_data(_G.save_state.vpn_data)
 
     file.rm(tmp_file)
+
+    -- something went wrong when connecting, telling user that the vpn ended in a crash
+    if code ~= 0 then
+      naughty.notification({
+        title = i18n.translate("VPN"),
+        text = i18n.translate('VPN stopped'),
+        timeout = 5,
+        urgency = "critical",
+        icon = icons.vpn
+      })
+    end
 
     refresh()
   end)
@@ -125,6 +137,7 @@ local function create_openvpn_config(_file)
         }
       end
     end,
+    hidden = true,
     icon = icons.password
   })
 
