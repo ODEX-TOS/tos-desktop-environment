@@ -32,7 +32,6 @@ local icons = require("theme.icons")
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 local card = require("lib-widget.card")
-local button_widget = require("lib-widget.button")
 local loading = require("lib-widget.loading")
 local inputfield = require("lib-widget.inputfield")
 local tde_button = require("lib-widget.button")
@@ -117,14 +116,14 @@ local function make_qr_code_field()
     widget = wibox.widget.imagebox
   }
   local done_btn =
-    tde_button(
-    wibox.widget.imagebox(icons.qr_code),
-    function()
-      bIsShowingNetworkTab = true
-      refresh()
-    end,
-    active_pallet
-  )
+    tde_button({
+      body = wibox.widget.imagebox(icons.qr_code),
+      callback = function()
+        bIsShowingNetworkTab = true
+        refresh()
+      end,
+      pallet = active_pallet
+    })
 
   return wibox.widget {
     wibox.container.place(img),
@@ -143,14 +142,14 @@ local function make_network_widget(ssid, active)
 
   local password
 
-  password = inputfield(
-      function(text)
+  password = inputfield({
+    typing_callback = function(text)
         active_text = text
-      end,
-      function(_)
+    end,
+    done_callback = function(_)
         root.elements.settings_grabber:start()
-      end,
-      function()
+    end,
+    start_callback = function()
         print("Not resetting: " .. password["id"] .. " (" .. ssid .. ")")
         for _, v in ipairs(password_fields) do
           if v["id"] ~= password["id"] then
@@ -159,9 +158,9 @@ local function make_network_widget(ssid, active)
         end
 
         password.focus()
-      end,
-      true
-    )
+    end,
+    hidden = true
+    })
 
   __id = __id + 1
   password["id"] = __id
@@ -203,9 +202,9 @@ local function make_network_widget(ssid, active)
     -- override button to be a checkmark to indicate connection
     button = wibox.container.margin(wibox.widget.imagebox(icons.network), dpi(10), dpi(10), dpi(10), dpi(10))
     password =
-      tde_button(
-      wibox.widget.imagebox(icons.qr_code),
-      function()
+      tde_button({
+      body = wibox.widget.imagebox(icons.qr_code),
+      callback = function()
         print("Generating qr code")
         local passwd =
           string.gsub(
@@ -217,8 +216,8 @@ local function make_network_widget(ssid, active)
         bIsShowingNetworkTab = false
         refresh()
       end,
-      active_pallet
-    )
+      pallet = active_pallet
+    })
   else
     table.insert(password_fields, password)
   end
@@ -357,7 +356,9 @@ return function()
 
   table.insert(static_connections, wireless.widget)
   table.insert(static_connections, wired.widget)
-  table.insert(static_connections, button_widget("Restart Network", function()
+  table.insert(static_connections, tde_button({
+    body = "Restart Network",
+    callback = function()
     start_loading()
 
     -- make sure the input goes to the polkit authenticator
@@ -376,7 +377,7 @@ return function()
       refresh()
     end)
 
-  end))
+  end}))
   table.insert(static_connections, network_settings)
 
   connections:add(wireless.widget)

@@ -52,35 +52,35 @@ return function()
     mouse_heading.font = beautiful.font
 
     local mouse_slider =
-      slider(
-      0.05,
-      10,
-      0.05,
-      default_value,
-      function(value)
-        mouse.setMouseSpeed(id, value)
-      end
-    )
+      slider({
+        min = 0.05,
+        max = 10,
+        increment = 0.05,
+        default = default_value,
+        callback = function(value)
+          mouse.setMouseSpeed(id, value)
+        end
+      })
 
     local mouse_accel_slider =
-      slider(
-      0.01,
-      1,
-      0.01,
-      default_accel_value,
-      function(value)
-        mouse.setAcceleration(id, value)
-      end
-    )
+      slider({
+        min = 0.01,
+        max = 1,
+        increment = 0.01,
+        default = default_accel_value,
+        callback = function(value)
+          mouse.setAcceleration(id, value)
+        end
+      })
 
     local natural_scrolling_checkbox =
-      checkbox(
-      natural_scrolling or false,
-      function(checked)
-        mouse.setNaturalScrolling(id, checked == true)
-      end,
-      settings_index
-    )
+      checkbox({
+        checked = natural_scrolling or false,
+        callback = function(checked)
+          mouse.setNaturalScrolling(id, checked == true)
+        end,
+        size = settings_index
+      })
 
     mouse_card.update_body(
       wibox.widget {

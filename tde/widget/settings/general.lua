@@ -80,27 +80,24 @@ local function create_multi_option_array(name, tooltip, options, default, config
     -- the button object
     local option_widget
     option_widget =
-      button(
-      option,
-      function()
-        print("Pressed button")
-        for _, widget in pairs(button_widgets[name]) do
-          widget.bg = beautiful.bg_modal
-          widget.active = false
-        end
-        option_widget.bg = primary_theme.hue_800
-        option_widget.active = true
-        configWriter.update_entry(configFile, configOption, option)
+      button({
+        body = option,
+        callback = function()
+          print("Pressed button")
+          for _, widget in pairs(button_widgets[name]) do
+            widget.bg = beautiful.bg_modal
+            widget.active = false
+          end
+          option_widget.bg = primary_theme.hue_800
+          option_widget.active = true
+          configWriter.update_entry(configFile, configOption, option)
 
-        if type(changed_callback) == "function" then
-          changed_callback(option)
-        end
-      end,
-      nil,
-      nil,
-      nil,
-      leave
-    )
+          if type(changed_callback) == "function" then
+            changed_callback(option)
+          end
+        end,
+        leave_callback = leave
+      })
 
     option_widget.forced_height = settings_index * 0.7
 
@@ -140,22 +137,22 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off, on
     widget = wibox.widget.textbox
   }
   local box =
-    checkbox(
-    checked,
-    function(box_checked)
-      local value = off or "0"
-      if box_checked then
-        value = on or "1"
-      end
+    checkbox({
+      checked = checked,
+      callback = function(box_checked)
+        local value = off or "0"
+        if box_checked then
+          value = on or "1"
+        end
 
-      if type(onChange) == "function" then
-        onChange(box_checked)
-      else
-        configWriter.update_entry(configFile, configOption, value)
-      end
-    end,
-    settings_index * 0.7
-  )
+        if type(onChange) == "function" then
+          onChange(box_checked)
+        else
+          configWriter.update_entry(configFile, configOption, value)
+        end
+      end,
+      size = settings_index * 0.7
+    })
 
   awful.tooltip {
     objects = {name_widget},
@@ -186,20 +183,20 @@ end
 
 local function create_option_slider(title, min, max, inc, option, start_value, callback, tooltip_callback, inverted)
   local option_slider =
-    slider(
-    min,
-    max,
-    inc,
-    start_value,
-    function(value)
+    slider({
+    min = min,
+    max = max,
+    increment = inc,
+    default = start_value,
+    callback = function(value)
       if inverted then
         value = max - value
       end
       callback(value)
       configWriter.update_entry(configFile, option, tostring(value))
     end,
-    tooltip_callback
-  )
+    tooltip_callback = tooltip_callback
+  })
 
   return wibox.widget {
     layout = wibox.layout.align.horizontal,
@@ -235,16 +232,16 @@ return function()
   )
 
   local save =
-    button(
-    "Update",
-    function()
-      print("Saving general settings")
-      -- reload TDE
-      tde.restart()
-    end
-  )
+    button({
+      body = "Update",
+      callback = function()
+        print("Saving general settings")
+        -- reload TDE
+        tde.restart()
+      end
+    })
 
-  local separator = seperator_widget(settings_index / 1.5)
+  local separator = seperator_widget({height = settings_index / 1.5})
 
   local checkbox_widget =
     wibox.widget {

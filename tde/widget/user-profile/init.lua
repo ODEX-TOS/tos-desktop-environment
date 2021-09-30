@@ -38,12 +38,10 @@ local user_card = card()
 
 
 local profile_imagebox =
-  profilebox(
-  PATH_TO_ICONS .. "user" .. ".svg",
-  dpi(90),
-  function(_)
-  end
-)
+  profilebox({
+    picture = PATH_TO_ICONS .. "user" .. ".svg",
+    diameter = dpi(90)
+  })
 
 local profile_name =
   wibox.widget {

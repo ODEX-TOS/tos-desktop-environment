@@ -96,31 +96,37 @@ local function create_openvpn_config(_file)
   local canonical = file.basename(_file)
   canonical = string.sub(canonical, 0, #canonical - 5)
 
-  local vpn_card = card(canonical)
+  local vpn_card = card({title=canonical})
 
-  local username_field = inputfield(function(text)
-    if _G.save_state.vpn_data[_file] ~= nil then
-      _G.save_state.vpn_data[_file].username = text
-    else
-      _G.save_state.vpn_data[_file] = {
-        active = false,
-        username = text,
-        password = ""
-      }
-    end
-  end,nil,nil, nil, nil, icons.user)
+  local username_field = inputfield({
+    typing_callback = function(text)
+      if _G.save_state.vpn_data[_file] ~= nil then
+        _G.save_state.vpn_data[_file].username = text
+      else
+        _G.save_state.vpn_data[_file] = {
+          active = false,
+          username = text,
+          password = ""
+        }
+      end
+    end,
+    icon = icons.user
+  })
 
-  local password_field = inputfield(function(text)
-    if _G.save_state.vpn_data[_file] ~= nil then
-      _G.save_state.vpn_data[_file].password = text
-    else
-      _G.save_state.vpn_data[_file] = {
-        active = false,
-        username = "",
-        password = text
-      }
-    end
-  end,nil,nil, true, nil, icons.password)
+  local password_field = inputfield({
+    typing_callback = function(text)
+      if _G.save_state.vpn_data[_file] ~= nil then
+        _G.save_state.vpn_data[_file].password = text
+      else
+        _G.save_state.vpn_data[_file] = {
+          active = false,
+          username = "",
+          password = text
+        }
+      end
+    end,
+    icon = icons.password
+  })
 
   if _G.save_state.vpn_data[_file] ~= nil then
     username_field.update_text(_G.save_state.vpn_data[_file].username)
@@ -145,24 +151,32 @@ local function create_openvpn_config(_file)
   password_ratio:adjust_ratio(2, 0.15, 0.05, 0.8)
 
 
-  local connect = button_widget("Connect", function()
-    print("Connecting vpn profile: ")
-    print(_file)
-    connect_to_vpn(_file, username_field.get_text(), password_field.get_text())
-  end)
-
-  local disconnect = button_widget("Disconnect", function()
-    if _G.save_state.vpn_data[_file] ~= nil and _G.save_state.vpn_data[_file].pid ~= nil then
-      root.elements.settings.close()
-      awful.spawn.easy_async("pkexec kill " .. tostring(math.floor(_G.save_state.vpn_data[_file].pid)), function(_,_,_, code)
-        if code == 0 then
-          _G.save_state.vpn_data[_file].pid = nil
-          _G.save_state.vpn_data[_file].active = false
-          refresh()
-        end
-      end)
+  local connect = button_widget({
+    body = "Connect",
+    callback = function()
+      print("Connecting vpn profile: ")
+      print(_file)
+      connect_to_vpn(_file, username_field.get_text(), password_field.get_text())
     end
-  end, mat_colors.red, nil, nil, nil, true)
+  })
+
+  local disconnect = button_widget({
+    body = "Disconnect",
+    callback = function()
+      if _G.save_state.vpn_data[_file] ~= nil and _G.save_state.vpn_data[_file].pid ~= nil then
+        root.elements.settings.close()
+        awful.spawn.easy_async("pkexec kill " .. tostring(math.floor(_G.save_state.vpn_data[_file].pid)), function(_,_,_, code)
+          if code == 0 then
+            _G.save_state.vpn_data[_file].pid = nil
+            _G.save_state.vpn_data[_file].active = false
+            refresh()
+          end
+        end)
+      end
+    end,
+    pallet = mat_colors.red,
+    no_update = true
+  })
 
   local _btn_widget
 

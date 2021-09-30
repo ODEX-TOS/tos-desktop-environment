@@ -64,6 +64,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - You can now see paint refreshes in the developer settings
 - Don't draw backdrops for invalidated clients
 - Plugins now have support for extended metadata
+- Introducing a new declarative `lib-widget` api, much like the `wibox`, `naughty`, `awful` and other api's
 
 
 ## Patch 0.9

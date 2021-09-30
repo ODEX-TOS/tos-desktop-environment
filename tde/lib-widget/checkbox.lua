@@ -28,7 +28,7 @@
 -- A togglable checkbox
 --
 --    -- checkbox that is 20 pixels high
---    local checkbox = lib-widget.checkbox(dpi(20))
+--    local checkbox = lib-widget.checkbox({size = dpi(20)})
 --
 -- ![checkbox](../images/checkbox.png)
 --
@@ -52,10 +52,16 @@ local theme = beautiful.primary
 -- @tparam number size The height of the checkbox
 -- @treturn widget The checkbox widget
 -- @staticfct checkbox
--- @usage -- This will create a checkbox that is 20 pixels high
+-- @usage -- This will create a checkbox that is 20 pixels high and is unchecked
 -- -- checkbox that is 20 pixels high
--- local checkbox = lib-widget.checkbox(dpi(20))
-return function(checked, callback, size)
+-- local checkbox = lib-widget.checkbox({checked = false, size = dpi(20) })
+return function(args)
+    if args == nil then args = {} end
+
+    local checked = args["checked"]
+    local callback = args["callback"]
+    local size = args["size"]
+
     local checkbox =
         wibox.widget {
         checked = checked,

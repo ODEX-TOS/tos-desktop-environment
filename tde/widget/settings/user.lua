@@ -82,29 +82,32 @@ end
 -- fullwall is a fullscreen (or original profilePicture)
 local function make_mon(wall, _, fullwall, size)
   fullwall = fullwall or wall
-  local picture =
-    profilebox(
-    wall,
-    size,
-    function(btn)
-      -- we check if button == 1 for a left mouse button (this way scrolling still works)
-      if bSelectedProfilePicture and btn == 1 then
-        start_loading()
-        awful.spawn.easy_async(
-          "tos -p " .. fullwall,
-          function()
-            bSelectedProfilePicture = false
-            print("Change profile picture to: " .. fullwall)
-            -- TODO: update all references to the profile picture
-            stop_loading(fullwall)
-            signals.emit_profile_picture_changed(wall)
-            -- collect the garbage to remove the image cache from memory
-            collectgarbage("collect")
-          end
-        )
-      end
+
+  local clicked_callback = function(btn)
+    -- we check if button == 1 for a left mouse button (this way scrolling still works)
+    if bSelectedProfilePicture and btn == 1 then
+      start_loading()
+      awful.spawn.easy_async(
+        "tos -p " .. fullwall,
+        function()
+          bSelectedProfilePicture = false
+          print("Change profile picture to: " .. fullwall)
+          -- TODO: update all references to the profile picture
+          stop_loading(fullwall)
+          signals.emit_profile_picture_changed(wall)
+          -- collect the garbage to remove the image cache from memory
+          collectgarbage("collect")
+        end
+      )
     end
-  )
+  end
+
+  local picture =
+    profilebox({
+      picture = wall,
+      diameter = size,
+      clicked_callback = clicked_callback
+    })
 
   return wibox.container.place(picture)
 end
@@ -129,14 +132,14 @@ return function()
   layout.min_rows_size = dpi(100)
 
   local changeProfilePicture =
-    button(
-    "Change Profile Picture",
-    function()
-      -- TODO: change profilePicture
-      bSelectedProfilePicture = not bSelectedProfilePicture
-      refresh()
-    end
-  )
+    button({
+      body = "Change Profile Picture",
+      callback = function()
+        -- TODO: change profilePicture
+        bSelectedProfilePicture = not bSelectedProfilePicture
+        refresh()
+      end
+    })
   changeProfilePicture.top = m
   changeProfilePicture.bottom = m
 

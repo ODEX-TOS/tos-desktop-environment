@@ -78,13 +78,13 @@ local function gen_master_count(tags)
     signals.emit_save_tag_state()
   end
 
-  local dec = button("-", function()
+  local dec = button({body = "-", callback = function()
     update(-1)
-  end)
+  end})
 
-  local inc = button("+", function()
+  local inc = button({body = "+", callback = function()
     update(1)
-  end)
+  end})
 
   local w =  wibox.widget {
     layout = wibox.layout.ratio.horizontal,
@@ -105,27 +105,40 @@ local function generate_tag(tags, t_card)
   local default_gap = tags[1].gap
   local default_factor = tags[1].master_width_factor
 
-  local _slider_gap = slider(0, max, 1, default_gap, function (value)
-    for _, tag in ipairs(tags) do
-      tag.gap = value
+  local _slider_gap = slider({
+    max= max,
+    default = default_gap,
+    callback = function (value)
+      for _, tag in ipairs(tags) do
+        tag.gap = value
+      end
+    end,
+    tooltip_callback = function()
+      return tostring(tags[1].gap) .. 'px'
+    end,
+    done_callback =function (_)
+      print('Updating gap')
+      signals.emit_save_tag_state()
     end
-  end, function()
-    return tostring(tags[1].gap) .. 'px'
-  end, function (_)
-    print('Updating gap')
-    signals.emit_save_tag_state()
-  end)
+  })
 
-  local _slider_factor = slider(0, 1, 0.01, default_factor, function (value)
-    for _, tag in ipairs(tags) do
-      tag.master_width_factor = value
+  local _slider_factor = slider({
+    max = 1,
+    increment = 0.01,
+    default = default_factor,
+    callback =function (value)
+      for _, tag in ipairs(tags) do
+        tag.master_width_factor = value
+      end
+    end,
+    tooltip_callback = function()
+      return tostring(tags[1].master_width_factor * 100) .. '%'
+    end,
+    done_callback = function (_)
+      print('Updating master width factor')
+      signals.emit_save_tag_state()
     end
-  end, function()
-    return tostring(tags[1].master_width_factor * 100) .. '%'
-  end, function (_)
-    print('Updating master width factor')
-    signals.emit_save_tag_state()
-  end)
+  })
 
   local btn = gen_master_count(tags)
 
@@ -210,7 +223,7 @@ return function()
     end
 
     for _, tag in ipairs(awful.screen.focused().tags) do
-      local tag_c = card('Tag', dpi(150))
+      local tag_c = card({title='Tag', height=dpi(150)})
       generate_tag(get_linked_tags(tag), tag_c)
       layout:add(wibox.container.margin(tag_c, 0, 0, m, m))
     end

@@ -66,9 +66,12 @@ local action_level = wibox.widget {
 	widget = wibox.container.background
 }
 
-local volume_slider = slider(0, 100, 1, _G.save_state.volume, function (value)
-	signals.emit_volume(value)
-end)
+local volume_slider = slider({
+	default = _G.save_state.volume,
+	callback = function (value)
+		signals.emit_volume(value)
+	end
+})
 
 signals.connect_volume(function(value)
 	if value ~= volume_slider.get_number() then

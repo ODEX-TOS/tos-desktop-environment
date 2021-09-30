@@ -49,7 +49,7 @@ local weather_icon_widget =
 
 _G.weather_icon_widget = weather_icon_widget
 
-local weather_card = card("Weather & Temperature")
+local weather_card = card({title="Weather & Temperature"})
 
 local weather_description =
   wibox.widget {

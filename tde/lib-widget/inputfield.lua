@@ -149,17 +149,28 @@ local reset_textbox = function(widget, active_text, hidden, has_focus)
 end
 
 --- Create a new inputfield widget
--- @tparam[opt] function typing_callback This callback gets triggered on every keystroke
--- @tparam[opt] function done_callback This callback gets triggered when the user finished typing
--- @tparam[opt] function start_callback This callback gets triggered when focus is received
--- @tparam[opt] bool hidden This option tells us if we need to mask the input (with * instead of the real text)
--- @tparam[opt] function isvalid Passes in the name of the key, it should return if the key is valid or not for the given inputfield
--- @tparam[opt] string icon An icon to display inside the inputfield
+-- @tparam[opt] function args.typing_callback This callback gets triggered on every keystroke
+-- @tparam[opt] function args.done_callback This callback gets triggered when the user finished typing
+-- @tparam[opt] function args.start_callback This callback gets triggered when focus is received
+-- @tparam[opt] bool args.hidden This option tells us if we need to mask the input (with * instead of the real text)
+-- @tparam[opt] function args.isvalid Passes in the name of the key, it should return if the key is valid or not for the given inputfield
+-- @tparam[opt] string args.icon An icon to display inside the inputfield
 -- @treturn widget The inputfield widget
 -- @staticfct inputfield
 -- @usage -- This will create a basic inputfield
 -- local inputfield = lib-widget.inputfield()
-return function(typing_callback, done_callback, start_callback, hidden, isvalid, icon)
+return function(args)
+    if args == nil then args = {} end
+
+
+    local typing_callback = args["typing_callback"]
+    local done_callback = args["done_callback"]
+    local start_callback = args["start_callback"]
+    local hidden = args["hidden"]
+    local isvalid = args["isvalid"]
+    local icon = args["icon"]
+
+
     local active_text = ""
     local prev_keygrabber
 

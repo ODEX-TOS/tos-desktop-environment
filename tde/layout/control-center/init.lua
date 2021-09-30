@@ -102,7 +102,7 @@ local username = wibox.widget {
 	widget = wibox.widget.textbox
 }
 
-local picture = profile_pic(10)
+local picture = profile_pic({ diameter = dpi(30)})
 
 signals.connect_username(function(name)
 	username.text = name

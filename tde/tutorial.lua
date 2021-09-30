@@ -563,26 +563,31 @@ local function create_app()
     local header = wibox.widget {
         layout = wibox.layout.align.horizontal,
         button({
-            layout = wibox.container.margin,
-            top = m,
-            bottom = m,
-            left = m,
-            right = m,
-            wibox.widget.textbox(i18n.translate("Previous"))
-        }, function()
-            stop_tip()
+                body = {
+                layout = wibox.container.margin,
+                top = m,
+                bottom = m,
+                left = m,
+                right = m,
+                wibox.widget.textbox(i18n.translate("Previous"))
+            },
+            callback = function()
+                stop_tip()
 
-            tip_index = tip_index - 1
+                tip_index = tip_index - 1
 
-            local tip = tips[tip_index]
+                local tip = tips[tip_index]
 
-            if tip == nil then
-                tip_index = 1
-                tip = tips[tip_index]
-            end
+                if tip == nil then
+                    tip_index = 1
+                    tip = tips[tip_index]
+                end
 
-            hub.set_tip(tip)
-        end, mat_colors.grey, nil, nil, nil, true),
+                hub.set_tip(tip)
+            end,
+            pallet = mat_colors.grey,
+            no_update = true
+        }),
         wibox.widget{
             text = i18n.translate("Tutorial"),
             align  = 'center',
@@ -591,26 +596,29 @@ local function create_app()
             widget = wibox.widget.textbox
         },
         button({
-            layout = wibox.container.margin,
-            top = m,
-            bottom = m,
-            left = m,
-            right = m,
-            wibox.widget.textbox(i18n.translate("Next"))
-        }, function()
-            stop_tip()
+            body = {
+                layout = wibox.container.margin,
+                top = m,
+                bottom = m,
+                left = m,
+                right = m,
+                wibox.widget.textbox(i18n.translate("Next"))
+            },
+            callback = function()
+                stop_tip()
 
-            tip_index = tip_index + 1
+                tip_index = tip_index + 1
 
-            local tip = tips[tip_index]
+                local tip = tips[tip_index]
 
-            if tip == nil then
-                hub.visible = false
-                return
+                if tip == nil then
+                    hub.visible = false
+                    return
+                end
+
+                hub.set_tip(tip)
             end
-
-            hub.set_tip(tip)
-        end),
+        }),
     }
 
     header:connect_signal("button::press", function()

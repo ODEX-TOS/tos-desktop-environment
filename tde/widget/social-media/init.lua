@@ -50,7 +50,7 @@ local genWidget = function(widgets)
   }
 end
 
-local social_card = card("Social Media", dpi(60))
+local social_card = card({title="Social Media", height=dpi(60)})
 
 local reddit_widget =
   wibox.widget {

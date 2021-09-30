@@ -31,12 +31,8 @@ local spawn = require("awful.spawn")
 local signals = require("lib-tde.signals")
 
 local slider_osd =
-  slider(
-  0,
-  100,
-  1,
-  0,
-  function(value)
+  slider({
+  callback = function(value)
     if (_G.menuopened) then
       signals.emit_brightness(tonumber(value))
     end
@@ -47,7 +43,7 @@ local slider_osd =
       spawn("brightness -s " .. math.max(value, 5))
     end
   end
-)
+})
 _G.brightness2 = slider_osd
 
 slider_osd:connect_signal(

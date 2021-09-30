@@ -52,21 +52,36 @@ local theme = beautiful.primary
 local background_theme = beautiful.background
 
 --- Create a slider widget
--- @tparam number min The lowest possible value for the slider
--- @tparam number max The highest possible value for the slider
--- @tparam number increment How much should one step increase the slider
--- @tparam number default_value To what value do we need to set the slider to initially
--- @tparam function callback A callback that gets triggered every time the value change_focus
--- @tparam[opt] function tooltip_callback A function that gets called each time a you want to show some information
--- @tparam[opt] function done_callback A function that gets called when the user finished using the slider
+-- @tparam number args.min The lowest possible value for the slider
+-- @tparam number args.max The highest possible value for the slider
+-- @tparam number args.increment How much should one step increase the slider
+-- @tparam number args.default_value To what value do we need to set the slider to initially
+-- @tparam function args.callback A callback that gets triggered every time the value change_focus
+-- @tparam[opt] function args.tooltip_callback A function that gets called each time a you want to show some information
+-- @tparam[opt] function args.done_callback A function that gets called when the user finished using the slider
 -- @treturn widget The slider widget
 -- @staticfct slider
 -- @usage -- This will create the content in hallo.txt to var=value
 -- -- A slider between 0 and 10 with increments of 0.05, the default value is 5 and a callback function each time the value is updated
--- local slider = lib-widget.slider(0, 10, 0.05, 5, function(value)
+-- local slider = lib-widget.slider({
+--     min = 0,
+--     max = 10,
+--     increment = 0.05,
+--     default = 5,
+--     callback = function(value)
 --      print("Updated slider value to: " .. value)
--- end)
-return function(min, max, increment, default_value, callback, tooltip_callback, done_callback)
+--     end})
+return function(args)
+    if args == nil then args = {} end
+
+    local min = args["min"] or 0
+    local max = args["max"] or 100
+    local increment = args["increment"] or 1
+    local default_value = args["default"] or min
+    local callback = args["callback"]
+    local tooltip_callback = args["tooltip_callback"]
+    local done_callback = args["done_callback"]
+
     local step_size = 1 / increment
 
     local widget = wibox.widget.slider()

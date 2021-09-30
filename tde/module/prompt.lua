@@ -31,7 +31,10 @@ local animate = require("lib-tde.animations").createAnimObject
 
 
 local card = require("lib-widget.card")
-local separator = require("lib-widget.separator")(dpi(5), "vertical")
+local separator = require("lib-widget.separator")({
+  height = dpi(5),
+  orientation = "vertical"
+})
 
 local wibox = require("wibox")
 local gears = require("gears")

@@ -131,7 +131,9 @@ return function()
         font = beautiful.title_font,
       },
       version_ratio,
-      checkbox(is_active, function(checked)
+      checkbox({
+        checked = is_active,
+        callback = function(checked)
         if checked then
           plugin_loader.live_add_plugin(plugin.metadata.type, plugin.__name)
           _G.save_state.plugins[plugin.__name] = plugin
@@ -142,7 +144,8 @@ return function()
           signals.emit_save_plugins(_G.save_state.plugins)
           tde.restart()
         end
-      end)
+      end
+      })
     }
 
 
@@ -214,12 +217,14 @@ return function()
       end
     end
 
-    layout:add(button(body,
-    function()
-      b_show_examples = not b_show_examples
+    layout:add(button({
+      body = body,
+      callback = function()
+        b_show_examples = not b_show_examples
 
-      set_body()
-    end))
+        set_body()
+      end
+    }))
 
   set_body()
   end

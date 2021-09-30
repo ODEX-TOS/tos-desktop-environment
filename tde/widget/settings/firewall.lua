@@ -305,7 +305,9 @@ return function()
     active_rule_list.children = {}
     stop_loading(true)
 
-    active_rule_list:add(button("Toggle Firewall", function()
+    active_rule_list:add(button({
+      body = "Toggle Firewall",
+      callback = function()
       is_active = not is_active
       start_loading()
       firewall.set_active(is_active, function ()
@@ -313,18 +315,20 @@ return function()
         -- in case we go active, repopulate the list
         refresh(false)
       end)
-    end))
+    end}))
 
-    active_rule_list:add(button("Reload rules", function()
+    active_rule_list:add(button({
+      body = "Reload rules",
+      callback = function()
       STATE = LIST_STATE
       refresh(true)
-    end))
+    end}))
 
     if is_active then
-      active_rule_list:add(button("Add rule", function()
+      active_rule_list:add(button({body = "Add rule", callback = function()
         STATE = ADD_STATE
         refresh(false)
-      end))
+      end}))
       if #rules == 0 then
         active_rule_list:add(empty_text)
       end
@@ -382,26 +386,23 @@ return function()
       -- the button object
       local option_widget
       option_widget =
-        button(
-        option,
-        function()
-          print("Pressed button")
-          for _, widget in pairs(button_widgets[name]) do
-            widget.bg = beautiful.bg_modal
-            widget.active = false
-          end
-          option_widget.bg = beautiful.primary.hue_800
-          option_widget.active = true
+        button({
+          body = option,
+          callback = function()
+            print("Pressed button")
+            for _, widget in pairs(button_widgets[name]) do
+              widget.bg = beautiful.bg_modal
+              widget.active = false
+            end
+            option_widget.bg = beautiful.primary.hue_800
+            option_widget.active = true
 
-          if type(changed_callback) == "function" then
-            changed_callback(option)
-          end
-        end,
-        nil,
-        nil,
-        nil,
-        leave
-      )
+            if type(changed_callback) == "function" then
+              changed_callback(option)
+            end
+          end,
+          leave_callback = leave
+        })
 
       option_widget.forced_height = settings_index * 0.7
 
@@ -492,7 +493,7 @@ return function()
         port_if.clear_text()
       end
     end
-    port_if = inputfield(nil, port_done)
+    port_if = inputfield({done_callback = port_done})
     local ip_if
 
     local ip_done = function (text)
@@ -512,7 +513,7 @@ return function()
       end
     end
 
-    ip_if = inputfield(nil, ip_done)
+    ip_if = inputfield({done_callback = ip_done})
 
     local state_btn = create_multi_option_array("State", nil, {firewall.state.DENY, firewall.state.ALLOW}, firewall.state.DENY, function (state)
       rule.state = state
@@ -522,25 +523,27 @@ return function()
     end)
 
 
-    local btn = button("Save", function ()
+    local btn = button({
+      body = "Save",
+      callback = function ()
+        port_done(port_if.get_text())
+        ip_done(ip_if.get_text())
 
-      port_done(port_if.get_text())
-      ip_done(ip_if.get_text())
+        if rule.ip == nil and rule.port == nil then
+          STATE = LIST_STATE
+          refresh(false)
+          return
+        end
 
-      if rule.ip == nil and rule.port == nil then
-        STATE = LIST_STATE
-        refresh(false)
-        return
+        start_loading()
+        firewall.add_rule(rule, function()
+          table.insert(rules, rule)
+          STATE = LIST_STATE
+          stop_loading(true)
+          refresh(false)
+        end)
       end
-
-      start_loading()
-      firewall.add_rule(rule, function()
-        table.insert(rules, rule)
-        STATE = LIST_STATE
-        stop_loading(true)
-        refresh(false)
-      end)
-    end)
+    })
 
 
     local ip_box = wibox.widget {

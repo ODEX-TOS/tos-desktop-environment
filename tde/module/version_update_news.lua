@@ -215,9 +215,12 @@ local function create_wiboxes(news)
                     widget = wibox.widget.textbox
                 },
                 text_info,
-                wibox.container.margin(button("Read", function()
-                    common.focused_screen().newsOverlay.hide()
-                end), margin, margin,margin,margin),
+                wibox.container.margin(button({
+                    body = "Read",
+                    callback = function()
+                        common.focused_screen().newsOverlay.hide()
+                    end
+                }), margin, margin,margin,margin),
                 layout = wibox.layout.fixed.vertical
             },
             -- The real background color

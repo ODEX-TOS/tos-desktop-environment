@@ -27,7 +27,12 @@ local dpi = require("beautiful").xresources.apply_dpi
 local has_package_installed = require("lib-tde.hardware-check").has_package_installed
 local seperator_widget = require("lib-widget.separator")
 
-local separator_horizontal = wibox.container.margin(seperator_widget(dpi(1), "horizontal", 0.2), 0, 0, dpi(10), dpi(10))
+local separator_horizontal = wibox.container.margin(
+  seperator_widget({
+    height = dpi(1),
+    orientation = "horizontal",
+    opacity = 0.2
+  }), 0, 0, dpi(10), dpi(10))
 
 local separator_vertical =
   wibox.container.margin(

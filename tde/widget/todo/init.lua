@@ -230,12 +230,15 @@ local function worker(user_args)
 
         for i, todo_item in ipairs(data.todo_items) do
 
-            local box = checkbox(todo_item.status, function(checked)
+            local box = checkbox({
+                checked = todo_item.status,
+                callback = function(checked)
                 todo_item.status = checked
                 data.todo_items[i] = todo_item
                 serialize.serialize_to_file(STORAGE, data)
                 todo_widget:update_counter(data.todo_items)
-            end)
+                end
+            })
 
             local trash_button = wibox.widget {
                 {

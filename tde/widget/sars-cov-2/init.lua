@@ -32,7 +32,7 @@ local card = require("lib-widget.card")
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/sars-cov-2/icons/"
 
-local covid_card = card("Covid-19 cases in your country")
+local covid_card = card({title="Covid-19 cases in your country"})
 
 local covid_deceases =
   wibox.widget {

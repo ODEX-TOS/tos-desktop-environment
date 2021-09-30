@@ -32,12 +32,10 @@ local signals = require("lib-tde.signals")
 local spawn = require("awful.spawn")
 
 local brightness_slider =
-  slider(
-  5,
-  100,
-  1,
-  5,
-  function(value)
+  slider({
+  min = 5,
+  max = 100,
+  callback = function(value)
     if (_G.menuopened) then
       _G.brightness2.update(value)
     end
@@ -48,7 +46,7 @@ local brightness_slider =
       spawn("brightness -s " .. value)
     end
   end
-)
+})
 
 _G.brightness1 = brightness_slider
 

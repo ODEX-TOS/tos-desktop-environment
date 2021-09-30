@@ -89,9 +89,9 @@ end
 
 local function create_primary_button()
   local btn =
-    button(
-    "Primary",
-    function()
+    button({
+      body = "Primary",
+    callback = function()
       print("Changing Primary mode")
       colorModeIsPrimary = true
       primaryButton.bg = activePrimary.hue_800
@@ -100,36 +100,30 @@ local function create_primary_button()
         signals.emit_primary_theme_changed(activePrimary)
       end
     end,
-    activePrimary,
-    nil,
-    nil,
-    nil,
-    true
-  )
+    pallet = activePrimary,
+    no_update = true
+  })
 
   return btn
 end
 
 local function create_background_button()
   local btn =
-    button(
-    "Background",
-    function()
-      print("Changing background mode")
-      colorModeIsPrimary = false
-      primaryButton.bg = activePrimary.hue_600
-      backgroundButton.bg = activeBackground.hue_800
-      print(activeBackground)
-      if not bGradientSelection then
-        signals.emit_background_theme_changed(activeBackground)
-      end
-    end,
-    activeBackground,
-    nil,
-    nil,
-    nil,
-    true
-  )
+    button({
+      body = "Background",
+      callback = function()
+        print("Changing background mode")
+        colorModeIsPrimary = false
+        primaryButton.bg = activePrimary.hue_600
+        backgroundButton.bg = activeBackground.hue_800
+        print(activeBackground)
+        if not bGradientSelection then
+          signals.emit_background_theme_changed(activeBackground)
+        end
+      end,
+      pallet = activeBackground,
+      no_update = true
+  })
 
   return btn
 end
@@ -150,9 +144,9 @@ local function make_color_entry(name, slide, font_black)
   }
 
   local btn =
-    button(
-    text,
-    function()
+    button({
+    body = text,
+    callback = function()
       print("Updating theme to: " .. name)
 
       if bGradientSelection then
@@ -179,12 +173,9 @@ local function make_color_entry(name, slide, font_black)
       end
       refresh()
     end,
-    pallet,
-    nil,
-    nil,
-    nil,
-    true
-  )
+    pallet = pallet,
+    no_update = true
+  })
 
   btn.forced_height = settings_index - dpi(5)
 
@@ -236,21 +227,21 @@ return function()
   title.forced_height = settings_index + m + m
 
   save =
-    button(
-    "Save",
-    function()
-      print("Saving colors")
-      local location = os.getenv("HOME") .. "/.config/tos/colors.conf"
-      configWriter.update_entry(location, "primary", activePrimaryName)
-      configWriter.update_entry(location, "accent", activePrimaryName)
-      configWriter.update_entry(location, "background", activeBackgroundName)
-      -- restart TDE
-      tde.restart()
-    end
-  )
+    button({
+      body = "Save",
+      callback = function()
+        print("Saving colors")
+        local location = os.getenv("HOME") .. "/.config/tos/colors.conf"
+        configWriter.update_entry(location, "primary", activePrimaryName)
+        configWriter.update_entry(location, "accent", activePrimaryName)
+        configWriter.update_entry(location, "background", activeBackgroundName)
+        -- restart TDE
+        tde.restart()
+      end
+  })
 
   local theme_card = card()
-  local gradient_card = card("Gradients")
+  local gradient_card = card({title="Gradients"})
 
   local theme_settings_body =
     wibox.widget {
@@ -300,48 +291,64 @@ return function()
     return mat_colors.gen_gradient(left_gradient, right_gradient, gradient_angle, gradient_lenght)
   end
 
-  local left_gradient_btn = button("Select Left color gradient", function()
-    bGradientSelection = true
-    bSelectLeftGradient = true
-    root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
-  end,
-  left_gradient,
-  false,
-  -- enter callback
-  function(btn)
-    btn.bg = left_gradient.hue_800
-  end,
-  -- leave callback
-  function(btn)
-    btn.bg = left_gradient.hue_600
-  end, true)
+  local left_gradient_btn = button({
+    body = "Select Left color gradient",
+    callback = function()
+      bGradientSelection = true
+      bSelectLeftGradient = true
+      root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
+    end,
+    pallet = left_gradient,
+    center = true,
+    -- enter callback
+    enter_callback = function(btn)
+      btn.bg = left_gradient.hue_800
+    end,
+    -- leave callback
+    leave_callback = function(btn)
+      btn.bg = left_gradient.hue_600
+    end,
+    no_update = true
+  })
 
-  local right_gradient_btn = button("Select Right color gradient", function()
-    bGradientSelection = true
-    bSelectLeftGradient = false
-    root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
-  end,
-  right_gradient,
-  false,
-  -- enter callback
-  function(btn)
-    btn.bg = right_gradient.hue_800
-  end,
-  -- leave callback
-  function(btn)
-    btn.bg = right_gradient.hue_600
-  end, true)
+  local right_gradient_btn = button({
+    body = "Select Right color gradient",
+    callback = function()
+      bGradientSelection = true
+      bSelectLeftGradient = false
+      root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
+    end,
+    pallet = right_gradient,
+    center = true,
+    -- enter callback
+    enter_callback = function(btn)
+      btn.bg = right_gradient.hue_800
+    end,
+    -- leave callback
+    leave_callback = function(btn)
+      btn.bg = right_gradient.hue_600
+    end,
+    no_update = true
+  })
 
 
-  local length_slider = slider(0, 1000, 1, 100, function(value)
-    gradient_lenght = value
-    root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
-  end)
+  local length_slider = slider({
+    max = 1000,
+    default = 100,
+    callback = function(value)
+      gradient_lenght = value
+      root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
+    end
+  })
 
-  local angle_slider = slider(0, 360, 1, 45, function(value)
-    gradient_angle = value
-    root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
-  end)
+  local angle_slider = slider({
+    max = 360,
+    default = 45,
+    callback = function(value)
+      gradient_angle = value
+      root.elements.settings.bg = new_gradient_pallet_fnc().hue_600
+    end
+  })
 
 
   local function ratio(text, _slider)
@@ -367,7 +374,7 @@ return function()
   wibox.container.margin(ratio("Angle", angle_slider), m, m, m, m),
   wibox.container.margin(left_gradient_btn, m, m, m, m),
   wibox.container.margin(right_gradient_btn, m, m, m, m),
-  wibox.container.margin(button("Update", function()
+  wibox.container.margin(button({body = "Update", callback = function()
     bGradientSelection = false
 
     local new_gradient = new_gradient_pallet_fnc()
@@ -385,7 +392,7 @@ return function()
     end
 
     refresh()
-  end), m, m, m, m)
+  end}), m, m, m, m)
 }
 
   tde.connect_signal('theme::redraw_gradient', function()

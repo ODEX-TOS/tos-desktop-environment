@@ -42,13 +42,13 @@ local function create_checkbox(name, checked, callback, set_checkbox_callback)
     widget = wibox.widget.textbox
   }
   local box =
-    checkbox(
-    checked,
-    function(box_checked)
+    checkbox({
+    checked = checked,
+    callback = function(box_checked)
       callback(box_checked)
     end,
-    settings_index * 0.7
-  )
+    size = settings_index * 0.7
+    })
   if set_checkbox_callback then
     set_checkbox_callback(function(_checked)
       box.update(_checked)
@@ -80,7 +80,7 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
-  local separator = seperator_widget(settings_index / 1.5)
+  local separator = seperator_widget({height = settings_index / 1.5 })
 
   local debug_check_callback = function(_) end
 

@@ -47,20 +47,32 @@ local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 
 --- Create a new button widget
--- @tparam wibox.widget body The widget to put in the center (usually an icon or text)
--- @tparam function callback The callback function to call when the button is pressed
--- @tparam[opt] table pallet A colorpallet from the theme.mat-colors file
--- @tparam[opt] bool bNo_center Don't center the content
--- @tparam[opt] function enter_callback This is called when the button receives focus
--- @tparam[opt] function leave_callback This is called when the button losses focus
--- @tparam[opt] bool no_update Don't update the color of the button (used in the theme settings)
+-- @tparam wibox.widget args.body The widget to put in the center (usually an icon or text)
+-- @tparam function args.callback The callback function to call when the button is pressed
+-- @tparam[opt] table args.pallet A colorpallet from the theme.mat-colors file
+-- @tparam[opt] bool args.center Center the content of the button
+-- @tparam[opt] function args.enter_callback This is called when the button receives focus
+-- @tparam[opt] function args.leave_callback This is called when the button losses focus
+-- @tparam[opt] bool args.update Don't update the color of the button (used in the theme settings)
 -- @treturn widget The button widget
 -- @staticfct button
 -- @usage -- This will create a button that is red
--- local button = lib-widget.button('Click me', function()
+-- local button = lib-widget.button({ body = 'Click me', callback = function()
 --    print("Clicked")
--- end, require("theme.mat-colors").red)
-return function(body, callback, pallet, bNo_center, enter_callback, leave_callback, no_update)
+-- end, pallet = require("theme.mat-colors").red})
+return function(args)
+    if args == nil then args = {} end
+
+    local body = args["body"]
+    local callback = args["callback"]
+    local pallet = args["pallet"]
+    local center = args["center"]
+    local enter_callback = args["enter_callback"]
+    local leave_callback = args["leave_callback"]
+    local no_update = args["no_update"]
+
+    if center == nil then center = true end
+
     local button = wibox.container.background()
     local color = pallet or beautiful.primary
     local bIsHovered = false
@@ -127,15 +139,15 @@ return function(body, callback, pallet, bNo_center, enter_callback, leave_callba
             button.emulate_focus_loss()
         end
     )
-    if bNo_center then
+    if center then
         button:setup {
-            layout = wibox.container.margin,
+            layout = wibox.container.place,
+            halign = "center",
             body
         }
     else
         button:setup {
-            layout = wibox.container.place,
-            halign = "center",
+            layout = wibox.container.margin,
             body
         }
     end

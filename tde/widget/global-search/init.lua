@@ -59,7 +59,7 @@ local return_button = function()
 				1,
 				nil,
 				function()
-					awful.spawn(apps.default.rofi_global, false)
+					awful.spawn(apps.default.rofiappmenu, false)
 				end
 			)
 		)

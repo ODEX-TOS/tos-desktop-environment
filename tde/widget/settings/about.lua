@@ -93,7 +93,7 @@ return function()
   local logo = wibox.widget.imagebox(icons.logo)
   logo.forced_height = settings_index * 3
 
-  local separator = seperator_widget(settings_index / 1.5)
+  local separator = seperator_widget({ height = settings_index / 1.5 })
 
   local container = wibox.layout.fixed.vertical()
   local device_name, device_text = generate_setting_panel(i18n.translate("Device name"))

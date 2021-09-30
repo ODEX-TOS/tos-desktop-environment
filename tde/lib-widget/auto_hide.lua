@@ -44,19 +44,21 @@ local signals = require('lib-tde.signals')
 local logger = require("lib-tde.logger")
 
 --- Create a new auto_hide widget
--- @tparam wibox box The wibox that should auto_hide when hovering
--- @tparam[opt] number auto_hide_time After x seconds of not being in the wibox when should the fading start
+-- @tparam wibox args.wibox The wibox that should auto_hide when hovering
+-- @tparam[opt] number args.auto_hide_time After x seconds of not being in the wibox when should the fading start
 -- @staticfct auto_hide
 -- @usage -- This will create a fading wibox
--- local separate = lib-widget.auto_hide(wibox, 1)
-return function(box, auto_hide_time)
+-- local separate = lib-widget.auto_hide({wibox = wibox, auto_hide_time = 1 })
+return function(args)
+    if args == nil then args = {} end
+    local box = args.wibox or {}
+    local auto_hide_time = args.auto_hide_time or 0.5
 
     if box.struts == nil then
         print("Auto Hide widget only support wiboxes as a parameter, but got: " .. tostring(box) , logger.warn)
         return box
     end
 
-    auto_hide_time = auto_hide_time or 0.5
     local enabled = _G.save_state.auto_hide
 
     local _struts = box:struts()

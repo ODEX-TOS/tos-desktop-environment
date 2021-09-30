@@ -31,15 +31,12 @@ local signals = require("lib-tde.signals")
 local volume = require("lib-tde.volume")
 
 local vol_slider =
-  slider(
-  0,
-  100,
-  1,
-  _G.save_state.volume or 0,
-  function(value)
+  slider({
+  default = _G.save_state.volume or 0,
+  callback = function(value)
     signals.emit_volume(value)
   end
-)
+})
 
 local icon =
   wibox.widget {

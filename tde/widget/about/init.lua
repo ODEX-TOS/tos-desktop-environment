@@ -234,10 +234,13 @@ return function(s)
             widget = wibox.widget.textbox
           },
           nil,
-          wibox.container.margin(button(i18n.translate("News"), function()
-            toggleAbout()
-            require("module.version_update_news").show()
-          end), dpi(10), dpi(10), dpi(20), dpi(10)),
+          wibox.container.margin(
+            button({ body = i18n.translate("News"),
+              callback = function()
+                toggleAbout()
+                require("module.version_update_news").show()
+              end}),
+          dpi(10), dpi(10), dpi(20), dpi(10)),
           layout =wibox.layout.fixed.vertical,
         }), dpi(20), 0,0,0),
         layout = wibox.layout.fixed.horizontal

@@ -48,19 +48,26 @@ local theme = require("theme.icons.dark-light")
 local dpi = require("beautiful.xresources").apply_dpi
 
 --- Create a slider widget
--- @tparam string picture The picture to set in the profilebox
--- @tparam number diameter The diameter of the profilebox
--- @tparam function clicked_callback A callback that gets triggered every time you click on the box
--- @tparam[opt] function tooltip_callback A function that gets called each time a you want to show some information
+-- @tparam string args.picture The picture to set in the profilebox
+-- @tparam number args.diameter The diameter of the profilebox
+-- @tparam function args.clicked_callback A callback that gets triggered every time you click on the box
+-- @tparam[opt] function args.tooltip_callback A function that gets called each time a you want to show some information
 -- @treturn widget The profilebox widget
 -- @staticfct profilebox
 -- @usage -- This will create the content in hallo.txt to var=value
--- local picture = lib-widget.profilebox("file.png", dpi(100), function(button)
---     print("Clicked with button: " .. button)
--- end)
-return function(picture, diameter, clicked_callback, tooltip_callback)
-    picture = picture or "/etc/xdg/tde/widget/user-profile/icons/user.svg"
-    diameter = diameter or dpi(30)
+-- local picture = lib-widget.profilebox({
+--     picture= "file.png",
+--     diameter = dpi(100),
+--     clicked_callback = function(button)
+--          print("Clicked with button: " .. button)
+--     end})
+return function(args)
+    if args == nil then args = {} end
+
+    local picture = args["picture"] or "/etc/xdg/tde/widget/user-profile/icons/user.svg"
+    local diameter = args["diameter"] or dpi(30)
+    local clicked_callback = args["clicked_callback"]
+    local tooltip_callback = args["tooltip_callback"]
 
     local widget =
         wibox.widget {
@@ -76,7 +83,9 @@ return function(picture, diameter, clicked_callback, tooltip_callback)
     widget:connect_signal(
         "button::press",
         function(_, _, _, button)
-            clicked_callback(button)
+            if clicked_callback ~= nil and type(clicked_callback) == "function" then
+                clicked_callback(button)
+            end
         end
     )
     if tooltip_callback ~= nil and type(tooltip_callback) == "function" then
@@ -90,7 +99,7 @@ return function(picture, diameter, clicked_callback, tooltip_callback)
     -- @tparam string file The path to the new profilebox
     -- @staticfct profilebox.update
     -- @usage -- This change the picture to image.png
-    -- slider.update("/path/to/a/new/image.png")
+    -- box.update("/path/to/a/new/image.png")
     widget.update = function(file)
         widget:set_image(theme(file))
     end

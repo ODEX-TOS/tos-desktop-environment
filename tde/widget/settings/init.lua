@@ -288,26 +288,24 @@ local function make_view(i, t, v, a)
   -- aka making sure a reference to the head pointer stays the same, even during construction
   local btn
   btn =
-    button(
-    btn_body,
-    function()
-      close_views()
-      view.visible = true
-      setActiveView(-1, btn)
-      if view.refresh then
-        view.refresh()
+    button({
+      body = btn_body,
+      callback = function()
+        close_views()
+        view.visible = true
+        setActiveView(-1, btn)
+        if view.refresh then
+          view.refresh()
+        end
+      end,
+      center = false,
+      -- when hover is lost we make the button transparent
+      leave_callback = function(curr_btn)
+        if curr_btn.active == false then
+          curr_btn.bg = beautiful.transparent
+        end
       end
-    end,
-    nil,
-    true,
-    nil,
-    -- when hover is lost we make the button transparent
-    function(curr_btn)
-      if curr_btn.active == false then
-        curr_btn.bg = beautiful.transparent
-      end
-    end
-  )
+    })
   btn.forced_height = (m * 1.5) + settings_index
 
   btn.activate = function()
@@ -348,12 +346,11 @@ local function make_nav(load_callback)
   local img = "/etc/xdg/tde/widget/user-profile/icons/user.svg"
 
   local avatar =
-    profilebox(
-    img,
-    settings_index,
-    function(_)
-    end
-  )
+    profilebox({
+      picture = img,
+      diameter = settings_index
+    })
+
 
   signals.connect_profile_picture_changed(
     function(picture)
@@ -496,14 +493,14 @@ local function make_nav(load_callback)
 
   local red = require("theme.mat-colors").red
   local power =
-    button(
-    wibox.widget.imagebox(icons.power),
-    function()
-      root.elements.settings.close()
-      _G.exit_screen_show()
-    end,
-    red
-  )
+    button({
+      body = wibox.widget.imagebox(icons.power),
+      callback = function()
+        root.elements.settings.close()
+        _G.exit_screen_show()
+      end,
+      pallet = red
+    })
 
   body = scrollbox(nav_container)
 

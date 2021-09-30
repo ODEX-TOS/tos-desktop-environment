@@ -152,7 +152,7 @@ local function gen_panel(s, layouts)
     local panel_width = dpi(350)
 
     local panel
-    local body = card("Keyboard Layout")
+    local body = card({title="Keyboard Layout"})
 
     local _widget = wibox.widget {
         layout = wibox.layout.fixed.vertical,
@@ -165,20 +165,22 @@ local function gen_panel(s, layouts)
         _widget:add(make_layout_entry(layout))
     end
 
-    local btn = button("Save", function()
+    local btn = button({
+        body = "Save",
+        callback = function()
+            if #selected_layouts == 0 then
+                print("You should at least select one layout option")
+                return
+            end
 
-        if #selected_layouts == 0 then
-            print("You should at least select one layout option")
-            return
+            tde.emit_signal("xkb::map_changed")
+            tde.emit_signal("xkb::group_changed")
+
+            if panel ~= nil then
+                panel:close()
+            end
         end
-
-        tde.emit_signal("xkb::map_changed")
-        tde.emit_signal("xkb::group_changed")
-
-        if panel ~= nil then
-            panel:close()
-        end
-    end)
+    })
 
     local scroll = scrollbox(_widget)
 
@@ -211,18 +213,21 @@ local function gen_panel(s, layouts)
         return false
     end
 
-    local search = inputfield(function(text)
-        scroll.reset()
+    local search = inputfield({
+        typing_callback = function(text)
+            scroll.reset()
 
-        _widget.children = {}
+            _widget.children = {}
 
-        -- filter out the widgets inside the _widget based on the countryname/code
-        for _, layout in ipairs(layouts) do
-            if country_is_a_match(layout, text) then
-                _widget:add(make_layout_entry(layout))
+            -- filter out the widgets inside the _widget based on the countryname/code
+            for _, layout in ipairs(layouts) do
+                if country_is_a_match(layout, text) then
+                    _widget:add(make_layout_entry(layout))
+                end
             end
-        end
-    end, nil, nil, nil, nil, icons.search)
+        end,
+        icon = icons.search
+    })
 
     local ratio = wibox.widget {
         scroll,

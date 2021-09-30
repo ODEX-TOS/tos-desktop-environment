@@ -44,6 +44,8 @@ local settings_index = dpi(40)
 local settings_width = dpi(1100)
 local settings_nw = dpi(260)
 
+local SCAN_PID = -1
+
 local scrollbox_body
 
 local refresh = function()
@@ -307,13 +309,8 @@ return function()
     print("Stopping bluetooth advertisment")
     timer:stop()
     -- disable our discovery
-    if IsreleaseMode then
-      awful.spawn([[sh -c '
-      killall bluetoothctl; 
-      bluetoothctl scan off;
-      bluetoothctl pairable off;
-      bluetoothctl discoverable off;
-      ']], false)
+    if IsreleaseMode and SCAN_PID ~= -1 then
+      awful.spawn("kill '" .. math.floor(SCAN_PID) .. "'", false)
     end
 
   end
@@ -361,7 +358,7 @@ return function()
     end
     if bIsTimer == nil then
       print("Starting bluetooth advertisment")
-      awful.spawn("sh -c 'bluetoothctl scan on; bluetoothctl pairable on; bluetoothctl discoverable on'", false)
+      SCAN_PID = awful.spawn("sh -c 'bluetoothctl scan on; bluetoothctl pairable on; bluetoothctl discoverable on'", false)
     elseif timer.started == nil then
       timer:start()
     end

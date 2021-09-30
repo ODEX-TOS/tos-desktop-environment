@@ -81,9 +81,13 @@ local adjust_blur = function(power)
 	)
 end
 
-local blur_slider = slider(0, 25, 1, 20, function (value)
-	adjust_blur(value)
-end)
+local blur_slider = slider({
+	max = 25,
+	default = 20,
+	callback = function (value)
+		adjust_blur(value)
+	end
+})
 blur_slider.forced_height = dpi(24)
 
 

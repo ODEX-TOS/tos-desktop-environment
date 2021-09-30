@@ -37,7 +37,11 @@ local seperator_widget = require("lib-widget.separator")
 local mat_list_item = {mt = {}}
 
 function mat_list_item:build_separator()
-  self._private.separator = seperator_widget(1, "horizontal", 0.08)
+  self._private.separator = seperator_widget({
+    height = 1,
+    orientation = "horizontal",
+    opacity = 0.08
+  })
   self:emit_signal("widget::layout_changed")
 end
 

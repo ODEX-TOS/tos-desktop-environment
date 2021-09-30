@@ -36,15 +36,11 @@ local signal = require("lib-tde.signals")
 local volume = require("lib-tde.volume")
 
 local slider_osd =
-  slider(
-  0,
-  100,
-  1,
-  0,
-  function(value)
+  slider({
+  callback = function(value)
     signal.emit_volume(value)
   end
-)
+})
 
 signal.connect_volume(
   function(value)

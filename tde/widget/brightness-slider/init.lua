@@ -68,10 +68,15 @@ local action_level = wibox.widget {
 }
 
 
-local brightness_slider = slider(5, 100, 1, _G.save_state.brightness, function (value)
-	signals.emit_brightness(value)
-	awful.spawn("brightness -s " .. tostring(value), false)
-end)
+local brightness_slider = slider({
+	min = 5,
+	max = 100,
+	default = _G.save_state.brightness,
+	callback = function (value)
+		signals.emit_brightness(value)
+		awful.spawn("brightness -s " .. tostring(value), false)
+	end
+})
 
 
 signals.connect_brightness(function (value)

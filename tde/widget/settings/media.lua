@@ -105,30 +105,27 @@ return function()
   mic_footer.align = "right"
 
   local vol_slider =
-    slider(
-    0,
-    100,
-    1,
-    _G.save_state.volume,
-    function(value)
+    slider({
+    default = _G.save_state.volume,
+    callback = function(value)
       signals.emit_volume(value)
     end
-  )
+  })
 
   local mic_slider =
-  slider(
-  0,
-  100,
-  1,
-  _G.save_state.mic_volume,
-  function(value)
+  slider({
+  default = _G.save_state.mic_volume,
+  callback = function(value)
     signals.emit_mic_volume(value)
   end
-)
+})
 
-  local hardware_only_volume_checbox = checkbox(_G.save_state.hardware_only_volume, function (checked)
-    signals.emit_volume_is_controlled_in_software(not checked)
-  end)
+  local hardware_only_volume_checbox = checkbox({
+    checked = _G.save_state.hardware_only_volume,
+    callback = function (checked)
+      signals.emit_volume_is_controlled_in_software(not checked)
+    end
+  })
 
   signals.connect_volume(
     function(value)
@@ -217,14 +214,15 @@ return function()
   local function generate_port_options(source, isSink)
     body.children = {}
 
-    local p_card = card(source.name)
+    local p_card = card({title=source.name})
     local _body = wibox.layout.fixed.vertical()
     local vertical = wibox.layout.fixed.vertical()
 
 
     for _, _port in ipairs(source.available_ports) do
-      _body:add(wibox.container.margin(button(
-        _port, function ()
+      _body:add(wibox.container.margin(button({
+        body = _port,
+        callback = function ()
 
           if isSink then
             volume.set_sink_port(source.id, _port)
@@ -235,15 +233,15 @@ return function()
           DISPLAY_MODE = NORMAL_MODE
           refresh()
         end
-      ), m,m,m,m))
+      }), m,m,m,m))
     end
 
     p_card.update_body(_body)
 
-    vertical:add(button('Back', function ()
+    vertical:add(button({body = 'Back', callback = function ()
       DISPLAY_MODE = NORMAL_MODE
       refresh()
-    end))
+    end}))
     vertical:add(wibox.container.margin(p_card, 0, 0, m, 0))
 
     body:add(vertical)
@@ -291,28 +289,33 @@ return function()
     end
 
     -- add buttons to test the audio
-    sink_children:add(wibox.container.margin(button("Test speaker", function()
+    sink_children:add(wibox.container.margin(button({body = "Test speaker", callback = function()
       sound(true)
-    end, active_pallet),m, m, m))
+    end, active_pallet}),m, m, m))
 
     -- If we are currently listing for microphone input
     if mic_test_pid == -1 then
-      source_children:add(wibox.container.margin(button(mic_test_start_message, function()
-        -- record audio using arecord and pipe it into aplay
-        -- we use a buffer size of 10 ms for recording and playback as that has almost no delay, but still allows recording
-        local cmd = "arecord -f cd - -B 10000 | aplay -B 10000"
-        -- start the process and get the pid
-        mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'", false)
-        refresh()
-      end, active_pallet),m, m, m))
+      source_children:add(wibox.container.margin(
+        button({
+          body = mic_test_start_message,
+          callback = function()
+          -- record audio using arecord and pipe it into aplay
+          -- we use a buffer size of 10 ms for recording and playback as that has almost no delay, but still allows recording
+          local cmd = "arecord -f cd - -B 10000 | aplay -B 10000"
+          -- start the process and get the pid
+          mic_test_pid= awful.spawn("sh -c '" .. cmd .. "'", false)
+          refresh()
+        end,
+        pallet = active_pallet
+      }),m, m, m))
     else
-      source_children:add(wibox.container.margin(button(mic_test_stop_message, kill_mic_pid),m, m, m))
+      source_children:add(wibox.container.margin(button({ body = mic_test_stop_message, callback = kill_mic_pid}),m, m, m))
     end
 
-    local sink_widget = card("Output")
+    local sink_widget = card({title="Output"})
     sink_widget.update_body(wibox.container.margin(sink_children, m, m, m, m))
 
-    local source_widget = card("Input")
+    local source_widget = card({title="Input"})
 
     source_widget.update_body(wibox.container.margin(source_children, m, m, m, m))
 
@@ -328,15 +331,11 @@ return function()
   local function create_volume_from_application(app)
     local app_volume_card = card()
 
-    local app_vol_slider = slider(
-    0,
-    100,
-    1,
-    0,
-    function(value)
-      volume.set_application_volume(app.sink, value)
-    end
-  )
+    local app_vol_slider = slider({
+      callback = function(value)
+        volume.set_application_volume(app.sink, value)
+      end
+    })
 
   volume.get_application_volume(app.sink , function (value)
     if not (app_vol_slider.value == value) then
@@ -532,9 +531,9 @@ return function()
   scrollbox_body = scrollbox(wibox.widget {
     layout = wibox.layout.fixed.vertical,
     volume_card,
-    wibox.container.margin(button("Reset Audio Server", function()
+    wibox.container.margin(button({body = "Reset Audio Server", callback = function()
       volume.reset_server()
-    end, active_pallet),m, m, m*2),
+    end, pallet = active_pallet}),m, m, m*2),
     audio_settings,
     body,
     application_settings,

@@ -49,11 +49,17 @@ local function anchor(s)
 
 	if anchorTag == "bottom" then
 	  -- Create the bottom bar
-	  s.bottom_panel = hide(bottom_panel(s))
+	  s.bottom_panel = hide({
+		  wibox = bottom_panel(s)
+		})
 	elseif anchorTag == "right" then
-	  s.bottom_panel = hide(right_panel(s, topBarDraw == "none"))
+	  s.bottom_panel = hide({
+		  wibox = right_panel(s, topBarDraw == "none")
+	  })
 	else
-	  s.bottom_panel = hide(left_panel(s, topBarDraw == "none"))
+	  s.bottom_panel = hide({
+			wibox = left_panel(s, topBarDraw == "none")
+		})
 	end
 end
 
@@ -68,7 +74,7 @@ local function panel(s)
 		return
 	end
 
-	s.top_panel = hide(top_panel(s))
+	s.top_panel = hide({ wibox = top_panel(s) })
 end
 
 signals.connect_anchor_changed(function(_anchor)

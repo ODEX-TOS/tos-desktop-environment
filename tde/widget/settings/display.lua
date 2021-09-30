@@ -62,8 +62,8 @@ local active_pallet = beautiful.primary
 
 
 -- REFRESH MODE VARS
-local refresh_card = card('Refresh rate list')
-local resolution_card = card('Resolution list')
+local refresh_card = card({title='Refresh rate list'})
+local resolution_card = card({title='Resolution list'})
 
 local refresh_rate_cmd = ""
 local active_refresh_buttons = {}
@@ -140,18 +140,22 @@ local function make_refresh_list(refresh_tbl, resolution, monitor_id)
   active_refresh_buttons = {}
 
   for index, value in ipairs(refresh_tbl) do
-      table.insert(active_refresh_buttons, button(value .. ' Hz', function ()
-        refresh_rate_cmd = 'xrandr --output ' .. monitor_id .. ' --rate ' .. tostring(value) .. ' --mode ' .. resolution
+      table.insert(active_refresh_buttons, button({
+          body = value .. ' Hz',
+          callback = function ()
+          refresh_rate_cmd = 'xrandr --output ' .. monitor_id .. ' --rate ' .. tostring(value) .. ' --mode ' .. resolution
 
-        -- Visually show the selected option
-        for i, btn in ipairs(active_refresh_buttons) do
-          if i == index then
-            btn.update_pallet(shift_pallet(active_pallet))
-          else
-            btn.update_pallet(active_pallet)
+          -- Visually show the selected option
+          for i, btn in ipairs(active_refresh_buttons) do
+            if i == index then
+              btn.update_pallet(shift_pallet(active_pallet))
+            else
+              btn.update_pallet(active_pallet)
+            end
           end
-        end
-      end, active_pallet))
+        end,
+        pallet = active_pallet
+      }))
       refresh_list:add(wibox.container.margin(
           active_refresh_buttons[#active_refresh_buttons],
           dpi(5),dpi(5),dpi(5),dpi(5)
@@ -176,7 +180,9 @@ local function make_resolution_list(monitor_information, monitor_id)
   end)
 
   for index, value in ipairs(sorted_resolutions) do
-      table.insert(active_resolution_buttons,  button(value, function ()
+      table.insert(active_resolution_buttons,  button({
+        body = value,
+        callback = function ()
             refresh_card.update_body(make_refresh_list(monitor_information[value], value, monitor_id))
 
             -- Visually show the selected option
@@ -187,8 +193,9 @@ local function make_resolution_list(monitor_information, monitor_id)
                 btn.update_pallet(active_pallet)
               end
             end
-        end, active_pallet)
-      )
+        end,
+        pallet = active_pallet
+      }))
       resolution_list:add(wibox.container.margin(
         active_resolution_buttons[#active_resolution_buttons],
           dpi(5),dpi(5),dpi(5),dpi(5)
@@ -256,32 +263,35 @@ local function make_cycle_hour_selection(value)
   local ratio = wibox.layout.ratio.horizontal()
 
   local field
-  field = inputfield(nil, nil, nil, false, function(key, text)
-    local valid = tonumber(key) ~= nil
+  field = inputfield({
+    hidden = false,
+    isvalid = function(key, text)
+      local valid = tonumber(key) ~= nil
 
-    local hour = tonumber(text .. key) or 0
+      local hour = tonumber(text .. key) or 0
 
-    local isHour = hour >= 0 and hour <= 24
+      local isHour = hour >= 0 and hour <= 24
 
-    if hour > 24 then
-      field.update_text("24")
-      hour = 24
-    end
-
-    if hour < 0 then
-      field.update_text("0")
-      hour = 0
-    end
-
-    -- find the active cycle and update the hour value
-    for i, v in ipairs(cycles) do
-      if value.image == v.image then
-        cycles[i].hour = hour
+      if hour > 24 then
+        field.update_text("24")
+        hour = 24
       end
-    end
 
-    return valid and isHour
-  end)
+      if hour < 0 then
+        field.update_text("0")
+        hour = 0
+      end
+
+      -- find the active cycle and update the hour value
+      for i, v in ipairs(cycles) do
+        if value.image == v.image then
+          cycles[i].hour = hour
+        end
+      end
+
+      return valid and isHour
+    end
+  })
 
   -- find the active cycle and update the hour value
   for i, v in ipairs(cycles) do
@@ -474,12 +484,8 @@ return function()
   layout.min_rows_size = dpi(100)
 
   local brightness =
-    slider(
-    0,
-    100,
-    1,
-    0,
-    function(value)
+    slider({
+    callback = function(value)
       if _G.oled then
         awful.spawn("brightness -s " .. tostring(value) .. " -F", false)
       else
@@ -489,7 +495,7 @@ return function()
 
       signals.emit_brightness(value)
     end
-  )
+  })
 
   signals.connect_brightness(
     function(value)
@@ -498,12 +504,11 @@ return function()
   )
 
   local screen_time =
-    slider(
-    10,
-    600,
-    1,
-    tonumber(general["screen_on_time"]) or 120,
-    function(value)
+    slider({
+    min = 10,
+    max = 600,
+    default = tonumber(general["screen_on_time"]) or 120,
+    callback = function(value)
       print("Updated screen time: " .. tostring(value) .. "sec")
       general["screen_on_time"] = tostring(value)
       configWriter.update_entry(os.getenv("HOME") .. "/.config/tos/general.conf", "screen_on_time", tostring(value))
@@ -515,20 +520,18 @@ return function()
     function()
       return  i18n.translate("%s before sleeping", datetime.numberInSecToMS(tonumber(general["screen_on_time"]) or 120))
     end
-  )
+  })
 
 
   local rounded_corner =
-    slider(
-    0,
-    dpi(50),
-    1,
-    _G.save_state.rounded_corner or dpi(10),
-    function(value)
+    slider({
+    max = dpi(50),
+    default = _G.save_state.rounded_corner or dpi(10),
+    callback = function(value)
       print("Setting rounded corner radius: " .. tostring(dpi(value)) .. "px")
      signals.emit_change_rounded_corner_dpi(dpi(value))
     end
-  )
+  })
 
   local function gen_dpi_body()
     local v_layout = wibox.layout.fixed.vertical()
@@ -543,7 +546,7 @@ return function()
     h_layout.forced_height = dpi(40)
 
     v_layout:add(h_layout)
-    v_layout:add(wibox.container.margin(button('Spooky...', function() end), dpi(10), dpi(10), dpi(10), dpi(10)))
+    v_layout:add(wibox.container.margin(button({body = 'Spooky...'}), dpi(10), dpi(10), dpi(10), dpi(10)))
     v_layout:add(wibox.container.margin(
       wibox.widget {
         text = i18n.translate('Spooky...'),
@@ -555,15 +558,15 @@ return function()
     return v_layout
   end
 
-  local dpi_examples = card("Example")
+  local dpi_examples = card({title="Example"})
 
   local dpi_slider =
-  slider(
-  5,
-  300,
-  1,
-  beautiful.xresources.dpi,
-  function(value)
+  slider({
+  min = 5,
+  max = 300,
+  increment = 1,
+  default = beautiful.xresources.dpi,
+  callback = function(value)
     print("Updated dpi: " .. tostring(value))
 
     local default = beautiful.xresources.dpi
@@ -573,19 +576,22 @@ return function()
 
     beautiful.xresources.set_dpi(default)
   end
-  )
+  })
 
-  local dpi_save_button = button("Save", function()
-    local value = tostring(math.floor(dpi_slider.get_number()))
-    print("Saving dpi value: " .. value)
-    local xresource_file = os.getenv("HOME") .. '/.Xresources'
+  local dpi_save_button = button({
+    body = "Save",
+    callback = function()
+      local value = tostring(math.floor(dpi_slider.get_number()))
+      print("Saving dpi value: " .. value)
+      local xresource_file = os.getenv("HOME") .. '/.Xresources'
 
-    -- make the changes persistant
-    filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
-    awful.spawn({'xrdb', xresource_file}, false)
+      -- make the changes persistant
+      filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
+      awful.spawn({'xrdb', xresource_file}, false)
 
-    tde.restart()
-  end)
+      tde.restart()
+    end
+  })
 
   dpi_examples.update_body(
     gen_dpi_body()
@@ -595,9 +601,9 @@ return function()
   dpi_slider.forced_height = dpi(20)
 
   local changewall =
-    button(
-    "Change wallpaper",
-    function()
+    button({
+    body = "Change wallpaper",
+    callback = function()
       if not (Display_Mode == WALLPAPER_MODE) then
         Display_Mode = WALLPAPER_MODE
       else
@@ -605,43 +611,43 @@ return function()
       end
       refresh()
     end
-  )
+  })
   changewall.top = m
   changewall.bottom = m
 
   local changewallcycle =
-  button(
-  "Wallpaper Cycle Mode",
-  function()
-    if not (Display_Mode == WALLPAPER_CYCLE_MODE or Display_Mode == WALLPAPER_CYCLE_HOUR_MODE) then
-      Display_Mode = WALLPAPER_CYCLE_MODE
-    elseif Display_Mode == WALLPAPER_CYCLE_HOUR_MODE then
+  button({
+    body = "Wallpaper Cycle Mode",
+    callback = function()
+      if not (Display_Mode == WALLPAPER_CYCLE_MODE or Display_Mode == WALLPAPER_CYCLE_HOUR_MODE) then
+        Display_Mode = WALLPAPER_CYCLE_MODE
+      elseif Display_Mode == WALLPAPER_CYCLE_HOUR_MODE then
 
-      local new_cycles = {}
+        local new_cycles = {}
 
-      for _, value in ipairs(cycles) do
-        table.insert(new_cycles, {
-          hour = value.hour,
-          image = value.image
-        })
+        for _, value in ipairs(cycles) do
+          table.insert(new_cycles, {
+            hour = value.hour,
+            image = value.image
+          })
+        end
+
+        signals.emit_enable_wallpaper_changer(#new_cycles > 0, new_cycles)
+
+        Display_Mode = NORMAL_MODE
+      else
+        Display_Mode = WALLPAPER_CYCLE_HOUR_MODE
       end
-
-      signals.emit_enable_wallpaper_changer(#new_cycles > 0, new_cycles)
-
-      Display_Mode = NORMAL_MODE
-    else
-      Display_Mode = WALLPAPER_CYCLE_HOUR_MODE
+      refresh()
     end
-    refresh()
-  end
-)
+  })
 changewallcycle.top = m
 changewallcycle.bottom = m
 
   local screenLayoutBtn =
-    button(
-    "Screen Layout",
-    function()
+    button({
+    body = "Screen Layout",
+    callback = function()
       if not (Display_Mode == XRANDR_MODE) then
         Display_Mode = XRANDR_MODE
       else
@@ -649,7 +655,7 @@ changewallcycle.bottom = m
       end
       refresh()
     end
-  )
+  })
   screenLayoutBtn.top = m
   screenLayoutBtn.bottom = m
 
@@ -667,15 +673,21 @@ changewallcycle.bottom = m
   local rounded_corner_card = card()
   local dpi_card = card()
 
-  local dpi_button_to = button("Change Application Scaling", function ()
-    Display_Mode = DPI_MODE
-    refresh()
-  end)
+  local dpi_button_to = button({
+    body = "Change Application Scaling",
+    callback = function ()
+      Display_Mode = DPI_MODE
+      refresh()
+    end
+  })
 
-  local dpi_button_back = button("Back", function ()
-    Display_Mode = NORMAL_MODE
-    refresh()
-  end)
+  local dpi_button_back = button({
+    body = "Back",
+    callback = function ()
+      Display_Mode = NORMAL_MODE
+      refresh()
+    end
+  })
 
   brightness_card.update_body(
     wibox.widget {
@@ -1006,21 +1018,21 @@ changewallcycle.bottom = m
       end
 
       local screen_btn =
-        button(
-        widget,
-        function()
-          print("Executing: " .. cmd)
-          awful.spawn.easy_async_with_shell(
-            cmd,
-            function()
-              awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'", false)
-              Display_Mode = NORMAL_MODE
-              refresh()
-            end
-          )
-        end,
-        active_pallet
-      )
+        button({
+          body = widget,
+          callback = function()
+            print("Executing: " .. cmd)
+            awful.spawn.easy_async_with_shell(
+              cmd,
+              function()
+                awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'", false)
+                Display_Mode = NORMAL_MODE
+                refresh()
+              end
+            )
+          end,
+          pallet = active_pallet
+        })
       layout:add(screen_btn)
       layout.forced_num_cols = 1
     end
@@ -1065,15 +1077,17 @@ changewallcycle.bottom = m
         layout = wibox.layout.align.vertical,
         wibox.widget.base.empty_widget(),
         refresh_card,
-        wibox.container.margin(button(
-          "Save", function ()
+        wibox.container.margin(button({
+          body = "Save",
+          callback = function ()
             awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'", false)
             body.enable()
 
             Display_Mode = NORMAL_MODE
             refresh()
-          end, active_pallet
-          ), 0, 0, dpi(20), 0),
+          end,
+          pallet = active_pallet
+        }), 0, 0, dpi(20), 0),
       },
       layout  = wibox.layout.ratio.horizontal
     }
@@ -1081,14 +1095,16 @@ changewallcycle.bottom = m
     widget:adjust_ratio(2, 0.625, 0.05, 0.325)
 
     layout:add(wibox.widget {
-      wibox.container.margin(button(
-        "Back", function ()
+      wibox.container.margin(button({
+        body = "Back",
+        callback = function ()
           body.enable()
 
           Display_Mode = NORMAL_MODE
           refresh()
-        end, active_pallet
-        ), 0, 0, 0, dpi(20)),
+        end,
+        pallet = active_pallet
+      }), 0, 0, 0, dpi(20)),
       nil,
       widget,
       layout = wibox.layout.fixed.vertical

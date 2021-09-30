@@ -27,7 +27,7 @@
 --
 --
 --    -- card with a title and body
---    local card = lib-widget.card("title")
+--    local card = lib-widget.card({title="title"})
 --    card.update_body(lib-widget.textbox("body"))
 --
 -- ![Card](../images/card.png)
@@ -48,7 +48,10 @@ local header_font = "SFNS Display Regular 14"
 local bg = beautiful.bg_modal
 local bg_title = beautiful.bg_modal_title
 
-local titled_card = function(title, height)
+local titled_card = function(args)
+    local title = args["title"]
+    local height = args["height"]
+
     local header =
         wibox.widget {
         text = i18n.translate(title),
@@ -154,7 +157,9 @@ local titled_card = function(title, height)
     return widget
 end
 
-local bare_card = function()
+local bare_card = function(args)
+    local height = args["height"]
+
     local body_widget =
         wibox.widget {
         wibox.widget.base.empty_widget(),
@@ -162,6 +167,7 @@ local bare_card = function()
         shape = function(cr, rect_width, rect_height)
             gears.shape.partially_rounded_rect(cr, rect_width, rect_height, true, true, true, true, _G.save_state.rounded_corner/2)
         end,
+        forced_height = height,
         widget = wibox.container.background
     }
 
@@ -212,16 +218,17 @@ local bare_card = function()
 end
 
 --- Create a new card widget
--- @tparam[opt] string title Sets the title of the card
--- @tparam[opt] number size The height of the card
+-- @tparam[opt] string args.title Sets the title of the card
+-- @tparam[opt] number args.size The height of the card
 -- @treturn widget The card widget
 -- @staticfct card
 -- @usage -- This will create a card with the title hello
 -- -- card with the title hello
--- local card = lib-widget.card("hello")
-return function(title, height)
-    if title ~= nil then
-        return titled_card(title, height)
+-- local card = lib-widget.card({title="hello"})
+return function(args)
+    if args == nil then args = {} end
+    if args["title"] ~= nil then
+        return titled_card(args)
     end
-    return bare_card()
+    return bare_card(args)
 end
