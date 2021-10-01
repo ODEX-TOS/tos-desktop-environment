@@ -85,15 +85,18 @@ local function connect_to_vpn(_file, user, pass)
     file.rm(tmp_file)
 
     -- something went wrong when connecting, telling user that the vpn ended in a crash
+    local urgency = "normal"
     if code ~= 0 then
-      naughty.notification({
-        title = i18n.translate("VPN"),
-        text = i18n.translate('VPN stopped'),
-        timeout = 5,
-        urgency = "critical",
-        icon = icons.vpn
-      })
+      urgency = "critical"
     end
+
+    naughty.notification({
+      title = i18n.translate("VPN"),
+      text = i18n.translate('VPN stopped'),
+      timeout = 5,
+      urgency = urgency,
+      icon = icons.vpn
+    })
 
     refresh()
   end)
