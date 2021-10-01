@@ -137,7 +137,7 @@ local create_clock = function(s)
     })
 
     s.month_calendar:attach(s.clock_widget, 'tc',
-                            {on_pressed = true, on_hover = false})
+                            {on_pressed = true, on_hover = true})
 
     return s.clock_widget
 end

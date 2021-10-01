@@ -232,22 +232,27 @@ return function()
   -- a simple function for people to get more information about plugins
   local function plugin_description()
 
-    local marketplace = button("Marketplace", function ()
-      -- TODO: Implement some kind of plugin marketplace
-      naughty.notification(
-        {
-            title = i18n.translate("Marketplace"),
-            text = i18n.translate("The Plugin Marketplace is currently in the works, it will be implemented shortly"),
-            timeout = 5,
-            urgency = "normal",
-            icon = icons.plugin
-        }
-    )
-    end)
+    local marketplace = button({
+      body = "Marketplace",
+      callback = function ()
+        -- TODO: Implement some kind of plugin marketplace
+        naughty.notification(
+          {
+              title = i18n.translate("Marketplace"),
+              text = i18n.translate("The Plugin Marketplace is currently in the works, it will be implemented shortly"),
+              timeout = 5,
+              urgency = "normal",
+              icon = icons.plugin
+          })
+      end
+  })
 
-    local build_your_own = button("Build your own plugin", function()
-      require('module.docs').open_doc("/usr/share/doc/tde/doc/documentation/plugin.md.html")
-    end)
+    local build_your_own = button({
+      body = "Build your own plugin",
+      callback = function()
+        require('module.docs').open_doc("/usr/share/doc/tde/doc/documentation/plugin.md.html")
+      end
+    })
 
     local ratio = wibox.widget {
       layout = wibox.layout.ratio.horizontal,

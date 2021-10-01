@@ -42,6 +42,7 @@ local signals = require("lib-tde.signals")
 local fetch_screen = require("lib-tde.function.common").focused_screen
 
 local bShowingWidget = false
+local bIsOpened = false
 local padding = dpi(30)
 
 local musicPlayer
@@ -138,27 +139,52 @@ local grabber =
   stop_event = "release"
 }
 
+local function openPlayer()
+  grabber:start()
+  bShowingWidget = true
+  musicPlayer.visible = true
+
+  awful.placement.under_mouse(
+    musicPlayer,
+    {
+      honor_workarea = true,
+      parent = musicPlayer.screen,
+      margins = {
+          top = dpi(33),
+          right = dpi(5)
+      }
+    }
+  )
+  bIsOpened = false
+  musicPlayer.y = musicPlayer.screen.geometry.y - musicPlayer.height
+  animate(_G.anim_speed, musicPlayer, {y = musicPlayer.screen.geometry.y + padding}, "outCubic", function()
+    bIsOpened = true
+  end)
+end
+
+local function closePlayer()
+  grabber:stop()
+  bShowingWidget = false
+  musicPlayer.visible = true
+  bIsOpened = false
+  animate(
+    _G.anim_speed,
+    musicPlayer,
+    {y = musicPlayer.screen.geometry.y - musicPlayer.height},
+    "outCubic",
+    function()
+      musicPlayer.visible = false
+    end
+  )
+end
+
 local function togglePlayer()
   update_callback()
   musicPlayer.visible = not musicPlayer.visible
   if musicPlayer.visible then
-    grabber:start()
-    bShowingWidget = true
-    musicPlayer.y = musicPlayer.screen.geometry.y - musicPlayer.height
-    animate(_G.anim_speed, musicPlayer, {y = musicPlayer.screen.geometry.y + padding}, "outCubic")
+    openPlayer()
   else
-    grabber:stop()
-    bShowingWidget = false
-    musicPlayer.visible = true
-    animate(
-      _G.anim_speed,
-      musicPlayer,
-      {y = musicPlayer.screen.geometry.y - musicPlayer.height},
-      "outCubic",
-      function()
-        musicPlayer.visible = false
-      end
-    )
+   closePlayer()
   end
 end
 
@@ -186,6 +212,12 @@ widget_button:buttons(
     )
   )
 )
+
+widget_button:connect_signal("mouse::enter", function ()
+  if not musicPlayer.visible then
+    openPlayer()
+  end
+end)
 
 -- Album Cover
 local cover =
@@ -247,17 +279,9 @@ musicPlayer:setup {
 musicPlayer:connect_signal(
   "mouse::leave",
   function()
-    grabber:stop()
-    bShowingWidget = false
-    animate(
-      _G.anim_speed,
-      musicPlayer,
-      {y = musicPlayer.screen.geometry.y - musicPlayer.height},
-      "outCubic",
-      function()
-        musicPlayer.visible = false
-      end
-    )
+    -- we are in the process of opening the player, don't close it
+    if not bIsOpened then return end
+    closePlayer()
   end
 )
 

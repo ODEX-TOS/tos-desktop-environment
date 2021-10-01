@@ -44,6 +44,8 @@ local selected_layouts = {}
 
 local __country_cache = {}
 
+local padding = dpi(30)
+
 local function make_layout_entry(layout)
 
     if __country_cache[layout] ~= nil then
@@ -275,17 +277,17 @@ local function gen_panel(s, layouts)
 
 
     panel.place = function()
-        awful.placement.top_right(
+        awful.placement.under_mouse(
             panel,
             {
-                honor_workarea = true,
-                parent = s,
-                margins = {
-                    top = dpi(33),
-                    right = dpi(5)
-                }
+              honor_workarea = true,
+              parent = panel.screen,
+              margins = {
+                  top = dpi(33),
+                  right = dpi(5)
+              }
             }
-        )
+          )
     end
 
     panel.open = function()
@@ -293,6 +295,8 @@ local function gen_panel(s, layouts)
         panel.visible = true
         scroll.reset()
         panel.place()
+
+        panel.y = panel.screen.geometry.y + padding
     end
 
 
@@ -398,31 +402,32 @@ return function(s)
     local panel
 
     local widget_button = clickable_container(wibox.container.margin(_widget, dpi(14), dpi(14), dpi(7), dpi(7)))
-			widget_button:buttons(
-			gears.table.join(
-				awful.button(
-				{},
-				1,
-				nil,
-				function()
-					next_layout()
-				end
-				),
-                awful.button(
-				{},
-				3,
-				nil,
-				function()
-                    -- generate the panel on the first opening
-                    -- Since we load in a lot of country images, it is best to wait until we need to load them into memory
-                    if panel == nil then
-                        panel = gen_panel(s, sorted)
-                    end
-					panel.toggle()
-				end
-				)
-			)
+	widget_button:buttons(
+        gears.table.join(
+            awful.button(
+            {},
+            1,
+            nil,
+            function()
+                next_layout()
+            end
+            ),
+            awful.button(
+            {},
+            3,
+            nil,
+            function()
+                -- generate the panel on the first opening
+                -- Since we load in a lot of country images, it is best to wait until we need to load them into memory
+                if panel == nil then
+                    panel = gen_panel(s, sorted)
+                end
+                panel.toggle()
+            end
+            )
+        )
 	)
+
 
     signals.connect_keyboard_layout(function()
         next_layout()
