@@ -1,0 +1,7 @@
+{
+    "type": "module",
+    "icon": "logo.svg",
+    "version": "v0.1.0",
+    "description": "Automatically connect your android phone to your the computer",
+    "description_nl": "Connecteer u android gsm automatisch met deze computer"
+}

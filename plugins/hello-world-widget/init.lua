@@ -30,7 +30,7 @@ local theme = require("theme.icons.dark-light")
 
 local beautiful = require("beautiful")
 
-local PATH_TO_ICONS = os.getenv("HOME") .. "/.config/tde/hello-world-widget/icons/"
+local PATH_TO_ICONS = require('lib-tde.plugin').path()
 
 -- generate the icon widget
 local hello_icon_widget =

@@ -40,8 +40,7 @@ local beautiful = require("beautiful")
 local clickable_container = require("widget.material.clickable-container")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local HOME_DIR = os.getenv("HOME")
-local WIDGET_DIR = HOME_DIR .. "/.config/tde/docker-widget"
+local WIDGET_DIR = require('lib-tde.plugin').path()
 local ICONS_DIR = WIDGET_DIR .. "/icons/"
 
 local LIST_CONTAINERS_CMD =

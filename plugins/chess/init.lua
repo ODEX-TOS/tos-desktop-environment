@@ -33,7 +33,7 @@ local screen_height = mouse.screen.workarea.height
 -- make the board size x percent of the screen
 local screen_size = 0.8
 
-local PICTURE_DIR = os.getenv("HOME") .. "/.config/tde/chess/"
+local PICTURE_DIR = require('lib-tde.plugin').path()
 
 local wibox_rows = {}
 

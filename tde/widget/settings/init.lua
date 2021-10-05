@@ -51,6 +51,8 @@ setmetatable(root.elements, weak)
 setmetatable(root.widget, weak)
 setmetatable(root.elements.settings_views, weak)
 
+local view_container = wibox.layout.stack()
+
 local m = dpi(10)
 local settings_index = dpi(40)
 local settings_width = dpi(1100)
@@ -185,6 +187,7 @@ local function setActiveView(i, link)
       root.elements.settings_views[index].link.activate()
       title.text = root.elements.settings_views[index].title.text or ""
       INDEX = index
+      view_container:raise(index)
     else
       root.elements.settings_views[index].link.bg = beautiful.bg_modal_title .. "00"
       root.elements.settings_views[index].link.active = false
@@ -551,7 +554,7 @@ return function()
     end
   )
 
-  local view_container = wibox.layout.stack()
+  view_container.children = {}
 
   local nav, nav_container = make_nav(function()
     gears.table.map(

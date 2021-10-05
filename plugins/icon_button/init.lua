@@ -36,7 +36,7 @@ local clickable_container = require("widget.material.clickable-container")
 local theme = require("theme.icons.dark-light")
 -- wrap the path to the icon in a theme() call
 -- this will change the icon depending on the theme eg dark or light
-local icon = theme(os.getenv("HOME") .. "/.config/tde/icon_button/" .. "icons/info.svg")
+local icon = theme(require('lib-tde.plugin').path() .. "icons/info.svg")
 
 -- put the icon into a widget
 local widget =

@@ -76,7 +76,7 @@ local function not_exists(cmd)
     return not hardware.is_in_path(command)
 end
 
-local function __run(cmd, restart, max_restarts, should_kill, kill_cmd)
+local function __run(cmd, restart, max_restarts, should_kill, kill_cmd, callback)
     local restarts = 0
 
     if not_exists(cmd) then
@@ -88,6 +88,11 @@ local function __run(cmd, restart, max_restarts, should_kill, kill_cmd)
 
     local restart_callback
     restart_callback = function()
+
+        if callback ~= nil and type(callback) == "function" then
+            callback()
+        end
+
         -- when the command is done, increment the restart counter
         restarts = restarts + 1
         if max_restarts > 0 and restarts > max_restarts then
@@ -115,6 +120,7 @@ end
 -- @tparam[opt] number args.max_restarts The amount of restarts until we stop trying to restart the program
 -- @tparam[opt] number args.kill_previous Kill the previous running command if found using the kill_cmd variable
 -- @tparam[opt] string args.kill_cmd The command used to kill the previous process %s will be replaced by the process name, default 'killall %s'
+-- @tparam[opt] function args.callback A function to run after the process started/restarted
 -- @staticfct run
 -- @usage -- Run the program forever
 -- daemonize.run("touchegg") -- runs the program called touchegg and restarts it forever
@@ -122,7 +128,7 @@ end
 -- daemonize.run("echo hello", {max_restarts = 10}) -- Run the echo hello program 10 times then stop
 local function run(cmd, args)
     local restart = args.restart
-    local kill_previous = args.kill_previous or false
+    local kill_previous = args.kill_previous
 
     if restart == nil then
         restart = true
@@ -135,7 +141,10 @@ local function run(cmd, args)
     local max_restarts = -1 -- -1 means restart forever
     local kill_cmd = args.kill_cmd or "pkill '%s'"
     local command = get_command(cmd)
-    __run(cmd, restart, max_restarts, kill_previous, string.format(kill_cmd, command))
+
+    local callback = args.callback
+
+    __run(cmd, restart, max_restarts, kill_previous, string.format(kill_cmd, command), callback)
 end
 
 return {

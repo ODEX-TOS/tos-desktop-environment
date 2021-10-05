@@ -38,6 +38,15 @@ The most basic plugin would be a module that prints to the log file, the `init.l
 print("Hello World from my plugin")
 ```
 
+Alternativly try something like this:
+
+```lua
+local plugin_path = require('lib-tde.plugin').path()
+
+print("Hello World from my plugin")
+print("The plugin directory is: " .. plugin_path)
+```
+
 ### metadata.json
 
 For the init.lua above (Which is a module (see below for more info)) this is the full metadata.json file
