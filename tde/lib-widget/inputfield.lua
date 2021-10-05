@@ -196,7 +196,7 @@ return function(args)
             textbox,
         }
 
-        ratio:adjust_ratio(2, 0.08, 0.02, 0.9)
+        ratio:adjust_ratio(2, 0.03, 0.02, 0.95)
     end
 
     local widget =

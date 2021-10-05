@@ -33,6 +33,7 @@ local scrollbox = require("lib-widget.scrollbox")
 local checkbox = require("lib-widget.checkbox")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
+local inputfield = require("lib-widget.inputfield")
 
 local mat_colors = require("theme.mat-colors")
 
@@ -47,6 +48,8 @@ local dpi = beautiful.xresources.apply_dpi
 local m = dpi(10)
 
 local function refresh() end
+
+local plugins = plugin_loader.list_plugins()
 
 
 local function fetch_plugin_icon(plugin)
@@ -98,13 +101,21 @@ return function()
 
   local scroll = scrollbox(layout)
 
+  local _widget = wibox.layout.fixed.vertical()
+
   view:setup {
     layout = wibox.container.background,
     bg = beautiful.transparent,
     scroll
   }
 
+  local __plugin_widget_cache = {}
+
   local function make_plugin_selection_item(plugin)
+    if __plugin_widget_cache[plugin.__name] ~= nil then
+      return __plugin_widget_cache[plugin.__name]
+    end
+
     local plugin_card = card()
 
 
@@ -181,19 +192,21 @@ return function()
       }
     end
 
-    return wibox.container.margin(plugin_card, m/2, m/2, m/2, m/2)
+    __plugin_widget_cache[plugin.__name] = wibox.container.margin(plugin_card, m/2, m/2, m/2, m/2)
+
+    return __plugin_widget_cache[plugin.__name]
   end
 
   local b_show_examples = false
 
-  local function handle_examples(plugins)
-    if #plugins == 0 or not _G.save_state.developer.enabled then
+  local function handle_examples(_plugins)
+    if #_plugins == 0 or not _G.save_state.developer.enabled then
       return
     end
 
     local _layout = wibox.layout.fixed.vertical()
 
-    for _, plugin in ipairs(plugins) do
+    for _, plugin in ipairs(_plugins) do
       _layout:add(make_plugin_selection_item(plugin))
     end
 
@@ -209,11 +222,11 @@ return function()
     local function set_body()
       if b_show_examples then
         btn_image:set_image(icons.arrow_up)
-        layout:add(_layout)
+        _widget:add(_layout)
       else
         btn_image:set_image(icons.arrow_down)
         -- make sure we remove the correct element
-        layout:remove_widgets(_layout)
+        _widget:remove_widgets(_layout)
       end
     end
 
@@ -266,18 +279,36 @@ return function()
     return wibox.container.margin(ratio, m, m, m, m)
   end
 
+  local search = inputfield({
+    typing_callback = function(text)
+        scroll.reset()
+
+        _widget.children = {}
+
+        -- filter out the widgets inside the _widget based on the name
+        for _, plugin in ipairs(plugins) do
+            if (string.find(plugin.name, text) ~= nil or string.find(plugin.__name, text) ~= nil) and plugin.metadata["example"] == nil then
+                _widget:add(make_plugin_selection_item(plugin))
+            end
+        end
+    end,
+    icon = icons.search
+  })
+
+  layout:add(plugin_description())
+  layout:add(wibox.container.margin(search, m, m, m, m))
+  layout:add(_widget)
+
+
   refresh = function()
-    layout.children = {}
-
-    layout:add(plugin_description())
-
-    local plugins = plugin_loader.list_plugins()
+    plugins = plugin_loader.list_plugins()
 
     local example_plugins = {}
 
+
     for _, plugin in ipairs(plugins) do
       if plugin.metadata["example"] == nil then
-        layout:add(make_plugin_selection_item(plugin))
+        _widget:add(make_plugin_selection_item(plugin))
       else
         table.insert(example_plugins, plugin)
       end
