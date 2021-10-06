@@ -31,12 +31,14 @@ CONFIG="$2"
 theme="$CONFIG/configuration/rofi/appmenu/drun.rasi"
 
 result="$(rofi -dpi "$DPI" -show drun -theme "$theme")"
+rofi_exit_code="$?"
 
-while [[ ! "$result" == "" ]]; do
+# The exit code 10 means nothing launched
+while [[ ! "$result" == ""  && "$rofi_exit_code" == "10" ]]; do
     qalculatedResult="$(qalc "$result")"
     # TODO: this is a hacky way to know if qalc tried to parse an application
     if ! echo "$qalculatedResult" | grep -q "^error: "; then
-        result="$(qalc "$result" | rofi -dpi "$DPI" -dmenu -theme "$theme")"
+        result="$(echo "$qalculatedResult" | rofi -dpi "$DPI" -dmenu -theme "$theme")"
     else
         result=""
     fi
