@@ -230,7 +230,7 @@ return function()
       end
     end
 
-    layout:add(button({
+    _widget:add(button({
       body = body,
       callback = function()
         b_show_examples = not b_show_examples
@@ -305,6 +305,7 @@ return function()
 
     local example_plugins = {}
 
+    _widget.children = {}
 
     for _, plugin in ipairs(plugins) do
       if plugin.metadata["example"] == nil then
