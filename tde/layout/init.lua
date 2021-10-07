@@ -166,6 +166,20 @@ client.connect_signal(
 	end
 )
 
+client.connect_signal("focus", function (c)
+    if c.fullscreen then
+		c.screen.selected_tag.fullscreen_mode = true
+        update_bars_visibility()
+    end
+end)
+
+client.connect_signal("unfocus", function (c)
+    if c.fullscreen then
+		c.screen.selected_tag.fullscreen_mode = false
+        update_bars_visibility()
+    end
+end)
+
 client.connect_signal(
 	'unmanage',
 	function(c)

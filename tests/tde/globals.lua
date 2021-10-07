@@ -38,7 +38,7 @@ awesome = {
 tde = awesome
 
 client = {
-    connect_signal = function(location)
+    connect_signal = function(location, _)
         print("Awesome signal connector: " .. location)
     end,
     get = function()

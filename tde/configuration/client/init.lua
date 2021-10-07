@@ -38,6 +38,18 @@ end
 
 client.connect_signal("request::manage", draw_client_border)
 
+client.connect_signal("unfocus", function (c)
+    if c.fullscreen then
+        c:lower()
+    end
+end)
+
+client.connect_signal("focus", function (c)
+    if c.fullscreen then
+        c:raise()
+    end
+end)
+
 client.connect_signal("draw_debug", function()
     for _, c in ipairs(client.get()) do
         draw_client_border(c)

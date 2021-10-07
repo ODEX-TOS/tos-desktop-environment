@@ -5,18 +5,18 @@ describe("awful.permissions.client_geometry_requests", function()
     package.loaded["awful.tag"] = {}
     package.loaded["gears.timer"] = {}
     _G.client = {
-        connect_signal = function() end,
+        connect_signal = function(_,_) end,
         get = function() return {} end,
     }
     _G.screen = {
-        connect_signal = function() end,
+        connect_signal = function(_,_) end,
     }
     _G.tag = {
-        connect_signal = function() end,
+        connect_signal = function(_,_) end,
     }
     _G.awesome = {
         api_level      = 4,
-        connect_signal = function() end,
+        connect_signal = function(_,_) end,
     }
     _G.drawin = {
         set_index_miss_handler    = function() end,
