@@ -46,6 +46,8 @@ local gears = require("gears")
 local signals = require("lib-tde.signals")
 local dpi = beautiful.xresources.apply_dpi
 
+local buttons = {}
+
 --- Create a new button widget
 -- @tparam wibox.widget args.body The widget to put in the center (usually an icon or text)
 -- @tparam function args.callback The callback function to call when the button is pressed
@@ -60,7 +62,7 @@ local dpi = beautiful.xresources.apply_dpi
 -- local button = lib-widget.button({ body = 'Click me', callback = function()
 --    print("Clicked")
 -- end, pallet = require("theme.mat-colors").red})
-return function(args)
+local btn = function(args)
     if args == nil then args = {} end
 
     local body = args["body"]
@@ -180,5 +182,25 @@ return function(args)
         )
     end
 
+    table.insert(buttons, button)
+
     return button
 end
+
+--- Return the amount of buttons
+-- @staticfct count
+-- @usage -- Returns the amount of instantiated buttons
+-- lib-widget.button.count()
+local function count()
+    return #buttons
+end
+
+return setmetatable(
+    {
+        button = btn,
+        count = count
+    },
+    {__call = function(_, ...)
+        return btn(...)
+    end}
+)

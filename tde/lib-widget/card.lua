@@ -48,6 +48,8 @@ local header_font = "SFNS Display Regular 14"
 local bg = beautiful.bg_modal
 local bg_title = beautiful.bg_modal_title
 
+local cards = {}
+
 local titled_card = function(args)
     local title = args["title"]
     local height = args["height"]
@@ -225,10 +227,33 @@ end
 -- @usage -- This will create a card with the title hello
 -- -- card with the title hello
 -- local card = lib-widget.card({title="hello"})
-return function(args)
+local card = function(args)
     if args == nil then args = {} end
+    local __card
     if args["title"] ~= nil then
-        return titled_card(args)
+        __card = titled_card(args)
+    else
+        __card = bare_card(args)
     end
-    return bare_card(args)
+
+    table.insert(cards, __card)
+    return __card
 end
+
+--- Return the amount of cards
+-- @staticfct count
+-- @usage -- Returns the amount of instantiated cards
+-- lib-widget.card.count()
+local function count()
+    return #cards
+end
+
+return setmetatable(
+    {
+        card = card,
+        count = count
+    },
+    {__call = function(_, ...)
+        return card(...)
+    end}
+)
