@@ -213,12 +213,6 @@ widget_button:buttons(
   )
 )
 
-widget_button:connect_signal("mouse::enter", function ()
-  if not musicPlayer.visible then
-    openPlayer()
-  end
-end)
-
 -- Album Cover
 local cover =
   wibox.widget {
