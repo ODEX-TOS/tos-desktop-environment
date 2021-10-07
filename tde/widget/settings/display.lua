@@ -73,6 +73,9 @@ weak.__mode = "k"
 setmetatable(active_refresh_buttons, weak)
 setmetatable(active_resolution_buttons, weak)
 
+
+local _inputfields = {}
+
 -- END REFRESH MODE VARS
 
 
@@ -292,6 +295,8 @@ local function make_cycle_hour_selection(value)
       return valid and isHour
     end
   })
+
+  table.insert(_inputfields, field)
 
   -- find the active cycle and update the hour value
   for i, v in ipairs(cycles) do
@@ -1165,5 +1170,12 @@ changewallcycle.bottom = m
   )
 
   view.refresh = refresh
+
+  view.stop = function()
+    for _, field in ipairs(_inputfields) do
+      field.unfocus()
+    end
+  end
+
   return view
 end

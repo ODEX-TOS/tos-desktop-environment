@@ -30,6 +30,14 @@
 --    -- basic inputfield
 --    local inputfield = lib-widget.inputfield()
 --
+-- It is also important to know that inputfields grab the global keyboard input.
+-- If the wibox/widget is incorrectly stopped, the focus to the inputfield will still remain.
+-- Therefore it is recommended to call the `inputfield.unfocus()` or `inputfield.reset()` methods, when closing the wibox/widget
+-- Alternativly if you have a lot of inputfields use the static function `lib-widget.inputfield.unfocus()` instead
+--
+--    -- A global unfocus on all inputfields
+--    lib-widget.inputfield.unfocus()
+--
 -- ![hidden](../images/hidden-inputfield.png)
 -- ![inputfield](../images/inputfield.png)
 --
@@ -49,6 +57,8 @@ local dpi = beautiful.xresources.apply_dpi
 local escape = require("gears.string").xml_escape
 
 local cursor_index = 1
+
+local inputfields = {}
 
 local password_to_star = function(pass)
     local str = ""
@@ -159,7 +169,7 @@ end
 -- @staticfct inputfield
 -- @usage -- This will create a basic inputfield
 -- local inputfield = lib-widget.inputfield()
-return function(args)
+local _if = function(args)
     if args == nil then args = {} end
 
 
@@ -392,5 +402,37 @@ return function(args)
         widget.stop_grabbing()
     end
 
+    table.insert(inputfields, widget)
+
     return widget
 end
+
+--- Ensure that no inputfield has focus anymore
+-- @staticfct reset
+-- @usage -- unfocuses all in and out of focus inputfield
+-- lib-widget.inputfield.unfocus()
+local function unfocus()
+    for _, __inputfield in ipairs(inputfields) do
+        __inputfield.unfocus()
+    end
+end
+
+--- Return the amount of inputfields
+-- @staticfct count
+-- @usage -- Returns the amount of instantiated inputfields
+-- lib-widget.inputfield.count()
+local function count()
+    return #inputfields
+end
+
+
+return setmetatable(
+    {
+        inputfield = _if,
+        unfocus = unfocus,
+        count = count
+    },
+    {__call = function(_, ...)
+            return _if(...)
+        end}
+)

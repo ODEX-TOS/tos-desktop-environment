@@ -42,6 +42,7 @@ loading.stop()
 local card = require('lib-widget.card')
 local button = require('lib-widget.button')
 local inputfield = require('lib-widget.inputfield')
+local _inputfields = {}
 
 local colorized_svg = require("lib-tde.function.svg").colorize
 
@@ -523,6 +524,10 @@ return function()
     end)
 
 
+    table.insert(_inputfields, port_if)
+    table.insert(_inputfields, ip_if)
+
+
     local btn = button({
       body = "Save",
       callback = function ()
@@ -621,6 +626,12 @@ return function()
   end
 
   view.refresh = refresh
+
+  view.stop = function ()
+    for _, field in ipairs(_inputfields) do
+      field.unfocus()
+    end
+  end
 
   return view
 end

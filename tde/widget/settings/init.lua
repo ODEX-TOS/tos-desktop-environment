@@ -156,6 +156,11 @@ local function close_views()
     function(v)
       v.view.visible = false
       v.title.font = beautiful.title_font
+
+      if v.view.stop ~= nil and type(v.view.stop) == "function" then
+        v.view.stop()
+      end
+
     end,
     root.elements.settings_views
   )
@@ -690,8 +695,6 @@ return function()
       root.elements.settings_views[INDEX].view.stop_view()
     end
 
-    root.elements.settings_grabber:stop()
-
     animate(
       _G.anim_speed,
       hub,
@@ -708,4 +711,11 @@ return function()
 
   close_views()
   root.elements.settings = hub
+
+  -- Let's ensure no lingering inputfield is active
+  require("lib-widget.inputfield").unfocus()
+
+  root.elements.settings_grabber:stop()
+
+
 end

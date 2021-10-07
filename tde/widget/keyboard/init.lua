@@ -304,6 +304,9 @@ local function gen_panel(s, layouts)
         backdrop.visible = false
         panel.visible = false
         search.stop_grabbing()
+
+        --- ensure that no inputfields have focus anymore
+        inputfield.unfocus()
     end
 
     panel.toggle = function()

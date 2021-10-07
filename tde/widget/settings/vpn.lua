@@ -106,6 +106,9 @@ local function connect_to_vpn(_file, user, pass)
   refresh()
 end
 
+-- This is used by the stop() function to remove focus on the inputfields
+local _field_reset = {}
+
 local function create_openvpn_config(_file)
 
   local canonical = file.basename(_file)
@@ -143,6 +146,9 @@ local function create_openvpn_config(_file)
     hidden = true,
     icon = icons.password
   })
+
+  table.insert(_field_reset, username_field)
+  table.insert(_field_reset, password_field)
 
   if _G.save_state.vpn_data[_file] ~= nil then
     username_field.update_text(_G.save_state.vpn_data[_file].username)
@@ -265,6 +271,14 @@ return function()
   end
 
   view.refresh = refresh
+
+  -- Ensure the inputfields lose focus
+  view.stop = function ()
+    for _, field in ipairs(_field_reset) do
+      field.reset()
+    end
+  end
+
 
   view.stop_view = function()
     print("Stopping vpn view")

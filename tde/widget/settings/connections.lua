@@ -461,5 +461,13 @@ return function()
   end
 
   view.refresh = refresh
+
+  -- Ensure the inputfields lose focus
+  view.stop = function ()
+    for _, field in ipairs(password_fields) do
+      field.reset()
+    end
+  end
+
   return view
 end

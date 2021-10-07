@@ -322,5 +322,10 @@ return function()
 
   view.refresh = refresh
 
+  -- Ensure the inputfields lose focus
+  view.stop = function ()
+    search.reset()
+  end
+
   return view
 end
