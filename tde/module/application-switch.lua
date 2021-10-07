@@ -64,6 +64,7 @@ _M.preview_wbox = wibox({width = screen[mouse.screen].geometry.width})
 _M.preview_wbox.border_width = 3
 _M.preview_wbox.ontop = true
 _M.preview_wbox.visible = false
+_M.preview_wbox.shape = gears.shape.rounded_rect
 
 _M.preview_live_timer = timer({timeout = 1 / _M.settings.preview_box_fps})
 _M.preview_widgets = {}
@@ -181,10 +182,10 @@ function _M.clientsHaveChanged()
 end
 
 function _M.createPreviewText(client)
-    if client.class then
-        return " - " .. client.class
+    if client.name then
+        return gears.string.linewrap(client.name, 10)
     else
-        return " - " .. client.name
+        return gears.string.linewrap(client.class or " ", 10)
     end
 end
 
@@ -277,13 +278,19 @@ function _M.preview()
     _M.preview_wbox.border_width = dpi(1)
 
     -- Make the wibox the right size, based on the number of clients
-    local n = math.max(7, #_M.altTabTable)
-    local W = screen[mouse.screen].geometry.width -- + 2 * _M.preview_wbox.border_width
-    local w = W / n -- widget width
+    local max_client_list=5
+    local n = math.min(max_client_list, #_M.altTabTable)
+
+    -- Make sure that when we have n == max_client_list that we occupy the entire width of the screen
+    -- If we have less clients, we reduce the size of the wibox
+    local w = screen[mouse.screen].geometry.width / max_client_list -- widget width
+
+    local W = w * n
+
     local h = w * 0.75 -- widget height
     local textboxHeight = w * 0.125
 
-    local x = screen[mouse.screen].geometry.x - _M.preview_wbox.border_width
+    local x = screen[mouse.screen].geometry.x + (screen[mouse.screen].geometry.width - W) / 2 - _M.preview_wbox.border_width
     local y = screen[mouse.screen].geometry.y + (screen[mouse.screen].geometry.height - h - textboxHeight) / 2
     _M.preview_wbox:geometry({x = x, y = y, width = W, height = h + textboxHeight})
 
@@ -313,7 +320,7 @@ function _M.preview()
     local text, textWidth, textHeight, maxText
     local maxTextWidth = 0
     local maxTextHeight = 0
-    local bigFont = textboxHeight / 2
+    local bigFont = textboxHeight / 4
     cr:set_font_size(fontSize)
     for i = 1, #leftRightTab do
         text = _M.createPreviewText(leftRightTab[i])
