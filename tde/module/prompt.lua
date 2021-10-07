@@ -142,8 +142,7 @@ end
 
 local _results = {}
 
-local function create_result_selection(result, index)
-  local _card = card()
+local function create_result_selection(result, index, _card)
   results:add(wibox.container.margin(_card, padding, padding, padding, padding) )
 
   local ratio = wibox.widget{
@@ -172,11 +171,11 @@ local function create_result_selection(result, index)
 
   _card.update_body(ratio)
 
-  _card:connect_signal("mouse::enter", function ()
+  local function enter()
     _card.highlight()
-  end)
+  end
 
-  _card:connect_signal("button::press", function ()
+  local function btn_press ()
     _card.highlight()
 
     -- set the current result as the active one
@@ -186,14 +185,26 @@ local function create_result_selection(result, index)
     -- stop the keygrabber and trigger the 'done_callback'
     root.fake_input('key_press'  , "Return")
     root.fake_input('key_release', "Return")
-  end)
+  end
 
-  _card:connect_signal("mouse::leave", function ()
+  local function leave()
     -- only if this result is not the active result
     if index ~= (_index + _selected_list_index) then
       _card.unhighlight()
     end
-  end)
+  end
+
+  _card:connect_signal("mouse::enter", enter)
+  _card:connect_signal("button::press", btn_press)
+  _card:connect_signal("mouse::leave", leave)
+
+
+  _card.disconnect = function ()
+    _card:disconnect_signal("mouse::enter", enter)
+    _card:disconnect_signal("button::press", btn_press)
+    _card:disconnect_signal("mouse::leave", leave)
+  end
+
 end
 
 local function down()
@@ -217,6 +228,25 @@ local function up()
     _index = 1
   end
 end
+local cards = {}
+
+local function fetch_card(index)
+  local _card_index = (index - _index) + 1
+  local _card = cards[_card_index]
+
+  -- if no card exists, create it
+  if _card == nil then
+    _card = card()
+    table.insert(cards, _card_index, _card)
+  end
+
+  if _card.disconnect ~= nil then
+    _card.disconnect()
+  end
+
+  return _card
+end
+
 _G.root.prompt = function()
     if promptPage == nil then
         return
@@ -275,7 +305,7 @@ _G.root.prompt = function()
             if _index > 0 and _index <= #_results then
               for index, result in ipairs(_results) do
                 if index >= _index and index < (_index + _list_amount) then
-                  create_result_selection(result, index)
+                  create_result_selection(result, index, fetch_card(index))
                 end
               end
             end
@@ -316,7 +346,7 @@ _G.root.prompt = function()
               }
 
               _G.root.prompt()
-              create_result_selection(_results, 1)
+              create_result_selection(_results, 1, fetch_card(1))
               update_rows()
             end
         end
