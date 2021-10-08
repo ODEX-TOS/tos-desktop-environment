@@ -69,8 +69,9 @@ local pallets = {
 }
 
 
-local function rounded_button(tooltip, callback)
-    tooltip = i18n.translate(tooltip)
+local function rounded_button(tooltip, tooltip_off, callback, bIsTooltipCB)
+    tooltip     = i18n.translate(tooltip)
+    tooltip_off = i18n.translate(tooltip_off)
 
     local pallet = pallets[pallet_index]
 
@@ -90,6 +91,22 @@ local function rounded_button(tooltip, callback)
 
     widget.bg = pallet.unfocus
 
+    local active_tooltip_text = tooltip
+
+    local function update_tooltip()
+        local bIsTooltip = true
+
+        if bIsTooltipCB ~= nil then
+            bIsTooltip = bIsTooltipCB()
+        end
+
+        if bIsTooltip then
+            active_tooltip_text = tooltip_off
+        else
+            active_tooltip_text = tooltip
+        end
+    end
+
     -- make the nice hover effects
     widget:connect_signal("mouse::enter", function ()
         widget.bg = pallet.focus
@@ -104,6 +121,8 @@ local function rounded_button(tooltip, callback)
         if callback then
             callback()
         end
+
+        update_tooltip()
     end)
 
     awful.tooltip {
@@ -111,8 +130,12 @@ local function rounded_button(tooltip, callback)
         mode = "outside",
         preferred_positions = "bottom",
         gaps = dpi(5),
-        text = tooltip,
+        timer_function = function()
+            return active_tooltip_text
+        end
     }
+
+    update_tooltip()
 
     return widget
 end
@@ -133,9 +156,9 @@ client.connect_signal("request::titlebars", function(c)
         wibox.container.margin(wibox.widget {
             layout = wibox.layout.fixed.horizontal,
             spacing = dpi(5),
-            rounded_button("close", function() c:kill() end),
-            rounded_button("minimize", function() c.minimized = not c.minimized end),
-            rounded_button("maximize", function() c.maximized = not c.maximized end)
+            rounded_button("close", "open", function() c:kill() end),
+            rounded_button("minimize", "un-minimize", function() c.minimized = not c.minimized end, function() return c.minimized end),
+            rounded_button("maximize", "un-maximize", function() c.maximized = not c.maximized end, function() return c.maximized end)
         }, dpi(10),0,0,0),
         -- center
         wibox.widget {
@@ -148,9 +171,9 @@ client.connect_signal("request::titlebars", function(c)
         },
         -- right
         wibox.container.margin(wibox.widget {
-            rounded_button("sticky", function() c.sticky = not c.sticky end),
-            rounded_button("ontop", function() c.ontop = not c.ontop end),
-            rounded_button("floating", function() c.floating = not c.floating end),
+            rounded_button("sticky", "un-stick", function() c.sticky = not c.sticky end, function() return c.sticky end),
+            rounded_button("ontop", "disable ontop", function() c.ontop = not c.ontop end, function() return c.ontop end),
+            rounded_button("floating", "tiling", function() c.floating = not c.floating end, function() return c.floating end),
             spacing = dpi(5),
             layout = wibox.layout.fixed.horizontal
         },0, dpi(10), 0,0),
