@@ -167,14 +167,14 @@ client.connect_signal(
 )
 
 client.connect_signal("focus", function (c)
-    if c.fullscreen and c.screen and c.screen.selected_tag then
+    if c.fullscreen and c.screen and  c.screen.selected_tag ~= nil then
 		c.screen.selected_tag.fullscreen_mode = true
         update_bars_visibility()
     end
 end)
 
 client.connect_signal("unfocus", function (c)
-    if c.fullscreen and c.screen and c.screen.selected_tag then
+    if c.fullscreen and c.screen and c.screen.selected_tag ~= nil then
 		c.screen.selected_tag.fullscreen_mode = false
         update_bars_visibility()
     end
@@ -183,7 +183,7 @@ end)
 client.connect_signal(
 	'unmanage',
 	function(c)
-		if c.fullscreen and c.screen and c.screen.selected_tag then
+		if c.fullscreen and c.screen and c.screen.selected_tag ~= nil then
 			c.screen.selected_tag.fullscreen_mode = false
 			update_bars_visibility()
 		end
