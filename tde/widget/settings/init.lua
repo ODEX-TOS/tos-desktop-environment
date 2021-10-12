@@ -174,6 +174,8 @@ local function close_views()
     awful.keygrabber.current_instance:stop()
   end
 
+
+
   -- perform an entire garbage collection
   -- this operation is heavy
   -- however the settings app can open up a lot of images which will consume a lot of memory

@@ -87,12 +87,19 @@ local function notify(title, msg)
   )
 end
 
+local __bluetooth_cache = {}
+
 local function make_bluetooth_widget(tbl)
   -- make sure ssid is not nil
   local name = tbl.name or tbl.mac
   local mac = tbl.mac
   local paired = tbl.paired
   local connected = tbl.connected
+
+
+  if __bluetooth_cache[mac] ~= nil then
+    return __bluetooth_cache[mac]
+  end
 
   local box = card()
 
@@ -267,6 +274,9 @@ local function make_bluetooth_widget(tbl)
   container.forced_width = settings_width - settings_nw - (m * 2)
   container.forced_height = dpi(50)
   container.widget = box
+
+  __bluetooth_cache[mac] = container
+
   return container
 end
 

@@ -45,7 +45,17 @@ return function()
   title.font = beautiful.title_font
   title.forced_height = settings_index + m + m
 
+  local __mouse_cache = {}
+
   local function make_mouse(id, name, default_value, default_accel_value, natural_scrolling)
+
+    if __mouse_cache[id] ~= nil then
+      __mouse_cache[id].set_speed(default_value)
+      __mouse_cache[id].set_accel(default_accel_value)
+      __mouse_cache[id].set_natural_scrolling(natural_scrolling)
+      return __mouse_cache[id]
+    end
+
     local mouse_card = card()
 
     local mouse_heading = wibox.widget.textbox(name)
@@ -81,6 +91,18 @@ return function()
         end,
         size = settings_index
       })
+
+    mouse_card.set_speed = function(val)
+      mouse_slider.update(val)
+    end
+
+    mouse_card.set_accel = function(val)
+      mouse_accel_slider.update(val)
+    end
+
+    mouse_card.set_natural_scrolling = function(val)
+      natural_scrolling_checkbox.update(val)
+    end
 
     mouse_card.update_body(
       wibox.widget {
@@ -137,6 +159,9 @@ return function()
         }
       }
     )
+
+    __mouse_cache[id] = mouse_card
+
     return mouse_card
   end
 

@@ -109,7 +109,13 @@ end
 -- This is used by the stop() function to remove focus on the inputfields
 local _field_reset = {}
 
+local __openvpn_cache = {}
+
 local function create_openvpn_config(_file)
+
+  if __openvpn_cache[_file] ~= nil then
+    return __openvpn_cache[_file]
+  end
 
   local canonical = file.basename(_file)
   canonical = string.sub(canonical, 0, #canonical - 5)
@@ -216,7 +222,8 @@ local function create_openvpn_config(_file)
     _btn_widget,
   })
 
-  return wibox.container.margin(vpn_card, m*2, m*2 ,m*2, m*2)
+  __openvpn_cache[_file] = wibox.container.margin(vpn_card, m*2, m*2 ,m*2, m*2)
+  return __openvpn_cache[_file]
 end
 
 

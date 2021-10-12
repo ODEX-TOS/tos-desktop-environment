@@ -51,5 +51,14 @@ return function()
     }
   }
 
+  view.refresh = function()
+    -- please ensure that not to much new objects get created on the refresh
+    -- instead update the existing objects
+  end
+
+  view.stop = function()
+    -- Make sure that 'background' processes are stopped here
+  end
+
   return view
 end

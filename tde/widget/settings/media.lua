@@ -145,7 +145,14 @@ return function()
     end
   )
 
+  local __volume_widget_cache = {}
+
   local function create_volume_widget(button_icon, text, obj, set_function)
+
+    if __volume_widget_cache[text] ~= nil then
+      return __volume_widget_cache[text]
+    end
+
     local button_wgt = mat_icon_button(mat_icon(button_icon, dpi(25)))
     button_wgt:buttons(
       gears.table.join(
@@ -162,7 +169,7 @@ return function()
       )
     )
 
-    return wibox.widget {
+    __volume_widget_cache[text] = wibox.widget {
       wibox.container.margin(
         wibox.widget {
           widget = wibox.widget.textbox,
@@ -180,6 +187,8 @@ return function()
       forced_height = settings_index,
       layout = wibox.layout.align.horizontal
     }
+
+    return __volume_widget_cache[text]
   end
 
   local function create_sink_widget(sink)
@@ -249,9 +258,6 @@ return function()
 
   local function generate_sink_setting_body(sinks, sources, _, _)
     body.children = {}
-    local weak = {}
-    weak.__mode = "k"
-    setmetatable(body.children, weak)
 
     local sink_children = wibox.layout.fixed.vertical()
     local source_children = wibox.layout.fixed.vertical()
@@ -328,21 +334,34 @@ return function()
   applications_body.expand = true
   applications_body.homogeneous = true
 
+  local __app_cache = {}
+
   local function create_volume_from_application(app)
+
+    local function get_vol(_slider)
+      volume.get_application_volume(app.sink , function (value)
+        if not (_slider.value == value) then
+          print("Detected the volume: " .. value)
+          _slider.update(value)
+        end
+      end)
+    end
+
+    if __app_cache[app.name] ~= nil then
+      get_vol(__app_cache[app.name].__slider)
+      return __app_cache[app.name]
+    end
+
     local app_volume_card = card()
 
     local app_vol_slider = slider({
+      default = 0,
       callback = function(value)
         volume.set_application_volume(app.sink, value)
       end
     })
 
-  volume.get_application_volume(app.sink , function (value)
-    if not (app_vol_slider.value == value) then
-      print("Detected the volume: " .. value)
-      app_vol_slider.update(value)
-    end
-  end)
+  get_vol(app_vol_slider)
 
   local app_vol_header = wibox.widget.textbox(app.name)
   app_vol_header.font = beautiful.font
@@ -370,15 +389,16 @@ return function()
         }
       }
     )
+
+    app_volume_card.__slider = app_vol_slider
+    __app_cache[app.name] = app_volume_card
+
     return app_volume_card
   end
 
   -- returns a widget with all application volume sliders
   local function populate_applications()
     applications_body.children = {}
-    local weak = {}
-    weak.__mode = "k"
-    setmetatable(applications_body.children, weak)
     volume.get_applications(function (applications)
       for _, app in ipairs(applications) do
         applications_body:add(wibox.container.margin(create_volume_from_application(app), m, m, m, m))
@@ -537,7 +557,7 @@ return function()
     audio_settings,
     body,
     application_settings,
-    applications_body
+    applications_body,
   })
 
   view:setup {

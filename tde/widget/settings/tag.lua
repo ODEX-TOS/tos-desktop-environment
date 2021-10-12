@@ -67,7 +67,7 @@ end
 
 local function gen_master_count(tags)
 
-  local text = wibox.widget.textbox(tostring(tags[1].master_count))
+  local text = wibox.widget.textbox(tostring(math.floor(tags[1].master_count)))
 
   local function update(amount)
     for _, tag in ipairs(tags) do
@@ -93,10 +93,20 @@ local function gen_master_count(tags)
     inc
   }
   w:adjust_ratio(2, 0.35, 0.30, 0.35)
-  return wibox.container.margin(w, 0, 0, 0, m)
+
+  local res = wibox.container.margin(w, 0, 0, 0, m)
+
+  res.update_text = function (_text)
+    text.text = _text
+  end
+
+  return res
 end
 
-local function generate_tag(tags, t_card)
+
+local __tag_cache = {}
+
+local function generate_tag(tags)
   if tags == nil then
     return wibox.widget.textbox('')
   end
@@ -104,6 +114,19 @@ local function generate_tag(tags, t_card)
   local max = tags[1].screen.geometry.width / 20
   local default_gap = tags[1].gap
   local default_factor = tags[1].master_width_factor
+
+
+  if __tag_cache[tags[1].name] ~= nil then
+    local _tag = __tag_cache[tags[1].name]
+
+    _tag.update_gap(default_gap)
+    _tag.update_master_width(default_factor)
+    _tag.update_master_count(tags[1].master_count)
+
+    return _tag
+  end
+
+  local t_card = card({title='Tag', height=dpi(150)})
 
   local _slider_gap = slider({
     max= max,
@@ -140,7 +163,20 @@ local function generate_tag(tags, t_card)
     end
   })
 
+  t_card.update_master_width = function (val)
+    _slider_factor.update(val)
+  end
+
+  t_card.update_gap = function (val)
+    _slider_gap.update(val)
+  end
+
   local btn = gen_master_count(tags)
+
+  t_card.update_master_count = function (count)
+    btn.update_text(tostring(math.floor(count)))
+  end
+
 
   local factor_line = wibox.widget {
     {
@@ -173,6 +209,7 @@ local function generate_tag(tags, t_card)
     factor_line,
     gap_line,
   }, m, m, m, m))
+
   t_card.update_title(i18n.translate('Tag') .. ' ' .. tags[1].name)
 
   t_card:connect_signal('mouse::enter', function ()
@@ -186,6 +223,10 @@ local function generate_tag(tags, t_card)
     -- revert card background back
     t_card.unhighlight()
   end)
+
+  __tag_cache[tags[1].name] = t_card
+
+  return __tag_cache[tags[1].name]
 end
 
 return function()
@@ -214,18 +255,13 @@ return function()
     layout:reset()
 
     active_tags = {}
-    local weak = {}
-    weak.__mode = "k"
-    setmetatable(active_tags, weak)
 
     for s in screen do
       table.insert(active_tags, s.selected_tag)
     end
 
     for _, tag in ipairs(awful.screen.focused().tags) do
-      local tag_c = card({title='Tag', height=dpi(150)})
-      generate_tag(get_linked_tags(tag), tag_c)
-      layout:add(wibox.container.margin(tag_c, 0, 0, m, m))
+      layout:add(wibox.container.margin(generate_tag(get_linked_tags(tag)), 0, 0, m, m))
     end
   end
 
