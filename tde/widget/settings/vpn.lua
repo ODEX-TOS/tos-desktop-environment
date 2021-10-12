@@ -76,7 +76,12 @@ local function connect_to_vpn(_file, user, pass)
 
   root.elements.settings.close()
 
-  local cmd = "pkexec openvpn --config " .. _file .. " --auth-user-pass" .. " " .. tmp_file
+  local cmd = "pkexec openvpn --config " .. _file
+
+  if user ~= "" and pass ~= "" then
+    cmd = cmd .. " --auth-user-pass" .. " " .. tmp_file
+  end
+
   _G.save_state.vpn_data[_file].pid = awful.spawn.easy_async(cmd, function(_, _, _, code)
     _G.save_state.vpn_data[_file].active = false
     _G.save_state.vpn_data[_file].pid = nil
