@@ -186,9 +186,27 @@ print = function(arg, log_type, depth)
 	end
 end
 
+--- Log a given message and add a stacktrace at the end, usually because something bad happened
+-- @tparam string arg The string to print
+-- @tparam[opt] enum log_type The type of log message
+-- @tparam[opt] depth number In case you print a table, show the table until a certain depth
+-- @staticfct log_with_stacktrace
+-- @usage -- Print the error message "hello" and show the callstack
+-- log_with_stacktrace("hello", logger.error)
+local function log_with_stacktrace(arg, log_type, depth)
+	if arg == nil or arg == "" then
+		print(debug.traceback(), log_type, depth)
+	end
+
+	local trace = debug.traceback()
+	print(arg .. '\n' .. trace, log_type, depth)
+end
+
 return {
 	warn = LOG_WARN,
 	error = LOG_ERROR,
 	debug = LOG_DEBUG,
-	info = LOG_INFO
+	info = LOG_INFO,
+
+	log_with_stacktrace = log_with_stacktrace
 }

@@ -593,10 +593,16 @@ function Test_lib_tde_plugin()
 end
 
 
+function Test_lib_tde_mime()
+    local file = "tde/lib-tde/mime.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
+
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 115
+    local amount = 116
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

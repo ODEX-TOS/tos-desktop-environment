@@ -39,7 +39,13 @@
 
 screenshot_dir="$HOME/Pictures/Screenshots/"
 COLOR="${2:-none}"
+SHADER="${3:-}"
 PADDING="3%"
+
+# Make sure both the vertex and fragment shaders exist
+if [[ "$SHADER" != "" &&  -f "$HOME/.config/slop/$SHADER.frag" &&  -f "$HOME/.config/slop/$SHADER.vert" ]]; then
+	SHADER=" -r $SHADER"
+fi
 
 echo "Selected color: $COLOR"
 
@@ -142,32 +148,35 @@ then
 	./snapshot window #FFFFFF
 	./snapshot window_blank
 
+	Optionaly you can specify the shader you want to apply to the screenshot by specifying a third argument (This only works for windowed mode)
+	./snapshot window none crosshair
+
 	"
 elif [ "$1" = 'full' ];
 then
 	msg="Full screenshot saved and copied to clipboard!"
-	window 'maim -u -m 1' "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
+	window "maim $SHADER -u -m 1" "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
 elif [ "$1" = 'full_blank' ];
 then
 	msg="Full screenshot saved and copied to clipboard!"
-	shot 'maim -u -m 1' "${msg}"
+	shot "maim $SHADER -u -m 1" "${msg}"
 elif [ "$1" = 'area' ];
 then
 	msg='Area screenshot saved and copied to clipboard!'
-	window 'maim -u -s -n -m 1' "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
+	window "maim $SHADER -u -s -n -m 1" "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
 elif [ "$1" = 'area_blank' ];
 then
 	msg='Area screenshot saved and copied to clipboard!'
-	shot 'maim -u -s -n -m 1' "${msg}"
+	shot "maim $SHADER -u -s -n -m 1" "${msg}"
 
 elif [ "$1" = 'window' ];
 then
 	msg='Window screenshot saved and copied to clipboard!'
 	# TODO: add a margin around the window so that the background is better visible
-	window 'maim -st 9999999 -B -m 1 -u' "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
+	window "maim $SHADER -st 9999999 -B -m 1 -u" "${msg}" "convert - ( +clone -background black -shadow 80x3+8+8 ) +swap -background $COLOR -layers merge +repage"
 elif [ "$1" = "window_blank" ];
 then
 	msg='Window screenshot saved and copied to clipboard!'
-	shot 'maim -st 9999999 -B -m 1 -u' "${msg}"
+	shot "maim $SHADER -st 9999999 -B -m 1 -u" "${msg}"
 fi
 

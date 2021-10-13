@@ -487,6 +487,10 @@ local function make_nav(load_callback)
   )
   table.insert(
     root.elements.settings_views,
+      make_view(icons.mime, i18n.translate("Default Applications"), require("widget.settings.mime")())
+    )
+  table.insert(
+    root.elements.settings_views,
     make_view(icons.about, i18n.translate("About"), require("widget.settings.about")())
   )
 

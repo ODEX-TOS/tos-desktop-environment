@@ -143,10 +143,10 @@ local function fuzzy_score(search, text, max_permutation_length, max_permutation
 
     for _, permutation in ipairs(permutations) do
         local permutation_count = (count_matches(text, permutation) * #permutation)
-        local index_delta = #text - begin_location(text, permutation)
+        local weighted_index = ((#text - begin_location(text, permutation)) / #text) * #permutation
 
         score = score + permutation_count
-        score = score + index_delta
+        score = score + weighted_index
     end
 
     -- now we reduce the score by the length of the search query / length of the text

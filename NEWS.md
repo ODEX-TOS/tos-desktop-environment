@@ -16,7 +16,7 @@ This draft is not a final version of what will be introduced in the next patch, 
 - [ ] `Translations` Support common languages such as: `French`, `Spanish`, `Chinese`
 - [ ] `accessibility Visual` Accessability settings for color impaired people (High contrast)
 - [X] `Auto-Hide-Panels` Allow automatically hiding of the top-bar and bottom-bar when not using them (Useful for oled screen not having burn in)
-- [ ] `Default Applications` Allow setting the default application from the settings
+- [X] `Default Applications` Allow setting the default application from the settings
 - [ ] `Key binding config` Allow setting the keybinding from the settings application
 - [X] `Change keyboard layout` Allow changing the keyboard layout from within the settings and using a keyboard shortcut
 - [X] `Firewall` Allow setting the firewall settings if ufw is installed and running
@@ -45,6 +45,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Added ability to change the wallpaper based on time of day
 - Fully reworked tutorial
 - You can now enable/disable plugins from the settings
+- You can now change the default applications from the settings
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
