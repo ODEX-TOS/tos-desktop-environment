@@ -1200,4 +1200,29 @@ connections.connect_save_plugins = function(func)
     tde.connect_signal("TDE::update::plugin::data", func)
 end
 
+--- Signals to notify that we should change the default monitor refresh rate and resolution
+-- @tparam string monitor_id The unique id of the monitor being connected
+-- @tparam string resolution The resolution that the monitor should opperate at
+-- @tparam number refresh_rate The refresh rate in Hz
+-- @staticfct emit_save_display_settings
+-- @usage
+-- lib-tde.signals.emit_save_display_settings("eDP1", "1920x1080", 60)
+connections.emit_save_display_settings = function(monitor_id, resolution, refresh_rate)
+    tde.emit_signal("TDE::monitor::save:settings", monitor_id, resolution, refresh_rate)
+end
+
+--- Trigger a callback function when we should change the default resolution and refresh rate
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_save_display_settings
+-- @usage
+-- lib-tde.signals.connect_save_display_settings(
+--    function (id, resolution, refresh_rate)
+--     print("Updating default settings for: " .. id)
+--     print(resolution)
+--     print(refresh_rate)
+--    end)
+connections.connect_save_display_settings = function(func)
+    tde.connect_signal("TDE::monitor::save:settings", func)
+end
+
 return connections

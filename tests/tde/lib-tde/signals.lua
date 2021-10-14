@@ -605,8 +605,18 @@ function Test_connect_save_plugins()
     assert(type(signals.connect_save_plugins) == "function", "Make sure connect_save_plugins is a signal and a function")
 end
 
+function Test_emit_save_display_settings()
+    assert(signals.emit_save_display_settings, "Make sure the signal emit_save_display_settings exists")
+    assert(type(signals.emit_save_display_settings) == "function", "Make sure emit_save_display_settings is a signal and a function")
+end
+
+function Test_connect_save_display_settings()
+    assert(signals.connect_save_display_settings, "Make sure the signal connect_save_display_settings exists")
+    assert(type(signals.connect_save_display_settings) == "function", "Make sure connect_save_display_settings is a signal and a function")
+end
+
 function Test_signals_api_unit_tested()
-    local amount = 109
+    local amount = 111
     local result = tablelength(signals)
     assert(
         result == amount,

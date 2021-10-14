@@ -119,6 +119,7 @@ local function load()
         },
         vpn_data = {},
         plugins = {},
+        display = {},
     }
     if not filehandle.exists(file) then
         return table
@@ -141,6 +142,7 @@ local function load()
 
     result.vpn_data = result.vpn_data or table.vpn_data
     result.plugins = result.plugins or table.plugins
+    result.display = result.display or table.display
 
     result.last_version = result.last_version or table.last_version
 
@@ -542,6 +544,24 @@ end)
 
 signals.connect_save_plugins(function(plugins)
     save_state.plugins = plugins
+
+    save(save_state)
+end)
+
+
+signals.connect_save_display_settings(function(monitor_id, res, refresh)
+    print(type(monitor_id))
+    print(type(res))
+    print(type(refresh))
+
+    if type(monitor_id) ~= "string" or type(res) ~= "string" or (type(refresh) ~= "string" and type(refresh) ~= "number") then
+        return
+    end
+
+    save_state.display[monitor_id] = {
+        resolution = res,
+        refresh_rate = refresh
+    }
 
     save(save_state)
 end)

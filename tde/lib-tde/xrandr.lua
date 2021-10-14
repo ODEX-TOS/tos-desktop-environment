@@ -122,8 +122,38 @@ local function arrange(out)
    return choices
 end
 
+local function get_cmd_from_output(output, use_save_state)
+   local cmd = " --output " .. output .. " --panning 0x0 --auto"
+
+   -- we have a non default resolution and refresh rate stored
+   if use_save_state == true and _G.save_state ~= nil and _G.save_state.display ~= nil and _G.save_state.display[output] ~= nil then
+      cmd = " --output " .. output .. " --panning 0x0 --mode " .. tostring(_G.save_state.display[output].resolution) .. " --rate " .. tostring(_G.save_state.display[output].refresh_rate)
+   end
+
+   return cmd
+end
+
+local function gen_cmd(out, choice, use_save_state)
+   local cmd = "xrandr"
+   for i, o in pairs(choice) do
+      -- set resolution, refresh_rate and disable panning (in case it is on)
+      cmd = cmd .. get_cmd_from_output(o, use_save_state == true)
+      if i > 1 then
+         cmd = cmd .. " --right-of " .. choice[i - 1]
+      end
+   end
+   -- Disabled outputs
+   for _, o in pairs(out) do
+      if not gtable.hasitem(choice, o) then
+         cmd = cmd .. " --output " .. o .. " --off"
+      end
+   end
+
+   return cmd
+end
+
 --- Build available screen orientations with accompanying xrandr commands
--- @treturn table A list of tables with the following signature: {label, cmd, choice}
+-- @treturn table A list of tables with the following signature: {label, cmd, choice, cmd_no_save_state}
 -- @staticfct lib-tde.xrandr.menu
 -- @usage -- Get all list of all permutations with labels, command and choice
 -- lib-tde.xrandr.menu({'eDP1', 'DP2'})
@@ -133,23 +163,7 @@ local function menu()
    local choices = arrange(out)
 
    for _, choice in pairs(choices) do
-      local cmd = "xrandr"
-      -- Enabled outputs
-      for i, o in pairs(choice) do
-         -- set default resolution and disable panning (in case it is on)
-         cmd = cmd .. " --output " .. o .. " --panning 0x0 --auto"
-         if i > 1 then
-            cmd = cmd .. " --right-of " .. choice[i - 1]
-         end
-         -- duplicate command due to xrandr bug?
-         --cmd = cmd .. "; sleep 1; " .. cmd
-      end
-      -- Disabled outputs
-      for _, o in pairs(out) do
-         if not gtable.hasitem(choice, o) then
-            cmd = cmd .. " --output " .. o .. " --off"
-         end
-      end
+      local cmd = gen_cmd(out, choice, true)
 
       local label = ""
       if #choice == 1 then
@@ -163,7 +177,7 @@ local function menu()
          end
       end
 
-      menu_tbl[#menu_tbl + 1] = {label, cmd, choice}
+      menu_tbl[#menu_tbl + 1] = {label, cmd, choice, gen_cmd(out, choice, false)}
       if #choice == 1 then
          menu_tbl[#menu_tbl + 1] = {
             i18n.translate("Duplicate") .. ' <span weight="bold">' .. choice[1] .. "</span>",
@@ -392,5 +406,5 @@ return {
    output_data = output_data,
    highest_refresh_rate_from_resolution = highest_refresh_rate_from_resolution,
    highest_refresh_rate = highest_refresh_rate,
-   highest_resolution = highest_resolution
+   highest_resolution = highest_resolution,
 }

@@ -34,7 +34,6 @@ local dpi = beautiful.xresources.apply_dpi
 local configWriter = require("lib-tde.config-writer")
 local datetime = require("lib-tde.function.datetime")
 local imagemagic = require("lib-tde.imagemagic")
-local xrandr_menu = require("lib-tde.xrandr").menu
 local scrollbox = require("lib-widget.scrollbox")
 local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
@@ -43,6 +42,7 @@ local inputfield = require("lib-widget.inputfield")
 local sort = require('lib-tde.sort.quicksort')
 local split = require('lib-tde.function.common').split
 local xrandr = require('lib-tde.xrandr')
+local xrandr_menu = xrandr.menu
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
 
@@ -156,6 +156,10 @@ local function make_refresh_list(refresh_tbl, resolution, monitor_id)
               btn.update_pallet(active_pallet)
             end
           end
+
+          -- Make sure we remember the active resolution/refresh rate for this monitor
+          signals.emit_save_display_settings(monitor_id, resolution, value)
+
         end,
         pallet = active_pallet
       }))
@@ -1014,12 +1018,36 @@ changewallcycle.bottom = m
       local label = tbl[1]
       local cmd = tbl[2]
       local screen_names = tbl[3]
+      local cmd_no_save_state = tbl[4]
 
       local widget = wibox.layout.flex.horizontal()
       widget:add(wibox.widget.textbox(label))
       for index = 1, #screen_names, 1 do
         local screen_wdgt = make_screen_layout(monitorScaledImage, screen_names[index])
         widget:add(wibox.container.margin(screen_wdgt, m, m, m, m))
+      end
+
+      local function done()
+        awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'", false)
+        Display_Mode = NORMAL_MODE
+        refresh()
+      end
+
+      local function no_save_state()
+        awful.spawn.easy_async_with_shell(
+          cmd_no_save_state,
+          function()
+            done()
+          end
+        )
+      end
+
+      local function xrandr_set_cmd_callback(_,_,_,code)
+        if code == 0 then
+         done()
+        else
+          no_save_state()
+        end
       end
 
       local screen_btn =
@@ -1029,11 +1057,7 @@ changewallcycle.bottom = m
             print("Executing: " .. cmd)
             awful.spawn.easy_async_with_shell(
               cmd,
-              function()
-                awful.spawn("sh -c 'sleep 1 && which autorandr && autorandr --save tde --force'", false)
-                Display_Mode = NORMAL_MODE
-                refresh()
-              end
+              xrandr_set_cmd_callback
             )
           end,
           pallet = active_pallet
