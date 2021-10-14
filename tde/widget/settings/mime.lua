@@ -160,6 +160,12 @@ return function()
     end
   end
 
+  local info = wibox.widget {
+      widget = wibox.widget.textbox,
+      text = i18n.translate("Search for a given filetype/mimetype and change the default application associated with it."),
+      font = beautiful.title_font
+    }
+
   refresh = function()
     mimetypes = mime.get_mimetypes()
 
@@ -167,6 +173,12 @@ return function()
    mimetypes = mappers.filter(mimetypes, function(element, _)
     return string.find(element, '%+') == nil
    end)
+
+   _widget.children = {}
+
+   info.forced_height = settings_height
+
+   _widget:add(wibox.container.place(info))
   end
 
   view.refresh = refresh
