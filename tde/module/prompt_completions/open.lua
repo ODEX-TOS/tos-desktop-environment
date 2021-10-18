@@ -39,7 +39,7 @@ local function get_completions(query)
 
     -- make sure that the resulting text always cleanly shows one '/' character to delimit the path
     -- eg /home//user becomes /home/user
-    query = string.gsub(query .. '/', '%/+', '/')
+    --query = string.gsub(query .. '/', '%/+', '/')
 
 
     -- next we look up the basename of the query, if that exists add all subdirectories to the query
