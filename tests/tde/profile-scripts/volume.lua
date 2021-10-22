@@ -22,15 +22,14 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
+require("profiler.mock")
 
 local volume = require("lib-tde.volume")
 require("lib-tde.logger")
 
 
-local res = volume.get_default_sink()
-local res2 = volume.get_sinks()
-
---print(res)
-print(res2)
+volume.get_applications(function(apps)
+    print(apps)
+end)
 
 

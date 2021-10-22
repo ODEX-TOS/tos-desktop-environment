@@ -347,9 +347,9 @@ return function()
       end)
     end
 
-    if __app_cache[app.name] ~= nil then
-      get_vol(__app_cache[app.name].__slider)
-      return __app_cache[app.name]
+    if __app_cache[app.sink] ~= nil then
+      get_vol(__app_cache[app.sink].__slider)
+      return __app_cache[app.sink]
     end
 
     local app_volume_card = card()
@@ -361,10 +361,10 @@ return function()
       end
     })
 
-  get_vol(app_vol_slider)
+    get_vol(app_vol_slider)
 
-  local app_vol_header = wibox.widget.textbox(app.name)
-  app_vol_header.font = beautiful.font
+    local app_vol_header = wibox.widget.textbox(app.name)
+    app_vol_header.font = beautiful.font
 
     app_volume_card.update_body(
       wibox.widget {
@@ -391,18 +391,27 @@ return function()
     )
 
     app_volume_card.__slider = app_vol_slider
-    __app_cache[app.name] = app_volume_card
+    __app_cache[app.sink] = app_volume_card
 
     return app_volume_card
   end
 
+  -- Ensure we don't call volume.get_applications twice after a refresh
+  local bIsPopulating = false
+
   -- returns a widget with all application volume sliders
   local function populate_applications()
+    if bIsPopulating then return end
+    bIsPopulating = true
     applications_body.children = {}
+
     volume.get_applications(function (applications)
+      print(applications)
       for _, app in ipairs(applications) do
         applications_body:add(wibox.container.margin(create_volume_from_application(app), m, m, m, m))
       end
+
+      bIsPopulating = false
     end)
   end
 
@@ -551,13 +560,13 @@ return function()
   scrollbox_body = scrollbox(wibox.widget {
     layout = wibox.layout.fixed.vertical,
     volume_card,
-    wibox.container.margin(button({body = "Reset Audio Server", callback = function()
-      volume.reset_server()
-    end, pallet = active_pallet}),m, m, m*2),
     audio_settings,
     body,
     application_settings,
     applications_body,
+    wibox.container.margin(button({body = "Reset Audio Server", callback = function()
+      volume.reset_server()
+    end, pallet = active_pallet}),m, m, m*2),
   })
 
   view:setup {

@@ -32,6 +32,10 @@ end
 
 local function profile_file()
     local profile = require("profiler.profile")
+
+    -- Ensure that we can mock some tde specific api
+    require("profiler.mock")
+
     if os.getenv("REALTIME") == "1" then
         profile.setclock(require("socket").gettime)
     end
