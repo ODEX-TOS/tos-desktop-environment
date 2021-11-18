@@ -114,7 +114,7 @@ local return_button = function()
 
 		battery_widget.spacing = dpi(5)
 		battery_percentage_text.visible = true
-		battery_percentage_text:set_text(tostring(battery_percentage) .. "%")
+		battery_percentage_text:set_text(tostring(math.floor(battery_percentage)) .. "%")
 
 		local icon_name = "battery"
 

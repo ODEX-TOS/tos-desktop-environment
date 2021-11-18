@@ -67,7 +67,6 @@ emit_charger_info()
 local charger_plugged = true
 local battery_full_already_notified = true
 local battery_low_already_notified = false
-local battery_critical_already_notified = false
 
 local last_notification
 
@@ -100,8 +99,7 @@ signals.connect_battery(
 		if not charger_plugged then
 			icon = icons.batt_discharging
 
-			if battery < 6 and not battery_critical_already_notified then
-				battery_critical_already_notified = true
+			if battery < 6 then
 				text = i18n.translate("Battery Critical!")
 				timeout = 0
 				urgency = "critical"
@@ -123,6 +121,14 @@ signals.connect_battery(
 			end
 		end
 
+		if battery > 16 then
+			battery_low_already_notified = false
+		end
+
+		if battery < 90 then
+			battery_full_already_notified = false
+		end
+
 		-- If text has been initialized, then we need to send a
 		-- notification
 		if text then
@@ -142,13 +148,10 @@ signals.connect_battery_charging(
 		-- TODO if charger is plugged and battery is full, then set
 		-- battery_full_already_notified to true
 		if plugged then
-			battery_critical_already_notified = false
-			battery_low_already_notified = false
 			text = i18n.translate("Plugged")
 			icon = icons.batt_charging
 			urgency = "normal"
 		else
-			battery_full_already_notified = false
 			text = i18n.translate("Unplugged")
 			icon = icons.batt_discharging
 			urgency = "normal"
