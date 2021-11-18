@@ -45,6 +45,18 @@ local filehandle = require("lib-tde.file")
 
 local _path_cache
 
+local function sys_file_to_int(file)
+    local value = filehandle.string(file)
+    if value == nil or value == "" then return -1 end
+
+    if value then
+        value = value:gsub("\n", "")
+        return tonumber(value) or -1
+    end
+
+    return -1
+end
+
 --- Check if a battery exists
 -- @return string The percentage of the battery
 -- @staticfct getBatteryPath
@@ -95,14 +107,16 @@ local function getBatteryPercentage()
         return nil
     end
 
-    -- battery exists, lets get the percentage back
-    local value = filehandle.string(battery .. "/capacity")
-    if value then
-        value = value:gsub("\n", "")
-        return tonumber(value) or -1
+    -- Let's do an accurate calculation, in case that fails we will fallback to a less accurate way
+    local charge_now = sys_file_to_int(battery.. '/charge_now')
+    local charge_full = sys_file_to_int(battery.. '/charge_full')
+
+    if charge_full ~= -1 and charge_now ~= -1 then
+        return (charge_now / charge_full) * 100
     end
-    -- something went wrong parsing the value
-    return -1
+
+    -- In case we can't calculate the accurate usage we need to do it with the less precise implementation
+    return sys_file_to_int(battery .. "/capacity")
 end
 
 return {
