@@ -439,7 +439,6 @@ return function()
     applications_body.children = {}
 
     volume.get_applications(function (applications)
-      print(applications)
       for _, app in ipairs(applications) do
         applications_body:add(wibox.container.margin(create_volume_from_application(app), m, m, m, m))
       end
