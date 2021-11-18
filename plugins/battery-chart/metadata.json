@@ -1,0 +1,7 @@
+{
+    "type": "settings",
+    "icon": "logo.png",
+    "version": "v1.0.0",
+    "description": "Draws a graph of your battery usage",
+    "name": "Battery graph"
+}

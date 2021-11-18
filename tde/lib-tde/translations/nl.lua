@@ -53,6 +53,7 @@ translations["Automatically make the focus follow the mouse without clicking"] =
 translations["awesome"] = "awesome"
 translations["Background"] = "Achtergrond"
 translations["Back"] = "Terug"
+translations["Battery is low, please charge it"] = "Battery is plat, laadt het zo snel mogelijk op"
 translations["BIOS"] = "BIOS"
 translations["black"] = "zwart"
 translations["blue"] = "blauw"
