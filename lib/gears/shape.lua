@@ -345,6 +345,80 @@ function module.infobubble(cr, width, height, corner_radius, arrow_size, arrow_p
     cr:close_path()
 end
 
+--- A rounded rectangle with a smaller rectangle at the top (Used for batteries).
+--
+-- @DOC_gears_shape_rectbubble_EXAMPLE@
+--
+-- @param cr A cairo context
+-- @tparam number width The shape width
+-- @tparam number height The shape height
+-- @tparam[opt=5] number corner_radius The corner radius
+-- @tparam[opt=10] number arrow_size The width and height of the arrow
+-- @tparam[opt=width/2 - arrow_size/2] number arrow_position The position of the arrow
+-- @staticfct gears.shape.rectbubble
+function module.rectbubble(cr, width, height, corner_radius, arrow_size, arrow_position)
+    arrow_size     = arrow_size  or 30
+    corner_radius  = math.min((height-arrow_size)/2, corner_radius or 5)
+    arrow_position = arrow_position or width/2 - arrow_size/2
+
+
+    cr:move_to(0 ,corner_radius+arrow_size)
+
+    -- Top left corner
+    cr:arc(corner_radius, corner_radius+arrow_size, (corner_radius), math.pi, 3*(math.pi/2))
+
+    -- The arrow triangle (still at the top)
+    cr:line_to(arrow_position                , arrow_size )
+    cr:line_to(arrow_position                , 0          )
+    cr:line_to(arrow_position + 2*arrow_size , 0          )
+    cr:line_to(arrow_position + 2*arrow_size , arrow_size )
+
+    -- Complete the rounded rounded rectangle
+    cr:arc(width-corner_radius, corner_radius+arrow_size  , (corner_radius) , 3*(math.pi/2) , math.pi*2 )
+    cr:arc(width-corner_radius, height-(corner_radius)    , (corner_radius) , math.pi*2     , math.pi/2 )
+    cr:arc(corner_radius      , height-(corner_radius)    , (corner_radius) , math.pi/2     , math.pi   )
+
+    -- Close path
+    cr:close_path()
+end
+
+--- A rounded rectangle with a smaller rectangle at the right side (Used for batteries).
+--
+-- @DOC_gears_shape_rectbubble_EXAMPLE@
+--
+-- @param cr A cairo context
+-- @tparam number width The shape width
+-- @tparam number height The shape height
+-- @tparam[opt=5] number corner_radius The corner radius
+-- @tparam[opt=10] number arrow_size The width and height of the arrow
+-- @tparam[opt=width/2 - arrow_size/2] number arrow_position The position of the arrow
+-- @staticfct gears.shape.rectbubbleh
+function module.rectbubbleh(cr, width, height, corner_radius, arrow_size, arrow_position)
+    arrow_size     = arrow_size  or 30
+    corner_radius  = math.min((height-arrow_size)/2, corner_radius or 5)
+    arrow_position = arrow_position or height/2 - arrow_size
+
+
+    cr:move_to(0 ,0)
+
+    -- Top left corner
+    cr:arc(corner_radius, corner_radius, (corner_radius), math.pi, 3*(math.pi/2))
+
+    -- Complete the rounded rounded rectangle
+    cr:arc(width-corner_radius - arrow_size, corner_radius  , (corner_radius) , 3*(math.pi/2) , math.pi*2 )
+
+    cr:line_to(width - arrow_size  , arrow_position                  )
+    cr:line_to(width               , arrow_position                  )
+    cr:line_to(width               , arrow_position + 2 * arrow_size )
+    cr:line_to(width - arrow_size  , arrow_position + 2 * arrow_size )
+
+    cr:arc(width-corner_radius - arrow_size, height-(corner_radius)    , (corner_radius) , math.pi*2     , math.pi/2 )
+    cr:arc(corner_radius      , height - corner_radius    , (corner_radius) , math.pi/2     , math.pi   )
+
+    -- Close path
+    cr:close_path()
+end
+
 --- A rectangle terminated by an arrow.
 --
 -- @DOC_gears_shape_rectangular_tag_EXAMPLE@
