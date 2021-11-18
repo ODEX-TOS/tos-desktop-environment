@@ -75,6 +75,23 @@ function mat_slider:get_value()
   return self._private.value
 end
 
+--- Automatically update the color when the theme changes
+-- @staticfct theme_color
+-- @usage -- Disable theme color
+-- progress_bar:theme_color(false)
+function mat_slider:theme_color(bIsThemeColor)
+  self._private.auto_theme_update = bIsThemeColor
+end
+
+--- Set the color of the progressbar (Automatically disabled theme color switching)
+-- @staticfct set_color
+-- @usage -- Set the progress bar color to white
+-- progress_bar:set_color(#FFFFFF)
+function mat_slider:set_color(color)
+  self._private.auto_theme_update = false
+  self._private.progress_bar.color = color
+end
+
 function mat_slider:set_read_only(value)
   if self._private.read_only ~= value then
     self._private.read_only = value
@@ -134,9 +151,14 @@ local function new(args)
     widget = wibox.widget.progressbar
   }
 
+  -- Update based on the primary theme
+  ret._private.auto_theme_update = true
+
   signals.connect_primary_theme_changed(
     function(theme)
-      ret._private.progress_bar.color = theme.hue_600
+      if ret._private.auto_theme_update then
+        ret._private.progress_bar.color = theme.hue_600
+      end
     end
   )
 
