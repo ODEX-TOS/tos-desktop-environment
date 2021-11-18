@@ -46,6 +46,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Fully reworked tutorial
 - You can now enable/disable plugins from the settings
 - You can now change the default applications from the settings
+- Added a new battery plugin for the settings
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel
@@ -56,6 +57,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - When a faulty plugin is loaded you now get the correct name in the error message
 - Fetch wifi list now works when no connection is currently active
 - Right bar now fits correctly when no top-panel is present
+- Fix the titlebar close button showing the wrong tooltip
 
 ### Dev Notes
 - The inputfield now allows editing of the field
@@ -66,6 +68,11 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Don't draw backdrops for invalidated clients
 - Plugins now have support for extended metadata
 - Introducing a new declarative `lib-widget` api, much like the `wibox`, `naughty`, `awful` and other api's
+- New QR code api added to `lib-tde.qr-code`
+- The `lib-widget.progress_bar` allows to configure the color now
+- The battery signal now sends a higher resolution battery percentage
+- The `wibox.widget.graph` can now add data both to the front and the back of the graph
+- Added a new `gears.shape.rectbubble` that behaves simular to the `infobubble` but is rectangular instead
 
 
 ## Patch 0.9
