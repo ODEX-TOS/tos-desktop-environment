@@ -39,6 +39,8 @@ local signals = require("lib-tde.signals")
 local scrollbox = require("lib-widget.scrollbox")
 local network = require("lib-tde.network")
 
+local qr_code = require("lib-tde.qr-code")
+
 local dpi = beautiful.xresources.apply_dpi
 
 local m = dpi(10)
@@ -51,6 +53,8 @@ local active_text = ""
 
 local static_connections = {}
 local password_fields = {}
+
+local qr_surface
 
 local weak = {}
 weak.__mode = "k"
@@ -79,7 +83,6 @@ local function stop_loading()
   connections.children = static_connections
 end
 
-local qr_code_image = ""
 local bIsShowingNetworkTab = true
 
 local active_pallet = beautiful.primary
@@ -90,24 +93,17 @@ signals.connect_primary_theme_changed(
   end
 )
 
-signals.connect_exit(
-  function()
-    file.rm(qr_code_image)
-  end
-)
 
 -- returns the filename of the qr code image
 local function generate_qr_code(ssid, password)
   local qr_text = "WIFI:T:WPA;S:" .. ssid .. ";P:" .. password .. ";;"
-  local output = "/tmp/qrcode" .. ssid .. ".png"
-  hardware.execute("qrencode -l L -v 1 -m 1 -s 9 -o '" .. output .. "' '" .. qr_text .. "'")
-  qr_code_image = output
+  qr_surface = qr_code.surface(qr_text, settings_width)
 end
 
 local function make_qr_code_field()
   local img =
     wibox.widget {
-    image = qr_code_image,
+    image = qr_surface,
     resize = true,
     forced_height = (settings_height / 2),
     clip_shape = function(cr, _width, _height)
