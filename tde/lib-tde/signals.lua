@@ -237,11 +237,12 @@ end
 
 --- Notify other TDE components that the volume should only be controlled from the hardware
 -- @tparam bool bIsControlledInSoftware True if the volume is controlled in software
+-- @tparam table sink The sink to allow or disallow controlling in software ({"name": "", port: ""})
 -- @staticfct emit_volume_is_controlled_in_software
 -- @usage -- notify other components that software is allowed to control the volume
 -- lib-tde.signals.emit_volume_is_controlled_in_software(true)
-connections.emit_volume_is_controlled_in_software = function(bIsControlledInSoftware)
-    tde.emit_signal("volume::controlled::software", bIsControlledInSoftware)
+connections.emit_volume_is_controlled_in_software = function(bIsControlledInSoftware, sink)
+    tde.emit_signal("volume::controlled::software", bIsControlledInSoftware, sink)
 end
 
 --- Trigger a callback function when the volume is controlled in software or not

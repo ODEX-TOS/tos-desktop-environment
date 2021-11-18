@@ -57,6 +57,10 @@ local DISPLAY_MODE = NORMAL_MODE
 
 local active_pallet = beautiful.primary
 
+local __active_sink
+-- luacheck: ignore
+local __active_source
+
 signals.connect_primary_theme_changed(
   function(pallete)
     active_pallet = pallete
@@ -123,7 +127,7 @@ return function()
   local hardware_only_volume_checbox = checkbox({
     checked = _G.save_state.hardware_only_volume,
     callback = function (checked)
-      signals.emit_volume_is_controlled_in_software(not checked)
+      signals.emit_volume_is_controlled_in_software(not checked, __active_sink)
     end
   })
 
@@ -162,7 +166,7 @@ return function()
           nil,
           function()
             print("Setting default sink to: " .. obj.sink)
-            set_function(obj.sink)
+            set_function(obj)
             refresh()
           end
         )
@@ -191,12 +195,36 @@ return function()
     return __volume_widget_cache[text]
   end
 
+  local function update_hardware_state_from_sink(_sink)
+    print("Updating hardware state from sink")
+    print(_sink)
+    -- When updating the sink we need to check if it is hardware controlled or software controlled
+    -- Let's check this
+    local __sink_save_data = _G.save_state.hardware_only_volume_controls[_sink.name]
+    -- This sink with this port are the same
+    if __sink_save_data ~= nil then
+      local ports = __sink_save_data.ports
+      local found = false
+      for _, port in ipairs(ports) do
+        -- We have the same sink and port
+        if port == _sink.port then
+         found = true
+        end
+      end
+      hardware_only_volume_checbox.update(found);
+    else
+      hardware_only_volume_checbox.update(false);
+    end
+  end
+
   local function create_sink_widget(sink)
-    return create_volume_widget(icons.volume, sink.name, sink, function(_id)
+    return create_volume_widget(icons.volume, sink.name, sink, function(_sink)
       active_sr = sink
       bIsSink = true
 
-      volume.set_default_sink(_id)
+      volume.set_default_sink(_sink)
+      __active_sink = _sink
+      update_hardware_state_from_sink(_sink)
 
       if #sink.available_ports > 1 then
         DISPLAY_MODE = PORT_MODE
@@ -206,11 +234,13 @@ return function()
   end
 
   local function create_source_widget(source)
-    return create_volume_widget(icons.microphone, source.name, source, function(_id)
+    return create_volume_widget(icons.microphone, source.name, source, function(_source)
       active_sr = source
       bIsSink = false
 
-      volume.set_default_source(_id)
+      volume.set_default_source(_source.id)
+      __active_source = _source
+
       if #source.available_ports > 1 then
         DISPLAY_MODE = PORT_MODE
         refresh()
@@ -234,9 +264,12 @@ return function()
         callback = function ()
 
           if isSink then
-            volume.set_sink_port(source.id, _port)
+            volume.set_sink_port(source, _port)
+            __active_sink = source
+            update_hardware_state_from_sink(source)
           else
-            volume.set_source_port(source.id, _port)
+            volume.set_source_port(source, _port)
+            __active_source = source
           end
 
           DISPLAY_MODE = NORMAL_MODE
@@ -427,7 +460,10 @@ return function()
 
   refresh = function()
     volume.get_default_sink(function (sink, sinks)
+      __active_sink = sink
       volume.get_default_source(function (source, sources)
+        __active_source = source
+        update_hardware_state_from_sink(sink)
         if not (sink.name == nil) then
           vol_footer.markup = 'Output: <span font="' .. beautiful.font .. '">' .. sink.name .. ' - ' .. sink.port .. "</span>"
         end

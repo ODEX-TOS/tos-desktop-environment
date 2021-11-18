@@ -37,8 +37,26 @@ local signals = require("lib-tde.signals")
 
 local err = "\27[0;31m[ ERROR "
 
+-- The sink that is currently in use
+local __active_sink = {name="", port=""}
 local function _should_control_via_software()
-    return not _G.save_state.hardware_only_volume
+    -- Check if we can find the sync in the hardware controls
+    local _sink = _G.save_state.hardware_only_volume_controls[__active_sink.name]
+
+    -- By default we control sound in software
+    if _sink == nil then
+        return true
+    end
+
+    -- Otherwise we check the user settings
+    local ports = _sink.ports
+    for _, port in ipairs(ports) do
+        if port == __active_sink.port then
+            return false
+        end
+    end
+
+    return true
 end
 
 local function _extract_pa_ctl_state(command, callback, id, port, description, hasID)
@@ -320,12 +338,14 @@ end
 -- @tparam number sink The sink property of our audio device
 -- @staticfct set_default_sink
 -- @usage -- Set our default sync to match the first device
---    set_default_sink(get_sinks()[1].sink)
+--    set_default_sink(get_sinks()[1])
 local function set_default_sink(sink)
-    if not (type(sink) == "number") then
+    if not (type(sink.sink) == "number") then
         print("set_active_sink expects a number", err)
     end
-    awful.spawn("pactl set-default-sink " .. sink, false)
+
+    __active_sink = sink
+    awful.spawn("pactl set-default-sink " .. sink.sink, false)
 end
 
 
@@ -352,6 +372,7 @@ local function get_default_sink(callback)
             -- loop over all sinks and find the default
             for _, sink in ipairs(sinks) do
                 if sink.id == sinkID then
+                    __active_sink = sink
                     callback(sink, sinks)
                     return
                 end
@@ -366,15 +387,17 @@ end
 -- @tparam string port The Specific port to enable in the sink
 -- @staticfct set_sink_port
 -- @usage -- Set our sink to match the first device and the first port of the device
---    set_sink_port(get_sinks()[1].sink, get_sinks()[1].ports[1])
+--    set_sink_port(get_sinks()[1], get_sinks()[1].ports[1])
 local function set_sink_port(sink, port)
-    if not (type(sink) == "number") then
+    if not (type(sink.sink) == "number") then
         print("set_default_sink_port expects a sink number", err)
     end
     if not (type(port) == "string") then
         print("set_default_sink_port expects a port string", err)
     end
-    awful.spawn("pactl set-sink-port " .. sink .. ' ' .. port, false)
+
+    __active_sink = sink
+    awful.spawn("pactl set-sink-port " .. sink.sink .. ' ' .. port, false)
 end
 
 --- Get a list of all audio sources back (A source is an audio recording device such as microphones)
@@ -390,12 +413,12 @@ end
 -- @tparam number source The sink property of our audio device
 -- @staticfct set_default_source
 -- @usage -- Set our default source to match the first device
---    set_default_source(get_sources()[1].sink)
+--    set_default_source(get_sources()[1])
 local function set_default_source(source)
-    if not (type(source) == "number") then
+    if not (type(source.sink) == "number") then
         print("set_active_source expects a number", err)
     end
-    awful.spawn("pactl set-default-source " .. source, false)
+    awful.spawn("pactl set-default-source " .. source.sink, false)
 end
 
 --- Return only the default source
@@ -436,15 +459,15 @@ end
 -- @tparam string port The Specific port to enable in the source
 -- @staticfct set_source_port
 -- @usage -- Set our source to match the first device and the first port of the device
---    set_source_port(get_sources()[1].sink, get_sources()[1].ports[1])
+--    set_source_port(get_sources()[1], get_sources()[1].ports[1])
 local function set_source_port(source, port)
-    if not (type(source) == "number") then
+    if not (type(source.sink) == "number") then
         print("set_default_source_port expects a source number", err)
     end
     if not (type(port) == "string") then
         print("set_default_source_port expects a port string", err)
     end
-    awful.spawn("pactl set-source-port " .. source .. ' ' .. port, false)
+    awful.spawn("pactl set-source-port " .. source.sink .. ' ' .. port, false)
 end
 
 

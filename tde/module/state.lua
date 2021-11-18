@@ -78,6 +78,7 @@ local function load()
         bluetooth = false,
         auto_hide = false,
         hardware_only_volume = false,
+        hardware_only_volume_controls = {},
         last_version = major_version(),
         rounded_corner = 10,
         tags = {
@@ -136,6 +137,7 @@ local function load()
     result.bluetooth = result.bluetooth or table.bluetooth
     result.auto_hide = result.auto_hide or table.auto_hide
     result.hardware_only_volume = result.hardware_only_volume or table.hardware_only_volume
+    result.hardware_only_volume_controls = result.hardware_only_volume_controls or table.hardware_only_volume_controls
     result.tags = result.tags or table.tags
     result.rounded_corner = result.rounded_corner or table.rounded_corner
     result.wallpaper = result.wallpaper or table.wallpaper
@@ -348,11 +350,38 @@ signals.connect_volume_is_muted(
     end
 )
 
-signals.connect_volume_is_controlled_in_software(
-    function(bIsControlledInSoftware)
-        if save_state.hardware_only_volume == (not bIsControlledInSoftware) then
-            return
+local function find_port_in_list(list, port)
+    for index, val in ipairs(list) do
+        if val == port then
+            return index
         end
+    end
+
+    return nil
+end
+
+signals.connect_volume_is_controlled_in_software(
+    function(bIsControlledInSoftware, sink)
+
+        if sink == nil or type(sink) ~= "table" then return end
+
+        -- create it in case it doesn't exist yet
+        if save_state.hardware_only_volume_controls[sink.name] == nil then
+            save_state.hardware_only_volume_controls[sink.name] = {
+                name = sink.name,
+                ports = {sink.port},
+                hardware_only_volume = bIsControlledInSoftware
+            }
+        end
+
+        local index = find_port_in_list(save_state.hardware_only_volume_controls[sink.name].ports, sink.port)
+        if bIsControlledInSoftware then
+            if index ~= nil then table.remove(save_state.hardware_only_volume_controls[sink.name].ports, index) end
+        else
+            if index == nil then table.insert(save_state.hardware_only_volume_controls[sink.name].ports, sink.port) end
+        end
+
+        -- TODO: Deprecate this legacy settings, we now control hardware based on the active source/port
         save_state.hardware_only_volume = not bIsControlledInSoftware
         save(save_state)
     end
