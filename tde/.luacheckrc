@@ -50,6 +50,7 @@ exclude_files = {
     "tde/lib-tde/lib-lua/socket/url.lua",
     "tde/lib-tde/lib-lua/ssl.lua",
     "tde/lib-tde/lib-lua/ssl/https.lua",
+    "tde/lib-tde/lib-lua/qrencode.lua",
     -- contains a lot of globals
     "tests/**",
     "build/**",

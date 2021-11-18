@@ -396,15 +396,20 @@ local function make_nav(load_callback)
   }
 
   local nav_container = wibox.layout.fixed.vertical()
+  local nav_btn_container = wibox.layout.fixed.vertical()
+
+  body = scrollbox(nav_btn_container)
+
   nav_container.forced_width = settings_nw
   nav_container.forced_height = settings_height
-  nav_container:add(header)
-  nav_container:add(rule)
+  nav_btn_container:add(header)
+  nav_btn_container:add(rule)
+  nav_container:add(body)
 
   local function nav_container_populate()
     gears.table.map(
         function(v)
-          nav_container:add(v.link)
+          nav_btn_container:add(v.link)
         end,
         root.elements.settings_views
     )
@@ -516,14 +521,12 @@ local function make_nav(load_callback)
       pallet = red
     })
 
-  body = scrollbox(nav_container)
-
   nav:setup {
     layout = wibox.container.place,
     {
       layout = wibox.layout.align.vertical,
       wibox.widget.base.empty_widget(),
-      body,
+      nav_container,
       {
         layout = wibox.container.margin,
         margins = m,
@@ -532,7 +535,7 @@ local function make_nav(load_callback)
     }
   }
 
-  return nav, nav_container
+  return nav, nav_btn_container
 end
 
 return function()
@@ -567,7 +570,7 @@ return function()
 
   view_container.children = {}
 
-  local nav, nav_container = make_nav(function()
+  local nav, nav_btn_container = make_nav(function()
     gears.table.map(
       function(v)
         view_container:add(v.view)
@@ -593,7 +596,7 @@ return function()
     close_views()
 
     view_container:add(view.view)
-    nav_container:add(view.link)
+    nav_btn_container:add(view.link)
 
     INDEX = #view_container.children
 

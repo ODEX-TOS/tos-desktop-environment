@@ -598,11 +598,16 @@ function Test_lib_tde_mime()
     assert(exists(file), "Check that " .. file .. " exists")
 end
 
+function Test_lib_tde_qr_code()
+    local file = "tde/lib-tde/qr-code.lua"
+    assert(exists(file), "Check that " .. file .. " exists")
+end
+
 
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 116
+    local amount = 117
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")
