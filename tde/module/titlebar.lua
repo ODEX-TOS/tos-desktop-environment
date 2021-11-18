@@ -156,7 +156,7 @@ client.connect_signal("request::titlebars", function(c)
         wibox.container.margin(wibox.widget {
             layout = wibox.layout.fixed.horizontal,
             spacing = dpi(5),
-            rounded_button("close", "open", function() c:kill() end),
+            rounded_button("open", "close", function() c:kill() end),
             rounded_button("minimize", "un-minimize", function() c.minimized = not c.minimized end, function() return c.minimized end),
             rounded_button("maximize", "un-maximize", function() c.maximized = not c.maximized end, function() return c.maximized end)
         }, dpi(10),0,0,0),
