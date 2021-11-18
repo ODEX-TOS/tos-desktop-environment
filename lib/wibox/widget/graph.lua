@@ -286,7 +286,8 @@ end
 -- @method add_value
 -- @tparam number value The value to be added to the graph
 -- @tparam[opt] number group The stack color group index.
-function graph:add_value(value, group)
+-- @tparam[opt] boolean bAtStart Add the value at the start of the graph, or at the end
+function graph:add_value(value, group, bAtStart)
     value = value or 0
     local values = self._private.values
     local max_value = self._private.max_value
@@ -303,7 +304,12 @@ function graph:add_value(value, group)
         end
         values = self._private.values[group]
     end
-    table.insert(values, value)
+
+    if bAtStart or bAtStart == nil then
+        table.insert(values, value)
+    else
+        table.insert(values, 1, value)
+    end
 
     local border_width = 0
     if self._private.border_color then border_width = self._private.border_width*2 end
