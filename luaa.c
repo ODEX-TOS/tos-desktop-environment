@@ -77,6 +77,7 @@
 
 #include <xcb/xcb_atom.h>
 #include <xcb/xcb_aux.h>
+#include <xcb/xcb_keysyms.h>
 #include "xkb_utf32_to_keysym_compat.c"
 
 #include <unistd.h> /* for gethostname() */
@@ -506,6 +507,52 @@ luaA_get_key_name(lua_State *L)
             return 1; // this will make the second returned value a nil
     }
     return 2;
+}
+
+/* Get utf8 string from a x11 keycode.
+ *
+ * A "one-character representation" is a single UTF-8 representing the typical
+ * output from that keysym in a text editor (e.g. " " for space, "ñ" for
+ * n_tilde, "Ā" for A_macron). It usually matches the main engraving of the key
+ * for level-0 symbols (but lowercase).
+ *
+ * Keycodes may be given in a string in any valid format for `awful.key`:
+ * "#" + keycode, the symkey name and the UTF-8 representation will all work.
+ *
+ * If no suitable keysym is found, or a malformed keycode is given as an
+ * argument, this function will return (nil, nil)
+ *
+ * @treturn[1] int keycode The keycode name
+ * @staticfct tde.get_key_code
+ */
+
+static int
+luaA_get_key_code(lua_State *L)
+{
+    // check if argument is valid
+    if (lua_gettop(L) > 1 || lua_type(L, 1) != LUA_TSTRING)
+    {
+        return 0;
+    }
+
+    const char* input = luaL_checkstring(L, 1);
+    const size_t length = strlen(input);
+
+     const xkb_keysym_t *keysyms;
+    xkb_keysym_t keysym = XKB_KEY_NoSymbol;
+    uint32_t ucs;
+
+    /* Convert the input to a keycode that can be saved internally */
+    uint32_t utf32 = one_utf8_to_utf32(input, strlen(input));
+	keysym = xkb_utf32_to_keysym(utf32);
+    xcb_keycode_t *keycode_xcb = xcb_key_symbols_get_keycode(xcb_key_symbols_alloc(globalconf.connection), keysym);
+    if (keycode_xcb != NULL) {
+        lua_pushinteger(L, *keycode_xcb);
+        return 1;
+    }
+
+    // Invalid keycode
+    return 0;
 }
 
 /* Undocumented */
@@ -1105,6 +1152,7 @@ luaA_init(xdgHandle* xdg, string_array_t *searchpath)
         { "kill", luaA_kill},
         { "sync", luaA_sync},
         { "_get_key_name", luaA_get_key_name},
+        { "_get_key_code", luaA_get_key_code},
         { NULL, NULL }
     };
 
