@@ -1226,4 +1226,25 @@ connections.connect_save_display_settings = function(func)
     tde.connect_signal("TDE::monitor::save:settings", func)
 end
 
+--- Signals to save the keyboard table
+-- @tparam table keys_table The table of key value pairs containing the keyboard action mapped to a keybind
+-- @staticfct emit_save_keyboard_data
+-- @usage
+-- lib-tde.signals.emit_save_keyboard_data({"terminal": "Mod4+Enter", ...})
+connections.emit_save_keyboard_data = function(keys_table)
+    tde.emit_signal("TDE::keyboard::save", keys_table)
+end
+
+--- Trigger a callback function when the keyboard keys changed
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_save_keyboard_data
+-- @usage
+-- lib-tde.signals.connect_save_keyboard_data(
+--    function (keys)
+--     print(keys)
+--    end)
+connections.connect_save_keyboard_data = function(func)
+    tde.connect_signal("TDE::keyboard::save", func)
+end
+
 return connections

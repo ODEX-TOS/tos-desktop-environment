@@ -39,7 +39,7 @@ local slider = require("lib-widget.slider")
 local card = require("lib-widget.card")
 local button = require("lib-widget.button")
 local inputfield = require("lib-widget.inputfield")
-local sort = require('lib-tde.sort.quicksort')
+local sort = require('lib-tde.sort.mergesort')
 local split = require('lib-tde.function.common').split
 local xrandr = require('lib-tde.xrandr')
 local xrandr_menu = xrandr.menu
@@ -1195,7 +1195,7 @@ changewallcycle.bottom = m
 
   view.refresh = refresh
 
-  view.stop = function()
+  view.stop_view = function()
     for _, field in ipairs(_inputfields) do
       field.unfocus()
     end

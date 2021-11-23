@@ -83,7 +83,10 @@ save_state= {
 
     },
     plugins = {
-        
+
+    },
+    keyboard_shortcuts = {
+
     }
 }
 

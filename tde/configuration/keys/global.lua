@@ -77,16 +77,16 @@ local globalKeys =
   ),
   -- Custom Keys
   awful.key(
-    {modkey},
-    config.randr,
+    config.to_modifiers("randr"),
+    config.to_key_string("randr"),
     function()
       xrandr.xrandr()
     end,
     {description = i18n.translate("Launch screen layout mode"), group = i18n.translate("Launcher")}
   ),
   awful.key(
-    {modkey},
-    config.terminal,
+    config.to_modifiers("terminal"),
+    config.to_key_string("terminal"),
     function()
       print("Spawning terminal")
       awful.spawn(apps.default.terminal)
@@ -94,8 +94,8 @@ local globalKeys =
     {description = i18n.translate("Open Terminal"), group = i18n.translate("Launcher")}
   ),
   awful.key(
-    {modkey},
-    config.window,
+    config.to_modifiers("window"),
+    config.to_key_string("window"),
     function()
       print("Spawning rofi window switcher")
       awful.spawn(apps.default.rofiwindowswitch)
@@ -103,8 +103,8 @@ local globalKeys =
     {description = i18n.translate("Open a Window Switcher"), group = i18n.translate("launcher")}
   ),
   awful.key(
-    {modkey},
-    config.launcher,
+    config.to_modifiers("launcher"),
+    config.to_key_string("launcher"),
     function()
       print("Spawning rofi app menu")
       awful.spawn(apps.default.rofiappmenu)
@@ -112,8 +112,8 @@ local globalKeys =
     {description = i18n.translate("Open Rofi"), group = i18n.translate("Launcher")}
   ),
   awful.key(
-    {modkey, "Shift"},
-    config.browser,
+    config.to_modifiers("browser"),
+    config.to_key_string("browser"),
     function()
       local browser = os.getenv("BROWSER") or "firefox-developer-edition"
       print("Opening browser: " .. browser)
@@ -122,8 +122,8 @@ local globalKeys =
     {description = i18n.translate("Open Browser"), group = i18n.translate("Launcher")}
   ),
   awful.key(
-    {modkey, "Shift"},
-    config.filemanager,
+    config.to_modifiers("filemanager"),
+    config.to_key_string("filemanager"),
     function()
       print("Opening filemanager: thunar")
       awful.spawn("thunar")
@@ -131,8 +131,8 @@ local globalKeys =
     {description = i18n.translate("Open file manager"), group = i18n.translate("Launcher")}
   ),
   awful.key(
-    {"Control", "Shift"},
-    config.monitor,
+    config.to_modifiers("monitor"),
+    config.to_key_string("monitor"),
     function()
       print("Opening system monitor")
       awful.spawn("gnome-system-monitor")
@@ -169,20 +169,20 @@ local globalKeys =
   ),
   -- Tag browsing
   awful.key(
-    {modkey},
-    config.previousWorkspace,
+    config.to_modifiers("previousWorkspace"),
+    config.to_key_string("previousWorkspace"),
     awful.tag.viewprev,
     {description = i18n.translate("view previous"), group = i18n.translate(i18n.translate("tag"))}
   ),
   awful.key(
-    {modkey},
-    config.nextWorkspace,
+    config.to_modifiers("nextWorkspace"),
+    config.to_key_string("nextWorkspace"),
     awful.tag.viewnext,
     {description = i18n.translate("view next"), group = i18n.translate(i18n.translate("tag"))}
   ),
   awful.key(
-    {modkey},
-    config.swapWorkspace,
+    config.to_modifiers("swapWorkspace"),
+    config.to_key_string("swapWorkspace"),
     awful.tag.history.restore,
     {description = i18n.translate("go back"), group = i18n.translate(i18n.translate("tag"))}
   ),
@@ -204,8 +204,8 @@ local globalKeys =
     {description = i18n.translate("focus previous by index"), group = i18n.translate("client")}
   ),
   awful.key(
-    {modkey},
-    config.configPanel,
+    config.to_modifiers("configPanel"),
+    config.to_key_string("configPanel"),
     function()
       print("Showing action center")
       if focused_screen().control_center then
@@ -216,8 +216,8 @@ local globalKeys =
   ),
   awful.key({modkey}, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
   awful.key(
-    {modkey},
-    config.toggleFocus,
+    config.to_modifiers("toggleFocus"),
+    config.to_key_string("toggleFocus"),
     function()
       awful.client.focus.history.previous()
       if _G.client.focus then
@@ -228,8 +228,8 @@ local globalKeys =
   ),
   -- Programs
   awful.key(
-    {modkey},
-    config.lock,
+    config.to_modifiers("lock"),
+    config.to_key_string("lock"),
     function()
       print("Locking screen")
       awful.spawn(apps.default.lock)
@@ -237,8 +237,8 @@ local globalKeys =
     {description = i18n.translate("lock the screen"), group = i18n.translate("hotkeys")}
   ),
   awful.key(
-    {modkey},
-    config.notificationPanel,
+    config.to_modifiers("notificationPanel"),
+    config.to_key_string("notificationPanel"),
     function()
       print("Toggeling right panel")
       if focused_screen().info_center then
@@ -249,14 +249,14 @@ local globalKeys =
   ),
   -- Standard program
   awful.key(
-    {modkey, "Control"},
-    config.restart,
+    config.to_modifiers("restart"),
+    config.to_key_string("restart"),
     _G.tde.restart,
     {description = i18n.translate("reload TDE"), group = i18n.translate("TDE")}
   ),
   awful.key(
-    {modkey, "Control"},
-    config.quit,
+    config.to_modifiers("quit"),
+    config.to_key_string("quit"),
     _G.tde.quit,
     {description = i18n.translate("quit TDE"), group = i18n.translate("TDE")}
   ),
@@ -309,24 +309,24 @@ local globalKeys =
     {description = i18n.translate("decrease the number of columns"), group = i18n.translate("layout")}
   ),
   awful.key(
-    {modkey},
-    config.nextLayout,
+    config.to_modifiers("nextLayout"),
+    config.to_key_string("nextLayout"),
     function()
       awful.layout.inc(1)
     end,
     {description = i18n.translate("select next"), group = i18n.translate("layout")}
   ),
   awful.key(
-    {modkey, "Shift"},
-    config.prevLayout,
+    config.to_modifiers("prevLayout"),
+    config.to_key_string("prevLayout"),
     function()
       awful.layout.inc(-1)
     end,
     {description = i18n.translate("select previous"), group = i18n.translate("layout")}
   ),
   awful.key(
-    {modkey, "Control"},
-    config.restoreMinimized,
+    config.to_modifiers("restoreMinimized"),
+    config.to_key_string("restoreMinimized"),
     function()
       local c = awful.client.restore()
       -- Focus restored client
@@ -339,8 +339,8 @@ local globalKeys =
   ),
   -- Dropdown application
   awful.key(
-    {},
-    config.drop,
+    config.to_modifiers("drop"),
+    config.to_key_string("drop"),
     function()
       _G.toggle_quake()
     end,
@@ -491,8 +491,8 @@ local globalKeys =
   ),
   -- keys for keyboards without xf86 keys
   awful.key(
-    {modkey},
-    config.toggleMusic,
+    config.to_modifiers("toggleMusic"),
+    config.to_key_string("toggleMusic"),
     function()
       print("toggeling music")
       awful.spawn("playerctl play-pause", false)
@@ -500,8 +500,8 @@ local globalKeys =
     {description = i18n.translate("toggle music"), group = i18n.translate("hardware")}
   ),
   awful.key(
-    {modkey},
-    config.prevMusic,
+    config.to_modifiers("prevMusic"),
+    config.to_key_string("prevMusic"),
     function()
       print("Previous song")
       awful.spawn("playerctl previous", false)
@@ -509,8 +509,8 @@ local globalKeys =
     {description = i18n.translate("go to the previous song"), group = i18n.translate("hardware")}
   ),
   awful.key(
-    {modkey},
-    config.nextMusic,
+    config.to_modifiers("nextMusic"),
+    config.to_key_string("nextMusic"),
     function()
       print("Next song")
       awful.spawn("playerctl next", false)
@@ -518,8 +518,8 @@ local globalKeys =
     {description = i18n.translate("go to the next song"), group = i18n.translate("hardware")}
   ),
   awful.key(
-    {},
-    config.printscreen,
+    config.to_modifiers("printscreen"),
+    config.to_key_string("printscreen"),
     function()
       print("Taking a full screenshot")
       send_notification_if_maim_missing(function (missing)
@@ -535,8 +535,8 @@ local globalKeys =
     {description = i18n.translate("fullscreen screenshot"), group = i18n.translate("Utility")}
   ),
   awful.key(
-    {modkey},
-    config.snapArea,
+    config.to_modifiers("snapArea"),
+    config.to_key_string("snapArea"),
     function()
       print("Taking an area screenshot")
       send_notification_if_maim_missing(function (missing)
@@ -552,8 +552,8 @@ local globalKeys =
     {description = i18n.translate("area/selected screenshot"), group = i18n.translate("Utility")}
   ),
   awful.key(
-    {modkey, "Shift"},
-    config.windowSnapArea,
+    config.to_modifiers("windowSnapArea"),
+    config.to_key_string("windowSnapArea"),
     function()
       print("Taking a screenshot of a window")
       send_notification_if_maim_missing(function (missing)
@@ -569,8 +569,8 @@ local globalKeys =
     {description = i18n.translate("window screenshot"), group = i18n.translate("Utility")}
   ),
   awful.key(
-    {modkey},
-    config.emoji,
+    config.to_modifiers("emoji"),
+    config.to_key_string("emoji"),
     function()
       print("Opening rofi emoji menu")
       awful.spawn(apps.default.rofiemojimenu)
@@ -578,8 +578,8 @@ local globalKeys =
     {description = i18n.translate("Show emoji selector"), group = i18n.translate("Utility")}
   ),
   awful.key(
-    {modkey},
-    config.clipboard,
+    config.to_modifiers("clipboard"),
+    config.to_key_string("clipboard"),
     function()
       print("Opening rofi clipboard")
       awful.spawn(apps.default.roficlipboard)
@@ -587,8 +587,8 @@ local globalKeys =
     {description = i18n.translate("Show clipboard history"), group = i18n.translate("Utility")}
   ),
   awful.key(
-    {modkey},
-    config.settings,
+    config.to_modifiers("settings"),
+    config.to_key_string("settings"),
     function()
       print("Opening settings application")
       root.elements.settings.enable_view_by_index(-1, mouse.screen)
@@ -596,8 +596,8 @@ local globalKeys =
     {description = i18n.translate("Open settings application"), group = "Launcher"}
   ),
   awful.key(
-    {modkey},
-    config.keyboard_layout,
+    config.to_modifiers("keyboard_layout"),
+    config.to_key_string("keyboard_layout"),
     function()
       print("Going to the next layout")
       signals.emit_keyboard_layout()

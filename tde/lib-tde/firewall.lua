@@ -35,7 +35,7 @@
 --
 --    firewall.add_rule({direction=firewall.direction.OUT, state=firewall.state.DENY, default=true }) -- By default deny all outgoing traffic
 
---    firewall.remove_rul(rules[1])
+--    firewall.remove_rule(rules[1])
 --
 -- @author Tom Meyers
 -- @copyright 2020 Tom Meyers

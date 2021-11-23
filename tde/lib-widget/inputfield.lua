@@ -230,9 +230,12 @@ local _if = function(args)
 
     local stop_grabber = function(grabber)
         grabber:stop()
-        if prev_keygrabber and prev_keygrabber ~= grabber then
+        if _G.root.elements.settings.visible then
+            root.elements.settings_grabber:start()
+        elseif prev_keygrabber and prev_keygrabber ~= grabber then
             prev_keygrabber:start()
         end
+
         if done_callback then
             done_callback(active_text)
         end

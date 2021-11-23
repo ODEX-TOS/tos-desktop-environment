@@ -184,7 +184,7 @@ return function()
   view.refresh = refresh
 
   -- Ensure the inputfields lose focus
-  view.stop = function ()
+  view.stop_view = function ()
     search.reset()
   end
 

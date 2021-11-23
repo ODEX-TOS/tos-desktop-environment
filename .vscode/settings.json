@@ -10,7 +10,9 @@
         "*.ld": "lua",
         "*.ltp": "lua",
         "*.tde": "lua",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "xkb.h": "c",
+        "xcb_atom.h": "c"
     },
     "Lua.runtime.version": "Lua 5.3",
     "Lua.workspace.ignoreSubmodules": false,

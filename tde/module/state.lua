@@ -121,6 +121,8 @@ local function load()
         vpn_data = {},
         plugins = {},
         display = {},
+        -- See tde/configuration/keys/mod.lua for default keyboard shortcuts
+        keyboard_shortcuts = {}
     }
     if not filehandle.exists(file) then
         return table
@@ -149,6 +151,8 @@ local function load()
     result.last_version = result.last_version or table.last_version
 
     result.keyboard = result.keyboard or table.keyboard
+
+    result.keyboard_shortcuts = result.keyboard_shortcuts or table.keyboard_shortcuts
 
     result.developer = result.developer or table.developer
     result = ensure_valid_dev_settings(result, table.developer)
@@ -591,6 +595,12 @@ signals.connect_save_display_settings(function(monitor_id, res, refresh)
         resolution = res,
         refresh_rate = refresh
     }
+
+    save(save_state)
+end)
+
+signals.connect_save_keyboard_data(function(keys)
+    save_state.keyboard_shortcuts = keys
 
     save(save_state)
 end)

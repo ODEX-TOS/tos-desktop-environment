@@ -83,8 +83,8 @@ if grabber == nil then
         end
       },
       awful.key {
-        modifiers = {modKey},
-        key = keyconfig.settings,
+        modifiers = keyconfig.to_modifiers("settings"),
+        key = keyconfig.to_key_string("settings"),
         on_press = function()
           if root.elements.settings then
             root.elements.settings.close()
@@ -195,9 +195,13 @@ local function setActiveView(i, link)
       title.text = root.elements.settings_views[index].title.text or ""
       INDEX = index
       view_container:raise(index)
-    else
+    elseif root.elements.settings_views[index].link.active then
       root.elements.settings_views[index].link.bg = beautiful.bg_modal_title .. "00"
       root.elements.settings_views[index].link.active = false
+      -- Ensure that button presses call this function
+      if root.elements.settings_views[INDEX].view.stop_view then
+        root.elements.settings_views[INDEX].view.stop_view()
+      end
     end
   end
 end
@@ -205,10 +209,6 @@ end
 
 -- If you set the index to -1 then we go to the last remembered index
 local function enable_view_by_index(i, s, bNoAnimation)
-  if root.elements.settings_views[INDEX].view.stop_view then
-    root.elements.settings_views[INDEX].view.stop_view()
-  end
-
   if not (i == -1) then
     INDEX = i
   end
@@ -317,6 +317,9 @@ local function make_view(i, t, v, a)
       end
     })
   btn.forced_height = (m * 1.5) + settings_index
+
+  btn.bg = beautiful.bg_modal_title .. "00"
+  btn.active = false
 
   btn.activate = function()
     btn.emulate_focus_loss()
@@ -711,9 +714,12 @@ return function()
       "outCubic",
       function()
         hub.visible = false
+        -- Make sure the settings are closed
+        root.elements.settings_grabber:stop()
       end
     )
   end
+
   hub.enable_view_by_index = enable_view_by_index
   hub.close_views = close_views
   hub.make_view = make_view

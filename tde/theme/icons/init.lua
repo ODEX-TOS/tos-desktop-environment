@@ -96,6 +96,7 @@ return {
   plugin = theme(dir .. "/plugin.svg"),
   password = theme(dir .. "/password.svg"),
   mime = theme(dir .. "/mime.svg"),
+  keyboard = theme(dir .. "/keyboard.svg"),
 
   --png's
   unknown = theme(dir .. "/noicon.png"),

@@ -24,13 +24,12 @@
 ]]
 require("awful.autofocus")
 local config = require("configuration.keys.mod")
-local modkey = config.modKey
 
 local clientKeys =
   awful.util.table.join(
   awful.key(
-    {modkey},
-    config.fullscreen,
+    config.to_modifiers("fullscreen"),
+    config.to_key_string("fullscreen"),
     function(c)
       c.fullscreen = not c.fullscreen
       c:raise()
@@ -38,8 +37,8 @@ local clientKeys =
     {description = i18n.translate("toggle fullscreen"), group = i18n.translate("client")}
   ),
   awful.key(
-    {modkey},
-    config.ontop,
+    config.to_modifiers("ontop"),
+    config.to_key_string("ontop"),
     function(c)
       c.ontop = not c.ontop
       c.sticky = c.ontop
@@ -48,16 +47,16 @@ local clientKeys =
     {description = i18n.translate("toggle ontop mode"), group = i18n.translate("client")}
   ),
   awful.key(
-    {modkey},
-    config.kill,
+    config.to_modifiers("kill"),
+    config.to_key_string("kill"),
     function(c)
       c:kill()
     end,
     {description = i18n.translate("close"), group = i18n.translate("client")}
   ),
   awful.key(
-    {modkey},
-    config.floating,
+    config.to_modifiers("floating"),
+    config.to_key_string("floating"),
     function(c)
       c.floating = not c.floating
       c:raise()

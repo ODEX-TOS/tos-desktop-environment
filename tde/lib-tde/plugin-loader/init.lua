@@ -34,7 +34,7 @@ local ERROR = require("lib-tde.logger").error
 local filehandle = require("lib-tde.file")
 local serialize = require("lib-tde.serialize")
 
-local quicksort = require("lib-tde.sort.quicksort")
+local mergesort = require("lib-tde.sort.mergesort")
 local capitalize = require("lib-tde.function.common").capitalize
 
 local internal_plugins = require("lib-tde.plugin-loader.internal-plugins")
@@ -222,7 +222,7 @@ local function list_plugins()
             metadata = value.metadata
         })
     end
-    return quicksort(res, function (smaller, bigger)
+    return mergesort(res, function (smaller, bigger)
         return smaller.name < bigger.name
     end)
 end

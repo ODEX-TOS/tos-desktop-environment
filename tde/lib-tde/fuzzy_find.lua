@@ -52,7 +52,7 @@
 -- @tdemod lib-tde.fuzzy_find
 ---------------------------------------------------------------------------
 
-local quicksort = require("lib-tde.sort.quicksort")
+local mergesort = require("lib-tde.sort.mergesort")
 local mappers = require("lib-tde.mappers")
 
 
@@ -188,7 +188,7 @@ local function best_score(list, search, max_result, filter_callback)
     -- now sort it based best fuzzy match
     -- our fuzzy finding algorithm is pretty basic, we check the length of the html page, count the matches of the given characters
     -- and see procentually which is closer
-    scores = quicksort(scores, function(best_match, worst_match)
+    scores = mergesort(scores, function(best_match, worst_match)
         return best_match.score > worst_match.score
     end)
 

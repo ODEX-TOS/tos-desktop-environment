@@ -42,43 +42,81 @@
 
 -- For the 'l' key the corresponding keycode is 46
 
-local config = keys
+local split = require("lib-tde.function.common").split
+
+local keybindings = {
+    -- Key Bindings use the to_modifiers and to_key_string functions to update the global buttons
+    randr = "Mod4+#27", -- r
+    terminal = "Mod4+Return",
+    kill = "Mod4+#24", -- q
+    floating = "Mod4+#54", -- c
+    fullscreen = "Mod4+#41", -- f
+    ontop = "Mod4+#32", -- o
+    window = "Mod4+#56", -- b
+    launcher = "Mod4+#40", -- d
+    browser = "Mod4+Shift+#56", -- b
+    filemanager = "Mod4+Shift+#26", -- e
+    monitor = "Control+Shift+Escape",
+    previousWorkspace = "Mod4+#25", -- w
+    nextWorkspace = "Mod4+#38", -- a
+    swapWorkspace = "Mod4+Escape",
+    configPanel = "Mod4+#26", -- e
+    toggleFocus = "Mod4+Tab",
+    lock = "Mod4+#46", -- l
+    notificationPanel = "Mod4+#53", -- x
+    restart = "Mod4+Control+#27", -- r
+    quit = "Mod4+Control+#24", -- q
+    nextLayout = "Mod4+space",
+    prevLayout = "Mod4+Shift+space",
+    restoreMinimized = "Mod4+Control+#57", -- n
+    drop = "F12",
+    toggleMusic = "Mod4+#28", -- t
+    prevMusic = "Mod4+#45", -- k
+    nextMusic = "Mod4+#57", -- n
+    printscreen = "Print",
+    snapArea = "Mod4+Print",
+    windowSnapArea = "Mod4+Shift+Print",
+    emoji = "Mod4+#58", -- m
+    clipboard = "Mod4+#33", -- p
+    settings = "Mod4+#39", -- s
+    keyboard_layout = "Mod4+#31",
+}
+
+local function get_str_from_shortcut(shortcut)
+    if _G.save_state.keyboard_shortcuts[shortcut] ~= nil then
+        return _G.save_state.keyboard_shortcuts[shortcut]
+    end
+
+    return keybindings[shortcut]
+end
+
 
 return {
-    modKey = config["mod"] or "Mod4",
-    randr = config["screen"] or "#27", -- r
-    altKey = config["alt"] or "Mod1",
-    terminal = config["terminal"] or "Return",
-    kill = config["kill"] or "#24", -- q
-    floating = config["floating"] or "#54", -- c
-    fullscreen = config["fullscreen"] or "#41", -- f
-    ontop = config["ontop"] or "#32", -- o
-    window = config["window_switch"] or "#56", -- b
-    launcher = config["launcher"] or "#40", -- d
-    browser = config["browser"] or "#56", -- b
-    filemanager = config["filemanager"] or "#26", -- e
-    monitor = config["systemmonitor"] or "Escape",
-    previousWorkspace = config["previous_workspace"] or "#25", -- w
-    nextWorkspace = config["next_workspace"] or "#38", -- a
-    swapWorkspace = config["swap_workspace"] or "Escape",
-    configPanel = config["action_center"] or "#26", -- e
-    toggleFocus = config["toggle_focus"] or "Tab",
-    lock = config["lock"] or "#46", -- l
-    notificationPanel = config["notification_panel"] or "#53", -- x
-    restart = config["restart_wm"] or "#27", -- r
-    quit = config["quit_wm"] or "#24", -- q
-    nextLayout = config["next_layout"] or "space",
-    prevLayout = config["previous_layout"] or "space",
-    restoreMinimized = config["restore_minimized"] or "#57", -- n
-    drop = config["dropdown_terminal"] or "F12",
-    toggleMusic = config["toggle_sound"] or "#28", -- t
-    prevMusic = config["previous_song"] or "#45", -- k
-    nextMusic = config["next_song"] or "#57", -- n
-    printscreen = config["printscreen"] or "Print",
-    snapArea = config["snapshot_area"] or "Print",
-    windowSnapArea = config["window_screenshot"] or "Print",
-    emoji = config["emoji"] or "#58", -- m
-    clipboard = config["clipboard"] or "#33", -- p
-    settings = config["settings"] or "#39", -- s
-    keyboard_layout = config["keyboard_layout"] or "#31"
+    modKey = "Mod4",
+    altKey = "Mod1",
+    keybindings = keybindings,
+    get_str_from_shortcut = get_str_from_shortcut,
+    to_modifiers = function(shortcut)
+            local str = get_str_from_shortcut(shortcut)
+            local splitted_keys = split(str, "+")
+
+            if #splitted_keys == 1 then
+                return {}
+            end
+
+            local modifiers = {}
+
+            for index, value in ipairs(splitted_keys) do
+                if index < #splitted_keys then
+                    table.insert(modifiers, value)
+                end
+            end
+
+            return modifiers
+    end,
+    to_key_string = function(shortcut)
+        local str = get_str_from_shortcut(shortcut)
+        local splitted_keys = split(str, "+")
+        return splitted_keys[#splitted_keys]
+    end
 }

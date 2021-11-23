@@ -98,7 +98,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Open up an application by using the keys %s or by pressing the search icon in the top right", highlight_key({super, keys.launcher})), img = icons.search, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Open up an application by using the keys %s or by pressing the search icon in the top right", highlight_key({super, keys.keybindings.launcher})), img = icons.search, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -125,7 +125,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Open up an Terminal by pressing %s", highlight_key({super, keys.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Open up an Terminal by pressing %s", highlight_key({super, keys.keybindings.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -152,7 +152,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close the Terminal by pressing %s", highlight_key({super, keys.kill})), img = icons.close, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close the Terminal by pressing %s", highlight_key({super, keys.keybindings.kill})), img = icons.close, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -185,7 +185,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Now open 3 terminals using %s", highlight_key({super, keys.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Now open 3 terminals using %s", highlight_key({super, keys.keybindings.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -227,7 +227,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Try pressing %s a couple of times and notice how your applications change", highlight_key({super, keys.nextLayout})), img = beautiful.layout_tile or icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Try pressing %s a couple of times and notice how your applications change", highlight_key({super, keys.keybindings.nextLayout})), img = beautiful.layout_tile or icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             local start_tile = awful.screen.focused().selected_tag.layout.name
@@ -336,7 +336,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close the terminals until you have one left using %s", highlight_key({super, keys.kill})), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close the terminals until you have one left using %s", highlight_key({super, keys.keybindings.kill})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -405,7 +405,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close all open Terminals by pressing %s", highlight_key({super, keys.kill})), img = icons.close, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close all open Terminals by pressing %s", highlight_key({super, keys.keybindings.kill})), img = icons.close, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -438,7 +438,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Now you can also open the settings using %s", highlight_key({super, keys.settings})), img = settings_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Now you can also open the settings using %s", highlight_key({super, keys.keybindings.settings})), img = settings_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,

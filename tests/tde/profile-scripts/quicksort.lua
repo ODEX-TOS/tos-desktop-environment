@@ -23,6 +23,9 @@
 --SOFTWARE.
 ]]
 local quicksort = require("tde.lib-tde.sort.quicksort")
+local radixsort = require("tde.lib-tde.sort.radixsort")
+-- On average mergesort is the fastest
+local mergesort = require("tde.lib-tde.sort.mergesort")
 
 local data = {}
 local expected = {}
@@ -36,8 +39,9 @@ for _, v in ipairs(expected) do
     table.insert(data, pos, v)
 end
 
-local result = quicksort(data)
+local result = mergesort(data)
 
 for index, element in ipairs(result) do
+    print(element)
     assert(element == expected[index], "Expected: " .. expected[index] .. " but got " .. element)
 end

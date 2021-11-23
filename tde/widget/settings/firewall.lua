@@ -627,7 +627,7 @@ return function()
 
   view.refresh = refresh
 
-  view.stop = function ()
+  view.stop_view = function ()
     for _, field in ipairs(_inputfields) do
       field.unfocus()
     end

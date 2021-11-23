@@ -56,8 +56,12 @@ return function()
     -- instead update the existing objects
   end
 
-  view.stop = function()
+  view.stop_view = function()
     -- Make sure that 'background' processes are stopped here
+  end
+
+  view.stop = function()
+    -- This gets called on settings close and when another view get's activated
   end
 
   return view

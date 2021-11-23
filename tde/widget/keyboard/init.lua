@@ -36,7 +36,7 @@ local button = require("lib-widget.button")
 local inputfield = require("lib-widget.inputfield")
 local card = require("lib-widget.card")
 
-local quicksort = require("lib-tde.sort.quicksort")
+local mergesort = require("lib-tde.sort.mergesort")
 
 local icons = require("theme.icons")
 
@@ -348,7 +348,7 @@ return function(s)
         end
     end
 
-    local sorted = quicksort(layout_codes)
+    local sorted = mergesort(layout_codes)
 
     selected_layouts = _G.save_state.keyboard.layouts
 

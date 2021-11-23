@@ -284,16 +284,11 @@ return function()
 
   view.refresh = refresh
 
-  -- Ensure the inputfields lose focus
-  view.stop = function ()
+  view.stop_view = function()
+    print("Stopping vpn view")
     for _, field in ipairs(_field_reset) do
       field.reset()
     end
-  end
-
-
-  view.stop_view = function()
-    print("Stopping vpn view")
     signals.emit_vpn_connection_data(_G.save_state.vpn_data)
   end
   return view

@@ -1,0 +1,7 @@
+{
+    "type": "settings",
+    "icon": "keyboard",
+    "version": "v1.0.0",
+    "description": "Allow changing your keyboard shortcuts",
+    "name": "Keyboard Shortcuts"
+}
