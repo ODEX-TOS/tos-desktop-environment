@@ -77,6 +77,32 @@ local function to_text_keybind(keybind)
     return text
 end
 
+-- Convert the keybind to a numberical, liternal keyevent on the keyboard instead of the keysym
+-- This way when changing keyboard layouts the state remains the same
+local function to_save_state(keybind)
+    local splitted = split(keybind, "+")
+
+    -- In case we are running in awesome instead of tde
+    if tde == nil or tde._get_key_code == nil then return keybind end
+
+    local res = ""
+
+    for index, value in ipairs(splitted) do
+        local code = tde._get_key_code(value)
+        if code then
+            res = res .. "#" .. code
+        else
+            res = res .. value
+        end
+
+        if index < #splitted then
+            res = res .. "+"
+        end
+    end
+
+    return res
+end
+
 local keyboard_cache = {}
 
 local function create_keyboard_widget(shortcut)
@@ -89,7 +115,8 @@ local function create_keyboard_widget(shortcut)
 
     local function update_keybind(keybind)
         textbox.text = to_text_keybind(keybind)
-        _G.save_state.keyboard_shortcuts[shortcut.shortcut] = keybind
+
+        _G.save_state.keyboard_shortcuts[shortcut.shortcut] = to_save_state(keybind)
         signals.emit_save_keyboard_data(_G.save_state.keyboard_shortcuts)
     end
 
