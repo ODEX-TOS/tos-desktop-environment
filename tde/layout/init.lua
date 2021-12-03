@@ -175,7 +175,7 @@ end)
 
 client.connect_signal("unfocus", function (c)
     if c.fullscreen and c.screen and c.screen.selected_tag ~= nil then
-		c.screen.selected_tag.fullscreen_mode = false
+		--c.screen.selected_tag.fullscreen_mode = false
         update_bars_visibility()
     end
 end)
