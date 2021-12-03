@@ -42,7 +42,7 @@ local split = common.split
 
 local signals = require("lib-tde.signals")
 
-local sort = require("lib-tde.sort.quicksort")
+local sort = require("lib-tde.sort.mergesort")
 
 local input = require("keyboard.input")
 
