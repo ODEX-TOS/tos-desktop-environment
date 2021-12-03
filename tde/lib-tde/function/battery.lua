@@ -115,12 +115,53 @@ local function getBatteryPercentage()
         return (charge_now / charge_full) * 100
     end
 
+
+    local energy_now = sys_file_to_int(battery.. '/energy_now')
+    local energy_full = sys_file_to_int(battery.. '/energy_full')
+
+    if energy_full ~= -1 and energy_now ~= -1 then
+        return (energy_now / energy_full) * 100
+    end
+
+
     -- In case we can't calculate the accurate usage we need to do it with the less precise implementation
     return sys_file_to_int(battery .. "/capacity")
+end
+
+--- Return the percentage of the battery degradation (e.g. how much charge the battery can hold now vs when it was in the factory)
+-- @return number The percentage of the battery degradation
+-- @staticfct getBatteryDegradation
+-- @usage -- This will depend on how good the battery can store it's charge when fully charged
+-- lib-tde.function.battery.getBatteryDegradation() -- return percentage of battery degradation
+local function getBatteryDegradation()
+    -- get back a battery location
+    local battery = getBatteryPath()
+    if battery == nil then
+        return nil
+    end
+
+    -- Let's do an accurate calculation, in case that fails we will fallback to a less accurate way
+    local charge_now = sys_file_to_int(battery.. '/charge_full')
+    local charge_full = sys_file_to_int(battery.. '/charge_full_design')
+
+    if charge_full ~= -1 and charge_now ~= -1 then
+        return (charge_now / charge_full) * 100
+    end
+
+    local energy_now = sys_file_to_int(battery.. '/energy_full')
+    local energy_full = sys_file_to_int(battery.. '/energy_full_design')
+
+    if energy_full ~= -1 and energy_now ~= -1 then
+        return (energy_now / energy_full) * 100
+    end
+
+    -- In case we can't calculate the degradation simply return what it would be at the factory
+    return 100
 end
 
 return {
     isBatteryCharging = isBatteryCharging,
     getBatteryPercentage = getBatteryPercentage,
-    getBatteryPath = getBatteryPath
+    getBatteryPath = getBatteryPath,
+    getBatteryDegradation = getBatteryDegradation
 }

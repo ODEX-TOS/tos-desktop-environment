@@ -44,8 +44,14 @@ function Test_lib_tde_battery_percentage()
     assert(type(battery.getBatteryPercentage) == "function", "Getting the battery percentage should be a function")
 end
 
+function Test_lib_tde_battery_degradation()
+    assert(battery.getBatteryDegradation, "Getting the battery degradation should exist")
+    assert(type(battery.getBatteryDegradation) == "function", "Getting the battery degradation should be a function")
+end
+
+
 function Test_battery_api_unit_tested()
-    local amount = 3
+    local amount = 4
     local result = tablelength(battery)
     assert(
         result == amount,
