@@ -8,7 +8,6 @@ local setmetatable = setmetatable
 local type = type
 local capi = { awesome = awesome }
 local cairo = require("lgi").cairo
-local GdkPixbuf = require("lgi").GdkPixbuf
 local color = nil
 local gdebug = require("gears.debug")
 local hierarchy = require("wibox.hierarchy")
@@ -38,6 +37,7 @@ end
 -- @return An error message, or nil on success.
 -- @staticfct load_uncached_silently
 function surface.load_uncached_silently(_surface, default)
+    local file
     -- On nil, return some sane default
     if not _surface then
         return get_default(default)
@@ -48,11 +48,15 @@ function surface.load_uncached_silently(_surface, default)
     end
     -- Strings are assumed to be file names and get loaded
     if type(_surface) == "string" then
-        local pixbuf, err = GdkPixbuf.Pixbuf.new_from_file(_surface)
-        if not pixbuf then
-            return get_default(default), tostring(err)
+        local err
+
+        file = _surface
+
+        _surface, err = capi.awesome.load_image(file)
+
+        if not _surface then
+            return get_default(default), err
         end
-        _surface = capi.awesome.pixbuf_to_surface(pixbuf._native, _surface)
 
         -- The shims implement load_image() to return a surface directly,
         -- instead of a lightuserdatum.
