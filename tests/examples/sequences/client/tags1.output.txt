@@ -1,2 +1,0 @@
-Tag:	2	two
-Tag:	3	three
