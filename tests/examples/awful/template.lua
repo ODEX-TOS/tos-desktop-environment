@@ -58,9 +58,21 @@ if not rawget(screen, "no_outline") then
     end
 end
 
+-- Draw the wallpaper (if any).
+if root._wallpaper_pattern then
+    cr:set_source_rgb(1,0,0)
+    cr:set_line_width(2)
+    cr:rectangle(0, 0, root.size())
+    cr:stroke()
+    cr:set_source(root._wallpaper_pattern)
+    cr:rectangle(0, 0, root.size())
+    cr:fill()
+    cr:paint()
+end
+
+
 cr:set_line_width(beautiful.border_width/2)
 cr:set_source(color(beautiful.border_color))
-
 
 
 local rect = {x1 = 0 ,y1 = 0 , x2 = 0 , y2 = 0}
@@ -86,10 +98,20 @@ local total_area = wibox.layout {
 }
 
 local function wrap_titlebar(tb, width, height)
+
+    local bg, fg
+
+    if args.honor_titlebar_colors then
+        bg = tb.drawable.background_color or tb.args.bg_normal
+        fg = tb.drawable.foreground_color or tb.args.fg_normal
+    else
+        bg, fg = tb.args.bg_normal, tb.args.fg_normal
+    end
+
     return wibox.widget {
         tb.drawable.widget,
-        bg            = tb.args.bg_normal,
-        fg            = tb.args.fg_normal,
+        bg            = bg,
+        fg            = fg,
         forced_width  = width,
         forced_height = height,
         widget        = wibox.container.background
@@ -144,13 +166,19 @@ local function client_widget(c, col, label)
             },
             layout = wibox.layout.stack
         },
-        border_width = bw,
-        border_color = bc,
-        shape_clip   = true,
-        fg           = beautiful.fg_normal or "#000000",
-        bg           = col,
-        shape        = function(cr2, w, h)
-            return shape.rounded_rect(cr2, w, h, args.radius or 5)
+        border_width    = bw,
+        border_color    = bc,
+        shape_clip      = true,
+        border_strategy = "inner",
+        opacity         = c.opacity,
+        fg              = beautiful.fg_normal or "#000000",
+        bg              = col,
+        shape           = function(cr2, w, h)
+            if c.shape then
+                c.shape(cr2, w, h)
+            else
+                return shape.rounded_rect(cr2, w, h, args.radius or 5)
+            end
         end,
 
         forced_width  = geo.width  + 2*bw,
@@ -188,7 +216,14 @@ end
 
 -- Loop each clients geometry history and paint it
 for _, c in ipairs(client.get()) do
-    if not c.minimized then
+
+    local is_displayed = false
+
+    for _, t in pairs(c:tags()) do
+        is_displayed = is_displayed or t.selected
+    end
+
+    if (not c.minimized) and is_displayed then
         local pgeo = nil
         for _, geo in ipairs(c._old_geo) do
             if not geo._hide then

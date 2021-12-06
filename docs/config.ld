@@ -435,7 +435,7 @@ add_custom_tag {
     auto_subtags = false
 }
 
--- Mark the item ad hidden.
+-- Mark the item as hidden.
 -- This tag should be used to hide items from the documentation.
 -- @hidden
 add_custom_tag {
@@ -444,6 +444,14 @@ add_custom_tag {
     auto_subtags = false
 }
 
+-- Mark the item as readonly.
+-- This tag should be used to mark readonly properties.
+-- @readonly
+add_custom_tag {
+    name = "readonly",
+    hidden = true,
+    auto_subtags = false
+}
 -- More fitting section names
 kind_names={topic='Documentation', module='Libraries', script='Sample files'}
 
@@ -493,6 +501,7 @@ file = {
         '../tos-tde/tde/lib-tde/lib-so',
         '../tos-tde/tde/lib-tde/sentry',
         '../lib/awful/autofocus.lua',
+        '../lib/awful/client/shape.lua',
         '../lib/awful/dbus.lua',
         '../lib/awful/_compat.lua',
         '../lib/awful/init.lua',
@@ -501,6 +510,7 @@ file = {
         '../lib/awful/startup_notification.lua',
         '../lib/awful/mouse/drag_to_tag.lua',
         '../lib/awful/permissions/_common.lua',
+        '../lib/awful/client/urgent.lua',
         '../lib/gears/init.lua',
         '../lib/wibox/layout/init.lua',
         '../lib/wibox/container/init.lua',
@@ -608,6 +618,9 @@ local function generate_summary(item)
             ret[#ret+1] = v
             has_show_more = v.showcount or has_show_more
         end
+    end
+    if item.tags.readonly then
+        ret[#ret+1] = {title = "read only"}
     end
 
     item.extra_summary = #ret > 0 and ret or nil
@@ -883,6 +896,7 @@ local show_return = {
     ["function"]    = true,
     constructorfct  = true,
     constructorfct2 = true,
+    legacylayout    = true,
     staticfct       = true,
     method          = true,
     deprecated      = true,

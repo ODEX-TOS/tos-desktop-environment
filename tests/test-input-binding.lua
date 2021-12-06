@@ -243,8 +243,20 @@ for _, type_name in ipairs { "key", "button" } do
         end)
 
         -- Cleanup (otherwise there is a race with the root.buttons tests)
-        table.insert(steps, function()
-            if #mouse.screen.clients ~= 0 then return end
+        table.insert(steps, function(count)
+            if #mouse.screen.clients ~= 0 then
+                if count > 5 then
+                    -- It's stuck, kill it.
+                    test_client.terminate()
+                else
+                    for _, c in pairs(client.get()) do
+                        c:kill()
+                    end
+                end
+
+
+                return
+            end
 
             return true
         end)
@@ -256,7 +268,7 @@ local new1, new2 = nil, nil
 
 -- Check that you can add new default key/mousebindings at any time.
 table.insert(steps, function()
-    assert(#mouse.screen.clients == 0)
+    if #mouse.screen.clients > 0 then return end
 
     new1 = module.key {
         key       = "a",
@@ -371,6 +383,8 @@ table.insert(steps, function()
 
     return true
 end)
+
+table.insert(steps, test_client.terminate)
 
 runner.run_steps(steps)
 

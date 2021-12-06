@@ -136,7 +136,7 @@ lua_class_t client_class;
  * @table awful.client.object
  */
 
-/** AwesomeWM is about to scan for existing clients.
+/** Emitted when AwesomeWM is about to scan for existing clients.
  *
  * Connect to this signal when code needs to be executed after screens are
  * initialized, but before clients are added.
@@ -145,7 +145,7 @@ lua_class_t client_class;
  * @classsignal
  */
 
-/** AwesomeWM is done scanning for clients.
+/** Emitted when AwesomeWM is done scanning for clients.
  *
  * This is emitted before the `startup` signal and after the `scanning` signal.
  *
@@ -153,23 +153,24 @@ lua_class_t client_class;
  * @classsignal
  */
 
-/** When a client gains focus.
+/** Emitted when a client gains focus.
  * @signal focus
  * @classsignal
  */
 
-/** Before manage, after unmanage, and when clients swap.
+/** Emitted before `request::manage`, after `request::unmanage`,
+ * and when clients swap.
  * @signal list
  * @classsignal
  */
 
-/** When 2 clients are swapped
+/** Emitted when 2 clients are swapped
  * @tparam client client The other client
  * @tparam boolean is_source If self is the source or the destination of the swap
  * @signal swapped
  */
 
-/** When a new client appears and gets managed by Awesome.
+/** Emitted when a new client appears and gets managed by Awesome.
  *
  * This request should be implemented by code which track the client. It isn't
  * recommended to use this to initialize the client content. This use case is
@@ -188,7 +189,7 @@ lua_class_t client_class;
  * @classsignal
  */
 
-/** When a client is going away.
+/** Emitted when a client is going away.
  *
  * Each places which store `client` objects in non-weak table or whose state
  * depend on the current client should answer this request.
@@ -216,32 +217,32 @@ lua_class_t client_class;
  * @deprecatedsignal unmanage
  */
 
-/** When a mouse button is pressed in a client.
+/** Emitted when a mouse button is pressed in a client.
  * @signal button::press
  */
 
-/** When a mouse button is released in a client.
+/** Emitted when a mouse button is released in a client.
  *
  * @signal button::release
  */
 
-/** When the mouse enters a client.
+/** Emitted when the mouse enters a client.
  *
  * @signal mouse::enter
  */
 
-/** When the mouse leaves a client.
+/** Emitted when the mouse leaves a client.
  *
  * @signal mouse::leave
  */
 
 /**
- * When the mouse moves within a client.
+ * Emitted when the mouse moves within a client.
  *
  * @signal mouse::move
  */
 
-/** When a client should get activated (focused and/or raised).
+/** Emitted when a client should get activated (focused and/or raised).
  *
  * **Contexts are:**
  *
@@ -279,7 +280,7 @@ lua_class_t client_class;
  * @classsignal
  */
 
-/** When an event could lead to the client being activated.
+/** Emitted when an event could lead to the client being activated.
  *
  * This is an layer "on top" of `request::activate` for event which are not
  * actual request for activation/focus, but where "it would be nice" if the
@@ -300,7 +301,7 @@ lua_class_t client_class;
  *
  */
 
-/** When something request a client geometry to be modified.
+/** Emitted when something request a client's geometry to be modified.
  *
  * @signal request::geometry
  * @tparam client c The client
@@ -315,23 +316,39 @@ lua_class_t client_class;
  * @classsignal
  */
 
-/** When the tag requests to be moved to a tag or needs a new tag.
+/** Emitted when a client requests to be moved to a tag or needs a new tag.
  *
  * @signal request::tag
+ * @tparam client c The client requesting a new tag.
  * @classsignal
  */
 
-/** When the client requests to become urgent.
+/** Emitted when any client's `urgent` property changes.
+ *
+ * Emitted both when `urgent = true` and `urgent = false`, so you will likely
+ * want to check `c.urgent` within the signal callback.
+ *
+ *    client.connect_signal("property::urgent", function(c)
+ *        if c.urgent then
+ *            naughty.notify {
+ *                title = "Urgent client",
+ *                message = c.name,
+ *            }
+ *        end
+ *    end)
  *
  * @signal request::urgent
+ * @tparam client c The client whose property changed.
  * @classsignal
  */
 
-/** Emitted during startup to gather the default client mousebindings.
+/** Emitted once to request default client mousebindings during the initial
+ * startup sequence.
  *
- * This signals gives a chance to all module to register new client keybindings.
- * Assuming the client rules does not overwrite them with the `keys` property,
- * they will be added to all clients.
+ * This signal gives all modules a chance to register their default client
+ * mousebindings.
+ * They will then be added to all new clients, unless rules overwrite them via
+ * the `buttons` property.
  *
  * @signal request::default_mousebindings
  * @tparam string context The reason why the signal was sent (currently always
@@ -339,41 +356,30 @@ lua_class_t client_class;
  * @classsignal
 */
 
-/** Emitted during startup to gather the default client keybindings.
+/** Emitted once to request default client keybindings during the initial
+ * startup sequence.
  *
- * This signals gives a chance to all module to register new client keybindings.
- * Assuming the client rules does not overwrite them with the `keys` property,
- * they will be added to all clients.
+ * This signal gives all modules a chance to register their default client
+ * keybindings.
+ * They will then be added to all new clients, unless rules overwrite them via
+ * the `keys` property.
  *
  * @signal request::default_keybindings
  * @tparam string context The reason why the signal was sent (currently always
- *  `startup`).
- * @classsignal
- */
-
-/** Sent once when AwesomeWM starts to add default keybindings.
- *
- * Keybindings can be set directly on clients. Actually, older version of
- * AwesomeWM did that through the rules. However this makes it impossible for
- * auto-configured modules to add their own keybindings. Using the signals,
- * `rc.lua` or any module can cleanly manage keybindings.
- *
- * @signal request::default_keybindings
- * @tparam string context The context (currently always "startup").
  * @classsignal
  * @request client default_keybindings startup granted Sent when AwesomeWM starts.
  */
 
-/** When a client gets tagged.
+/** Emitted when a client gets tagged.
  * @signal tagged
  * @tparam tag t The tag object.
  */
 
-/** When a client gets unfocused.
+/** Emitted when a client gets unfocused.
  * @signal unfocus
  */
 
-/** When a client gets untagged.
+/** Emitted when a client gets untagged.
  * @signal untagged
  * @tparam tag t The tag object.
  */
@@ -404,13 +410,13 @@ lua_class_t client_class;
 /**
  * The focused `client` or nil (in case there is none).
  *
- * It is not recommanded to set the focused client using
- * this property. Please use `c:activate{}` instead of
+ * It is not recommended to set the focused client using
+ * this property. Please use @{client.activate} instead of
  * `client.focus = c`. Setting the focus directly bypasses
  * all the filters and emits fewer signals, which tend to
  * cause unwanted side effects and make it harder to alter
  * the code behavior in the future. It usually takes *more*
- * code to use this rather than `:activate{}` because all
+ * code to use this rather than @{client.activate} because all
  * the boilerplate code (such as `c:raise()`) needs to be
  * added everywhere.
  *
@@ -443,6 +449,7 @@ lua_class_t client_class;
  * @property window
  * @tparam integer window
  * @propemits false false
+ * @readonly
  */
 
 /**
@@ -469,10 +476,14 @@ lua_class_t client_class;
  * `_NET_WM_STATE_SKIP_TASKBAR` X11 protocol xproperty. Clients can modify this
  * state through this property.
  *
+ * @DOC_awful_client_skip_tasklist1_EXAMPLE@
+ *
  * @property skip_taskbar
  * @tparam[opt=false] boolean skip_taskbar
  * @propemits false false
  * @see sticky
+ * @see hidden
+ * @see unmanage
  */
 
 /**
@@ -512,6 +523,7 @@ lua_class_t client_class;
  * @property type
  * @tparam string type
  * @propemits false false
+ * @readonly
  * @see ruled.client
  */
 
@@ -540,6 +552,7 @@ lua_class_t client_class;
  * @property class
  * @tparam string class
  * @propemits false false
+ * @readonly
  * @see instance
  * @see ruled.client
  */
@@ -566,6 +579,7 @@ lua_class_t client_class;
  * @property instance
  * @tparam string instance
  * @propemits false false
+ * @readonly
  * @see class
  * @see ruled.client
  */
@@ -578,6 +592,7 @@ lua_class_t client_class;
  * @property pid
  * @tparam integer pid
  * @propemits false false
+ * @readonly
  */
 
 /**
@@ -586,17 +601,18 @@ lua_class_t client_class;
  * @property role
  * @tparam string role
  * @propemits false false
+ * @readonly
  * @see instance
  * @see class
  */
 
 /**
- * The machine client is running on.
+ * The machine the client is running on.
  *
- * X11 windows can "live" in another computer but shown
+ * X11 windows can "live" in one computer but be shown
  * in another one. This is called "network transparency"
  * and is either used directly by allowing remote windows
- * using the `xhosts` command for using proxies such as
+ * using the `xhosts` command or using proxies such as
  * `ssh -X` or `ssh -Y`.
  *
  * According to EWMH, this property contains the value
@@ -606,6 +622,7 @@ lua_class_t client_class;
  * @property machine
  * @tparam string machine
  * @propemits false false
+ * @readonly
  */
 
 /**
@@ -614,6 +631,7 @@ lua_class_t client_class;
  * @property icon_name
  * @tparam string icon_name
  * @propemits false false
+ * @readonly
  */
 
 /**
@@ -622,7 +640,7 @@ lua_class_t client_class;
  * This property holds the client icon closest to the size configured via
  * @{awesome.set_preferred_icon_size}.
  *
- * It is not a path or an "real" file. Rather, it is already a bitmap surface.
+ * It is not a path or a "real" file. Rather, it is already a bitmap surface.
  *
  * Typically you would want to use @{awful.widget.clienticon} to get this as a
  * widget.
@@ -638,6 +656,10 @@ lua_class_t client_class;
  *    cr:set_source_surface(s, 0, 0)
  *    cr:paint()
  *
+ * (Note that `awesome.set_preferred_icon_size` defaults to `0` if it wasn't
+ * set. It means that, by default, the preferred icon provided will be the
+ * smallest available)
+ *
  * @property icon
  * @tparam surface icon
  * @propemits false false
@@ -649,9 +671,18 @@ lua_class_t client_class;
  * The available sizes of client icons. This is a table where each entry
  * contains the width and height of an icon.
  *
+ * Example:
+ *
+ *    {
+ *      { 24, 24 },
+ *      { 32, 32 },
+ *      { 64, 64 },
+ *    }
+ *
  * @property icon_sizes
  * @tparam table sizes
  * @propemits false false
+ * @readonly
  * @see awful.widget.clienticon
  * @see get_icon
  */
@@ -683,16 +714,28 @@ lua_class_t client_class;
  * @tparam boolean hidden
  * @propemits false false
  * @see minimized
+ * @see skip_taskbar
+ * @see unmanage
  */
 
 /**
  * Define it the client must be iconify, i.e. only visible in
  *   taskbar.
  *
+ * Minimized clients are still part of tags and screens, but
+ * they are not displayed. You can unminimize using `c.minimized = false`,
+ * but if you also want to set the focus, it is better to use:
+ *
+ *    c:activate { context = "unminimized", raise = true }
+ *
+ * @DOC_sequences_client_minimize1_EXAMPLE@
+ *
  * @property minimized
  * @tparam boolean minimized
  * @propemits false false
  * @see hidden
+ * @see isvisible
+ * @see activate
  */
 
 /**
@@ -712,6 +755,15 @@ lua_class_t client_class;
 
 /**
  * The client border width.
+ *
+ * When manually set (for example, in `ruled.client` rules), this value
+ * will be static. Otherwise, it is controlled by many `beautiful` variables.
+ *
+ * Be careful, the borders are **around** the geometry, not part of it. If
+ * you want more fancy border, use the `awful.titlebar` API to create
+ * titlebars on each side of the client.
+ *
+ * @DOC_awful_client_border_width_EXAMPLE@
  *
  * @property border_width
  * @tparam integer border_width
@@ -745,14 +797,18 @@ lua_class_t client_class;
 /**
  * The client border color.
  *
- * @DOC_awful_client_border_width_EXAMPLE@
+ * @DOC_awful_client_border_color_EXAMPLE@
  *
  * Note that setting this directly will override and disable all related theme
  * variables.
  *
+ * Setting a transparent color (e.g. to implement dynamic borders without size
+ * changes) is supported, but requires the color to be set to `#00000000`
+ * specifically. Other RGB colors with an alpha of `0` won't work.
+ *
  * @property border_color
- * @tparam color border_color Any string, gradients and patterns will be converted to a
- *  cairo pattern.
+ * @tparam color border_color Any string, gradient or pattern definition that
+ *  can be converted to a cairo pattern.
  * @propemits false false
  * @usebeautiful beautiful.border_color_marked The fallback color when the
  *  client is marked.
@@ -792,12 +848,34 @@ lua_class_t client_class;
  */
 
 /**
- * The client urgent state.
+ * Set to `true` when the client ask for attention.
+ *
+ * The urgent state is the visual equivalent of the "bell" noise from
+ * old computer. It is set by the client when their state changed and
+ * they need attention. For example, a chat client will set it when
+ * a new message arrive. Some terminals, like `rxvt-unicode`, will also
+ * set it when calling the `bell` command.
+ *
+ * There is many ways an urgent client can become for visible:
+ *
+ *  * Highlight in the `awful.widget.taglist` and `awful.widget.tasklist`
+ *  * Highlight in the `awful.titlebar`
+ *  * Highlight of the client border color (or width).
+ *  * Accessible using `Mod4+u` in the default config.
+ *  * Emit the `property::urgent` signal.
+ *
+ * @DOC_awful_client_urgent1_EXAMPLE@
  *
  * @property urgent
  * @tparam boolean urgent
  * @propemits false false
+ * @request client border active granted When a client becomes active and is no
+ *  longer urgent.
+ * @request client border inactive granted When a client stop being active and
+ *  is no longer urgent.
+ * @request client border urgent granted When a client stop becomes urgent.
  * @see request::border
+ * @see awful.client.urgent.jumpto
  * @usebeautiful beautiful.border_color_urgent The fallback color when the
  *  client is urgent.
  * @usebeautiful beautiful.border_color_floating_urgent The color when the
@@ -814,6 +892,11 @@ lua_class_t client_class;
  *  the client is maximized and urgent.
  * @usebeautiful beautiful.border_width_fullscreen_urgent The border width when
  *  the client is fullscreen and urgent.
+ * @usebeautiful beautiful.titlebar_fg_urgent
+ * @usebeautiful beautiful.titlebar_bg_urgent
+ * @usebeautiful beautiful.titlebar_bgimage_urgent
+ * @usebeautiful beautiful.fg_urgent
+ * @usebeautiful beautiful.bg_urgent
  */
 
 /**
@@ -842,16 +925,24 @@ lua_class_t client_class;
  *
  * @property content
  * @tparam surface content
+ * @readonly
  * @see gears.surface
  */
 
 /**
  * The client opacity.
  *
+ * The opacity only works when a compositing manager, such as
+ * [picom](https://github.com/yshui/picom/), is used. Otherwise,
+ * the clients will remain opaque.
+ *
+ * @DOC_awful_client_opacity1_EXAMPLE@
+ *
  * @property opacity
  * @tparam number opacity Between 0 (transparent) to 1 (opaque).
  * @propemits false false
  * @see request::border
+ * @see awesome.composite_manager_running
  */
 
 /**
@@ -971,6 +1062,7 @@ lua_class_t client_class;
  * @property transient_for
  * @tparam client transient_for
  * @propemits false false
+ * @readonly
  * @see modal
  * @see type
  * @see is_transient_for
@@ -987,6 +1079,7 @@ lua_class_t client_class;
  * @property group_window
  * @tparam integer group_window
  * @propemits false false
+ * @readonly
  * @see leader_window
  */
 
@@ -998,6 +1091,7 @@ lua_class_t client_class;
  * @property leader_window
  * @tparam number leader_window
  * @propemits false false
+ * @readonly
  * @see transient_for
  * @see modal
  * @see group_window
@@ -1050,6 +1144,7 @@ lua_class_t client_class;
  * @tparam[opt] integer|nil hints.base_width
  * @tparam[opt] integer|nil hints.base_height
  * @propemits false false
+ * @readonly
  * @see size_hints_honor
  * @see geometry
  */
@@ -1085,6 +1180,7 @@ lua_class_t client_class;
  *  `full_application_modal` or `unknown`.
  * @tparam[opt] boolean hints.status.tearoff_window
  * @propemits false false
+ * @readonly
  */
 
 /**
@@ -1206,6 +1302,7 @@ lua_class_t client_class;
  * @property client_shape_bounding
  * @tparam surface client_shape_bounding
  * @propemits false false
+ * @readonly
  * @see shape_bounding
  * @see shape_clip
  * @see shape_input
@@ -1222,6 +1319,7 @@ lua_class_t client_class;
  * @property client_shape_clip
  * @tparam surface client_shape_clip
  * @propemits false false
+ * @readonly
  * @see shape_bounding
  * @see shape_clip
  * @see shape_input
@@ -1302,6 +1400,7 @@ lua_class_t client_class;
  * @property valid
  * @tparam boolean valid
  * @propemits false false
+ * @readonly
  * @see kill
  */
 
@@ -1315,6 +1414,7 @@ lua_class_t client_class;
  * @property first_tag
  * @tparam tag first_tag
  * @propemits false false
+ * @readonly
  * @see tags
  */
 
@@ -1338,6 +1438,7 @@ lua_class_t client_class;
  * @method struts
  * @see geometry
  * @see screen.workarea
+ * @see dockable
  */
 
 /** Get or set mouse buttons bindings for a client.
@@ -1346,6 +1447,9 @@ lua_class_t client_class;
  * @tparam table buttons
  * @propemits false false
  * @see awful.button
+ * @see append_mousebinding
+ * @see remove_mousebinding
+ * @see request::default_mousebindings
  */
 
 /** Get the number of instances.
@@ -2895,12 +2999,12 @@ client_kill(client_t *c)
 
 /** Get all clients into a table.
  *
- * @tparam[opt] integer screen A screen number to filter clients on.
+ * @tparam[opt] integer|screen screen A screen number to filter clients on.
  * @tparam[opt] boolean stacked Return clients in stacking order? (ordered from
  *   top to bottom).
  * @treturn table A table with clients.
  * @staticfct get
- * @usage for _, c in client.get() do
+ * @usage for _, c in ipairs(client.get()) do
  *     -- do something
  * end
  */
@@ -3055,7 +3159,9 @@ out:
  *
  * This method can be used to close (kill) a **client** using the
  * X11 protocol. To use the POSIX way to kill a **process**, use
- * `awesome.kill`.
+ * `awesome.kill` (using the client `pid` property).
+ *
+ * @DOC_sequences_client_kill1_EXAMPLE@
  *
  * @method kill
  * @see awesome.kill
@@ -3069,11 +3175,14 @@ luaA_client_kill(lua_State *L)
 }
 
 /** Swap a client with another one in global client list.
+ *
+ * @DOC_sequences_client_swap1_EXAMPLE@
+ *
  * @tparam client c A client to swap with.
  * @method swap
  * @emits swapped
- * @emitstparam swapped client The other client.
- * @emitstparam swapped boolean `true` when `:swap()` was called
+ * @emitstparam swapped client other The other client.
+ * @emitstparam swapped boolean is_origin `true` when `:swap()` was called
  *  on *self* rather than the other client. `false` when
  *  `:swap()` was called on the other client.
  * @emits list
@@ -3123,6 +3232,8 @@ luaA_client_swap(lua_State *L)
 /** Access or set the client tags.
  *
  * Use the `first_tag` field to access the first tag of a client directly.
+ *
+ * @DOC_sequences_client_tags1_EXAMPLE@
  *
  * @tparam table tags_table A table with tags to set, or `nil` to get the
  *   current tags.
@@ -3484,6 +3595,8 @@ HANDLE_TITLEBAR(bottom, CLIENT_TITLEBAR_BOTTOM)
 HANDLE_TITLEBAR(left, CLIENT_TITLEBAR_LEFT)
 
 /** Return or set client geometry.
+ *
+ * @DOC_sequences_client_geometry1_EXAMPLE@
  *
  * @tparam table|nil geo A table with new coordinates, or nil.
  * @tparam integer geo.x The horizontal position.
@@ -4160,6 +4273,9 @@ luaA_client_set_shape_input(lua_State *L, client_t *c)
  * @tparam table keys
  * @propemits false false
  * @see awful.key
+ * @see append_keybinding
+ * @see remove_keybinding
+ * @see request::default_keybindings
  */
 static int
 luaA_client_keys(lua_State *L)
@@ -4202,10 +4318,25 @@ luaA_client_get_icon_sizes(lua_State *L, client_t *c)
 
 /** Get the client's n-th icon.
  *
+ * The icon index can be deternined by inspecting the `icon_sizes` property first.
+ *
+ * The user has the responsibility to test the value returned by this function
+ * to ensure an icon have been returned.
+ *
+ * It is recommended to use the `awful.widget.clienticon` widget when the
+ * client icon is used in a widget structure.
+ *
+ * Note that this function tests the provided index and raise an "invalid icon
+ * index" error if the provided index doesn't exist in the client's icons list
+ * (by raising an error, the function will be stopped and nothing will be
+ * returned to the caller).
+ *
  * @tparam interger index The index in the list of icons to get.
  * @treturn surface A lightuserdata for a cairo surface. This reference must be
  * destroyed!
  * @method get_icon
+ * @see icon_sizes
+ * @see awful.widget.clienticon
  */
 static int
 luaA_client_get_some_icon(lua_State *L)

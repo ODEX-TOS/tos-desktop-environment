@@ -39,7 +39,8 @@
 # local use_li = ldoc.use_li
 # local display_name = ldoc.display_name
 # local iter = ldoc.modules.iter
-# local function M(txt,item) return ldoc.markup(txt,item,ldoc.plain) end
+# local function un_cmake(s) return s:gsub("&#59", ";"):gsub("&#34", '"') end
+# local function M(txt,item) return ldoc.markup(txt and un_cmake(txt) or nil,item,ldoc.plain) end
 # local nowrap = ldoc.wrap and '' or 'nowrap'
 # local html_space = function(s) return s:gsub(" ", "%%20") end
 # local no_underscores = function(s) return s:gsub("_", " ") end
@@ -190,7 +191,7 @@
     <h3>Usage:</h3>
     <ul>
 #     for usage in iter(module.usage) do
-        $(li)<pre class="example">$(ldoc.escape(usage))</pre>$(il)
+        $(li)<pre class="example">$(ldoc.escape(un_cmake(usage)))</pre>$(il)
 #     end -- for
     </ul>
 #   end -- if usage
@@ -232,7 +233,18 @@
     <h3>Info:</h3>
     <ul>
 #     for tag, value in module.info:iter() do
-            <li><strong>$(tag)</strong>: $(M(value,module))</li>
+#           if tag == 'Author' then
+                <li>
+                    <strong>Originally authored by</strong>: $(M(value,module))<br />
+                    <small>(Full contributors list available on
+                    <a href="https://github.com/awesomeWM/awesome/graphs/contributors">
+                        our github project)
+                    </a></small>
+
+                </li>
+#           else
+                <li><strong>$(tag)</strong>: $(M(value,module))</li>
+#           end
 #     end
     </ul>
   </div>
@@ -281,7 +293,12 @@
 #     end
       </td>
 #   end
-      <td colspan="$(inherited and 1 or 2)" class="summary">$(M(item.summary,item))</td>
+      <td colspan="$(inherited and 1 or 2)" class="summary">
+        $(M(item.summary,item))
+#   if item.tags.readonly then
+        <span class="chips--readonly">read only</span>
+#   end
+      </td>
 #   if inherited then
       <td class="baseclass" nowrap>
         Inherited from $(item.baseclass)
@@ -321,7 +338,7 @@
 #       end
 #       if kitem.usage then
             <h3>Usage:</h3>
-            <pre class="example">$(ldoc.prettify(kitem.usage[1]))</pre>
+            <pre class="example">$(ldoc.prettify(un_cmake(kitem.usage[1])))</pre>
 #        end
 #   end
 #  if not kind:match("^ldoc_skip") then
@@ -440,7 +457,7 @@
     <h3>Usage:</h3>
     <ul>
 #     for usage in iter(item.usage) do
-        $(li)<pre class="example">$(ldoc.prettify(usage))</pre>$(il)
+        $(li)<pre class="example">$(ldoc.prettify(un_cmake(usage)))</pre>$(il)
 #     end -- for
     </ul>
 #   end -- if usage

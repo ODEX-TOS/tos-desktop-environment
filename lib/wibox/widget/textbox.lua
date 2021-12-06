@@ -1,4 +1,5 @@
 ---------------------------------------------------------------------------
+-- A widget to display either plain or HTML text.
 --
 --@DOC_wibox_widget_defaults_textbox_EXAMPLE@
 --
@@ -148,7 +149,7 @@ function textbox:get_height_for_width_at_dpi(width, dpi)
 end
 
 --- Set the text of the textbox.(with
--- [Pango markup](https://developer.gnome.org/pango/stable/pango-Markup.html)).
+-- [Pango markup](https://docs.gtk.org/Pango/pango_markup.html)).
 --
 -- @tparam string text The text to set. This can contain pango markup (e.g.
 --   `<b>bold</b>`). You can use `gears.string.escape` to escape
@@ -177,11 +178,23 @@ function textbox:set_markup_silently(text)
     return true
 end
 
---- Set the text of the textbox (with
--- [Pango markup](https://developer.gnome.org/pango/stable/pango-Markup.html)).
+--- Set the HTML text of the textbox.
+--
+-- The main difference between `text` and `markup` is that `markup` is
+-- able to render a small subset of HTML tags. See the
+-- [Pango markup](https://docs.gtk.org/Pango/pango_markup.html)) documentation
+-- to see what is and isn't valid in this property.
+--
+-- @DOC_wibox_widget_textbox_markup1_EXAMPLE@
+--
+-- The `wibox.widget.textbox` colors are usually set by wrapping into a
+-- `wibox.container.background` widget, but can also be done using the
+-- markup:
+--
+-- @DOC_wibox_widget_textbox_markup2_EXAMPLE@
 --
 -- @property markup
--- @tparam string text The text to set. This can contain pango markup (e.g.
+-- @tparam string markup The text to set. This can contain pango markup (e.g.
 --   `<b>bold</b>`). You can use `gears.string.escape` to escape
 --   parts of it.
 -- @propemits true false
@@ -198,7 +211,15 @@ function textbox:get_markup()
     return self._private.markup
 end
 
---- Set a textbox text.
+--- Set a textbox plain text.
+--
+-- This property renders the text as-is, it does not interpret it:
+--
+-- @DOC_wibox_widget_textbox_text1_EXAMPLE@
+--
+-- One exception are the control characters, which are interpreted:
+--
+-- @DOC_wibox_widget_textbox_text2_EXAMPLE@
 --
 -- @property text
 -- @tparam string text The text to display. Pango markup is ignored and shown
@@ -222,17 +243,22 @@ function textbox:get_text()
     return self._private.layout.text
 end
 
---- Set a textbox ellipsize mode.
+--- Set the text ellipsize mode.
 --
 -- Valid values are:
 --
--- * **start**
--- * **middle**
--- * **end**
+-- * `"start"`
+-- * `"middle"`
+-- * `"end"`
+-- * `"none"`
+--
+-- See Pango for additional details:
+-- [Layout.set_ellipsize](https://docs.gtk.org/Pango/method.Layout.set_ellipsize.html)
+--
+--@DOC_wibox_widget_textbox_ellipsize_EXAMPLE@
 --
 -- @property ellipsize
--- @tparam string mode Where should long lines be shortened? "start", "middle"
---  or "end".
+-- @tparam[opt="end"] string mode The ellipsize mode.
 -- @propemits true false
 
 function textbox:set_ellipsize(mode)
@@ -256,8 +282,10 @@ end
 -- * **char**
 -- * **word_char**
 --
+-- @DOC_wibox_widget_textbox_wrap1_EXAMPLE@
+--
 -- @property wrap
--- @tparam string mode Where to wrap? After "word", "char" or "word_char".
+-- @tparam[opt="word_char"] string mode Where to wrap? After "word", "char" or "word_char".
 -- @propemits true false
 
 function textbox:set_wrap(mode)
@@ -281,8 +309,10 @@ end
 -- * **center**
 -- * **bottom**
 --
+--@DOC_wibox_widget_textbox_valign1_EXAMPLE@
+--
 -- @property valign
--- @tparam string mode Where should the textbox be drawn? "top", "center" or
+-- @tparam[opt="center"] string mode Where should the textbox be drawn? "top", "center" or
 --  "bottom".
 -- @propemits true false
 
@@ -307,8 +337,10 @@ end
 -- * **center**
 -- * **right**
 --
+--@DOC_wibox_widget_textbox_align1_EXAMPLE@
+--
 -- @property align
--- @tparam string mode Where should the textbox be drawn? "left", "center" or
+-- @tparam[opt="left"] string mode Where should the textbox be drawn? "left", "center" or
 --  "right".
 -- @propemits true false
 
@@ -327,16 +359,63 @@ end
 
 --- Set a textbox font.
 --
+-- There is multiple valid font string representation. The most precise is
+-- [XFT](https://wiki.archlinux.org/title/X_Logical_Font_Description). It
+-- is also possible to use the family name, followed by the face and size
+-- such as `Monospace Bold 10`. This script lists the fonts present
+-- on your system:
+--
+--    #!/usr/bin/env lua
+--
+--    local lgi = require("lgi")
+--    local pangocairo = lgi.PangoCairo
+--
+--    local font_map = pangocairo.font_map_get_default()
+--
+--    for k, v in pairs(font_map:list_families()) do
+--        print(v:get_name(), "monospace?: "..tostring(v:is_monospace()))
+--        for k2, v2 in ipairs(v:list_faces()) do
+--            print("    ".. v2:get_face_name())
+--        end
+--    end
+--
+-- Save this script somewhere on your system, `chmod +x` it and run it. It
+-- will list something like:
+--
+--    Sans    monospace?: false
+--        Regular
+--        Bold
+--        Italic
+--        Bold Italic
+--
+-- In this case, the font could be `Sans 10` or `Sans Bold Italic 10`.
+--
+-- Here are examples of several font families:
+--
+--@DOC_wibox_widget_textbox_font1_EXAMPLE@
+--
+-- The font size is a number at the end of the font description string:
+--
+--@DOC_wibox_widget_textbox_font2_EXAMPLE@
+--
 -- @property font
--- @tparam string font The font description as string.
+-- @tparam[opt=beautiful.font] string font The font description as string.
 -- @propemits true false
--- @propbeautiful
+-- @usebeautiful beautiful.font The default font.
 
 function textbox:set_font(font)
+    if font == self._private.font then return end
+
+    self._private.font = font
+
     self._private.layout:set_font_description(beautiful.get_font(font))
     self:emit_signal("widget::redraw_needed")
     self:emit_signal("widget::layout_changed")
     self:emit_signal("property::font", font)
+end
+
+function textbox:get_font()
+    return self._private.font
 end
 
 --- Create a new textbox.
@@ -353,12 +432,12 @@ local function new(text, ignore_markup)
     ret._private.dpi = -1
     ret._private.ctx = PangoCairo.font_map_get_default():create_context()
     ret._private.layout = Pango.Layout.new(ret._private.ctx)
+    ret._private.layout:set_font_description(beautiful.get_font(beautiful.font))
 
     ret:set_ellipsize("end")
     ret:set_wrap("word_char")
     ret:set_valign("center")
     ret:set_align("left")
-    ret:set_font(beautiful and beautiful.font)
 
     if text then
         if ignore_markup then
@@ -381,6 +460,7 @@ end
 -- @tparam[opt=nil] integer|screen s The screen on which the textbox would be displayed.
 -- @tparam[opt=beautiful.font] string font The font description as string.
 -- @treturn table Geometry (width, height) hashtable.
+-- @staticfct wibox.widget.textbox.get_markup_geometry
 function textbox.get_markup_geometry(text, s, font)
     font = font or beautiful.font
     local pctx = PangoCairo.font_map_get_default():create_context()

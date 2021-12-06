@@ -481,6 +481,11 @@ luaA_root_wallpaper(lua_State *L)
 {
     if(lua_gettop(L) == 1)
     {
+        /* Avoid `error()s` down the line. If this happens during
+         * initialization, AwesomeWM can be stuck in an infinite loop */
+        if(lua_isnil(L, -1))
+            return 0;
+
         cairo_pattern_t *pattern = (cairo_pattern_t *)lua_touserdata(L, -1);
         lua_pushboolean(L, root_set_wallpaper(pattern));
         /* Don't return the wallpaper, it's too easy to get memleaks */
@@ -494,6 +499,29 @@ luaA_root_wallpaper(lua_State *L)
     lua_pushlightuserdata(L, cairo_surface_reference(globalconf.wallpaper));
     return 1;
 }
+
+
+/** Get the content of the root window as a cairo surface.
+ *
+ * @property content
+ * @tparam surface A cairo surface with the root window content (aka the whole surface from every screens).
+ * @see gears.surface
+ */
+static int
+luaA_root_get_content(lua_State *L)
+{
+    cairo_surface_t *surface;
+
+    surface = cairo_xcb_surface_create(globalconf.connection,
+                                       globalconf.screen->root,
+                                       globalconf.default_visual,
+                                       globalconf.screen->width_in_pixels, 
+                                       globalconf.screen->height_in_pixels);
+
+    lua_pushlightuserdata(L, surface);
+    return 1;
+}
+
 
 /** Get the size of the root window.
  *
@@ -602,7 +630,8 @@ const struct luaL_Reg awesome_root_methods[] =
     { "cursor", luaA_root_cursor },
     { "fake_input", luaA_root_fake_input },
     { "drawins", luaA_root_drawins },
-    { "wallpaper", luaA_root_wallpaper },
+    { "_wallpaper", luaA_root_wallpaper },
+    { "content", luaA_root_get_content},
     { "size", luaA_root_size },
     { "size_mm", luaA_root_size_mm },
     { "tags", luaA_root_tags },

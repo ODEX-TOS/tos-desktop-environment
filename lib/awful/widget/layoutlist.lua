@@ -10,7 +10,7 @@
 --
 --@DOC_awful_widget_layoutlist_popup_EXAMPLE@
 --
--- This example extends 'awful.widget.layoutbox' to show a layout list popup:
+-- This example extends `awful.widget.layoutbox` to show a layout list popup:
 --
 --@DOC_awful_widget_layoutlist_bar_EXAMPLE@
 --
@@ -36,9 +36,11 @@ local surface  = require("gears.surface")
 
 local module = {}
 
-local default_buttons = gtable.join(
-    abutton({ }, 1, function(a) a.callback() end)
-)
+local default_buttons = {
+    abutton({ }, 1, function(a) a.callback(  ) end),
+    abutton({ }, 4, function() alayout.inc(-1) end),
+	abutton({ }, 5, function() alayout.inc( 1) end),
+}
 
 local function wb_label(item, _, textbox)
     local selected = alayout.get(item.screen) == item.layout
@@ -201,17 +203,6 @@ local layoutlist = {}
 -- @property filter
 -- @param[opt=awful.widget.layoutlist.source.for_screen] function
 
---- The layoutlist buttons.
---
--- The default is:
---
---    gears.table.join(
---        awful.button({ }, 1, awful.layout.set)
---    )
---
--- @property buttons
--- @param table
-
 --- The default foreground (text) color.
 -- @beautiful beautiful.layoutlist_fg_normal
 -- @tparam[opt=nil] string|pattern fg_normal
@@ -254,7 +245,7 @@ local layoutlist = {}
 
 --- The space between the layouts.
 -- @beautiful beautiful.layoutlist_spacing
--- @tparam[opt=0] number spacing The spacing between tasks.
+-- @tparam[opt=0] number spacing The spacing between layouts.
 
 --- The default layoutlist elements shape.
 -- @beautiful beautiful.layoutlist_shape
@@ -308,7 +299,10 @@ end
 
 function layoutlist:set_buttons(buttons)
     self._private.buttons = buttons
-    update(self)
+
+    if self._private.layout then
+        update(self)
+    end
 end
 
 function layoutlist:get_buttons()
@@ -320,10 +314,10 @@ function layoutlist:set_base_layout(layout)
         layout or wibox.layout.fixed.horizontal
     )
 
-    if self._private.layout.set_spacing then
-        self._private.layout:set_spacing(
-            self._private.style.spacing or beautiful.tasklist_spacing or 0
-        )
+    local spacing = self._private.style.spacing or beautiful.tasklist_spacing
+
+    if self._private.layout.set_spacing and spacing then
+        self._private.layout:set_spacing(spacing)
     end
 
     assert(self._private.layout.is_widget)
@@ -369,14 +363,13 @@ end
 --- Create a layout list.
 --
 -- @tparam table args
--- @tparam widget args.layout The widget layout (not to be confused with client
+-- @tparam widget args.base_layout The widget layout (not to be confused with client
 --  layout).
 -- @tparam table args.buttons A table with buttons binding to set.
 -- @tparam[opt=awful.widget.layoutlist.source.for_screen] function args.source A
 --  function to generate the list of layouts.
 -- @tparam[opt] table args.widget_template A custom widget to be used for each action.
 -- @tparam[opt=ascreen.focused()] screen args.screen A screen
--- @tparam[opt=nil] table args.buttons The list of `awful.buttons`.
 -- @tparam[opt={}] table args.style Extra look and feel parameters
 -- @tparam boolean args.style.disable_icon
 -- @tparam boolean args.style.disable_name
@@ -407,6 +400,8 @@ local function update_common()
 end
 
 local function new(_, args)
+    args = args or {}
+
     local ret = wibox.widget.base.make_widget(nil, nil, {
         enable_properties = true,
     })
@@ -420,11 +415,15 @@ local function new(_, args)
 
     reload_cache(ret)
 
-    -- Apply all args properties
-    gtable.crush(ret, args)
+    -- Apply all args properties. Make sure "set_layout" doesn't override
+    -- the widget `layout` method.
+    local l = args.layout
+    args.layout = nil
+    gtable.crush(ret, args, false)
+    args.layout = l
 
     if not ret._private.layout then
-        ret:set_base_layout()
+        ret:set_base_layout(args.layout)
     end
 
     assert(ret._private.layout)

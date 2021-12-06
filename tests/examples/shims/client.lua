@@ -5,6 +5,8 @@ local clients = {}
 
 local client, meta = awesome._shim_fake_class()
 
+rawset(client, "_autotags", true)
+
 -- Keep an history of the geometry for validation and images
 local function push_geometry(c)
     table.insert(c._old_geo, c:geometry())
@@ -60,6 +62,10 @@ function properties.set_screen(self, s)
     end
 
     self:emit_signal("property::screen")
+end
+
+function properties:get_first_tag()
+    return self:tags()[1]
 end
 
 -- Create fake clients to move around
@@ -126,7 +132,15 @@ function client.gen_fake(args)
     end
 
     function ret:isvisible()
-        return true
+        if ret.minimized or ret.hidden then return false end
+
+        local vis = false
+
+        for _, tag in ipairs(ret:tags()) do
+            vis = vis or tag.selected
+        end
+
+        return vis
     end
 
     -- Used for screenshots
@@ -192,20 +206,41 @@ function client.gen_fake(args)
         assert(not ret.valid)
     end
 
+    function ret:swap(other)
+        local idx1, idx2 = nil, nil
+        for k, c in ipairs(clients) do
+            if c == ret then
+                idx1 = k
+            elseif c == other then
+                idx2 = k
+            end
+        end
+
+        if not (idx1 and idx2) then return end
+
+        clients[idx1], clients[idx2] = other, ret
+        ret:emit_signal("swapped", other, true)
+        other:emit_signal("swapped", ret, false)
+        client.emit_signal("list")
+    end
+
     titlebar_meta(ret)
 
     function ret:tags(new) --FIXME
         if new then
             ret._tags = new
+            ret:emit_signal("property::tags")
         end
 
         if ret._tags then
             return ret._tags
         end
 
-        for _, t in ipairs(root._tags) do
-            if t.screen == ret.screen then
-                return {t}
+        if client._autotags then
+            for _, t in ipairs(root._tags) do
+                if t.screen == ret.screen then
+                    return {t}
+                end
             end
         end
 
@@ -258,10 +293,14 @@ function client.gen_fake(args)
     ret.drawable = ret
 
     -- Make sure the layer properties are not `nil`
-    ret.ontop = false
-    ret.below = false
-    ret.above = false
-    ret.sticky = false
+    local defaults = {
+        ontop     = false,
+        below     = false,
+        above     = false,
+        sticky    = false,
+        urgent    = false,
+        focusable = true,
+    }
 
     -- Declare the deprecated buttons and keys methods.
     function ret:_keys(new)
@@ -289,17 +328,25 @@ function client.gen_fake(args)
         __index     = function(self, key)
             if properties["get_"..key] then
                 return properties["get_"..key](self)
+            elseif defaults[key] ~= nil then
+                return defaults[key]
             end
 
             return meta.__index(self, key)
         end,
         __newindex = function(self, key, value)
-
             if properties["set_"..key] then
                 return properties["set_"..key](self, value)
             end
 
-            return meta.__newindex(self, key, value)
+            if defaults[key] ~= nil then
+                defaults[key] = value
+            else
+                meta.__newindex(self, key, value)
+            end
+
+            ret:emit_signal("property::"..key, value)
+            --client.emit_signal("property::"..key, ret, value)
         end
     })
 

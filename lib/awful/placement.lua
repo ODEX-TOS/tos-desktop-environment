@@ -115,7 +115,7 @@ local attach
 --- Allow multiple placement functions to be daisy chained.
 -- This also allow the functions to be aware they are being chained and act
 -- upon the previous nodes results to avoid unnecessary processing or deduce
--- extra paramaters/arguments.
+-- extra parameters/arguments.
 local function compose(...)
     local queue = {}
 
@@ -144,7 +144,7 @@ local function compose(...)
         local last_geo = nil
 
         -- As some functions may have to take into account results from
-        -- previously execued ones, add the `composition_results` hint.
+        -- previously executed ones, add the `composition_results` hint.
         args = setmetatable({composition_results=rets}, {__index=args})
 
         -- Only apply the geometry once, not once per chain node, to do this,
@@ -183,6 +183,10 @@ local function compose(...)
             args.attach = true
             attach(d, ret, args)
         end
+
+        -- Cleanup the override because otherwise it might leak into
+        -- future calls.
+        rawset(args, "override_geometry", nil)
 
         return last_geo, rets
     end, "compose")
@@ -276,6 +280,30 @@ local outer_positions = {
     bottom_middle = function(r, w, _) return {x=r.x-w/2+r.width/2, y=r.y                }, "middle" end,
 }
 
+-- Map the opposite side for a string
+local opposites = {
+    top    = "bottom",
+    bottom = "top",
+    left   = "right",
+    right  = "left",
+    width  = "height",
+    height = "width",
+    x      = "y",
+    y      = "x",
+}
+
+-- List reletvant sides for each orientation.
+local struts_orientation_to_sides = {
+    horizontal = { "top" , "bottom" },
+    vertical   = { "left", "right"  }
+}
+
+-- Map orientation to the length components (width/height).
+local orientation_to_length = {
+    horizontal = "width",
+    vertical   = "height"
+}
+
 --- Add a context to the arguments.
 -- This function extend the argument table. The context is used by some
 -- internal helper methods. If there already is a context, it has priority and
@@ -313,7 +341,7 @@ local function get_decoration(args)
         height = offset,
     } or args.offset or {}
 
-    -- Margins are distances on each side to substract from the area`
+    -- Margins are distances on each side to subtract from the area`
     local m = type(args.margins) == "table" and args.margins or {
         left = args.margins or 0 , right  = args.margins or 0,
         top  = args.margins or 0 , bottom = args.margins or 0
@@ -355,7 +383,7 @@ end
 area_common = function(d, new_geo, ignore_border_width, args)
     -- The C side expect no arguments, nil isn't valid
     if new_geo and args.zap_border_width then
-        d.border_width = 0
+        d._border_width = 0
     end
     local geometry = new_geo and d:geometry(new_geo) or d:geometry()
     local border = ignore_border_width and 0 or d.border_width or 0
@@ -477,8 +505,8 @@ wibox_update_strut = function(d, position, args)
     end
 
     -- Detect horizontal or vertical drawables
-    local geo      = area_common(d)
-    local vertical = geo.width < geo.height
+    local geo         = area_common(d)
+    local orientation = geo.width < geo.height and "vertical" or "horizontal"
 
     -- Look into the `position` string to find the relevants sides to crop from
     -- the workarea
@@ -486,17 +514,12 @@ wibox_update_strut = function(d, position, args)
 
     local m = get_decoration(args)
 
-    if vertical then
-        for _, v in ipairs {"right", "left"} do
-            if (not position) or position:match(v) then
-                struts[v] = geo.width + m[v]
-            end
-        end
-    else
-        for _, v in ipairs {"top", "bottom"} do
-            if (not position) or position:match(v) then
-                struts[v] = geo.height + m[v]
-            end
+    for _, v in ipairs(struts_orientation_to_sides[orientation]) do
+        if (not position) or position:match(v) then
+            -- Add the "short" rectangle length then the above and below margins.
+            struts[v] = geo[opposites[orientation_to_length[orientation]]]
+                + m[v]
+                + m[opposites[v]]
         end
     end
 
@@ -1453,8 +1476,8 @@ end
 -- @tparam string|table args.preferred_anchors The preferred anchor(s) (in order)
 -- @tparam string args.geometry A geometry inside the other drawable
 -- @treturn table The new geometry
--- @treturn string The choosen position ("left", "right", "top" or "bottom")
--- @treturn string The choosen anchor ("front", "middle" or "back")
+-- @treturn string The chosen position ("left", "right", "top" or "bottom")
+-- @treturn string The chosen anchor ("front", "middle" or "back")
 -- @staticfct awful.placement.next_to
 function placement.next_to(d, args)
     args = add_context(args, "next_to")
@@ -1610,7 +1633,7 @@ function placement.restore(d, args)
 
     end
 
-    d.border_width = memento.border_width
+    d._border_width = memento.border_width
 
     -- Don't use the memento as it would be "destructive", since `x`, `y`
     -- and `screen` have to be modified.
@@ -1624,7 +1647,7 @@ function placement.restore(d, args)
     return true
 end
 
---- Skip all preceeding results of placement pipeline for fullscreen clients.
+--- Skip all preceding results of placement pipeline for fullscreen clients.
 --@DOC_awful_placement_skip_fullscreen_EXAMPLE@
 -- @tparam drawable d A drawable (like `client`, `mouse` or `wibox`)
 -- @tparam[opt={}] table args Other arguments

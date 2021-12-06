@@ -19,6 +19,8 @@ local gdebug = require("gears.debug")
 local gmath = require("gears.math")
 local object = require("gears.object")
 local grect =  require("gears.geometry").rectangle
+local gsurf = require("gears.surface")
+local cairo = require("lgi").cairo
 
 local function get_screen(s)
     return s and capi.screen[s]
@@ -32,7 +34,7 @@ local screen = {object={}}
 local data = {}
 data.padding = {}
 
---- Take an input geometry and substract/add a delta.
+--- Take an input geometry and subtract/add a delta.
 -- @tparam table geo A geometry (width, height, x, y) table.
 -- @tparam table delta A delta table (top, bottom, x, y).
 -- @treturn table A geometry (width, height, x, y) table.
@@ -179,7 +181,7 @@ end
 
 --- The area where clients can be tiled.
 --
--- This property holds the (read only) area where clients can be tiled. Use
+-- This property holds the area where clients can be tiled. Use
 -- the `padding` property, `wibox.struts` and `client.struts` to modify this
 -- area.
 --
@@ -191,6 +193,7 @@ end
 -- @tparam number tiling_area.y
 -- @tparam number tiling_area.width
 -- @tparam number tiling_area.height
+-- @readonly
 -- @see padding
 -- @see get_bounding_geometry
 
@@ -199,6 +202,27 @@ function screen.object.get_tiling_area(s)
         honor_padding  = true,
         honor_workarea = true,
     }
+end
+
+--- Take a screenshot of the physical screen.
+--
+-- Reading this property returns a screenshot of the physical
+-- (Xinerama) screen as a cairo surface.
+--
+-- @property content
+-- @tparam gears.surface content
+-- @readonly
+
+function screen.object.get_content(s)
+    local geo = s.geometry
+    local source = gsurf(capi.root.content())
+    local target = source:create_similar(cairo.Content.COLOR, geo.width,
+                                         geo.height)
+    local cr = cairo.Context(target)
+    cr:set_source_surface(source, -geo.x, -geo.y)
+    cr:rectangle(0, 0, geo.width, geo.height)
+    cr:fill()
+    return target
 end
 
 --- Get or set the screen padding.
@@ -279,7 +303,6 @@ end
 --
 --  * *property::outputs*
 --
--- **Immutable:** true
 -- @property outputs
 -- @param table
 -- @tfield table table.name A table with the screen name as key (like `eDP1` on a laptop)
@@ -288,6 +311,7 @@ end
 -- @tfield integer table.name The output name.
 -- @tfield integer table.viewport_id The identifier of the viewport this output
 --  corresponds to.
+-- @readonly
 
 function screen.object.get_outputs(s)
     local ret = {}
@@ -533,12 +557,13 @@ end
 
 --- A list of all tags on the screen.
 --
--- This property is read only, use `tag.screen`, `awful.tag.add`,
+-- Use `tag.screen`, `awful.tag.add`,
 -- `awful.tag.new` or `t:delete()` to alter this list.
 --
 -- @property tags
 -- @param table
 -- @treturn table A table with all available tags.
+-- @readonly
 
 function screen.object.get_tags(s, unordered)
     local tags = {}
@@ -562,6 +587,7 @@ end
 -- @property selected_tags
 -- @param table
 -- @treturn table A table with all selected tags.
+-- @readonly
 -- @see tag.selected
 -- @see client.to_selected_tags
 
@@ -581,6 +607,7 @@ end
 -- @property selected_tag
 -- @param tag
 -- @treturn ?tag The first selected tag or nil.
+-- @readonly
 -- @see tag.selected
 -- @see selected_tags
 
@@ -731,10 +758,12 @@ end
 --- The lowest density DPI from all of the (physical) outputs.
 -- @property minimum_dpi
 -- @param number the DPI value.
+-- @readonly
 
 --- The highest density DPI from all of the (physical) outputs.
 -- @property maximum_dpi
 -- @param number the DPI value.
+-- @readonly
 
 --- The preferred DPI from all of the (physical) outputs.
 --
@@ -743,6 +772,7 @@ end
 --
 -- @property preferred_dpi
 -- @param number the DPI value.
+-- @readonly
 
 --- The maximum diagonal size in millimeters.
 --
@@ -862,7 +892,7 @@ end
 --
 -- Important: This only exists when Awesome is started with `--screen off`.
 --
--- Note that given the viewports are not the same, the `id` wont be the same.
+-- Note that given the viewports are not the same, the `id` won't be the same.
 -- Also note that if multiple new viewports fit within a single "old" viewport,
 -- the resized screen will be the one with the largest total overlapping
 -- viewport (`intersection.width*intersection.height`), regardless of the
@@ -970,7 +1000,7 @@ require("awful.screen.dpi")(screen, data)
 -- Set the wallpaper(s) and create the bar(s) for new screens
 
 capi.screen.connect_signal("_added", function(s)
-    -- If it was emited from here when screens are created with fake_add,
+    -- If it was emitted from here when screens are created with fake_add,
     -- the Lua code would not have an opportunity to polutate the screen
     -- metadata. Thus, the DPI may be wrong when setting the wallpaper.
     if s._managed ~= "Lua" then

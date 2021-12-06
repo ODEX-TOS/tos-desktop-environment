@@ -523,6 +523,11 @@ function notification:set_id(new_id)
     self:emit_signal("property::id", new_id)
 end
 
+-- Return true if `self` is suspended.
+local function get_suspended(self)
+    return naughty.suspended and (not self._private.ignore_suspend)
+end
+
 function notification:set_timeout(timeout)
     timeout = timeout or 0
 
@@ -554,7 +559,7 @@ function notification:set_timeout(timeout)
         end)
 
         --FIXME there's still a dependency loop to fix before it works
-        if not self.suspended then
+        if not get_suspended(self) then
             timer_die:start()
         end
 
@@ -568,6 +573,27 @@ function notification:set_timeout(timeout)
     self.die = die
     self._private.timeout = timeout
     self:emit_signal("property::timeout", timeout)
+end
+
+function notification:get_message()
+    -- This property was called "text" in older versions.
+    -- Some modules like `lain` abused of the presets (they
+    -- had little choice at the time) to set the message on
+    -- an existing popup.
+    local p = rawget(self, "preset") or {}
+    local message = self._private.message or p.message or ""
+
+    if message == "" and p.text and p.text ~= "" then
+        gdebug.deprecate(
+            "Using the preset configuration to set the notification "..
+            "message is not supported. Please use `n.message = 'text'`.",
+            {deprecated_in=5}
+        )
+
+        return p.text
+    end
+
+    return message
 end
 
 function notification:set_text(txt)
@@ -615,9 +641,9 @@ for _, prop in ipairs(properties) do
 
         -- When a notification is updated over dbus or by setting a property,
         -- it is usually convenient to reset the timeout.
-        local reset = ((not self.suspended)
+        local reset = ((not self.suspended) or self._private.ignore_suspend)
             and self.auto_reset_timeout ~= false
-            and naughty.auto_reset_timeout)
+            and naughty.auto_reset_timeout
 
         if reset then
             self:reset_timeout()
@@ -753,9 +779,9 @@ function notification.set_actions(self, new_actions)
 
     -- When a notification is updated over dbus or by setting a property,
     -- it is usually convenient to reset the timeout.
-    local reset = ((not self.suspended)
+    local reset = (not get_suspended(self))
         and self.auto_reset_timeout ~= false
-        and naughty.auto_reset_timeout)
+        and naughty.auto_reset_timeout
 
     if reset then
         self:reset_timeout()
@@ -861,7 +887,15 @@ local function select_legacy_preset(n, args)
     ))
 
     for k, v in pairs(n.preset) do
-        n._private[k] = v
+        -- Don't keep a strong reference to the screen, Lua 5.1 GC wont be
+        -- smart enough to unwind the mess of circular weak references.
+        if k ~= "screen" then
+            n._private[k] = v
+        end
+    end
+
+    if n.preset.screen then
+        n._private.weak_screen[1] = capi.screen[n.preset.screen]
     end
 end
 
@@ -1004,7 +1038,7 @@ local function create(args)
     end
 
     -- Let all listeners handle the actual visual aspects
-    if (not n.ignore) and ((not n.preset) or n.preset.ignore ~= true) then
+    if (not n.ignore) and ((not n.preset) or n.preset.ignore ~= true) and (not get_suspended(n)) then
         naughty.emit_signal("request::display" , n, "new", args)
         naughty.emit_signal("request::fallback", n, "new", args)
     end

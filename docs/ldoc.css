@@ -333,6 +333,23 @@ table td {
   border-bottom-width: 1px;
 }
 
+.flex-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex-list > div {
+    flex-grow: 1;
+    /* Use base width based on font size
+       to make sure text fits when zooming */
+    width: 9em;
+
+    text-align: center;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid rgb(193, 204, 228);
+}
+
 #about {
   padding: 15px;
   margin-left: 21em;
@@ -412,6 +429,16 @@ span.inheritance {
   border-left: none;
   border-right: none;
   text-align: right;
+}
+
+span.chips--readonly {
+  border: 1px solid #9db9f3;
+  border-radius: 25px;
+  padding: 1px 3px;
+  font-size: 70%;
+  color: #9db9f3;
+  background-color: #FFF;
+  margin-left: 10px;
 }
 
 table.function_list .function_args /*.function_modname*/ {
