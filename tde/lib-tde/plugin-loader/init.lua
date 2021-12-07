@@ -117,7 +117,7 @@ local function handle_plugin(value, name)
             -- otherwise the user entered a wrong plugin
             return true, pluginify(require(value), value:sub(8, #value))
         end
-    elseif dirExists(os.getenv("HOME") .. "/.config/tde/" .. value) then
+    elseif dirExists(os.getenv("HOME") .. "/.config/tde/" .. value) or dirExists("/etc/tde/plugins/" .. value) then
         local plugin = prequire(value)
         if (plugin) then
             print("Plugin " .. name .. " is loaded in!")
@@ -129,7 +129,7 @@ local function handle_plugin(value, name)
             )
         end
     else
-        inValidPlugin(value, "Not found. Make sure it is present in  ~/.config/tde/" .. value .. "/init.lua")
+        inValidPlugin(value, "Not found. Make sure it is present in  ~/.config/tde/" .. value .. "/init.lua or /etc/tde/plugins/" .. value .. "/init.lua")
     end
     return false
 end
@@ -143,7 +143,7 @@ local function getPluginSection(section)
         return iterator
     end
     if type(item) == "table" then
-        for _, value in ipairs(getItem(section)) do
+        for _, value in ipairs(item) do
             local valid, plugin = handle_plugin(value, section)
             if valid then
                 table.insert(iterator, plugin)

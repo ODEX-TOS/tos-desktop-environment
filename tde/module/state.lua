@@ -63,6 +63,20 @@ local function ensure_valid_dev_settings(state, disabled_dev_settings)
     return state
 end
 
+-- Ensure that the path exists on which the plugins are installed, otherwise omit them
+local function validate_plugins(plugins)
+    local __file = require("lib-tde.file")
+    local res = {}
+
+    for _, plugin in ipairs(plugins) do
+        if plugin.path == "" or (__file.dir_exists(plugin.path) and __file.exists(plugin.path .. '/init.lua') and __file.exists(plugin.path .. '/metadata.json')) then
+         table.insert(res, plugin)
+        end
+    end
+
+    return res
+end
+
 local function load()
 
     local fetch_default_layout = default_keyboard_layout()
@@ -145,7 +159,7 @@ local function load()
     result.wallpaper = result.wallpaper or table.wallpaper
 
     result.vpn_data = result.vpn_data or table.vpn_data
-    result.plugins = result.plugins or table.plugins
+    result.plugins = validate_plugins(result.plugins or table.plugins)
     result.display = result.display or table.display
 
     result.last_version = result.last_version or table.last_version
