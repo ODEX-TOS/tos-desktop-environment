@@ -80,6 +80,9 @@ local keybindings = {
     clipboard = "Mod4+#33", -- p
     settings = "Mod4+#39", -- s
     keyboard_layout = "Mod4+#31",
+
+    helpMenu = "Mod4+F1",
+    prompt = "Mod4+F2",
 }
 
 local function get_str_from_shortcut(shortcut)

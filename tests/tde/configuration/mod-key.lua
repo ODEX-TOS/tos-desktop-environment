@@ -204,8 +204,18 @@ function Test_configuration_mod_key_ontop()
     assert(type(mod.keybindings.keyboard_layout) == "string")
 end
 
+function Test_configuration_mod_key_help()
+    assert(mod.keybindings.helpMenu)
+    assert(type(mod.keybindings.helpMenu) == "string")
+end
+
+function Test_configuration_mod_key_prompt()
+    assert(mod.keybindings.prompt)
+    assert(type(mod.keybindings.prompt) == "string")
+end
+
 function Test_configuration_mod_key_keybindins_api_unit_tested()
-    local amount = 34
+    local amount = 36
     local result = tablelength(mod.keybindings)
     assert(
         result == amount,

@@ -29,7 +29,6 @@ require("awful.hotkeys_popup.keys")
 
 local config = require("configuration.keys.mod")
 local modkey = config.modKey
-local altkey = config.altKey
 local apps = require("configuration.apps")
 local xrandr = require("lib-tde.xrandr")
 local volume = require("lib-tde.volume")
@@ -60,14 +59,14 @@ local globalKeys =
   awful.util.table.join(
   -- Hotkeys
   awful.key(
-    {modkey},
-    "F1",
+    config.to_modifiers("helpMenu"),
+    config.to_key_string("helpMenu"),
     hotkeys_popup.show_help,
     {description = i18n.translate("show help"), group = i18n.translate("TDE")}
   ),
   awful.key(
-    {modkey},
-    "F2",
+    config.to_modifiers("prompt"),
+    config.to_key_string("prompt"),
     function()
       if _G.root.prompt ~= nil then
         _G.root.prompt()
@@ -186,23 +185,6 @@ local globalKeys =
     awful.tag.history.restore,
     {description = i18n.translate("go back"), group = i18n.translate(i18n.translate("tag"))}
   ),
-  -- Default client focus
-  awful.key(
-    {modkey},
-    "d",
-    function()
-      awful.client.focus.byidx(1)
-    end,
-    {description = i18n.translate("focus next by index"), group = i18n.translate("client")}
-  ),
-  awful.key(
-    {modkey},
-    "a",
-    function()
-      awful.client.focus.byidx(-1)
-    end,
-    {description = i18n.translate("focus previous by index"), group = i18n.translate("client")}
-  ),
   awful.key(
     config.to_modifiers("configPanel"),
     config.to_key_string("configPanel"),
@@ -259,54 +241,6 @@ local globalKeys =
     config.to_key_string("quit"),
     _G.tde.quit,
     {description = i18n.translate("quit TDE"), group = i18n.translate("TDE")}
-  ),
-  awful.key(
-    {altkey, "Shift"},
-    "l",
-    function()
-      awful.tag.incmwfact(0.05)
-    end,
-    {description = i18n.translate("increase master width factor"), group = i18n.translate("layout")}
-  ),
-  awful.key(
-    {altkey, "Shift"},
-    "h",
-    function()
-      awful.tag.incmwfact(-0.05)
-    end,
-    {description = i18n.translate("decrease master width factor"), group = i18n.translate("layout")}
-  ),
-  awful.key(
-    {modkey, "Shift"},
-    "h",
-    function()
-      awful.tag.incnmaster(1, nil, true)
-    end,
-    {description = i18n.translate("increase the number of master clients"), group = i18n.translate("layout")}
-  ),
-  awful.key(
-    {modkey, "Shift"},
-    "l",
-    function()
-      awful.tag.incnmaster(-1, nil, true)
-    end,
-    {description = i18n.translate("decrease the number of master clients"), group = i18n.translate("layout")}
-  ),
-  awful.key(
-    {modkey, "Control"},
-    "h",
-    function()
-      awful.tag.incncol(1, nil, true)
-    end,
-    {description = i18n.translate("increase the number of columns"), group = i18n.translate("layout")}
-  ),
-  awful.key(
-    {modkey, "Control"},
-    "l",
-    function()
-      awful.tag.incncol(-1, nil, true)
-    end,
-    {description = i18n.translate("decrease the number of columns"), group = i18n.translate("layout")}
   ),
   awful.key(
     config.to_modifiers("nextLayout"),
