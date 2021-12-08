@@ -145,8 +145,8 @@ function Test_configuration_mod_key_restoreMinimized()
 end
 
 function Test_configuration_mod_key_drop()
-    assert(mod.keybindings.drop)
-    assert(type(mod.keybindings.drop) == "string")
+    assert(mod.keybindings.dropdownTerminal)
+    assert(type(mod.keybindings.dropdownTerminal) == "string")
 end
 
 function Test_configuration_mod_key_toggleMusic()

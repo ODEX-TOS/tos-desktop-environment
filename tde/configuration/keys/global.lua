@@ -273,8 +273,8 @@ local globalKeys =
   ),
   -- Dropdown application
   awful.key(
-    config.to_modifiers("drop"),
-    config.to_key_string("drop"),
+    config.to_modifiers("dropdownTerminal"),
+    config.to_key_string("dropdownTerminal"),
     function()
       _G.toggle_quake()
     end,
