@@ -72,9 +72,9 @@ local function validate_plugins(plugins)
     local __file = require("lib-tde.file")
     local res = {}
 
-    for _, plugin in pairs(plugins) do
+    for key, plugin in pairs(plugins) do
         if plugin.path == "" or (__file.dir_exists(plugin.path) and __file.exists(plugin.path .. '/init.lua') and __file.exists(plugin.path .. '/metadata.json')) then
-            table.insert(res, plugin)
+            res[key] = plugin
         end
     end
 
