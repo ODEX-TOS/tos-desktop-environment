@@ -127,7 +127,7 @@ local function create_keyboard_widget(shortcut)
             input.stop_grabbing()
             input.start_grabbing(function(keybind)
                 -- Verify that it is unique
-                local unique, name = is_unique(keybind, shortcut.shortcut)
+                local unique, name = is_unique(to_save_state(keybind), shortcut.shortcut)
                 if not unique then
                     naughty.notify({
                         title = "Keyboard Shortcuts",
