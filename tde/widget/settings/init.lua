@@ -602,8 +602,15 @@ return function()
     nav_btn_container:add(view.link)
 
     INDEX = #view_container.children
+    root.elements.settings_views[INDEX].view.visible = true
+    root.elements.settings_views[INDEX].title.font = beautiful.title_font
 
     setActiveView(INDEX)
+
+    if view.view.refresh ~= nil then
+      print("Refreshing the view")
+      view.view.refresh()
+    end
   end)
 
   hub:buttons(
