@@ -35,6 +35,11 @@
 local split = require("lib-tde.function.common").split
 local signals = require("lib-tde.signals")
 
+-- convert comma to a point in the string
+local function to_point(speed)
+    local res, _ = string.gsub(speed, ",", ".")
+    return res or speed
+end
 
 local function _isValidInput(name, identifiers)
     name = name:lower()
@@ -144,7 +149,7 @@ local function setAcceleration(id, speed)
         speed = 0
     end
 
-    local cmd = string.format("xinput set-prop %d 'libinput Accel Speed' %.1f", id, speed)
+    local cmd = string.format("xinput set-prop %d 'libinput Accel Speed' %s", id, to_point(speed))
     print("Setting mouse acceleration speed: " .. cmd)
     awful.spawn(cmd, false)
 
@@ -177,7 +182,7 @@ local function setMouseSpeed(id, speed)
     end
 
     local cmd =
-        string.format("xinput set-prop %d 'Coordinate Transformation Matrix' %.1f 0 0 0 %.1f 0 0 0 1", id, speed, speed)
+        string.format("xinput set-prop %d 'Coordinate Transformation Matrix' %s 0 0 0 %s 0 0 0 1", id, to_point(speed), to_point(speed))
     print("Setting mouse speed: " .. cmd)
     awful.spawn(cmd, false)
 
