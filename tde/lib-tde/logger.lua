@@ -100,8 +100,8 @@ local error_fd = io.open(filename_error, "a")
 
 local prev_time = time()
 
--- how often we should flush to disk
-local flush_time_delta = 0.5
+-- how often we should flush to disk in seconds, 0 means always flush
+local flush_time_delta = 0
 
 -- helper function to convert a table to a string
 -- WARN: For internal use only, this should never be exposed to the end user
