@@ -64,7 +64,7 @@ local LOG_ERROR = "\27[0;31m[ ERROR "
 --- Indicate that this print message is a warning
 -- @property warn
 -- @param string
-local LOG_WARN = "\27[0;33m[ WARN "
+local LOG_WARN = "\27[0;33m[ WARN  "
 --- Indicate that this print message is a debug message
 -- @property debug
 -- @param string
@@ -72,7 +72,7 @@ local LOG_DEBUG = "\27[0;35m[ DEBUG "
 --- Indicate that this print message is an info message
 -- @property info
 -- @param string
-local LOG_INFO = "\27[0;32m[ INFO "
+local LOG_INFO = "\27[0;32m[ INFO  "
 
 if _G.echo ~= nil then
 	-- this module was already been called
@@ -136,6 +136,19 @@ local function table_to_string(tbl, depth, indent)
 	return result
 end
 
+
+local function __write(line, log)
+	-- print it to stdout
+	echo(line)
+	-- append it to the log file
+	if stdout_fd ~= nil then
+		stdout_fd:write(line .. "\n")
+	end
+	if error_fd ~= nil and log == LOG_ERROR then
+		error_fd:write(line .. "\n")
+	end
+end
+
 --- The default lua print message is overridden
 -- @tparam string arg The string to print
 -- @tparam[opt] enum log_type The type of log message
@@ -157,20 +170,36 @@ print = function(arg, log_type, depth)
 	end
 
 	local log = log_type or LOG_INFO
+	local bIsDevMode = general ~= nil and general["developer"] == "1"
 
 	local __time = time()
 
 	local out = os.date("%H:%M:%S") .. string.format(".%.04d", math.floor(__time * 10000) % 10000)
 	local statement = log .. out:gsub("\n", "") .. " ]\27[0m "
-	for line in arg:gmatch("[^\r\n]+") do
-		-- print it to stdout
-		echo(statement .. line)
-		-- append it to the log file
-		if stdout_fd ~= nil then
-			stdout_fd:write(statement .. line .. "\n")
+
+	if bIsDevMode then
+		local calling_fnc = debug.getinfo(2)
+		if calling_fnc ~= nil then
+			local file = calling_fnc.short_src
+			local line = calling_fnc.currentline
+			local name = calling_fnc.name
+			if name then
+				name = name .. '()'
+			else
+				name = ""
+			end
+
+			local debug_line = "\n\n" .. LOG_DEBUG .. out:gsub("\n", "") .. " ]\27[0m " .. file .. ":" .. line .. " @" .. name .. " "
+
+			__write(debug_line, log)
 		end
-		if error_fd ~= nil and log == LOG_ERROR then
-			error_fd:write(statement .. line .. "\n")
+	end
+
+	for line in arg:gmatch("[^\r\n]+") do
+		if bIsDevMode then
+			__write(statement .. "\t\t" .. line, log)
+		else
+			__write(statement .. line, log)
 		end
 	end
 
