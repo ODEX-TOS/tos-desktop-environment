@@ -108,11 +108,24 @@ return function()
   mic_footer.font = beautiful.font
   mic_footer.align = "right"
 
-  local vol_slider =
+  local hardware_only_volume_checbox = checkbox({
+    checked = _G.save_state.hardware_only_volume,
+    callback = function (checked)
+      signals.emit_volume_is_controlled_in_software(not checked, __active_sink)
+    end
+  })
+
+  local vol_slider
+  vol_slider =
     slider({
     default = _G.save_state.volume,
     callback = function(value)
-      signals.emit_volume(value)
+      if not hardware_only_volume_checbox.checked then
+        signals.emit_volume(value)
+      else
+        signals.emit_volume(100)
+        vol_slider.value = 100
+      end
     end
   })
 
@@ -124,12 +137,6 @@ return function()
   end
 })
 
-  local hardware_only_volume_checbox = checkbox({
-    checked = _G.save_state.hardware_only_volume,
-    callback = function (checked)
-      signals.emit_volume_is_controlled_in_software(not checked, __active_sink)
-    end
-  })
 
   signals.connect_volume(
     function(value)

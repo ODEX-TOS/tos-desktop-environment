@@ -534,7 +534,10 @@ local function set_mic_volume(volume)
     -- unmute the mic
     set_mic_muted(false)
 
-    awful.spawn("amixer set Capture " .. tostring(volume) .. '%', false)
+    local cmd = "amixer set Capture " .. tostring(math.floor(volume)) .. '%'
+    print(cmd)
+
+    awful.spawn(cmd, false)
 end
 
 --- Get the microphone volume asynchronously
