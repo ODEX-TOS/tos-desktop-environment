@@ -91,13 +91,15 @@ local function highlight_key(_keys)
     end
 
     local __keys = split(_keys[1], '+')
-    local res = ""
+    local res = "__keys[1]"
 
-    for _, k in ipairs(__keys) do
-        res = res .. '+' .. (get_key(k) or k)
+    for i, k in ipairs(__keys) do
+        if i > 1 then
+            res = res .. '+' .. (get_key(k) or k)
+        end
     end
 
-    return res
+    return highlight_text(res)
 end
 
 local tips = {
