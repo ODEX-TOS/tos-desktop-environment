@@ -30,6 +30,8 @@ local mat_colors = require("theme.mat-colors")
 local wibox = require("wibox")
 local menubar = require("menubar")
 
+local split = require("lib-tde.function.common").split
+
 local keys = require("configuration.keys.mod")
 
 local highlight_text = require("lib-tde.function.common").highlight_text
@@ -75,15 +77,27 @@ local function get_key(key)
 end
 
 local function highlight_key(_keys)
-    local res = get_key(_keys[1] or super)
 
-    for i, k in ipairs(_keys) do
-        if i > 1 then
-            res = res .. '+' .. (get_key(k) or k)
+    if  #_keys > 1 then
+        local res = get_key(_keys[1] or super)
+
+        for i, k in ipairs(_keys) do
+            if i > 1 then
+                res = res .. '+' .. (get_key(k) or k)
+            end
         end
+
+        return highlight_text(res)
     end
 
-    return highlight_text(res)
+    local __keys = split(_keys, '+')
+    local res = ""
+
+    for _, k in ipairs(__keys) do
+        res = res .. '+' .. (get_key(k) or k)
+    end
+
+    return res
 end
 
 local tips = {
@@ -98,7 +112,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Open up an application by using the keys %s or by pressing the search icon in the top right", highlight_key({super, keys.keybindings.launcher})), img = icons.search, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Open up an application by using the keys %s or by pressing the search icon in the top right", highlight_key({keys.keybindings.launcher})), img = icons.search, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -125,7 +139,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Open up an Terminal by pressing %s", highlight_key({super, keys.keybindings.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Open up an Terminal by pressing %s", highlight_key({keys.keybindings.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -152,7 +166,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close the Terminal by pressing %s", highlight_key({super, keys.keybindings.kill})), img = icons.close, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close the Terminal by pressing %s", highlight_key({keys.keybindings.kill})), img = icons.close, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -185,7 +199,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Now open 3 terminals using %s", highlight_key({super, keys.keybindings.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Now open 3 terminals using %s", highlight_key({keys.keybindings.terminal})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -227,7 +241,7 @@ local tips = {
         loading = false
     },
     {
-        text = i18n.translate("Try pressing %s a couple of times and notice how your applications change", highlight_key({super, keys.keybindings.nextLayout})), img = beautiful.layout_tile or icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Try pressing %s a couple of times and notice how your applications change", highlight_key({keys.keybindings.nextLayout})), img = beautiful.layout_tile or icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             local start_tile = awful.screen.focused().selected_tag.layout.name
@@ -336,7 +350,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close the terminals until you have one left using %s", highlight_key({super, keys.keybindings.kill})), img = terminal_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close the terminals until you have one left using %s", highlight_key({keys.keybindings.kill})), img = terminal_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -405,7 +419,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Close all open Terminals by pressing %s", highlight_key({super, keys.keybindings.kill})), img = icons.close, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Close all open Terminals by pressing %s", highlight_key({keys.keybindings.kill})), img = icons.close, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -438,7 +452,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Now you can also open the settings using %s", highlight_key({super, keys.keybindings.settings})), img = settings_icon, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Now you can also open the settings using %s", highlight_key({keys.keybindings.settings})), img = settings_icon, cb = function(done_cb, stop_cb)
             local stopped = false
             local timer = gears.timer {
                 timeout = 2,
@@ -496,7 +510,7 @@ local tips = {
         loading = true
     },
     {
-        text = i18n.translate("Here is an extra tip, you can view the keyboard shortcuts using %s", highlight_key({super, "F1"})), img = icons.logo, cb = function(done_cb, stop_cb)
+        text = i18n.translate("Here is an extra tip, you can view the keyboard shortcuts using %s", highlight_key({keys.keybindings.helpMenu})), img = icons.logo, cb = function(done_cb, stop_cb)
             local stopped = false
 
             stop_cb(function() stopped = true end)

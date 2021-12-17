@@ -55,7 +55,7 @@ installed("installer", function(show_installer)
         desktop_icon.create_icon(
             settings_icon,
             i18n.translate("Settings"),
-            1,
+            2,
             function()
                 print("Opening settings application")
                 root.elements.settings.enable_view_by_index(-1, mouse.screen)

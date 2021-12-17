@@ -94,7 +94,7 @@ end
 
 installed("installer", function (bIsInstalled)
     if IsreleaseMode and bIsInstalled then
-        offset = 1
+        offset = 2
     end
 
     -- TODO: run filesystem event listener each time the desktop changes
