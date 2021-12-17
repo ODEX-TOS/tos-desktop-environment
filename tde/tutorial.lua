@@ -90,7 +90,7 @@ local function highlight_key(_keys)
         return highlight_text(res)
     end
 
-    local __keys = split(_keys, '+')
+    local __keys = split(_keys[1], '+')
     local res = ""
 
     for _, k in ipairs(__keys) do
