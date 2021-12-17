@@ -91,7 +91,7 @@ local function highlight_key(_keys)
     end
 
     local __keys = split(_keys[1], '+')
-    local res = "__keys[1]"
+    local res = __keys[1]
 
     for i, k in ipairs(__keys) do
         if i > 1 then
