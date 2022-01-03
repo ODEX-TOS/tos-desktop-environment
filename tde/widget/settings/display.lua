@@ -45,6 +45,7 @@ local xrandr = require('lib-tde.xrandr')
 local xrandr_menu = xrandr.menu
 local mat_icon_button = require("widget.material.icon-button")
 local mat_icon = require("widget.material.icon")
+local dpi_handle = require("widget.settings.dpi-handler")
 
 
 -- this will hold the scrollbox, used to reset it
@@ -592,11 +593,8 @@ return function()
     callback = function()
       local value = tostring(math.floor(dpi_slider.get_number()))
       print("Saving dpi value: " .. value)
-      local xresource_file = os.getenv("HOME") .. '/.Xresources'
 
-      -- make the changes persistant
-      filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
-      awful.spawn({'xrdb', xresource_file}, false)
+      dpi_handle.update_dpi(value or 100)
 
       tde.restart()
     end

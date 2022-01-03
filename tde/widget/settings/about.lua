@@ -36,11 +36,12 @@ local uname = require("posix.sys.utsname").uname()
 
 local dpi = beautiful.xresources.apply_dpi
 local icons = require("theme.icons")
+local size = require("widget.settings.size")
 
-local m = dpi(10)
-local settings_index = dpi(40)
-local settings_width = dpi(1100)
-local settings_nw = dpi(260)
+local m = size.m
+local settings_index = size.settings_index
+local settings_width = size.settings_width
+local settings_nw = size.settings_nw
 
 -- returns the total widget and text widget holding the normal name
 local function generate_setting_panel(title)

@@ -43,9 +43,8 @@ local common = require("lib-tde.function.common")
 local highlight_text = common.highlight_text
 local split = common.split
 
-local dpi = beautiful.xresources.apply_dpi
-
-local m = dpi(10)
+local size = require("widget.settings.size")
+local m = size.m
 
 local function refresh() end
 

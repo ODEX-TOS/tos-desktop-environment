@@ -47,6 +47,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - You can now enable/disable plugins from the settings
 - You can now change the default applications from the settings
 - Added a new battery plugin for the settings
+- Handle dpi better for smaller displays ( < 1920x1080)
 
 ### Bug Fixes
 - Don't play a 'pop' sound when opening the left-panel

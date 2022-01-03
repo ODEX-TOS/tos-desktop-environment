@@ -33,10 +33,12 @@ local signals = require("lib-tde.signals")
 local button = require("lib-widget.button")
 local slider = require("lib-widget.slider")
 
-local m = dpi(5)
-local settings_index = dpi(35)
-local settings_width = dpi(1100)
-local settings_nw = dpi(260)
+local size = require("widget.settings.size")
+
+local m = size.m
+local settings_index = size.settings_index
+local settings_width = size.settings_width
+local settings_nw = size.settings_nw
 
 -- We need to expose these variables in a more "global" scope
 -- This way we can update the colors on the fly

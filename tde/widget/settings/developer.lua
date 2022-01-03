@@ -31,8 +31,10 @@ local checkbox = require("lib-widget.checkbox")
 
 local signals = require("lib-tde.signals")
 
-local m = dpi(5)
-local settings_index = dpi(40)
+local size = require("widget.settings.size")
+
+local m = size.m
+local settings_index = size.settings_index
 
 local function create_checkbox(name, checked, callback, set_checkbox_callback)
   local name_widget =

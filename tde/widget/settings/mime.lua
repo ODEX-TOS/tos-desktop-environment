@@ -42,9 +42,12 @@ local mimetypes = {}
 
 local dpi = beautiful.xresources.apply_dpi
 
-local m = dpi(10)
 local element_height = dpi(130)
-local settings_height = dpi(1000)
+
+local size = require("widget.settings.size")
+
+local m = size.m
+local settings_height = size.settings_height
 
 
 local function refresh() end

@@ -38,10 +38,13 @@ local button = require("lib-widget.button")
 local checkbox = require("lib-widget.checkbox")
 local datetime = require("lib-tde.function.datetime")
 
-local m = dpi(5)
-local settings_index = dpi(40)
-local settings_width = dpi(1100)
-local settings_nw = dpi(260)
+
+local size = require("widget.settings.size")
+
+local m = size.m
+local settings_index = size.settings_index
+local settings_width = size.settings_width
+local settings_nw = size.settings_nw
 
 local button_widgets = {}
 local primary_theme = beautiful.primary

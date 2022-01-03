@@ -51,8 +51,11 @@ local ADD_STATE = 1
 
 local STATE = LIST_STATE
 
-local m = dpi(10)
-local settings_index = dpi(40)
+local size = require("widget.settings.size")
+
+local m = size.m
+local settings_index = size.settings_index
+
 
 local active_rule_list = wibox.layout.fixed.vertical()
 active_rule_list.spacing = m

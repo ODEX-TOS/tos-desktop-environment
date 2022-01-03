@@ -36,9 +36,10 @@ local highlight_text = require("lib-tde.function.common").highlight_text
 local icons = require("theme.icons")
 local naughty = require("naughty")
 
-local dpi = beautiful.xresources.apply_dpi
+local size = require("widget.settings.size")
 
-local m = dpi(10)
+local m = size.m
+
 
 local function refresh() end
 

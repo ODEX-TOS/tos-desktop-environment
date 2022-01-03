@@ -32,8 +32,13 @@ local scrollbox = require("lib-widget.scrollbox")
 
 local dpi = beautiful.xresources.apply_dpi
 
-local m = dpi(10)
-local settings_index = dpi(40)
+local size = require("widget.settings.size")
+local m = size.m
+
+
+local settings_index = size.settings_index
+
+
 local scrollbox_body
 
 return function()

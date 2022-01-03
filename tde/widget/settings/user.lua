@@ -44,9 +44,11 @@ loading.stop()
 local body = nil
 local layout = nil
 
-local m = dpi(10)
-local settings_index = dpi(40)
-local settings_height = dpi(500)
+local _size = require("widget.settings.size")
+
+local m = _size.m
+local settings_index = _size.settings_index
+local settings_height = _size.settings_height
 
 local tempUserDir = filehandle.mktempdir()
 

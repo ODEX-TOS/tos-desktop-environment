@@ -43,11 +43,14 @@ local qr_code = require("lib-tde.qr-code")
 
 local dpi = beautiful.xresources.apply_dpi
 
-local m = dpi(10)
-local settings_index = dpi(40)
-local settings_width = dpi(1100)
-local settings_height = dpi(900)
-local settings_nw = dpi(260)
+local size = require("widget.settings.size")
+
+local m = size.m
+local settings_index = size.settings_index
+local settings_width = size.settings_width
+local settings_height = size.settings_height
+local settings_nw = size.settings_nw
+
 
 local active_text = ""
 

@@ -22,48 +22,21 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 --SOFTWARE.
 ]]
-local wibox = require("wibox")
 local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
+local dpi_handle = require("widget.settings.dpi-handler")
 
-local size = require("widget.settings.size")
+local settings_width = dpi(1100)
+local settings_height = dpi(1000)
 
-local m = size.m
-local settings_index = size.settings_index
+local m = dpi_handle.get_dpi(dpi(10), settings_width, settings_height)
+local settings_index = dpi_handle.get_dpi(dpi(40), settings_width, settings_height)
+local settings_nw = dpi_handle.get_dpi(dpi(260), settings_width, settings_height)
 
-return function()
-  local view = wibox.container.margin()
-  view.left = m
-  view.right = m
-
-  local title = wibox.widget.textbox(i18n.translate("About"))
-  title.font = beautiful.title_font
-  title.forced_height = settings_index + m + m
-
-  view:setup {
-    layout = wibox.container.background,
-    {
-      layout = wibox.layout.align.vertical,
-      {
-        layout = wibox.container.place,
-        valign = "center",
-        halign = "center",
-        wibox.widget.textbox(i18n.translate("test"))
-      }
-    }
-  }
-
-  view.refresh = function()
-    -- please ensure that not to much new objects get created on the refresh
-    -- instead update the existing objects
-  end
-
-  view.stop_view = function()
-    -- Make sure that 'background' processes are stopped here
-  end
-
-  view.stop = function()
-    -- This gets called on settings close and when another view get's activated
-  end
-
-  return view
-end
+return {
+     m = m,
+     settings_index = settings_index,
+     settings_width =  dpi_handle.get_dpi(settings_width, settings_width, settings_height),
+     settings_height = dpi_handle.get_dpi(settings_height, settings_width, settings_height),
+     settings_nw = settings_nw
+}
