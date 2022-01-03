@@ -25,7 +25,6 @@
 
 -- This file is responsible for making sure the settings application still fits in the view (By automatically scaling the dpi settings)
 
-local beautiful = require("beautiful")
 local filesystem = require("lib-tde.file")
 local awful = require("awful")
 
@@ -55,13 +54,10 @@ local function get_dpi(dpi, width, height)
 
    local smallest_width = smallest.geometry.width
    local smallest_height = smallest.geometry.height
-   print(smallest.geometry)
-   print(width)
-   print(height)
 
    local function offset(_dpi)
         if _dpi == smallest_height or _dpi == smallest_width then
-            return _dpi - beautiful.xresources.apply_dpi(10)
+            return _dpi * 0.9
         end
 
         return _dpi
