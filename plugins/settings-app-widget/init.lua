@@ -32,9 +32,10 @@ local icons = require("theme.icons")
 local wibox = require("wibox")
 
 -- general settings for how big the settings app will be
-local m = dpi(10)
-local settings_width = dpi(800)
-local settings_nw = dpi(200)
+local size = require("widgets.settings.size")
+local m = size.m
+local settings_width = size.settings_width
+local settings_nw = size.settings_nw
 
 local function create()
   local view = wibox.container.margin()
