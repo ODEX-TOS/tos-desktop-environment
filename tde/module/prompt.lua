@@ -272,6 +272,7 @@ _G.root.prompt = function()
         bg_cursor = beautiful.primary.hue_700,
         textbox = prompt,
         text = "",
+        history_path = os.getenv("HOME") .. '/.cache/tde/prompt.hist',
         keypressed_callback  = function(mod, key, cmd) --luacheck: no unused args
           if key == 'Down' then
             down()

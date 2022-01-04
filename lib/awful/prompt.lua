@@ -19,7 +19,10 @@
 --   <tr><td><kbd>CTRL+U</kbd></td><td>unix-line-discard</td></tr>
 --   <tr><td><kbd>CTRL+W</kbd></td><td>unix-word-rubout</td></tr>
 --   <tr><td><kbd>CTRL+BACKSPACE</kbd></td><td>unix-word-rubout</td></tr>
+--   <tr><td><kbd>CTRL+LEFT</kbd></td><td>Jump to previous word</td></tr>
+--   <tr><td><kbd>CTRL+RIGHT</kbd></td><td>Jump to next word</td></tr>
 --   <tr><td><kbd>SHIFT+INSERT</kbd></td><td>paste</td></tr>
+--   <tr><td><kbd>SHIFT+INSERT</kbd></td><td>copy</td></tr>
 --   <tr><td><kbd>HOME</kbd></td><td>beginning-of-line</td></tr>
 --   <tr><td><kbd>END</kbd></td><td>end-of-line</td></tr>
 -- </table>
@@ -777,6 +780,10 @@ function prompt.run(args, textbox, exe_callback, completion_callback,
                 end
                 command = command:sub(1, cword_start_pos - 1) .. command:sub(cword_end_pos + 1)
                 cur_pos = cword_start_pos
+            elseif key == "Left" then
+                cur_pos = cword_start(command, cur_pos)
+            elseif key == "Right" then
+                cur_pos = cword_end(command, cur_pos)
             elseif key == "Delete" then
                 -- delete from history only if:
                 --  we are not dealing with a new command
@@ -846,7 +853,7 @@ function prompt.run(args, textbox, exe_callback, completion_callback,
             end
 
             -- Typin cases
-            if mod.Shift and key == "Insert" then
+            if mod.Shift and key == "Insert" or mod.Control and key == "v" then
                 local selection = capi.selection()
                 if selection then
                     -- Remove \n
