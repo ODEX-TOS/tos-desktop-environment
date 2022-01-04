@@ -27,6 +27,9 @@
 
 local filesystem = require("lib-tde.file")
 local awful = require("awful")
+local stdlib = require("posix.stdlib")
+
+stdlib.setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0")
 
 local function update_dpi(value)
     local xresource_file = os.getenv("HOME") .. '/.Xresources'
@@ -34,6 +37,18 @@ local function update_dpi(value)
     -- make the changes persistant
     filesystem.replace(xresource_file, "Xft.dpi:.*", "Xft.dpi: " .. value)
     awful.spawn({'xrdb', xresource_file}, false)
+
+    -- We also need to take into account the scaling of QT applications: see https://forum.manjaro.org/t/scaling-issues-with-qt-apps-on-gnome/39843/8
+    local qt_scale_file = os.getenv("HOME") .. '/.profile'
+    if filesystem.string(qt_scale_file):find("export QT_FONT_DPI=") ~= nil then
+        filesystem.replace(qt_scale_file, "export QT_FONT_DPI=.*", "export QT_FONT_DPI=" .. value)
+    else
+        filesystem.write(qt_scale_file, "export QT_FONT_DPI=" .. value)
+    end
+
+    -- Now we also expose the environment variable to the active DE instance, so new apps will be scaled without reloading the DE
+    stdlib.setenv("QT_FONT_DPI", value)
+    stdlib.setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0")
 end
 
 local function get_dpi(dpi, width, height)
@@ -57,7 +72,7 @@ local function get_dpi(dpi, width, height)
 
    local function offset(_dpi)
         if _dpi == smallest_height or _dpi == smallest_width then
-            return _dpi * 0.9
+            return _dpi * 0.95
         end
 
         return _dpi
