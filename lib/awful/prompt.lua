@@ -803,6 +803,17 @@ function prompt.run(args, textbox, exe_callback, completion_callback,
                         cur_pos = 1
                     end
                 end
+            elseif key == "v" then
+                local selection = capi.selection()
+                if selection then
+                    -- Remove \n
+                    local n = selection:find("\n")
+                    if n then
+                        selection = selection:sub(1, n - 1)
+                    end
+                    command = command:sub(1, cur_pos - 1) .. selection .. command:sub(cur_pos)
+                    cur_pos = cur_pos + #selection
+                end
             end
         elseif mod.Mod1 or mod.Mod3 then
             if key == "b" then
@@ -853,7 +864,7 @@ function prompt.run(args, textbox, exe_callback, completion_callback,
             end
 
             -- Typin cases
-            if mod.Shift and key == "Insert" or mod.Control and key == "v" then
+            if mod.Shift and key == "Insert" then
                 local selection = capi.selection()
                 if selection then
                     -- Remove \n
