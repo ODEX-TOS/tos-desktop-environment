@@ -158,6 +158,31 @@ local reset_textbox = function(widget, active_text, hidden, has_focus)
     return active_text
 end
 
+
+local previous_word_cursor_index = function(active_text, cursor)
+    cursor = string.len(active_text) - cursor
+
+    local index, _ =  tostring(active_text):reverse():find("%s", cursor + 1)
+
+    if index == nil then
+        return 0
+    end
+
+    index = string.len(active_text) - index
+
+    return index
+end
+
+local next_word_cursor_index = function(active_text, cursor)
+    local index, _ = active_text:find("%s", cursor + 1)
+
+    if index == nil then
+        index = string.len(active_text)
+    end
+
+    return index
+end
+
 --- Create a new inputfield widget
 -- @tparam[opt] function args.typing_callback This callback gets triggered on every keystroke
 -- @tparam[opt] function args.done_callback This callback gets triggered when the user finished typing
@@ -252,6 +277,12 @@ local _if = function(args)
                 active_text = delete_key(textbox, active_text, hidden)
             elseif key == "Delete" then
                 active_text = delete_ahead_key(textbox, active_text, hidden)
+            elseif key == "Left" and mod[1] == "Control" or mod[2] == "Control" then
+                cursor_index = previous_word_cursor_index(active_text, cursor_index)
+                update_text(active_text, textbox, hidden)
+            elseif key == "Right" and mod[1] == "Control" or mod[2] == "Control" then
+                cursor_index = next_word_cursor_index(active_text, cursor_index)
+                update_text(active_text, textbox, hidden)
             elseif key == "Left" then
                 cursor_index = cursor_index - 1
                 if cursor_index < 0 then
