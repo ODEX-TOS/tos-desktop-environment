@@ -26,6 +26,54 @@ local filesystem = require("gears.filesystem")
 local config = require("config")
 local hardware = require("lib-tde.hardware-check")
 local signals = require('lib-tde.signals')
+local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
+
+local term = ""
+local term_add_dpi = false
+
+local function get_terminal()
+  -- cache as is_in_path is costly
+  if term ~= nil and term ~= "" then
+    if term_add_dpi then
+      return term .. ' -z ' .. tostring(dpi(16))
+    end
+
+    return term
+  end
+
+  local terminals = {
+    "st",
+    "kitty",
+    "alacritty",
+    "konsole",
+    "gnome-terminal",
+    "xterm"
+  }
+
+  -- let's find a terminal for the user
+  for _, terminal in ipairs(terminals) do
+    if hardware.is_in_path(terminal) then
+      term = terminal
+      if term == "st" then
+        -- In case the terminal is ST, we want to see if it contains the patch for -z, if that is the case we can set the dpi
+        local output, _ = hardware.execute("st -h", true)
+        if output:find("-z") ~= nil then
+          term_add_dpi = true
+          return term .. ' -z ' .. tostring(dpi(16))
+        else
+          term_add_dpi = false
+        end
+      else
+        term_add_dpi = false
+      end
+
+      return term
+    end
+  end
+
+  return "xterm"
+end
 
 local function addHash(input)
   if input == nil then
@@ -36,7 +84,6 @@ end
 
 -- lib-tde to retrieve current theme
 local themefile = require("theme.config")
-local beautiful = require("beautiful")
 
 local function update_color()
   local color = beautiful.primary.hue_500
@@ -69,7 +116,7 @@ end
 return {
   -- List of apps to start by default on some actions
   default = {
-    terminal = os.getenv("TERMINAL") or "st",
+    terminal = os.getenv("TERMINAL") or get_terminal(),
     editor = "code-insiders",
     web_browser = "firefox-developer-edition",
     file_manager = "thunar",

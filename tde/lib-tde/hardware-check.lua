@@ -65,18 +65,24 @@ local LOG_WARN = "\27[0;33m[ WARN "
 
 --- Executes a shell command on the main thread, This is dangerous and should be avoided as it blocks input!!
 -- @tparam cmd string The command to execute
+-- @tparam[opt=stderr] stderr boolean Should return stderr output instead of stdout
 -- @treturn tuple The first element is the standard output of the command (string), the second element is the exit code (number)
 -- @staticfct execute
 -- @usage -- This returns Tuple<"hello", 0>
 -- lib-tde.hardware-check.execute("echo hello")
-local function osExecute(cmd)
+local function osExecute(cmd, stderr)
     print("Running synchronous shell code can dramatically slow down execution", LOG_WARN)
     print("The command being ran is:", LOG_WARN)
     print(tostring(cmd), LOG_WARN)
     print("Please use awful.spawn.easy_async(cmd, callback) instead", LOG_WARN)
 
     local start = time()
-    local handle = assert(io.popen(cmd, "r"))
+    local handle
+    if stderr == nil or stderr == false then
+        handle = assert(io.popen(cmd, "r"))
+    else
+        handle = assert(io.popen('sh -c "' .. cmd .. ' 2>&1"', "r"))
+    end
     local commandOutput = assert(handle:read("*a"))
     local returnTable = {handle:close()}
     local stop = time()
