@@ -87,7 +87,8 @@ save_state= {
     },
     keyboard_shortcuts = {
 
-    }
+    },
+    hardware_only_volume_controls = {}
 }
 
 -- some generic counter for tables to make sure the user didn't forget to add a unit test

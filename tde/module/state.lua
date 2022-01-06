@@ -392,7 +392,7 @@ signals.connect_volume_is_controlled_in_software(
             save_state.hardware_only_volume_controls[sink.name] = {
                 name = sink.name,
                 ports = {sink.port},
-                hardware_only_volume = bIsControlledInSoftware
+                hardware_only_volume = not bIsControlledInSoftware
             }
         end
 
@@ -402,6 +402,8 @@ signals.connect_volume_is_controlled_in_software(
         else
             if index == nil then table.insert(save_state.hardware_only_volume_controls[sink.name].ports, sink.port) end
         end
+
+        save_state.hardware_only_volume_controls[sink.name].hardware_only_volume = not bIsControlledInSoftware
 
         -- TODO: Deprecate this legacy settings, we now control hardware based on the active source/port
         save_state.hardware_only_volume = not bIsControlledInSoftware

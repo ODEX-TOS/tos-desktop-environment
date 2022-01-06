@@ -126,7 +126,7 @@ return function()
         signals.emit_volume(value)
       else
         signals.emit_volume(100)
-        vol_slider.value = 100
+        --vol_slider.value = 100
       end
     end
   })
@@ -211,19 +211,18 @@ return function()
     -- Let's check this
     local __sink_save_data = _G.save_state.hardware_only_volume_controls[_sink.name]
     -- This sink with this port are the same
+    local found = false
     if __sink_save_data ~= nil then
       local ports = __sink_save_data.ports
-      local found = false
       for _, port in ipairs(ports) do
         -- We have the same sink and port
         if port == _sink.port then
          found = true
         end
       end
-      hardware_only_volume_checbox.update(found);
-    else
-      hardware_only_volume_checbox.update(false);
     end
+    hardware_only_volume_checbox.update(found);
+
   end
 
   local function create_sink_widget(sink)

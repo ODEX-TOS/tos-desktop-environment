@@ -48,14 +48,21 @@ local function _should_control_via_software()
         return true
     end
 
+    print("Active sink")
+    print(__active_sink)
+    print("save state stored sink")
+    print(_sink)
+
     -- Otherwise we check the user settings
     local ports = _sink.ports
     for _, port in ipairs(ports) do
         if port == __active_sink.port then
-            return false
+            _G.save_state.hardware_only_volume = _sink.hardware_only_volume
+            return not _sink.hardware_only_volume
         end
     end
 
+    _G.save_state.hardware_only_volume = false
     return true
 end
 
@@ -557,6 +564,12 @@ local function get_mic_volume(callback)
         end
     )
 end
+
+get_default_sink(function(sink)
+    __active_sink.name = sink.name
+    __active_sink.port = sink.port
+    _should_control_via_software()
+end)
 
 return {
     get_volume = get_volume,
