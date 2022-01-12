@@ -373,3 +373,25 @@ ruled.client.connect_signal("request::rules", function()
   }
 end)
 
+
+-- Edge case for windows that don't want to properly tile
+-- e.g. google meets screen share, zoom preview box, etc
+client.connect_signal("request::manage", function(c)
+  if c.size_hints == nil then
+    return
+  end
+
+  if c.size_hints["max_width"] == nil or c.size_hints["max_height"] == nil then
+    return
+  end
+
+  local max_w = c.size_hints["max_width"]
+  local max_h = c.size_hints["max_height"]
+
+  local screen_geo = c.screen.workarea
+
+  if max_w < screen_geo.width or max_h < screen_geo.height then
+    c.floating = true
+    awful.placement.no_offscreen(c)
+  end
+end)
