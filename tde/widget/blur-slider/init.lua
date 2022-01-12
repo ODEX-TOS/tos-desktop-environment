@@ -28,8 +28,10 @@ local awful = require('awful')
 local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 local icons = require('theme.icons')
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 local slider = require("lib-widget.slider")
+
+local to_point = require("lib-tde.function.common").to_point
 
 local filehandle = require('lib-tde.file')
 
@@ -85,6 +87,7 @@ local blur_slider = slider({
 	max = 25,
 	default = 20,
 	callback = function (value)
+		value = to_point(value)
 		adjust_blur(value)
 	end
 })

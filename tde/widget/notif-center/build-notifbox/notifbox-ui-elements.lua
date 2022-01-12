@@ -32,7 +32,7 @@ local dpi = beautiful.xresources.apply_dpi
 local config_dir = gears.filesystem.get_configuration_dir()
 local widget_icon_dir = config_dir .. 'widget/notif-center/icons/'
 
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 
 local ui_noti_builder = {}
 

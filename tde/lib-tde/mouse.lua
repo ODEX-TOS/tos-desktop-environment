@@ -32,14 +32,10 @@
 -- @tdemod lib-tde.mouse
 -----------------
 
-local split = require("lib-tde.function.common").split
+local common = require("lib-tde.function.common")
+local split = common.split
+local to_point = common.to_point
 local signals = require("lib-tde.signals")
-
--- convert comma to a point in the string
-local function to_point(speed)
-    local res, _ = string.gsub(speed, ",", ".")
-    return res or speed
-end
 
 local function _isValidInput(name, identifiers)
     name = name:lower()

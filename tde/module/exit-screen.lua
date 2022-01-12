@@ -30,7 +30,7 @@ local dpi = require("beautiful").xresources.apply_dpi
 
 local icons = require("theme.icons")
 local apps = require("configuration.apps")
-local clickable_container = require("widget.clickable-container")
+local clickable_container = require("widget.material.clickable-container")
 local signals = require("lib-tde.signals")
 
 local animate = require("lib-tde.animations").createAnimObject

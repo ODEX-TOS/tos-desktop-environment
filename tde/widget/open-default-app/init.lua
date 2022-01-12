@@ -28,7 +28,7 @@ local awful = require('awful')
 local gears = require('gears')
 local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 local icons = require('theme.icons')
 
 local create_open_default_button = function(s)

@@ -26,7 +26,7 @@ local awful = require('awful')
 local wibox = require('wibox')
 local gears = require('gears')
 local dpi = require('beautiful').xresources.apply_dpi
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 local config_dir = gears.filesystem.get_configuration_dir()
 local widget_icon_dir = config_dir .. 'widget/tray-toggle/icons/'
 

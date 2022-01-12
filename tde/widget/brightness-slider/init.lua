@@ -28,7 +28,7 @@ local awful = require('awful')
 local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 local icons = require('theme.icons')
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 local signals = require('lib-tde.signals')
 local slider = require('lib-widget.slider')
 

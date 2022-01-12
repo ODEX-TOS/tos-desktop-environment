@@ -234,6 +234,14 @@ local function highlight_text(text, colorcode)
     return string.format("<span foreground='%s'>%s</span>", colorcode, text)
 end
 
+--- Return the US way of writing a number as a string e.g. 1.3 becomes "1.3" and 1,3 becomes "1.3"
+-- @tparam number number The number to convert to a string representation (Doesn't follow the locale)
+-- @staticfct to_point
+local function to_point(number)
+    local res, _ = string.gsub(tostring(number), ",", ".")
+    return res
+end
+
 return {
     split = split,
     sleep = sleep,
@@ -245,5 +253,6 @@ return {
     major_version = major_version,
     capitalize = capitalize,
     widget_geometry = widget_geometry,
-    highlight_text = highlight_text
+    highlight_text = highlight_text,
+    to_point = to_point
 }

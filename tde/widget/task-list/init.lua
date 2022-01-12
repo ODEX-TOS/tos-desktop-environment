@@ -26,7 +26,7 @@ local awful = require('awful')
 local wibox = require('wibox')
 local dpi = require('beautiful').xresources.apply_dpi
 local gears = require('gears')
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 local icons = require('theme.icons')
 
 --- Common method to create buttons.

@@ -222,13 +222,6 @@ function Test_configuration_mod_key_tde_widget_package_updater_init_lua()
     assert(exists("tde/widget/package-updater/init.lua"), "Check that tde/widget/package-updater/init.lua exists")
 end
 
-function Test_configuration_mod_key_tde_widget_clickable_container_init_lua()
-    assert(
-        exists("tde/widget/clickable-container/init.lua"),
-        "Check that tde/widget/clickable-container/init.lua exists"
-    )
-end
-
 function Test_configuration_mod_key_tde_tutorial_lua()
     assert(exists("tde/tutorial.lua"), "Check that tde/tutorial.lua exists")
 end

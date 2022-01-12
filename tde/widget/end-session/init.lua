@@ -29,7 +29,7 @@ local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 local icons = require('theme.icons')
 local signals = require('lib-tde.signals')
-local clickable_container = require('widget.clickable-container')
+local clickable_container = require('widget.material.clickable-container')
 
 local return_button = function()
 
