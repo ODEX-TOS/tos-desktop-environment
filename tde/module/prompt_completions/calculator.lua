@@ -23,12 +23,76 @@
 --SOFTWARE.
 ]]
 local icons = require("theme.icons")
+local common = require("lib-tde.function.common")
 
+-- convert some common math symbols to their respective lua representation
+--
+-- Symbols
+-- a ** b (Power) -> math.pow(a,b)
+-- a ^ b (power)  -> math.pow(a,b)
+-- min -> math.min()
+local function math_to_lua (query)
+    local replace = {
+        "min",
+        "modf",
+        "ceil",
+        "floor",
+        "log",
+        "deg",
+        "asin",
+        "abs",
+        "sinh",
+        "tanh",
+        "ult",
+        "log10",
+        "sqrt",
+        "atan",
+        "pi",
+        "fmod",
+        "acos",
+        "cos",
+        "max",
+        "exp",
+        "atan2",
+        "cosh",
+        "sin",
+        "rad",
+        "pow"
+    }
+
+    local _
+
+    query, _ = string.gsub(query, "math%.", "")
+    -- update simple value
+    for _, val in ipairs(replace) do
+        query, _ = string.gsub(query, "%f[%a]" .. val .. "%(", "math." .. val .. '(' )
+    end
+
+     -- Now we do a search and replace for know values such as pi, tau
+     query, _ = string.gsub(query, "pi", common.to_point(math.pi))
+
+     local tau = 1.618033988749894
+     query, _ = string.gsub(query, "tau", common.to_point(tau))
+
+     local star_regex = "([%d%s%w]+)(%*%*)([%d%s%w]+)"
+     while string.find(query, star_regex) ~= nil do
+        query, _ = string.gsub(query, star_regex, " math.pow(%1, %3) ")
+     end
+
+
+     local had_pow_regex = "([%d%s%w]+)(%^)([%d%s%w]+)"
+     while string.find(query, had_pow_regex) ~= nil do
+        query, _ = string.gsub(query, had_pow_regex, " math.pow(%1, %3) ")
+     end
+
+
+    return query
+end
 
 local function get_completions(query)
     local res = {}
 
-    local evaluated = load("return " .. query)
+    local evaluated = load("return " .. math_to_lua(query))
 
     if type(evaluated) == "function" then
         local err, payload = pcall(evaluated)
