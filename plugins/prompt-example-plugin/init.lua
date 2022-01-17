@@ -49,10 +49,19 @@ local function perform_action(payload)
     print("Prompt example plugin got payload: " .. payload)
 end
 
+-- This function allows you to tab complete a query for faster searching
+-- The payload parameter is the payload you supplied in the `get_completions` function
+-- The query parameter is the search string the user typed in
+-- Return a string represeting the completed query
+local function get_tab_completion(payload, query)
+    return "Plugin completion for: " .. query .. " with payload: " .. payload
+end
+
 
 return {
     get_completion = get_completions,
     perform_action = perform_action,
+    get_tab_completion = get_tab_completion,
 
     -- Don't forget to change this name to the name of your plugin
     name = "example plugin"

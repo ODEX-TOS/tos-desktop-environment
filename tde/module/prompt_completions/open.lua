@@ -63,10 +63,19 @@ local function perform_action(payload)
     awful.spawn(cmd, false)
 end
 
+local function perform_tab_completion(payload, _)
+    if filehandle.dir_exists(payload) then
+        return payload .. "/"
+    end
+
+    return payload
+end
+
 local name = i18n.translate("Files")
 
 return {
     get_completion = get_completions,
     perform_action = perform_action,
+    perform_tab_completion = perform_tab_completion,
     name = name,
 }

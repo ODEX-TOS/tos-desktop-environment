@@ -108,10 +108,32 @@ local function perform_actions(payload, action_name)
     else
         print("Could not execute prompt payload for: " .. tostring(action_name))
     end
+end
 
+local function get_tab_completion(text, action_name, payload)
+    local actions = {}
+    actions[documentation.name] = documentation["perform_tab_completion"]
+    actions[browser.name] = browser["perform_tab_completion"]
+    actions[ssh.name] = ssh["perform_tab_completion"]
+    actions[update.name] = update["perform_tab_completion"]
+    actions[open.name] = open["perform_tab_completion"]
+    actions[tde_script.name] = tde_script["perform_tab_completion"]
+    actions[plugin.name] = plugin["perform_tab_completion"]
+
+
+    local executor = actions[action_name]
+
+    if executor ~= nil then
+        return executor(payload, text)
+    else
+        print("No tab completion for: " .. tostring(action_name))
+    end
+
+    return text
 end
 
 return {
     get_completions = get_completions,
     perform_actions = perform_actions,
+    get_tab_completion = get_tab_completion
 }

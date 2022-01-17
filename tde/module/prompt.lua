@@ -265,14 +265,15 @@ _G.root.prompt = function()
     promptPage.visible = true
 
     local prev_text = ""
+    local text = ""
 
-    awful.prompt.run{
+    local prompt_state
+    prompt_state = awful.prompt.run{
         prompt = "<b>" .. i18n.translate("Search") .. "</b>: ",
         bg = beautiful.bg_modal,
         bg_cursor = beautiful.primary.hue_700,
         textbox = prompt,
-        text = "",
-        history_path = os.getenv("HOME") .. '/.cache/tde/prompt.hist',
+        text = text,
         keypressed_callback  = function(mod, key, cmd) --luacheck: no unused args
           if key == 'Down' then
             down()
@@ -280,6 +281,10 @@ _G.root.prompt = function()
           elseif key == 'Up' then
             up()
             update_rows()
+          elseif key == 'Tab' then
+            if prompt_state ~= nil and _results[_index + _selected_list_index] ~= nil then
+              prompt_state.update(delegator.get_tab_completion(prompt_state.get_text(), _results[_index + _selected_list_index].action_name, _results[_index + _selected_list_index].payload) or  prev_text)
+            end
           elseif key == "Escape" then
             _index = -1
             _selected_list_index = 0

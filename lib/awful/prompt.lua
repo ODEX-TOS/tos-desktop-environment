@@ -552,7 +552,12 @@ function prompt.run(args, textbox, exe_callback, completion_callback,
     end
 
     -- Update textbox
-    local function update()
+    local function update(txt)
+        if txt ~= nil then
+            command = txt
+            cur_pos=#command+1
+        end
+
         textbox:set_font(font)
         textbox:set_markup(prompt_text_with_cursor{
            text = command, text_color = inv_col, cursor_color = cur_col,
@@ -935,6 +940,13 @@ function prompt.run(args, textbox, exe_callback, completion_callback,
             changed_callback(command)
         end
     end)
+
+    return {
+        update = update,
+        get_text = function()
+            return command
+        end,
+    }
 end
 
 return prompt
