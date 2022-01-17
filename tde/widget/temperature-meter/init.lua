@@ -26,11 +26,9 @@ local wibox = require('wibox')
 local gears = require('gears')
 local beautiful = require('beautiful')
 local progressbar = require('lib-widget.progress_bar')
-local config = require("config")
 local dpi = beautiful.xresources.apply_dpi
 local icons = require('theme.icons')
-local delayed_timer = require("lib-tde.function.delayed-timer")
-local filehandle = require('lib-tde.file')
+local signals = require('lib-tde.signals')
 
 local meter_name = wibox.widget {
 	text = 'Temperature',
@@ -78,19 +76,10 @@ local slider = wibox.widget {
 
 local max_temp = 80
 
-delayed_timer(
-  config.temp_poll,
-  function()
-    local stdout = filehandle.string("/sys/class/thermal/thermal_zone0/temp") or ""
-    if stdout == "" then
-      return
-    end
-    local temp = stdout:match("(%d+)")
-    meter:set_value((temp / 1000) / max_temp * 100)
-    print("Current temperature: " .. (temp / 1000) .. " °C")
-  end,
-  config.temp_startup_delay
-)
+signals.connect_temperature(function (temp)
+	meter:set_value((temp / max_temp) * 100)
+end)
+
 
 local temp_meter = wibox.widget {
 	layout = wibox.layout.fixed.vertical,

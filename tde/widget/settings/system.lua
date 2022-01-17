@@ -30,6 +30,8 @@ local icons = require("theme.icons")
 local file = require("lib-tde.file")
 local signals = require("lib-tde.signals")
 local card = require("lib-widget.card")
+local common = require("lib-tde.function.common")
+local mat_colors = require("theme.mat-colors")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -250,6 +252,31 @@ return function()
     }
   )
 
+  local temp = card()
+
+  local temp_icon = wibox.container.margin(wibox.widget.imagebox(icons.thermometer), dpi(12), dpi(12), dpi(12), dpi(12))
+  temp_icon.forced_height = settings_index + m + m
+
+  local temp_bar = require("lib-widget.progress_bar")()
+  temp_bar.forced_height = dpi(36)
+
+  local temp_value = wibox.widget.textbox()
+  temp_value.font = beautiful.title_font
+
+  local temp_stack = wibox.widget {
+    temp_bar,
+    wibox.container.place(temp_value),
+    layout  = wibox.layout.stack
+  }
+
+  temp.update_body(
+    wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      {layout = wibox.container.margin, left = m, temp_icon},
+      {layout = wibox.container.margin, right = m, temp_stack},
+    }
+  )
+
   local general_info = card()
 
   local osName =
@@ -310,6 +337,7 @@ return function()
       layout = wibox.layout.fixed.vertical,
       graph,
       {layout = wibox.container.margin, top = m, pac},
+      {layout = wibox.container.margin, top = m, temp},
       {layout = wibox.container.margin, top = m, bottom = m, general_info}
     }
   }
@@ -341,6 +369,29 @@ return function()
       disk_value.text = todecimal(value, 2) .. "%"
     end
   )
+
+  local max_temp = 100
+
+  signals.connect_temperature(function (temperature)
+    temp_value.text = string.format("%s ℃", common.num_to_str(temperature, 0))
+
+    temp_bar:set_value((temperature / max_temp) * 100)
+
+    if temperature < 20 then
+      -- The temperature is colder than 20°C, so we make is cyan (To simpulate cold)
+      temp_bar:set_color(mat_colors.cyan.hue_500)
+    elseif temperature < 65 then
+      -- The temperature is colder than 65°C, which is normal, so we make it green
+      temp_bar:set_color(mat_colors.green.hue_700)
+    elseif temperature < 80 then
+      -- The temperature is colder than 80°C, Which is already close to trotteling, so we start to be causious
+      temp_bar:set_color(mat_colors.yellow.hue_700)
+    else
+      -- We are in the danger zone, so we make it red
+      temp_bar:set_color(mat_colors.red.hue_800)
+    end
+
+  end)
 
   signals.emit_request_ram()
   signals.emit_request_disk()

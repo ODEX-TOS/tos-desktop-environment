@@ -78,6 +78,14 @@ local function split(inputstr, sep)
     return t
 end
 
+--- Return the US way of writing a number as a string e.g. 1.3 becomes "1.3" and 1,3 becomes "1.3"
+-- @tparam number number The number to convert to a string representation (Doesn't follow the locale)
+-- @staticfct to_point
+local function to_point(number)
+    local res, _ = string.gsub(tostring(number), ",", ".")
+    return res
+end
+
 --- Convert a number to a string with a given precision
 -- @tparam number num The number to convert to a given precision
 -- @tparam[opt] number precision The precision after the decimal point (by default 2)
@@ -89,9 +97,9 @@ local function num_to_str(num, precision)
         precision = 2
     end
     if type(num) == "number" then
-        return string.format("%." .. tostring(precision) .. "f", num)
+        return to_point(string.format("%." .. tostring(precision) .. "f", num))
     end
-    return tostring(num)
+    return to_point(tostring(num))
 end
 
 
@@ -232,14 +240,6 @@ end
 local function highlight_text(text, colorcode)
     colorcode = colorcode or beautiful.primary.hue_600
     return string.format("<span foreground='%s'>%s</span>", colorcode, text)
-end
-
---- Return the US way of writing a number as a string e.g. 1.3 becomes "1.3" and 1,3 becomes "1.3"
--- @tparam number number The number to convert to a string representation (Doesn't follow the locale)
--- @staticfct to_point
-local function to_point(number)
-    local res, _ = string.gsub(tostring(number), ",", ".")
-    return res
 end
 
 return {

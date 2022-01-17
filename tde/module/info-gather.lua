@@ -184,6 +184,29 @@ local function get_cpu()
     end)
 end
 
+local function get_temp()
+    delayed_timer(
+        config.temp_poll,
+        function()
+          local stdout = filehandle.string("/sys/class/thermal/thermal_zone0/temp") or ""
+          if stdout == "" then
+            return
+          end
+          local temp = stdout:match("(%d+)")
+
+          if temp == nil then
+            return
+          end
+
+          temp = temp / 1000
+          print("Current temperature: " .. temp .. " °C")
+
+          signals.emit_temperature(temp)
+        end,
+        config.temp_startup_delay
+      )
+end
+
 local function init()
     get_username()
     get_distro_name()
@@ -191,6 +214,7 @@ local function init()
     get_ram_info()
     get_disk_info()
     get_cpu()
+    get_temp()
 
     get_profile_pic()
 

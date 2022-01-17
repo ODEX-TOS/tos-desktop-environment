@@ -625,9 +625,19 @@ function Test_connect_save_keyboard_data()
     assert(type(signals.connect_save_keyboard_data) == "function", "Make sure connect_save_keyboard_data is a signal and a function")
 end
 
+function Test_emit_temperature()
+    assert(signals.emit_temperature, "Make sure the signal emit_temperature exists")
+    assert(type(signals.emit_temperature) == "function", "Make sure emit_temperature is a signal and a function")
+end
+
+function Test_connect_temperature()
+    assert(signals.connect_temperature, "Make sure the signal connect_temperature exists")
+    assert(type(signals.connect_temperature) == "function", "Make sure connect_temperature is a signal and a function")
+end
+
 
 function Test_signals_api_unit_tested()
-    local amount = 113
+    local amount = 115
     local result = tablelength(signals)
     assert(
         result == amount,

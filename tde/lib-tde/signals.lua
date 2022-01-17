@@ -1247,4 +1247,25 @@ connections.connect_save_keyboard_data = function(func)
     tde.connect_signal("TDE::keyboard::save", func)
 end
 
+--- Signals to emit cpu temperature in degrees celcius
+-- @tparam number temp The temperature in degrees celcius
+-- @staticfct emit_temperature
+-- @usage
+-- lib-tde.signals.emit_temperature(56)
+connections.emit_temperature = function(temp)
+    tde.emit_signal("TDE::cpu::temp", temp)
+end
+
+--- Trigger a callback function when the temperature of the cpu is updated
+-- @tparam function func The callback function that will be called
+-- @staticfct connect_temperature
+-- @usage
+-- lib-tde.signals.connect_temperature(
+--    function (temperature)
+--     print(temperature)
+--    end)
+connections.connect_temperature = function(temp)
+    tde.connect_signal("TDE::cpu::temp", temp)
+end
+
 return connections
