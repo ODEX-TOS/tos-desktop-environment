@@ -40,7 +40,7 @@ local hardware = require("lib-tde.hardware-check")
 local LOG_ERROR = "\27[0;31m[ ERROR "
 
 
-local function __run_cmd_in_background(cmd, callback, should_kill, kill_cmd)
+local function __run_cmd_in_background(cmd, start_cb, callback, should_kill, kill_cmd)
     print("Starting daemon process:")
     print(cmd)
 
@@ -48,11 +48,13 @@ local function __run_cmd_in_background(cmd, callback, should_kill, kill_cmd)
         print("Killing")
         print(kill_cmd)
         awful.spawn.easy_async(kill_cmd, function()
+            if start_cb ~= nil then start_cb() end
             awful.spawn.easy_async(cmd, callback)
         end)
         return
     end
 
+    if start_cb ~= nil then start_cb() end
     awful.spawn.easy_async(cmd, callback)
 end
 
@@ -76,7 +78,7 @@ local function not_exists(cmd)
     return not hardware.is_in_path(command)
 end
 
-local function __run(cmd, restart, max_restarts, should_kill, kill_cmd, callback)
+local function __run(cmd, restart, max_restarts, should_kill, kill_cmd, callback, start_cb)
     local restarts = 0
 
     if not_exists(cmd) then
@@ -108,10 +110,10 @@ local function __run(cmd, restart, max_restarts, should_kill, kill_cmd, callback
         end
 
         -- lets restart the process
-        __run_cmd_in_background(cmd, restart_callback, should_kill, kill_cmd)
+        __run_cmd_in_background(cmd, start_cb, restart_callback, should_kill, kill_cmd)
     end
 
-    __run_cmd_in_background(cmd, restart_callback, should_kill, kill_cmd)
+    __run_cmd_in_background(cmd, start_cb, restart_callback, should_kill, kill_cmd)
 end
 
 --- Add custom translations into the translation lookup table
@@ -120,6 +122,7 @@ end
 -- @tparam[opt] number args.max_restarts The amount of restarts until we stop trying to restart the program
 -- @tparam[opt] number args.kill_previous Kill the previous running command if found using the kill_cmd variable
 -- @tparam[opt] string args.kill_cmd The command used to kill the previous process %s will be replaced by the process name, default 'killall %s'
+-- @tparam[opt] function args.start_cb A function to run before the process started/restarted
 -- @tparam[opt] function args.callback A function to run after the process started/restarted
 -- @staticfct run
 -- @usage -- Run the program forever
@@ -143,8 +146,9 @@ local function run(cmd, args)
     local command = get_command(cmd)
 
     local callback = args.callback
+    local start_cb = args.start_cb
 
-    __run(cmd, restart, max_restarts, kill_previous, string.format(kill_cmd, command), callback)
+    __run(cmd, restart, max_restarts, kill_previous, string.format(kill_cmd, command), callback, start_cb)
 end
 
 return {

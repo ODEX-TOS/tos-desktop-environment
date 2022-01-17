@@ -234,6 +234,10 @@ function Test_configuration_client_init()
     assert(exists("tde/configuration/client/init.lua"), "Check that tde/configuration/client/init.lua exists")
 end
 
+function Test_configuration_lxsession()
+    assert(exists("tde/configuration/lxsession.lua"), "Check that tde/configuration/lxsession.lua exists")
+end
+
 function Test_collision_focus()
     assert(exists("tde/collision/focus.lua"), "Check that tde/collision/focus.lua exists")
 end
@@ -600,7 +604,7 @@ end
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 117
+    local amount = 118
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

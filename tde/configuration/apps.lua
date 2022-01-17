@@ -23,11 +23,13 @@
 --SOFTWARE.
 ]]
 local filesystem = require("gears.filesystem")
+local filehandle = require("lib-tde.file")
 local config = require("config")
 local hardware = require("lib-tde.hardware-check")
 local signals = require('lib-tde.signals')
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
+local lxsession_data = require("configuration.lxsession")
 
 local term = ""
 local term_add_dpi = false
@@ -155,10 +157,18 @@ return {
   -- simular to the `run_on_start_up` table, but instead this holds all applications that continue to run on startup
   daemons = {
     {cmd={"light-locker", "--no-lock-on-suspend"}, tbl= {restart = true, kill_previous = true}},
-    {cmd={"lxsession", "-s", "TDE", "-e", "TDE"}, tbl= {restart = true, kill_previous = true}},
-    {cmd={"greenclip", "daemon"}, tbl= {restart = true, kill_previous = true}},
+    {cmd={"lxsession", "-s", "TDE", "-e", "TDE"}, tbl= {restart = true, kill_previous = true, start_cb = function()
+      -- Ensure that the ~/.config/lxsession/TDE/desktop.conf file exists
+      local dir = os.getenv("HOME") .. "/.config/lxsession/TDE"
+      local file = dir .. "/desktop.conf"
 
-    -- These are auxilary commands that might be usefull
+      filehandle.dir_create(dir)
+      filehandle.overwrite(file, lxsession_data)
+
+    end}},
+    {cmd={"greenclip", "daemon"}, tbl= {restart = true, kill_previous = true}},
+--
+    ---- These are auxilary commands that might be usefull
     {cmd={"kdeconnectd"}, tbl= {restart = true, kill_previous = true}},
     {cmd={"udiskie"}, tbl= {restart = true, kill_previous = true}},
     {cmd={"psi-notify"}, tbl= {restart = true, kill_previous = true}},
