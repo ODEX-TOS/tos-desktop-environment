@@ -138,6 +138,8 @@ local info_center = function(s)
 		height = s.geometry.height
 	}
 
+	local grabber
+
 	local open_panel = function()
 		s.backdrop_info_center.visible = true
 		s.info_center.visible = true
@@ -155,6 +157,23 @@ local info_center = function(s)
 		)
 
 		panel:emit_signal('opened')
+
+		grabber = awful.keygrabber {
+			keybindings = {},
+			-- Note that it is using the key name and not the modifier name.
+			stop_key           = "Escape",
+			stop_event         = "release",
+			stop_callback      = function()
+				s.info_center.visible = false
+				s.backdrop_info_center.visible = false
+
+				panel:emit_signal('closed')
+
+				panel.opened = false
+			end,
+			export_keybindings = true,
+			autostart = true
+		}
 	end
 
 	local close_panel = function()
@@ -162,6 +181,12 @@ local info_center = function(s)
 		s.backdrop_info_center.visible = false
 
 		panel:emit_signal('closed')
+
+		if grabber ~= nil then
+			grabber:stop()
+		end
+
+		panel.opened = false
 	end
 
 	-- Hide this panel when app dashboard is called.
