@@ -58,7 +58,7 @@ function run_prepend_commit_msg() {
   GREP_REGEX=""
   # shellcheck disable=SC2068
   for t in ${VALID_START_REGEX[@]}; do
-    GREP_REGEX="$GREP_REGEX|^$t: "
+    GREP_REGEX="$GREP_REGEX|^$t: [a-zA-Z0-9_]"
   done
 
   GREP_REGEX="${GREP_REGEX:1}"
