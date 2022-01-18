@@ -228,6 +228,17 @@ local function up()
     _index = 1
   end
 end
+
+local function select_first_item()
+  _index = 1
+  _selected_list_index = 0
+end
+
+local function reset_index()
+  _index = -1
+  _selected_list_index = 0
+end
+
 local cards = {}
 
 local function fetch_card(index)
@@ -284,10 +295,10 @@ _G.root.prompt = function()
           elseif key == 'Tab' then
             if prompt_state ~= nil and _results[_index + _selected_list_index] ~= nil then
               prompt_state.update(delegator.get_tab_completion(prompt_state.get_text(), _results[_index + _selected_list_index].action_name, _results[_index + _selected_list_index].payload) or  prev_text)
+              select_first_item()
             end
           elseif key == "Escape" then
-            _index = -1
-            _selected_list_index = 0
+            reset_index()
           end
         end,
         changed_callback = function(input_text)
@@ -334,8 +345,7 @@ _G.root.prompt = function()
             end
 
             -- after the execution, reset the values
-            _index = -1
-            _selected_list_index = 0
+            reset_index()
 
             -- if the delegator returned a response then we display it back to the user
             if type(response) == "function" then
