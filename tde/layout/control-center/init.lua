@@ -29,6 +29,7 @@ local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 local signals = require("lib-tde.signals")
 local profile_pic = require('lib-widget.profilebox')
+local config = require("configuration.keys.mod")
 
 local format_item = function(widget)
 	local _widget = wibox.widget {
@@ -323,20 +324,38 @@ local control_center = function(s)
 
 		panel:emit_signal('opened')
 
+		local function stop_keygrabber_cb()
+			s.control_center.visible = false
+			s.backdrop_control_center.visible = false
+
+			panel:emit_signal('closed')
+
+			panel.opened = false
+		end
+
+		local function modifiers_equals(mod1, mod2)
+			for _, m in ipairs(mod1) do
+				if not gears.table.hasitem(mod2, m) then
+					return false
+				end
+			end
+			return true
+		end
+
 		grabber = awful.keygrabber {
 			keybindings = {},
+			keypressed_callback = function(_, modifiers, key)
+				local code, _ = tde._get_key_name(config.to_key_string("configPanel"))
+				if key == code
+				and modifiers_equals(config.to_modifiers("configPanel"), modifiers) then
+					grabber:stop()
+				end
+			end,
 			-- Note that it is using the key name and not the modifier name.
 			stop_key           = "Escape",
 			stop_event         = "release",
-			stop_callback      = function()
-				s.control_center.visible = false
-				s.backdrop_control_center.visible = false
-
-				panel:emit_signal('closed')
-
-				panel.opened = false
-			end,
-			export_keybindings = true,
+			stop_callback      = stop_keygrabber_cb,
+			export_keybindings = false,
 			autostart = true
 		}
 	end
