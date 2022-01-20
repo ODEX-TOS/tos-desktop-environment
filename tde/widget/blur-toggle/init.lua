@@ -100,7 +100,7 @@ end)
 
 local check_blur_status = function()
     awful.spawn.easy_async_with_shell([[bash -c "
-		grep -F 'method = \"none\";' $HOME/picom.conf | tr -d '[\"\;\=\ ]'
+		grep -F 'method = \"none\";' $HOME/.config/picom.conf | tr -d '[\"\;\=\ ]'
 		"]], function(stdout, _)
         if stdout:match('methodnone') then
             blur_status = false

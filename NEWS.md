@@ -62,6 +62,7 @@ A major refactor went into the codebase to cleanup several leaking processes. Th
 - Fix the titlebar close button showing the wrong tooltip
 - Fix the titlebar tooltip from showing when out of focus in some cases
 - Fixed some size_hint restricted windows from tiling
+- Correctly detect if blur is on/off on boot
 
 ### Dev Notes
 - The inputfield now allows editing of the field
