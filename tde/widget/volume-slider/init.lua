@@ -88,6 +88,8 @@ local _slider = wibox.widget {
 	layout = wibox.layout.align.vertical
 }
 
+volume_slider.bar_height = _slider.forced_height
+
 local volume_setting = wibox.widget {
 	layout = wibox.layout.fixed.vertical,
 	forced_height = dpi(48),

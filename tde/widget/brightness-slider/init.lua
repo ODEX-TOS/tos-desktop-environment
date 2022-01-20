@@ -96,6 +96,8 @@ local _slider = wibox.widget {
 	layout = wibox.layout.align.vertical
 }
 
+brightness_slider.bar_height = _slider.forced_height
+
 local brightness_setting = wibox.widget {
 	layout = wibox.layout.fixed.vertical,
 	spacing = dpi(5),

@@ -92,6 +92,7 @@ local blur_slider = slider({
 	end
 })
 blur_slider.forced_height = dpi(24)
+blur_slider.bar_height = dpi(24)
 
 
 local update_slider_value = function()

@@ -86,7 +86,7 @@ return function(args)
 
     local widget = wibox.widget.slider()
     widget.bar_shape = function(c, w, h)
-        gears.shape.rounded_rect(c, w, h, dpi(30) / 2)
+        gears.shape.rounded_rect(c, w, h, h / 2)
     end
     widget.bar_height = dpi(30)
     widget.bar_color = background_theme.hue_700 .. beautiful.background_transparency
