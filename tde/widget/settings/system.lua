@@ -32,6 +32,8 @@ local signals = require("lib-tde.signals")
 local card = require("lib-widget.card")
 local common = require("lib-tde.function.common")
 local mat_colors = require("theme.mat-colors")
+local delayed_timer = require("lib-tde.function.delayed-timer")
+local hardware = require("lib-tde.hardware-check")
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -303,6 +305,14 @@ return function()
     text = i18n.translate("Uptime: %s", "unknown"),
     widget = wibox.widget.textbox
   }
+
+  local memory =
+    wibox.widget {
+    font = beautiful.title_font,
+    text = "",
+    widget = wibox.widget.textbox
+  }
+
   signals.connect_distro(
     function(value)
       osName.text = i18n.translate("OS: %s", value)
@@ -327,9 +337,15 @@ return function()
       wibox.container.margin(osName, dpi(20), 0, dpi(20), 0),
       wibox.container.margin(kernelVersion, dpi(20)),
       wibox.container.margin(hostName, dpi(20)),
+      wibox.container.margin(memory, dpi(20)),
       wibox.container.margin(uptime, dpi(20), 0, 0, dpi(20))
     }
   )
+
+  delayed_timer(30, function()
+    local mem, _ = hardware.getTDEMemoryConsumption()
+    memory.text = i18n.translate("Memory: %s", common.bytes_to_grandness(mem, 1))
+  end, 0)
 
   view:setup {
     layout = wibox.container.background,
