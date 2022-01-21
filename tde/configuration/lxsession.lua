@@ -30,7 +30,7 @@ return [[
 [Session]
 keyring/command=echo
 disable_autostart=yes
-polkit/command=echo
+polkit/command=lxpolkit
 clipboard/command=echo
 xsettings_manager/command=build-in
 proxy_manager/command=build-in
