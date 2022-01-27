@@ -184,11 +184,50 @@ local function get_cpu()
     end)
 end
 
+
+local function find_termal_type(find_type, termal_kernel_dirs)
+    for _, file in ipairs(termal_kernel_dirs) do
+        local path = file .. "/type"
+        if filehandle.exists(path) then
+            local type = filehandle.string(path)
+            if string.find(type, find_type) then
+                print("Match found")
+                return file .. '/temp'
+            end
+        end
+    end
+
+    return "false"
+end
+
+local function get_termal_zone()
+    local termal_kernel_dirs = filehandle.list_dir("/sys/class/thermal/")
+
+    local allowed_termal_types = {
+        "pkg_temp",
+        "B0D4",
+        "SEN%d",
+        "INT3400"
+    }
+
+    for _, temp_str in ipairs(allowed_termal_types) do
+        local res = find_termal_type(temp_str, termal_kernel_dirs)
+        if res ~= nil then
+            return res
+        end
+    end
+
+    -- we didn't find any thermal zone with an overall pkg_temp type...
+    return nil
+end
+
+local termal_zone_path = get_termal_zone()
+
 local function get_temp()
     delayed_timer(
         config.temp_poll,
         function()
-          local stdout = filehandle.string("/sys/class/thermal/thermal_zone0/temp") or ""
+          local stdout = filehandle.string(termal_zone_path) or ""
           if stdout == "" then
             return
           end
