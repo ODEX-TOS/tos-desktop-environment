@@ -143,14 +143,21 @@ local function fuzzy_score(search, text, max_permutation_length, max_permutation
 
     for _, permutation in ipairs(permutations) do
         local permutation_count = (count_matches(text, permutation) * #permutation)
-        local weighted_index = ((#text - begin_location(text, permutation)) / #text) * #permutation
+        local begin_index = begin_location(text, permutation)
+
+        local weighted_index = ((#text - begin_index) / #text) * #permutation
+
+        -- We have a literal match, which we award a higher score
+        if begin_index < 2 then
+            weighted_index = weighted_index * #permutation
+        end
 
         score = score + permutation_count
         score = score + weighted_index
     end
 
     -- now we reduce the score by the length of the search query / length of the text
-    score = score * (#search / #text)
+    --score = score * (#search / #text)
 
     return score
 end
@@ -165,15 +172,15 @@ end
 -- @staticfct best_score
 -- @usage
 -- lib-tde.fuzzy_find.best_score({"a", "ab", "abc", "abcd", "abcde", "xyz"}, "abc") -- returns {"abc", "abcd", "abcde", "ab", "a", "xyz"}
-local function best_score(list, search, max_result, filter_callback)
+local function best_score(list, search, max_result, filter_callback, min_score)
     max_result = max_result or #list
     filter_callback = filter_callback or function(el)
         return el
     end
 
-    local max_permutation_length = 10
-    local max_permutation_entries= 100
-    local min_score = 1
+    local max_permutation_length  = 10
+    local max_permutation_entries = 100
+    min_score = min_score or 1
 
     local scores = {}
     for _, item in ipairs(list) do
