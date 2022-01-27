@@ -407,7 +407,7 @@ return function()
         return i18n.translate("Duration of the break: %s", datetime.numberInSecToMS(break_time_value))
       end
     ),
-    layout = wibox.layout.flex.vertical
+    layout = wibox.layout.fixed.vertical
   }
 
   local slider_widget =
