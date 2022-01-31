@@ -105,4 +105,7 @@ package() {
   # remove the readme, only show the png/jpg files
   rm "$pkgdir"/usr/share/backgrounds/tos/README.md
   chmod -R 644 "$pkgdir"/usr/share/backgrounds/tos
+
+  # Make sure we can still access the background themselves
+  chmod +x "$pkgdir"/usr/share/backgrounds/tos
 }
