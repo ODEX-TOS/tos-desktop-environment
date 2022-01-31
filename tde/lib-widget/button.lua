@@ -26,8 +26,8 @@
 -- Create a new button widget
 --
 --
---    local button = lib-widget.button("Button text")
---    local button2 = lib-widget.button(wibox.widget.imagebox("/path/to/image"))
+--    local button = lib-widget.button({body = "Button text"})
+--    local button2 = lib-widget.button({body = wibox.widget.imagebox("/path/to/image")})
 --
 -- ![Button](../images/button.png)
 --
@@ -56,6 +56,7 @@ local buttons = {}
 -- @tparam[opt] function args.enter_callback This is called when the button receives focus
 -- @tparam[opt] function args.leave_callback This is called when the button losses focus
 -- @tparam[opt] bool args.update Don't update the color of the button (used in the theme settings)
+-- @tparam[opt] number args.width The width of the button (If not set it is scalled to the body)
 -- @treturn widget The button widget
 -- @staticfct button
 -- @usage -- This will create a button that is red
@@ -72,6 +73,7 @@ local btn = function(args)
     local enter_callback = args["enter_callback"]
     local leave_callback = args["leave_callback"]
     local no_update = args["no_update"]
+    local _width = args["width"]
 
     if center == nil then center = true end
 
@@ -183,6 +185,8 @@ local btn = function(args)
     end
 
     table.insert(buttons, button)
+
+    button.forced_width = _width
 
     return button
 end

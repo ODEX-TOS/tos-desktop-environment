@@ -57,6 +57,20 @@ local settings_icon = menubar.utils.lookup_icon("preferences-desktop-theme") or 
 
 local super = keys.modKey
 
+local function is_terminal(c)
+    local valid_class_names = {
+        "st-256color",
+        "xterm"
+    }
+
+    for _, term_name_regex in ipairs(valid_class_names) do
+        if string.find(c.class, term_name_regex) ~= nil then
+            return true
+        end
+    end
+    return false
+end
+
 local function get_key(key)
 
     if string.sub(key, 1,1) ~= "#" then
@@ -151,7 +165,7 @@ local tips = {
                     if stopped then return end
 
                     for _, c in ipairs(client.get()) do
-                        if c.class == "st-256color" and not stopped then
+                        if is_terminal(c) and not stopped then
                             done_cb()
                         end
                     end
@@ -180,7 +194,7 @@ local tips = {
                     local st_found = false
 
                     for _, c in ipairs(client.get()) do
-                        if c.class == "st-256color" then
+                        if is_terminal(c) then
                             st_found = true
                         end
                     end
@@ -212,7 +226,7 @@ local tips = {
 
                     local count = 0
                     for _, c in ipairs(client.get()) do
-                        if c.class == "st-256color" then
+                        if is_terminal(c) then
                             count = count + 1
                         end
                     end
@@ -363,7 +377,7 @@ local tips = {
 
                     local count = 0
                     for _, c in ipairs(client.get()) do
-                        if c.class == "st-256color" then
+                        if is_terminal(c) then
                             count = count + 1
                         end
                     end
@@ -396,7 +410,7 @@ local tips = {
                     local st = nil
 
                     for _, c in ipairs(client.get()) do
-                        if c.class == "st-256color" then
+                        if is_terminal(c) then
                             st = c
                         end
                     end
@@ -433,7 +447,7 @@ local tips = {
                     local st_found = false
 
                     for _, c in ipairs(client.get()) do
-                        if c.class == "st-256color" then
+                        if is_terminal(c) then
                             st_found = true
                         end
                     end
@@ -648,6 +662,29 @@ local function create_app()
         end)
     end)
 
+    local footer = wibox.widget {
+        widget = wibox.container.place,
+        button({
+            body = {
+                layout = wibox.container.margin,
+                top = m,
+                bottom = m,
+                left = m,
+                right = m,
+                wibox.widget.textbox(i18n.translate("Skip"))
+            },
+            callback = function()
+                stop_tip()
+                tip_index = 1
+                finish()
+                hub.visible = false
+            end,
+            width = app_width / 3,
+            pallet = mat_colors.orange,
+            no_update = true
+        })
+    }
+
 
 
     hub.set_tip = function(tip)
@@ -659,6 +696,7 @@ local function create_app()
                 wibox.container.margin(header, m, m, m, m),
                 wibox.container.place(loader),
                 wibox.container.place(tip_w),
+                wibox.container.margin(footer, m, m, m, m),
                 layout = wibox.layout.ratio.vertical,
             }
         else
@@ -666,11 +704,13 @@ local function create_app()
                 wibox.container.margin(header, m, m, m, m),
                 wibox.widget.base.empty_widget(),
                 wibox.container.place(tip_w),
+                wibox.container.margin(footer, m, m, m, m),
                 layout = wibox.layout.ratio.vertical,
             }
         end
 
-        hub.widget:adjust_ratio(2, 0.1, 0.1, 0.8)
+        hub.widget:adjust_ratio(2, 0.12, 0.1, 0.78)
+        hub.widget:adjust_ratio(3, 0.22, 0.66, 0.12)
 
 
         local function done_cb()
@@ -704,6 +744,7 @@ end
 local function start()
     print("Showing tutorial")
     local app = create_app()
+    tip_index = 1
 
     local tip = tips[tip_index]
 
