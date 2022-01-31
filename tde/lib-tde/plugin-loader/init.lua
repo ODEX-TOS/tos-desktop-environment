@@ -180,7 +180,7 @@ local function list_plugins()
 
     for _, value in ipairs(user_plugins) do
         if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') then
-            local metadata = serialize.deserialize_from_file(value .. "/metadata.json")
+            local metadata = serialize.deserialize_from_file(value .. "/metadata.json") or {}
             table.insert(res, {
                 path = value,
                 name = capitalize(metadata["name"] or filehandle.basename(value)),
@@ -203,7 +203,7 @@ local function list_plugins()
     -- Add system plugins, but make sure that the user_plugin doesn't exist
     for _, value in ipairs(sys_files) do
         if filehandle.dir_exists(value) and filehandle.exists(value .. '/init.lua') and filehandle.exists(value .. '/metadata.json') and is_unique_plugin(filehandle.basename(value)) then
-            local metadata = serialize.deserialize_from_file(value .. "/metadata.json")
+            local metadata = serialize.deserialize_from_file(value .. "/metadata.json") or {}
 
             table.insert(res, {
                 path = value,

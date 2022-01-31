@@ -1,0 +1,85 @@
+local config = require("configuration.keys.mod")
+local gtable = require("gears.table")
+
+local key = "terminal"
+
+-- Check to see if 2 keys matches
+local function match(_key, pressed_mod, pressed_key)
+    if _key.description ~= "Open Terminal" then
+        return false
+    end
+
+    for _, key in ipairs(_key.keys) do
+        if not gtable.hasitem(key, pressed_key) then
+            -- No, so this is failure!
+            return false
+        end
+    end
+   -- Then, compare mod
+   local mod = _key.mod
+   -- For each modifier of the key object, check that the modifier has been
+   -- pressed.
+   for _, m in ipairs(mod) do
+       -- Has it been pressed?
+       if not gtable.hasitem(pressed_mod, m) then
+           -- No, so this is failure!
+           return false
+       end
+   end
+   -- If the number of pressed modifier is ~=, it is probably >, so this is not
+   -- the same, return false.
+   return #pressed_mod == #mod
+end
+
+function find_root_key(mod, keystr)
+    for _, key in ipairs(root._keys()) do
+        if awful.key.match(key, mod, keystr) then
+            return key
+        end
+    end
+
+    return
+end
+
+function find_awful_key(mod, keystr)
+    for _, key in ipairs(awful.key.hotkeys) do
+        if match(key, mod, keystr) then
+            return key
+        end
+    end
+
+    return
+end
+
+function find_key(_key)
+    local mod = config.to_modifiers(_key)
+    local keystr = config.to_key_string(_key)
+
+    local a_key = find_awful_key(mod, keystr)
+    local r_key = find_root_key(mod, keystr)
+
+    if a_key and r_key then
+        return a_key, r_key
+    end
+end
+
+
+
+local a_key, r_key = find_key(key)
+local new_key
+
+if a_key and r_key then
+    new_key = awful.key(
+        a_key.mod,
+        "0",
+        a_key.execute,
+        {description = a_key.description, group = a_key.group}
+    )
+
+    awful.keyboard.remove_global_keybinding({r_key})
+    awful.keyboard.append_global_keybindings({
+        new_key
+    })
+end
+
+return new_key.mod

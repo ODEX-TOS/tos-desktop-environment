@@ -145,7 +145,7 @@ local function load()
     if not filehandle.exists(file) then
         return table
     end
-    local result = serialize.deserialize_from_file(file)
+    local result = serialize.deserialize_from_file(file) or {}
     -- in case someone modified the state object and some properties are faulty or errored outputs
     result.volume = result.volume or table.volume
     result.volume_muted = result.volume_muted or table.volume_muted

@@ -51,7 +51,9 @@ weak.__mode = "k"
 
 local todo_widget = {}
 local update_widget
-local data = serialize.deserialize_from_file(STORAGE)
+local data = serialize.deserialize_from_file(STORAGE) or  {
+    todo_items = {}
+}
 
 todo_widget.widget = wibox.widget {
     {

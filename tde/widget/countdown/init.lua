@@ -52,7 +52,9 @@ weak.__mode = "k"
 
 local countdown_widget = {}
 local update_widget
-local data = serialize.deserialize_from_file(STORAGE)
+local data = serialize.deserialize_from_file(STORAGE) or {
+    countdown_items = {}
+}
 
 
 local function toYYDDHHMMSS(seconds)

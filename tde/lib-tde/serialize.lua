@@ -53,7 +53,12 @@ local filehandle = require("lib-tde.file")
 -- @usage -- returns "[1,2,3,4, {hello='world'}]"
 -- lib-tde.serialize.serialize({1,2,3,4, {hello='world'}})
 local function serialize(tbl)
-    return json.encode(tbl)
+    local status, result = pcall(json.encode, tbl)
+    if status then
+        return result
+    end
+
+    return "{}"
 end
 
 --- Deserialize a string into a tables
@@ -63,7 +68,12 @@ end
 -- @usage -- returns {1,2,3,4, {hello='world'}}
 -- lib-tde.serialize.deserialize("[1,2,3,4, {hello='world'}]")
 local function deserialize(str)
-    return json.decode(str)
+    local status, result = pcall(json.decode, str)
+    if status then
+        return result
+    end
+
+    return nil
 end
 
 --- Serialize table and save it to a file
