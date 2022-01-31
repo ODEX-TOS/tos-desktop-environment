@@ -179,14 +179,15 @@ end)
 local add_button = wibox.widget {
     {
         {
-            image = icons.plus,
-            resize = true,
-            widget = wibox.widget.imagebox
+            {
+                image = icons.plus,
+                resize = true,
+                widget = wibox.widget.imagebox
+            },
+            margins = dpi(8),
+            layout = wibox.container.margin
         },
-        top = 11,
-        left = 8,
-        right = 8,
-        layout = wibox.container.margin
+        layout = wibox.container.place,
     },
     shape = function(cr, width, height)
         gears.shape.circle(cr, width, height, dpi(12))
