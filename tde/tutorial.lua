@@ -628,6 +628,7 @@ local function create_app()
                 local tip = tips[tip_index]
 
                 if tip == nil then
+                    finish()
                     hub.visible = false
                     return
                 end
