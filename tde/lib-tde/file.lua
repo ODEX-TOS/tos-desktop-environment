@@ -79,7 +79,7 @@ end
 -- TODO: unit test the file writing
 
 --- Function equivalent to basename in POSIX systems
---@param string str the path as a string
+-- @param string str the path as a string
 -- @staticfct basename
 -- @usage -- This returns file.txt
 -- lib-tde.file.basename("/sys/class/power_supply/BAT0/file.txt")
@@ -404,6 +404,24 @@ local function log(filename)
   end
 end
 
+--- Check to see if a given file is a dotfile (starts with a dot)
+-- @param string file The filename as a string (Can be a full or relative path)
+-- @staticfct is_dotfile
+-- @usage
+--    lib-tde.file.is_dotfile("/sys/class/power_supply/BAT0/power_now") -- Returns false
+--    lib-tde.file.is_dotfile("/home/user/.cache") -- Returns true
+local function is_dotfile(file)
+  if type(file) ~= "string" or file == '' then
+    return nil
+  end
+
+  if file == '' or file == '.' or file == '..' then
+    return false
+  end
+
+  return string.sub(basename(file), 1, 1) == "."
+end
+
 return {
   log = log,
   lines = lines_from,
@@ -421,5 +439,6 @@ return {
   rm = rm,
   copy_file = copy_file,
   mktemp = mktemp,
-  mktempdir = mktempdir
+  mktempdir = mktempdir,
+  is_dotfile = is_dotfile
 }

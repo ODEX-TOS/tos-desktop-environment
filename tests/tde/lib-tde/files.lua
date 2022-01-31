@@ -422,8 +422,52 @@ function Test_dir_recursive_creation()
     assert(result, "The directroy didn't get created: " .. dir)
 end
 
+function Test_dotfile_detection()
+    local file = "/home/user/.bashrc"
+    assert(files.is_dotfile(file), string.format("%s should be a dotfile", file))
+
+    file = "/home/user/.bashrc.swp"
+    assert(files.is_dotfile(file), string.format("%s should be a dotfile", file))
+
+    file = "/home/user/file.txt"
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+    file = "/dir"
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+    file = "~/dir"
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+    file = "~/.config"
+    assert(files.is_dotfile(file), string.format("%s should be a dotfile", file))
+
+    file = "~/.config/example/file.txt"
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+
+    file = "~/.config/example/.file.txt"
+    assert(files.is_dotfile(file), string.format("%s should be a dotfile", file))
+end
+
+function Test_dotfile_detection_edge_cases()
+    local file = ""
+    assert(not files.is_dotfile(file), string.format("'%s' should not be a dotfile", file))
+
+    file = "/"
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+    file = 10
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+    file = "." -- The current directory
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+
+    file = ".." -- The parent directory
+    assert(not files.is_dotfile(file), string.format("%s should not be a dotfile", file))
+end
+
 function Test_filehandle_api_unit_tested()
-    local amount = 17
+    local amount = 18
     local result = tablelength(files)
     assert(
         result == amount,
