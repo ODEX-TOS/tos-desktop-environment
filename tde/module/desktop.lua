@@ -98,30 +98,32 @@ installed("installer", function (bIsInstalled)
     end
 
     -- TODO: run filesystem event listener each time the desktop changes
+    local __index = 0
     if filehandle.dir_exists(desktopLocation) then
-        for index, file in ipairs(filehandle.list_dir(desktopLocation)) do
+        for _, file in ipairs(filehandle.list_dir(desktopLocation)) do
             -- initialize x and y to nil, find the stored location otherwise use the default location
             local pos = find_pos_by_name(filehandle.basename(file))
             local x = pos.x
             local y = pos.y
-            local position = index + offset
-            if x and y then
-                position = nil
-            end
 
-            if filehandle.is_dotfile(file) then
-                return
-            end
+            if not filehandle.is_dotfile(file) then
+                __index = __index + 1
 
-            desktop_icon.from_file(
-                file,
-                position,
-                x,
-                y,
-                function(name)
-                    update_entry(filehandle.basename(file), name)
+                local position = __index + offset
+                if x and y then
+                    position = nil
                 end
-            )
+
+                desktop_icon.from_file(
+                    file,
+                    position,
+                    x,
+                    y,
+                    function(name)
+                        update_entry(filehandle.basename(file), name)
+                    end
+                )
+            end
         end
     end
 
