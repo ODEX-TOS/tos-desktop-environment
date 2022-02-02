@@ -41,13 +41,19 @@ local Gio = lgi.Gio
 
 local logger = require('lib-tde.logger')
 
+
+local __mimetype_cache = nil
 --- Get a list of all known mimetypes
 -- @staticfct get_mimetypes
 -- @usage -- Returns a list of mimetypes
 -- get_mimetypes() -- {"application/json", "image/png", ...}
 local function get_mimetypes()
-    local types = Gio.content_types_get_registered()
-    return types
+    if __mimetype_cache ~= nil then
+        return __mimetype_cache
+    end
+    -- This is a heavy function to call, so we cache it
+    __mimetype_cache = Gio.content_types_get_registered()
+    return __mimetype_cache
 end
 
 --- Get the application icon and name for the given mimetype

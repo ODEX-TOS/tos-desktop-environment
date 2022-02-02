@@ -113,24 +113,36 @@ local function battery()
     return batteryHandle.getBatteryPath() ~= nil
 end
 
+
+local __wifi_cache = nil
 --- Check to see the hardware has a network card
 -- @treturn bool True if an active wifi connection exists, false otherwise
 -- @staticfct hasWifi
 -- @usage -- This True if a network card with wifi exists and has an active connection
 -- lib-tde.hardware-check.hasWifi()
 local function wifi()
-    return fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 2
+    if __wifi_cache ~= nil then
+        return __wifi_cache
+    end
+    __wifi_cache = fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 2
+    return __wifi_cache
 end
 
+local __wifi_card_cache = nil
 --- Check to see the hardware has a network card
 -- @treturn bool True if a network card exists, false otherwise
 -- @staticfct hasWifiCard
 -- @usage -- This True if a network card with wifi exists
 -- lib-tde.hardware-check.hasWifiCard()
 local function wifiCard()
-    return fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 0
+    if __wifi_card_cache ~= nil then
+        return __wifi_card_cache
+    end
+    __wifi_card_cache = fileHandle.exists("/proc/net/wireless") and #fileHandle.lines("/proc/net/wireless") > 0
+    return __wifi_card_cache
 end
 
+local __bluetooth_cache = nil
 --- Check to see the hardware has a network card with bluetooth support
 -- @tparam function callback The callback to trigger once we detect the bluetooth status
 -- @treturn bool True if a network card exists with bluetooth support, false otherwise
@@ -138,6 +150,10 @@ end
 -- @usage -- This True if a network card exists with bluetooth support
 -- lib-tde.hardware-check.hasBluetooth(function(bHasBluetooth) print(bHasBluetooth) end)
 local function bluetooth(callback)
+    if __bluetooth_cache ~= nil then
+        return __bluetooth_cache
+    end
+
     awful.spawn.easy_async("systemctl is-active bluetooth", function (_, _, _, returnValue)
         -- only check if a bluetooth controller is found if the bluetooth service is active
         -- Otherwise the system will hang
@@ -146,10 +162,12 @@ local function bluetooth(callback)
             -- list all present controllers
             awful.spawn.easy_async("bluetoothctl list" , function (_, _, _, returnValue2)
                 print(returnValue2)
-                callback(returnValue2 == 0)
+                __bluetooth_cache = returnValue2 == 0
+                callback(__bluetooth_cache)
             end)
         else
-            callback(false)
+            __bluetooth_cache = false
+            callback(__bluetooth_cache)
         end
     end)
 end
@@ -179,6 +197,8 @@ local function is_in_path(cmd)
     return false, ""
 end
 
+
+local __installed_cache = {}
 --- Check if a certain piece of software is installed
 -- @tparam name string The name of the software package
 -- @tparam callback function  The function to call when we know if the package exists
@@ -191,13 +211,19 @@ local function has_package_installed(name, callback)
         return callback(false)
     end
 
+    if __installed_cache[name] ~= nil then
+        return callback(__installed_cache[name])
+    end
+
     local in_path = is_in_path(name)
     if in_path then
+        __installed_cache[name] = true
         return callback(true)
     end
 
     -- it is not in our path, now we do a heavy operation
     awful.spawn.easy_async("pacman -Q " .. name, function (_,_,_, rc)
+        __installed_cache[name] = rc == 0
         callback(rc == 0)
     end)
 end
@@ -213,13 +239,19 @@ local function ffmpeg(callback)
     has_package_installed("ffmpeg", callback)
 end
 
+
+local __sound_cache = nil
 --- Check to see the hardware has a sound card installed
 -- @treturn bool True if a sound card exists, false otherwise
 -- @staticfct hasSound
 -- @usage -- This True if a sound card exists
 -- lib-tde.hardware-check.hasSound()
 local function sound()
-    return fileHandle.exists("/proc/asound/cards") and #fileHandle.lines("/proc/asound/cards") > 1
+    if __sound_cache ~= nil then
+        return __sound_cache
+    end
+    __sound_cache = fileHandle.exists("/proc/asound/cards") and #fileHandle.lines("/proc/asound/cards") > 1
+    return __sound_cache
 end
 
 --- Returns the ip address of the default route
@@ -288,16 +320,22 @@ local function getCpuInfo()
     return cores, threads, name, tonumber(frequency)
 end
 
+local __weak_hardware_cache = nil
 --- Returns if the hardware is to weak, e.g. little amount of ram, cpu etc
 -- @return bool true if the hardware is below a certain threshold
 -- @staticfct isWeakHardware
 -- @usage -- If ram is below 1G or only one cpu core is present
 -- lib-tde.hardware-check.isWeakHardware()
 local function isWeakHardware()
+    if __weak_hardware_cache ~= nil then
+        return __weak_hardware_cache
+    end
     local _, ramtotal = getRamInfo()
     local _, threads = getCpuInfo()
     local minRamInKB = 1 * 1024 * 1024
-    return (threads < 2) or (ramtotal < minRamInKB)
+
+    __weak_hardware_cache = (threads < 2) or (ramtotal < minRamInKB)
+    return __weak_hardware_cache
 end
 
 --- Returns The frequency of the display panel in Hertz, for example 60 Hz
@@ -341,13 +379,18 @@ local function getTDEMemoryConsumption()
     return kbMem * 4, lua_mem
 end
 
+local __UID_cache = nil
 --- Returns the user id of the user running TDE
 -- @return number The UID of the calling process
 -- @staticfct getUID
 -- @usage -- Returns the user ID (Usually 1000 for single user systems)
 -- local uid = lib-tde.hardware-check.getUID()
 local function getUID()
-    return require("posix.unistd").getuid()
+    if __UID_cache ~= nil then
+        return __UID_cache
+    end
+    __UID_cache = require("posix.unistd").getuid()
+    return __UID_cache
 end
 
 return {
