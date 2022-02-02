@@ -433,36 +433,6 @@ local function make_nav(load_callback)
     make_view(icons.wifi, i18n.translate("Connections"), require("widget.settings.connections")())
   )
 
-
-  hardware.hasBluetooth(function(bHasBT)
-    if bHasBT then
-      local view = make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
-      table.insert(
-        root.elements.settings_views,
-        4,
-        view
-      )
-      view.link.bg = beautiful.transparent
-      view.link.active = false
-
-    end
-    hardware.has_package_installed("openvpn",function(bHasVPN)
-      if bHasVPN then
-        local view = make_view(icons.vpn, i18n.translate("VPN"), require("widget.settings.vpn")())
-        table.insert(
-          root.elements.settings_views,
-          4,
-          view
-        )
-        view.link.bg = beautiful.transparent
-        view.link.active = false
-      end
-      nav_container_populate()
-      load_callback()
-    end)
-  end)
-
-
   table.insert(
     root.elements.settings_views,
     make_view(icons.chart, i18n.translate("System"), require("widget.settings.system")())
@@ -510,6 +480,35 @@ local function make_nav(load_callback)
       make_view(icons.developer, i18n.translate("Developer"), require("widget.settings.developer")())
     )
   end
+
+  hardware.hasBluetooth(function(bHasBT)
+    if bHasBT then
+      local view = make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
+      table.insert(
+        root.elements.settings_views,
+        4,
+        view
+      )
+      view.link.bg = beautiful.transparent
+      view.link.active = false
+
+    end
+    hardware.has_package_installed("openvpn",function(bHasVPN)
+      if bHasVPN then
+        local view = make_view(icons.vpn, i18n.translate("VPN"), require("widget.settings.vpn")())
+        table.insert(
+          root.elements.settings_views,
+          4,
+          view
+        )
+        view.link.bg = beautiful.transparent
+        view.link.active = false
+      end
+      nav_container_populate()
+      load_callback()
+    end)
+  end)
+
 
   for _, plugin in ipairs(plugins) do
     validate_plugin(plugin)

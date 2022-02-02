@@ -151,17 +151,16 @@ local __bluetooth_cache = nil
 -- lib-tde.hardware-check.hasBluetooth(function(bHasBluetooth) print(bHasBluetooth) end)
 local function bluetooth(callback)
     if __bluetooth_cache ~= nil then
-        return __bluetooth_cache
+        callback(__bluetooth_cache)
+        return
     end
 
     awful.spawn.easy_async("systemctl is-active bluetooth", function (_, _, _, returnValue)
         -- only check if a bluetooth controller is found if the bluetooth service is active
         -- Otherwise the system will hang
         if returnValue == 0 then
-            print(returnValue)
             -- list all present controllers
             awful.spawn.easy_async("bluetoothctl list" , function (_, _, _, returnValue2)
-                print(returnValue2)
                 __bluetooth_cache = returnValue2 == 0
                 callback(__bluetooth_cache)
             end)
