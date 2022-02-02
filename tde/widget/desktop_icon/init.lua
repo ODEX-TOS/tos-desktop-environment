@@ -32,6 +32,7 @@ local filehandle = require("lib-tde.file")
 local hardware = require("lib-tde.hardware-check")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
+local click_handler = require("lib-tde.click-handler")
 
 local width = dpi(60)
 local height = width
@@ -84,8 +85,6 @@ local function create_icon(icon, name, num, callback, drag)
     -- The offset used when dragging the icon
     local xoffset = 0
     local yoffset = 0
-    -- To detect if a drag or a click happened
-    local timercount = 0
 
     local box =
         wibox(
@@ -98,7 +97,8 @@ local function create_icon(icon, name, num, callback, drag)
             bg = beautiful.background.hue_800 .. "00",
             width = width,
             height = height,
-            screen = awful.screen.primary
+            screen = awful.screen.primary,
+            cursor = 'hand1',
         }
     )
 
@@ -112,7 +112,6 @@ local function create_icon(icon, name, num, callback, drag)
             local coords = mouse.coords()
             box.x = coords.x - xoffset
             box.y = coords.y - yoffset
-            timercount = timercount + 1
             move_selected_boxes(box, offset)
         end
     }
@@ -123,36 +122,43 @@ local function create_icon(icon, name, num, callback, drag)
 
     local started = false
 
+    local press_cb, release_cb = click_handler({
+        pressed_cb =  function()
+            -- Find the offset of the mouse relative to the start of the rectangle
+            local coords = mouse.coords()
+            xoffset = coords.x - box.x
+            yoffset = coords.y - box.y
+            if not started then
+                started = true
+                print("TIMER: started")
+                timer:start()
+            end
+        end,
+        released_cb = function()
+            if started then
+                started = false
+                print("TIMER: stopped")
+                timer:stop()
+            end
+            if type(drag) == "function" then
+                drag(name, box.x, box.y)
+            end
+        end,
+        double_pressed_cb = function()
+            if type(callback) == "function" then
+                box.cursor = "watch"
+                callback(name, box)
+            end
+        end
+    })
+
     box:buttons(
         gears.table.join(
             awful.button(
                 {},
                 1,
-                function()
-                    -- Find the offset of the mouse relative to the start of the rectangle
-                    local coords = mouse.coords()
-                    xoffset = coords.x - box.x
-                    yoffset = coords.y - box.y
-                    if not started then
-                        started = true
-                        print("TIMER: started")
-                        timer:start()
-                    end
-                    timercount = 0
-                end,
-                function()
-                    if started then
-                        started = false
-                        print("TIMER: stopped")
-                        timer:stop()
-                    end
-                    if type(drag) == "function" then
-                        drag(name, box.x, box.y)
-                    end
-                    if timercount < 10 then
-                        callback()
-                    end
-                end
+                press_cb,
+                release_cb
             )
         )
     )
@@ -230,10 +236,12 @@ local function desktop_file(file, _, index, drag)
         menubar.utils.lookup_icon(icon) or icons.warning,
         name,
         index,
-        function()
+        function(_, _wibox)
             print("Opened: " .. file)
             clear_selections()
-            awful.spawn("gtk-launch " .. filehandle.basename(file), false)
+            awful.spawn.easy_async("gtk-launch " .. filehandle.basename(file), function()
+                _wibox.cursor = "hand1"
+            end)
         end,
         drag
     )
@@ -249,10 +257,12 @@ local function from_file(file, index, x, y, drag)
             menubar.utils.lookup_icon("text-x-generic") or icons.warning,
             name,
             index or {x = x, y = y},
-            function()
+            function(_, _wibox)
                 print("Opened: " .. file)
                 clear_selections()
-                awful.spawn("open " .. file, false)
+                awful.spawn.easy_async("open " .. file, function()
+                    _wibox.cursor = "hand1"
+                end)
             end,
             drag
         )
