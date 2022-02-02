@@ -167,7 +167,8 @@ local function get_cpu()
 
             local diff_idle = idle - idle_prev
             local diff_total = total - total_prev
-            local diff_usage = (1000 * (diff_total - diff_idle) / diff_total + 5) / 10
+            -- we add and substract 5 from it in order to ensure we don't get a divide by zero error
+            local diff_usage = (((1000 * ((diff_total - diff_idle) / diff_total)) + 5) - 5 )/ 10
 
             print("CPU usage: " .. diff_usage .. "%")
             signals.emit_cpu_usage(diff_usage)
