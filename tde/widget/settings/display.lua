@@ -180,7 +180,9 @@ local function make_resolution_list(monitor_information, monitor_id)
 
   local sorted_resolutions = {}
   for key, _ in pairs(monitor_information) do
-      table.insert(sorted_resolutions, key)
+      if string.find(key, '[0-9]+x[0-9]+') then
+          table.insert(sorted_resolutions, key)
+      end
   end
 
   sorted_resolutions = sort(sorted_resolutions, function (smaller, bigger)
@@ -1107,7 +1109,9 @@ changewallcycle.bottom = m
         wibox.container.margin(button({
           body = "Save",
           callback = function ()
-            awful.spawn("sh -c '" .. refresh_rate_cmd .. " ; which autorandr && autorandr --save tde --force'", false)
+            awful.spawn.easy_async(refresh_rate_cmd, function()
+              awful.spawn("sh -c '" .. xrandr.reposition_monitors() .. " ; which autorandr && autorandr --save tde --force'", false)
+            end)
             body.enable()
 
             Display_Mode = NORMAL_MODE

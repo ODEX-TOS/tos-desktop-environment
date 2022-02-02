@@ -41,6 +41,7 @@ local gtable = require("gears.table")
 local naughty = require("naughty")
 local apps = require("configuration.apps")
 local split = require("lib-tde.function.common").split
+local mergesort = require("lib-tde.sort.mergesort")
 
 local LOG_ERROR = "\27[0;31m[ ERROR "
 -- A path to a fancy icon
@@ -246,8 +247,8 @@ local function xrandr()
    state.cid = noti.id
 end
 
---- Get a list of all existing screens with their resolutions and refresh rates
--- @treturn table A table of tables with the following signature: {'eDP1': {resolution: {'Refresh Rate 1', 'Refresh Rate 2', ...}, '1920x1080': {'60'}, ...}, ...}
+--- Get a list of all existing screens with their resolutions, refresh rates and position in the screen XY space
+-- @treturn table A table of tables with the following signature: {'eDP1': {position: '0+0', resolution: '1920x1080', '1920x1080': {'60'}, '1080x720': {'60', '59.98', '29.99'}, ...}, 'DP2': {position: '1920+1080', resolution: '1920x1080', '1920x1080': {'60'} ...}...}
 -- @staticfct lib-tde.xrandr.output_data
 -- @usage -- Get a list of all screens
 -- local xrandr_data = lib-tde.xrandr.output_data()
@@ -261,15 +262,18 @@ local function output_data()
 
    if xrandr_out then
       for line in xrandr_out:lines() do
-         local output = line:match("^([%w-]+) connected ")
+         local output, active_res, location = line:match("^([%w-]+) connected.* ([0-9]+x[0-9]+)%+([0-9]+%+[0-9]+)")
          if output ~= nil  then
             activeOutput = output
-            data_tbl[activeOutput] = {}
+            data_tbl[activeOutput] = {
+               position = location,
+               resolution = active_res
+            }
             active = true
          end
 
          -- check for disconnected screens, don't scan/populate it
-         local isDisconnected = line:match("^([%w-]+) disconnected ")
+         local isDisconnected = line:match("^([%w-]+) disconnected")
          if isDisconnected ~= nil then
             data_tbl[isDisconnected] = {}
             active = false
@@ -397,6 +401,59 @@ local function highest_refresh_rate_from_resolution(res_tbl)
    return largest_rate
 end
 
+local function _sort_monitors_in_x_screen_space(_outputs)
+   -- lets find the monitors from left to right
+   local mon_tbl = {}
+   for key, output in pairs(_outputs) do
+       if output.position then
+       local x_component = tonumber(split(output.position, '+')[1])
+       table.insert(mon_tbl, {x = x_component, output = key})
+       end
+   end
+
+   return mergesort(mon_tbl, function(a, b)
+       return a.x < b.x
+   end)
+end
+
+--- Find the current monitor positions and make sure they are next to eachother
+-- @tparam[opt] table _outputs the output of lib-tde.xrandr.output_data, if not given this will call it for you
+-- @staticfct lib-tde.xrandr.reposition_monitors
+-- @usage -- If 2 or more monitors are connected and not duplicating, reposition them next to eachother
+-- lib-tde.xrandr.reposition_monitors()
+local function reposition_monitors(_outputs)
+  local cmd = "xrandr "
+  _outputs = _outputs or output_data()
+
+  local monitor_positions = _sort_monitors_in_x_screen_space(_outputs)
+
+  local total_x = 0
+
+  for i, mon in ipairs(monitor_positions) do
+      -- we are the first monitor
+      if i == 1 then
+       local output = _outputs[mon.output]
+       local resolution = output.resolution
+       cmd = cmd .. " --output " .. mon.output .. ' --mode ' .. resolution .. " --pos 0x0"
+      else
+       local output = _outputs[mon.output]
+       local prev_output = _outputs[monitor_positions[i - 1].output]
+
+       local x_component = split(prev_output.resolution, 'x')[1]
+       local y_component = split(output.position, '+')[2]
+
+       -- Only add then up if the positions are different (e.g. not duplicating)
+       if prev_output.position ~= output.position then
+           total_x = math.floor(x_component + total_x)
+       end
+
+       cmd = cmd .. " --output " .. mon.output .. ' --mode ' .. output.resolution .. " --pos " .. total_x .. "x" .. y_component
+      end
+  end
+
+  return cmd
+end
+
 return {
    outputs = outputs,
    inactive = inactive,
@@ -404,6 +461,7 @@ return {
    menu = menu,
    xrandr = xrandr,
    output_data = output_data,
+   reposition_monitors = reposition_monitors,
    highest_refresh_rate_from_resolution = highest_refresh_rate_from_resolution,
    highest_refresh_rate = highest_refresh_rate,
    highest_resolution = highest_resolution,
