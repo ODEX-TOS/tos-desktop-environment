@@ -29,6 +29,8 @@ local dpi = beautiful.xresources.apply_dpi
 local task_list = require('widget.task-list')
 local hardware = require('lib-tde.hardware-check')
 local keyboard_layout = require("widget.keyboard")
+local mat_colors = require("theme.mat-colors")
+local icons = require("theme.icons")
 
 local plugins = require("lib-tde.plugin-loader")("topbar")
 
@@ -47,6 +49,62 @@ local top_panel = function(s)
 		bg = beautiful.background.hue_800 .. beautiful.background_transparency,
 		fg = beautiful.fg_normal
 	}
+	local live_system_banner
+	hardware.has_package_installed("installer", function(bInstallerInstalled)
+		if not bInstallerInstalled then
+			return
+		end
+		live_system_banner = wibox {
+			ontop = true,
+			visible = true,
+			screen = s,
+			type = 'dock',
+			height = panel.height,
+			width = s.geometry.width,
+			x = s.geometry.x,
+			y = s.geometry.y + panel.height,
+			stretch = false,
+			bg = mat_colors.red.hue_800 .. beautiful.background_transparency,
+			fg = beautiful.fg_normal,
+			cursor = 'hand1'
+		}
+
+		live_system_banner:struts
+		{
+			top = panel.height * 2
+		}
+
+		live_system_banner:connect_signal(
+			'mouse::enter',
+			function()
+				local w = mouse.current_wibox
+				if w then
+					w.cursor = 'hand1'
+				end
+			end
+		)
+
+		live_system_banner:connect_signal(
+			'button::press',
+			function()
+				awful.spawn("calamares", false)
+			end
+		)
+
+		live_system_banner : setup {
+			layout = wibox.layout.align.horizontal,
+			expand = 'none',
+			wibox.container.margin(
+				wibox.widget.imagebox(icons.warning),
+				dpi(10),
+				0,
+				dpi(2),
+				dpi(2)
+			),
+			wibox.widget.textbox(i18n.translate("This is a live system, no information will be saved after restarting this device. To install the full system please click me!")),
+			nil
+		}
+	end)
 
 	signals.connect_background_theme_changed(function(pallet)
 		panel.bg = pallet.hue_800 .. beautiful.background_transparency
@@ -56,6 +114,12 @@ local top_panel = function(s)
 		panel.x = s.geometry.x
 		panel.y = s.geometry.y
 		panel.width = s.geometry.width
+
+		if live_system_banner ~= nil then
+			live_system_banner.x = s.geometry.x
+			live_system_banner.y = s.geometry.y + panel.height
+			live_system_banner.width = s.geometry.width
+		end
 	end)
 
 	panel:struts
