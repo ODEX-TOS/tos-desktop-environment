@@ -134,7 +134,13 @@ end
 local function dir_create(path)
   local stat = require("posix.sys.stat")
   local split = require("lib-tde.function.common").split
-  local dir = dirname(path)
+  local dir = path
+
+  -- In case we are dealing with a file and not a dir, otherwise we treat the last part as a dir
+  if file_exists(path) then
+    dir = dirname(path)
+  end
+
   if dir_exists(dir) then
     return
   end
@@ -164,7 +170,7 @@ local function overwrite(file, data)
   if type(file) ~= "string" then
     return false
   end
-  dir_create(file)
+  dir_create(dirname(file))
   local fd = io.open(file, "w")
 
   if fd == nil then
@@ -187,7 +193,7 @@ local function write(file, data)
   if type(file) ~= "string" then
     return false
   end
-  dir_create(file)
+  dir_create(dirname(file))
   local fd = io.open(file, "a")
 
   if fd == nil then

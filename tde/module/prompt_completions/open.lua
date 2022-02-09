@@ -35,6 +35,13 @@ local function get_completions(query)
           payload = tostring(query),
           __score = math.huge
       })
+    else
+        table.insert(res, {
+            icon = icons.dir,
+            text = i18n.translate("Create directory %s", query),
+            payload = tostring(query),
+            __score = math.huge
+        })
     end
 
     -- make sure that the resulting text always cleanly shows one '/' character to delimit the path
@@ -58,6 +65,11 @@ local function get_completions(query)
 end
 
 local function perform_action(payload)
+    -- In case the file/directory doesn't exist and we are executing this action we will create it for you and then open it
+    print("Opening payload: " .. payload)
+    if not filehandle.dir_exists(payload) and not filehandle.exists(payload) then
+        filehandle.dir_create(payload)
+    end
 
     local cmd = "open " .. payload
     awful.spawn(cmd, false)
