@@ -65,6 +65,7 @@ local function UpdateBrOSD()
       function(stdout)
         local brightness = string.match(stdout, "(%d+)")
         slider_osd.update(tonumber(brightness))
+        signals.emit_brightness(tonumber(brightness))
       end
     )
   else
@@ -73,6 +74,7 @@ local function UpdateBrOSD()
       function(stdout)
         local brightness = string.match(stdout, "(%d+)")
         slider_osd.update(tonumber(brightness))
+        signals.emit_brightness(tonumber(brightness))
       end
     )
   end

@@ -223,8 +223,10 @@ local function setup_state(state)
     if (_G.oled) then
         awful.spawn("brightness -s " .. math.max(state.brightness, 5) .. " -F", false) -- toggle pixel values
     else
-        awful.spawn("brightness -s 100 -F", false) -- reset pixel values
-        awful.spawn("brightness -s " .. math.max(state.brightness, 5), false)
+        -- reset pixel values
+        awful.spawn.easy_async("brightness -s 100 -F", function()
+            awful.spawn("brightness -s " .. math.max(state.brightness, 5), false)
+        end)
     end
 
     signals.emit_brightness(math.max(state.brightness, 5))
