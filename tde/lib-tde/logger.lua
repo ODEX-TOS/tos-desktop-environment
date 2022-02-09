@@ -74,145 +74,125 @@ local LOG_DEBUG = "\27[0;35m[ DEBUG "
 -- @param string
 local LOG_INFO = "\27[0;32m[ INFO  "
 
-if _G.echo ~= nil then
-	-- this module was already been called
-	return {
-		warn = LOG_WARN,
-		error = LOG_ERROR,
-		debug = LOG_DEBUG,
-		info = LOG_INFO
-	}
-end
+if _G.echo == nil then
+    -- store the old print variable into echo
+    echo = print
 
--- store the old print variable into echo
-echo = print
+    local dir = os.getenv("HOME") .. "/.cache/tde"
+    local filename = dir .. "/stdout.log"
+    local filename_error = dir .. "/error.log"
 
+    filehandle.overwrite(filename, "")
+    filehandle.overwrite(filename_error, "")
 
-local dir = os.getenv("HOME") .. "/.cache/tde"
-local filename = dir .. "/stdout.log"
-local filename_error = dir .. "/error.log"
+    local stdout_fd = io.open(filename, "a")
+    local error_fd = io.open(filename_error, "a")
 
-filehandle.overwrite(filename, "")
-filehandle.overwrite(filename_error, "")
+    local prev_time = time()
 
-local stdout_fd = io.open(filename, "a")
-local error_fd = io.open(filename_error, "a")
+    -- how often we should flush to disk in seconds, 0 means always flush
+    local flush_time_delta = 0
 
-local prev_time = time()
+    -- helper function to convert a table to a string
+    -- WARN: For internal use only, this should never be exposed to the end user
+    -- usage: local string = pretty_print_table({})
+    local function table_to_string(tbl, depth, indent)
+        indent = indent or 1
+        -- limit the max size
+        if indent > depth then
+            if type(tbl) == "table" then return "{  ..." end
+            return ""
+        end
+        local formatting = string.rep("  ", indent)
+        local result = "{\n"
+        for k, v in pairs(tbl) do
+            local format = formatting .. tostring(k) .. ": "
+            if type(v) == "table" then
+                result = result .. format ..
+                             table_to_string(v, depth - 1, indent + 1) ..
+                             formatting .. "},\n"
+            else
+                if type(v) == "string" then
+                    result = result .. format .. "'" .. v .. "',\n"
+                else
+                    result = result .. format .. tostring(v) .. ",\n"
+                end
+            end
+        end
+        -- edge case initial indentation requires manually adding ending bracket
+        if indent == 1 then return result .. "}" end
+        return result
+    end
 
--- how often we should flush to disk in seconds, 0 means always flush
-local flush_time_delta = 0
+    local function __write(line, log)
+        -- print it to stdout
+        echo(line)
+        -- append it to the log file
+        if stdout_fd ~= nil then stdout_fd:write(line .. "\n") end
+        if error_fd ~= nil and log == LOG_ERROR then
+            error_fd:write(line .. "\n")
+        end
+    end
 
--- helper function to convert a table to a string
--- WARN: For internal use only, this should never be exposed to the end user
--- usage: local string = pretty_print_table({})
-local function table_to_string(tbl, depth, indent)
-	indent = indent or 1
-	-- limit the max size
-	if indent > depth then
-		if type(tbl) == "table" then
-			return "{  ..."
-		end
-		return ""
-	end
-	local formatting = string.rep("  ", indent)
-	local result = "{\n"
-	for k, v in pairs(tbl) do
-		local format = formatting .. tostring(k) .. ": "
-		if type(v) == "table" then
-			result = result .. format .. table_to_string(v, depth - 1, indent + 1) .. formatting .. "},\n"
-		else
-			if type(v) == "string" then
-				result = result .. format .. "'" .. v .. "',\n"
-			else
-				result = result .. format .. tostring(v) .. ",\n"
-			end
-		end
-	end
-	-- edge case initial indentation requires manually adding ending bracket
-	if indent == 1 then
-		return result .. "}"
-	end
-	return result
-end
+    --- The default lua print message is overridden
+    -- @tparam string arg The string to print
+    -- @tparam[opt] enum log_type The type of log message
+    -- @tparam[opt] depth number In case you print a table, show the table until a certain depth
+    -- @staticfct print
+    -- @usage -- Print the error message "hello"
+    -- print("hello", logger.error)
+    print = function(arg, log_type, depth)
+        depth = depth or 3
+        -- validate the input
+        if arg == nil or _G.UNIT_TESTING_ACTIVE == true then return end
+        if type(arg) == "table" then arg = table_to_string(arg, depth) end
+        if not (type(arg) == "string") then arg = tostring(arg) end
 
+        local log = log_type or LOG_INFO
+        local bIsDevMode = general ~= nil and general["developer"] == "1"
 
-local function __write(line, log)
-	-- print it to stdout
-	echo(line)
-	-- append it to the log file
-	if stdout_fd ~= nil then
-		stdout_fd:write(line .. "\n")
-	end
-	if error_fd ~= nil and log == LOG_ERROR then
-		error_fd:write(line .. "\n")
-	end
-end
+        local __time = time()
 
---- The default lua print message is overridden
--- @tparam string arg The string to print
--- @tparam[opt] enum log_type The type of log message
--- @tparam[opt] depth number In case you print a table, show the table until a certain depth
--- @staticfct print
--- @usage -- Print the error message "hello"
--- print("hello", logger.error)
-print = function(arg, log_type, depth)
-	depth = depth or 3
-	-- validate the input
-	if arg == nil or _G.UNIT_TESTING_ACTIVE == true then
-		return
-	end
-	if type(arg) == "table" then
-		arg = table_to_string(arg, depth)
-	end
-	if not (type(arg) == "string") then
-		arg = tostring(arg)
-	end
+        local out = os.date("%H:%M:%S") ..
+                        string.format(".%.04d",
+                                      math.floor(__time * 10000) % 10000)
+        local statement = log .. out:gsub("\n", "") .. " ]\27[0m "
 
-	local log = log_type or LOG_INFO
-	local bIsDevMode = general ~= nil and general["developer"] == "1"
+        if bIsDevMode then
+            local calling_fnc = debug.getinfo(2)
+            if calling_fnc ~= nil then
+                local file = calling_fnc.short_src
+                local line = calling_fnc.currentline
+                local name = calling_fnc.name
+                if name then
+                    name = name .. '()'
+                else
+                    name = ""
+                end
 
-	local __time = time()
+                local debug_line = "\n\n" .. LOG_DEBUG .. out:gsub("\n", "") ..
+                                       " ]\27[0m " .. file .. ":" .. line ..
+                                       " @" .. name .. " "
 
-	local out = os.date("%H:%M:%S") .. string.format(".%.04d", math.floor(__time * 10000) % 10000)
-	local statement = log .. out:gsub("\n", "") .. " ]\27[0m "
+                __write(debug_line, log)
+            end
+        end
 
-	if bIsDevMode then
-		local calling_fnc = debug.getinfo(2)
-		if calling_fnc ~= nil then
-			local file = calling_fnc.short_src
-			local line = calling_fnc.currentline
-			local name = calling_fnc.name
-			if name then
-				name = name .. '()'
-			else
-				name = ""
-			end
+        for line in arg:gmatch("[^\r\n]+") do
+            if bIsDevMode then
+                __write(statement .. "\t\t" .. line, log)
+            else
+                __write(statement .. line, log)
+            end
+        end
 
-			local debug_line = "\n\n" .. LOG_DEBUG .. out:gsub("\n", "") .. " ]\27[0m " .. file .. ":" .. line .. " @" .. name .. " "
-
-			__write(debug_line, log)
-		end
-	end
-
-	for line in arg:gmatch("[^\r\n]+") do
-		if bIsDevMode then
-			__write(statement .. "\t\t" .. line, log)
-		else
-			__write(statement .. line, log)
-		end
-	end
-
-	-- flush to the file every flush_time_delta seconds
-	if __time - prev_time > flush_time_delta then
-		if stdout_fd ~= nil then
-			stdout_fd:flush()
-		end
-		if error_fd ~= nil then
-			error_fd:flush()
-		end
-		prev_time = __time
-	end
+        -- flush to the file every flush_time_delta seconds
+        if __time - prev_time > flush_time_delta then
+            if stdout_fd ~= nil then stdout_fd:flush() end
+            if error_fd ~= nil then error_fd:flush() end
+            prev_time = __time
+        end
+    end
 end
 
 --- Log a given message and add a stacktrace at the end, usually because something bad happened
@@ -223,19 +203,17 @@ end
 -- @usage -- Print the error message "hello" and show the callstack
 -- log_with_stacktrace("hello", logger.error)
 local function log_with_stacktrace(arg, log_type, depth)
-	if arg == nil or arg == "" then
-		print(debug.traceback(), log_type, depth)
-	end
+    if arg == nil or arg == "" then print(debug.traceback(), log_type, depth) end
 
-	local trace = debug.traceback()
-	print(arg .. '\n' .. trace, log_type, depth)
+    local trace = debug.traceback()
+    print(arg .. '\n' .. trace, log_type, depth)
 end
 
 return {
-	warn = LOG_WARN,
-	error = LOG_ERROR,
-	debug = LOG_DEBUG,
-	info = LOG_INFO,
+    warn = LOG_WARN,
+    error = LOG_ERROR,
+    debug = LOG_DEBUG,
+    info = LOG_INFO,
 
-	log_with_stacktrace = log_with_stacktrace
+    log_with_stacktrace = log_with_stacktrace
 }
