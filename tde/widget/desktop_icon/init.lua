@@ -33,6 +33,7 @@ local hardware = require("lib-tde.hardware-check")
 local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
 local click_handler = require("lib-tde.click-handler")
+local menu = require("widget.menu")
 
 local width = dpi(60)
 local height = width
@@ -120,6 +121,31 @@ local function create_icon(icon, name, num, callback, drag)
         timer.timeout = 1 / freq
     end)
 
+    box.hover = function()
+        box.ontop = true
+        box.bg = active_theme.hue_500 .. "99"
+    end
+
+    box.select = function()
+        box.hover()
+        box.bg = active_theme.hue_600 .. "99"
+        box.__selected = true
+    end
+
+    box.unhover = function()
+        if box.__selected == nil or box.__selected == false then
+            box.ontop = false
+            box.bg = active_theme.hue_800 .. "00"
+        else
+            box.hover()
+        end
+    end
+
+    box.unselect = function()
+        box.__selected = false
+        box.unhover()
+    end
+
     local started = false
 
     local press_cb, release_cb = click_handler({
@@ -149,19 +175,11 @@ local function create_icon(icon, name, num, callback, drag)
                 box.cursor = "watch"
                 callback(name, box)
             end
+        end,
+        short_pressed_cb = function()
+            box.select()
         end
     })
-
-    box:buttons(
-        gears.table.join(
-            awful.button(
-                {},
-                1,
-                press_cb,
-                release_cb
-            )
-        )
-    )
 
     local widget =
         wibox.widget {
@@ -186,15 +204,6 @@ local function create_icon(icon, name, num, callback, drag)
         forced_width = width
     }
 
-    box.hover = function()
-        box.ontop = true
-        box.bg = active_theme.hue_600 .. "99"
-    end
-
-    box.unhover = function()
-        box.ontop = false
-        box.bg = active_theme.hue_800 .. "00"
-    end
 
     widget:connect_signal("mouse::enter", box.hover)
 
@@ -212,9 +221,20 @@ local function create_icon(icon, name, num, callback, drag)
         widget,
         forced_width = width
     }
+
+    box._menu = menu({
+        wibox = box,
+        left_click_pressed = press_cb,
+        left_click_released = release_cb,
+        items = {
+            { i18n.translate("Delete"), function () end, icons.trash }
+        },
+    })
+
     table.insert(desktop_icons, box)
     table.insert(text_name, name)
     table.insert(icon_timers, timer)
+
     return box
 end
 

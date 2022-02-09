@@ -127,12 +127,12 @@ local function find_colliding_icons(computation)
         for _, icon in ipairs(desktop_icons) do
             if collides(icon, computation) then
                 if not (icon.ontop) then
-                    icon.hover()
+                    icon.select()
                 end
             else
                 -- optimization to reduce rendering
                 if icon.ontop then
-                    icon.unhover()
+                    icon.unselect()
                 end
             end
         end
