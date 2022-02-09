@@ -104,6 +104,7 @@ translations["decrease the number of master clients"] = "Verlaag het aantal mast
 translations["deep_orange"] = "donker oranje"
 translations["Default Applications"] = "Standaard Applicaties"
 translations["Delay by 5 minutes"] = "Vertraag met 5 minuten"
+translations["Delete"] = "Verwijder"
 translations["deny"] = "afgekeurd"
 translations["Developer"] = "Ontwikkelaar"
 translations["Device name"] = "Apparaat naam"

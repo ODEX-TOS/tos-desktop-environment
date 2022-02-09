@@ -299,13 +299,17 @@ function Test_theme_icon_mime()
 end
 
 function Test_theme_icon_keyboard()
-    assert(file_exists(icons.keyboard), "Check that the mime icon exists")
+    assert(file_exists(icons.keyboard), "Check that the keyboard icon exists")
+end
+
+function Test_theme_icon_trash()
+    assert(file_exists(icons.trash), "Check that the trash icon exists")
 end
 
 
 
 function Test_that_all_icons_are_tested()
-    local amount = 69
+    local amount = 70
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

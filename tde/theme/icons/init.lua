@@ -97,6 +97,7 @@ return {
   password = theme(dir .. "/password.svg"),
   mime = theme(dir .. "/mime.svg"),
   keyboard = theme(dir .. "/keyboard.svg"),
+  trash = theme(dir .. "/trash.svg"),
 
   --png's
   unknown = theme(dir .. "/noicon.png"),
