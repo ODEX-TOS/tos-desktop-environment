@@ -35,7 +35,8 @@ local function get_completions(query)
           payload = tostring(query),
           __score = math.huge
       })
-    else
+    -- We don't want to show the create directory item for all completions, only when typing in a directory path
+    elseif string.find(query, '/') then
         table.insert(res, {
             icon = icons.dir,
             text = i18n.translate("Create directory %s", query),
@@ -67,7 +68,9 @@ end
 local function perform_action(payload)
     -- In case the file/directory doesn't exist and we are executing this action we will create it for you and then open it
     print("Opening payload: " .. payload)
-    if not filehandle.dir_exists(payload) and not filehandle.exists(payload) then
+
+    -- Only create a dir if it doesn't exist and contains a /
+    if not filehandle.dir_exists(payload) and not filehandle.exists(payload) and string.find(payload, '/') then
         filehandle.dir_create(payload)
     end
 
