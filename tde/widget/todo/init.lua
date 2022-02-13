@@ -263,7 +263,7 @@ local function worker(user_args)
 
             local edit_button = wibox.widget {
                 {
-                    image = icons.brush,
+                    image = icons.edit,
                     resize = true,
                     forced_height = dpi(20),
                     forced_width = dpi(20),
