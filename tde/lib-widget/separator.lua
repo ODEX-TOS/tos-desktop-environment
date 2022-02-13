@@ -58,6 +58,7 @@ return function(args)
         orientation = orientation,
         opacity = opacity,
         widget = wibox.widget.separator,
-        forced_height = height
+        forced_height = height,
+        span_ratio = 0.9
     }
 end

@@ -418,6 +418,38 @@ function menu:get_root()
     return self.parent and menu.get_root(self.parent) or self
 end
 
+menu.seperation = true
+
+--- Add a separator between menu items, so you can group them in logical menu's.
+-- @method separator
+function menu:separator()
+
+    local theme = load_theme({}, self.theme)
+
+
+    local separator = wibox.widget {
+        orientation = "horizontal",
+        opacity = 1,
+        widget = wibox.widget.separator,
+        thickness = dpi(1),
+        span_ratio = 0.9
+    }
+
+    local _background = wibox.container.background()
+    _background:set_widget(separator)
+    _background:set_fg(theme.fg_normal)
+    _background:set_bg(theme.bg_normal)
+
+    separator.forced_height = dpi(1)
+    _background.forced_height = dpi(1)
+
+    self.layout:add(_background)
+
+    if self.wibox then
+        set_size(self)
+    end
+end
+
 --- Add a new menu entry.
 -- args.* params needed for the menu entry constructor.
 -- @param args The item params
@@ -427,6 +459,9 @@ end
 -- @method add
 function menu:add(args, index)
     if not args then return end
+
+    if args == menu.seperation then self:separator() return end
+
     local theme = load_theme(args.theme or {}, self.theme)
     args.theme = theme
     args.new = args.new or menu.entry
@@ -444,7 +479,6 @@ function menu:add(args, index)
     item._background:set_widget(item.widget)
     item._background:set_fg(item.theme.fg_normal)
     item._background:set_bg(item.theme.bg_normal)
-
 
     -- Create bindings
     item._background.buttons = {
@@ -721,6 +755,8 @@ function menu.new(args, parent)
         show = menu.show,
         exec = menu.exec,
         add = menu.add,
+        separator = menu.separator,
+        seperation = menu.seperation,
         child = {},
         items = {},
         parent = parent,
@@ -738,7 +774,7 @@ function menu.new(args, parent)
     -- Create items
     for _, v in ipairs(args) do  _menu:add(v)  end
     if args.items then
-        for _, v in pairs(args.items) do  _menu:add(v)  end
+        for _, v in pairs(args.items) do _menu:add(v) end
     end
 
     _menu._keygrabber = function (...)

@@ -146,13 +146,15 @@ local function gen_menu()
 				{i18n.translate("Terminal"), terminal, menubar.utils.lookup_icon("utilities-terminal")},
 				{i18n.translate("Web browser"), web_browser, menubar.utils.lookup_icon("webbrowser-app")},
 				{i18n.translate("File Manager"), file_manager, menubar.utils.lookup_icon("system-file-manager")},
-				{i18n.translate("Text Editor"), text_editor, menubar.utils.lookup_icon("accessories-text-editor")}
+				{i18n.translate("Text Editor"), text_editor, menubar.utils.lookup_icon("accessories-text-editor")},
 				-- other triads can be put here
+				awful.menu.seperation,
 			},
 			after = {
-				{"TDE", mytdemenu, icons.logo},
-				{i18n.translate("Screenshot"), screenshot, photo},
+				awful.menu.seperation,
 				{i18n.translate("Create"), files, file_icon},
+				{i18n.translate("Screenshot"), screenshot, photo},
+				{"TDE", mytdemenu, icons.logo},
 				{
 					i18n.translate("End Session"),
 					function()
