@@ -310,10 +310,14 @@ function Test_theme_icon_copy()
     assert(file_exists(icons.copy), "Check that the copy icon exists")
 end
 
+function Test_theme_icon_edit()
+    assert(file_exists(icons.edit), "Check that the edit icon exists")
+end
+
 
 
 function Test_that_all_icons_are_tested()
-    local amount = 71
+    local amount = 72
     assert(
         tablelength(icons) == amount,
         "It looks like you forgot to add some icons to the test suite, add them and then update this test (you forgot: " ..

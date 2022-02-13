@@ -72,6 +72,7 @@ return {
   lan_off = theme(config["lan_off"] or dir .. "/lan_off.svg"),
   calendar = theme(config["calendar"] or dir .. "/calendar.svg"),
   brush = theme(config["brush"] or dir .. "/brush.svg"),
+  edit = theme(config["edit"] or dir .. "/edit.svg"),
   bluetooth = theme(config["bluetooth"] or dir .. "/bluetooth.svg"),
   bluetooth_off = theme(config["bluetooth_off"] or dir .. "/bluetooth-off.svg"),
   bios = theme(config["bios"] or dir .. "/bios.svg"),
