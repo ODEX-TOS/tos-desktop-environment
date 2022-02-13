@@ -98,6 +98,7 @@ return {
   mime = theme(dir .. "/mime.svg"),
   keyboard = theme(dir .. "/keyboard.svg"),
   trash = theme(dir .. "/trash.svg"),
+  copy = theme(dir .. "/copy.svg"),
 
   --png's
   unknown = theme(dir .. "/noicon.png"),
