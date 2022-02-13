@@ -139,7 +139,7 @@ installed("installer", function (bIsInstalled)
                 print("file event:")
                 print(ev.name)
                 local file = desktopLocation .. "/" .. ev.name
-                if filehandle.exists(file) and not filehandle.is_dotfile(file) then
+                if (filehandle.exists(file) or filehandle.dir_exists(file)) and not filehandle.is_dotfile(file) then
                     desktop_icon.from_file(
                         file,
                         desktop_icon.count() + offset + 1,

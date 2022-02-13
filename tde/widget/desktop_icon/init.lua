@@ -34,6 +34,7 @@ local err = require("lib-tde.logger").error
 local signals = require("lib-tde.signals")
 local click_handler = require("lib-tde.click-handler")
 local menu = require("widget.menu")
+local split = require("lib-tde.function.common").split
 
 local width = dpi(60)
 local height = width
@@ -61,13 +62,40 @@ end
 -- clear all selected icons
 local function clear_selections()
     for _, value in ipairs(desktop_icons) do
-        value.unhover()
+        value.unselect()
     end
+end
+
+-- We will rename a file from 'file.txt' to 'file.copy.txt' if it already exists then we call it file.copy(2).txt
+local function generate_copy_file_name(file)
+
+    local path = filehandle.dirname(file)
+    local filename = filehandle.basename(file)
+    local extention_lst = split(filename, ".")
+    local extention = extention_lst[#extention_lst]
+
+    local file_name = filename:gsub("%." .. extention, "")
+
+    local base = path .. '/' .. file_name
+
+    -- Our inotify handler will pick it up
+    if filehandle.exists(base .. '.copy.' .. extention) then
+        local i = 1
+        while filehandle.exists(base .. '.copy('.. tostring(i) .. ').' .. extention) and i < 50 do
+            i = i + 1
+        end
+        return base.. '.copy('.. tostring(i) .. ').' .. extention
+    else
+        return base .. '.copy.' .. extention
+    end
+end
+
+local from_file = function(file, index, x, y, drag) -- luacheck: ignore
 end
 
 _G.clear_desktop_selection = clear_selections
 
-local function create_icon(icon, name, num, callback, drag)
+local function create_icon(icon, name, num, callback, drag, copy, delete, rename, rename_aborted)
     _count = _count + 1
     local x = 0
     local y = 0
@@ -103,6 +131,14 @@ local function create_icon(icon, name, num, callback, drag)
         }
     )
 
+    local text =  wibox.widget {
+        text = name,
+        halign = "center",
+        valign = "top",
+        font = beautiful.font,
+        widget = wibox.widget.textbox
+    }
+
     local timer =
         gears.timer {
         timeout = 1 / 24,
@@ -133,8 +169,9 @@ local function create_icon(icon, name, num, callback, drag)
     end
 
     box.unhover = function()
+        box.ontop = false
+
         if box.__selected == nil or box.__selected == false then
-            box.ontop = false
             box.bg = active_theme.hue_800 .. "00"
         else
             box.hover()
@@ -144,6 +181,11 @@ local function create_icon(icon, name, num, callback, drag)
     box.unselect = function()
         box.__selected = false
         box.unhover()
+    end
+
+    box.rename = function(new_name)
+        name = new_name or name
+        text.text = name
     end
 
     local started = false
@@ -193,16 +235,39 @@ local function create_icon(icon, name, num, callback, drag)
             }
         ),
         wibox.container.place(
-            {
-                text = name,
-                halign = "center",
-                valign = "top",
-                font = beautiful.font,
-                widget = wibox.widget.textbox
-            }
+            text
         ),
         forced_width = width
     }
+
+    local function rename_run()
+        awful.prompt.run {
+            prompt       = "",
+            text         = text.text,
+            bg_cursor    = beautiful.primary.hue_600,
+            textbox      = text,
+            exe_callback = function(input)
+                if not input or #input == 0 then
+                    if rename_aborted then
+                        rename_aborted(text.text)
+                    end
+                    return
+                end
+
+                -- before calling the user callback, ensure that the internal naming is still correct
+                for index, value in ipairs(text_name) do
+                    if value == name then
+                        text_name[index] = input
+                    end
+                end
+
+                rename(input)
+                box.rename(input)
+            end
+        }
+    end
+
+    box.prompt = rename_run
 
 
     widget:connect_signal("mouse::enter", box.hover)
@@ -222,18 +287,23 @@ local function create_icon(icon, name, num, callback, drag)
         forced_width = width
     }
 
-    box._menu = menu({
+    menu({
         wibox = box,
         left_click_pressed = press_cb,
         left_click_released = release_cb,
         items = {
-            { i18n.translate("Delete"), function () end, icons.trash }
+            { i18n.translate("Rename"), function ()
+                rename_run()
+            end, icons.edit },
+            { i18n.translate("Copy"), copy, icons.copy },
+            { i18n.translate("Delete"), delete, icons.trash }
         },
     })
 
     table.insert(desktop_icons, box)
     table.insert(text_name, name)
     table.insert(icon_timers, timer)
+
 
     return box
 end
@@ -263,18 +333,54 @@ local function desktop_file(file, _, index, drag)
                 _wibox.cursor = "hand1"
             end)
         end,
-        drag
+        drag,
+         -- copy function
+         function()
+            print("Copied: " .. file)
+            local copy_file_name = generate_copy_file_name(file)
+            filehandle.copy_file(file, copy_file_name)
+        end,
+        -- delete function
+        function()
+            print("Deleting file: " .. file)
+            filehandle.rm(file)
+        end,
+        -- rename function
+        function (renamed)
+            print("Renaming file: " .. file .. ' to ' .. renamed)
+            local dir = filehandle.dirname(file)
+
+            filehandle.move_file(file, dir .. '/' .. renamed)
+
+            file = dir .. '/' .. renamed
+        end
     )
 end
 
-local function from_file(file, index, x, y, drag)
+
+from_file = function(file, index, x, y, drag)
     local name = filehandle.basename(file)
+    -- Ensure that the name is not used already
+    for _, text in ipairs(text_name) do
+        if text == name then
+            return
+        end
+    end
+
     if name:match(".desktop$") then
         desktop_file(file, name, index or {x = x, y = y}, drag)
     else
+        local icon = icons.warning
+
         -- can be found here https://specifications.freedesktop.org/icon-naming-spec/latest/ar01s04.html
+        if filehandle.exists(file) then
+            icon = menubar.utils.lookup_icon("text-x-generic") or icon
+        else
+            icon = menubar.utils.lookup_icon("folder") or icon
+        end
+
         create_icon(
-            menubar.utils.lookup_icon("text-x-generic") or icons.warning,
+            icon,
             name,
             index or {x = x, y = y},
             function(_, _wibox)
@@ -284,7 +390,27 @@ local function from_file(file, index, x, y, drag)
                     _wibox.cursor = "hand1"
                 end)
             end,
-            drag
+            drag,
+            -- copy function
+            function()
+                print("Copied: " .. file)
+                local copy_file_name = generate_copy_file_name(file)
+                filehandle.copy_file(file, copy_file_name)
+            end,
+            -- delete function
+            function()
+                print("Deleting file: " .. file)
+                filehandle.rm(file)
+            end,
+            -- rename function
+            function (renamed)
+                print("Renaming file: " .. file .. ' to ' .. renamed)
+                local dir = filehandle.dirname(file)
+
+                filehandle.move_file(file, dir .. '/' .. renamed)
+
+                file = dir .. '/' .. renamed
+            end
         )
     end
 end
@@ -306,6 +432,61 @@ local function delete(name)
     table.remove(text_name, i)
 end
 
+local __from_nothing = function (icon, create, drag)
+    local desktop = os.getenv("HOME") .. '/Desktop/'
+    local file
+    local box = create_icon(
+            icon,
+            "",
+            _count,
+            function(_, _wibox)
+                if file == nil then return end
+
+                print("Opened: " .. file)
+                clear_selections()
+                awful.spawn.easy_async("open " .. file, function()
+                    _wibox.cursor = "hand1"
+                end)
+            end,
+            drag,
+            -- copy function
+            function()
+                if file == nil then return end
+                print("Copied: " .. file)
+                local copy_file_name = generate_copy_file_name(file)
+                filehandle.copy_file(file, copy_file_name)
+            end,
+            -- delete function
+            function()
+                if file == nil then return end
+                print("Deleting file: " .. file)
+                filehandle.rm(file)
+            end,
+            -- rename function
+            function (renamed)
+                -- we are in the case were we create the file/directory from nothing
+                if file == nil then
+                    create(desktop .. renamed)
+                    file = desktop .. renamed
+                    return
+                end
+
+                print("Renaming file: " .. file .. ' to ' .. renamed)
+                local dir = filehandle.dirname(file)
+
+                filehandle.move_file(file, dir .. '/' .. renamed)
+
+                file = dir .. '/' .. renamed
+            end,
+            -- people stopped creating the new file/directory
+            function (name)
+                delete(name)
+            end
+        )
+
+    box.prompt()
+end
+
 local function location_from_name(name)
     local i = -1
     for index, value in ipairs(text_name) do
@@ -319,11 +500,41 @@ local function location_from_name(name)
     return {x = nil, y = nil}
 end
 
+-- TODO: Implement creating a file
+-- (Create a desktop icon with a rename prompt, but the inotify shouldn't create a new icon)
+
+local file_icon = menubar.utils.lookup_icon("text-x-generic")  or icons.warning
+local dir_icon = menubar.utils.lookup_icon("folder") or icons.warning
+
+local function create_file(drag)
+    __from_nothing(
+        file_icon,
+        function(file)
+            filehandle.overwrite(file, "")
+        end,
+        drag
+    )
+
+end
+
+-- TODO: Same applies to the directory
+local function create_directory(drag)
+    __from_nothing(
+        dir_icon,
+        function(dir)
+            filehandle.dir_create(dir)
+        end,
+        drag
+    )
+end
+
 return {
     from_file = from_file,
     create_icon = create_icon,
     delete = delete,
     location_from_name = location_from_name,
+    create_file = create_file,
+    create_directory = create_directory,
     count = function()
         return _count
     end

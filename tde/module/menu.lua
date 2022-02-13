@@ -27,6 +27,7 @@ local beautiful = require("beautiful")
 local apps = require("configuration.apps")
 local icons = require("theme.icons")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local desktop_icon = require("widget.desktop_icon")
 
 local mousedrag = nil
 local started = false
@@ -98,22 +99,43 @@ local function gen_menu()
 					print("Full screenshot\n" .. out)
 				end
 			)
-		end,
-		photo
-	},
-	{
-		i18n.translate("Area"),
-		function()
-			awful.spawn.easy_async_with_shell(
-				apps.bins().area_screenshot,
-				function(out)
-					print("Area screenshot\n" .. out)
-				end
-			)
-		end,
-		photo
+			end,
+			photo
+		},
+		{
+			i18n.translate("Area"),
+			function()
+				awful.spawn.easy_async_with_shell(
+					apps.bins().area_screenshot,
+					function(out)
+						print("Area screenshot\n" .. out)
+					end
+				)
+			end,
+			photo
+		}
 	}
-}
+
+	local file_icon = menubar.utils.lookup_icon("text-x-generic")  or icons.warning
+	local dir_icon = menubar.utils.lookup_icon("folder") or icons.warning
+
+	-- Screenshot menu
+	local files = {
+		{
+			i18n.translate("Create File"),
+			function()
+				desktop_icon.create_file()
+			end,
+			file_icon
+		},
+		{
+			i18n.translate("Create Directory"),
+			function()
+				desktop_icon.create_directory()
+			end,
+			dir_icon
+		}
+	}
 
 
 	mymainmenu = freedesktop.menu.build(
@@ -130,6 +152,7 @@ local function gen_menu()
 			after = {
 				{"TDE", mytdemenu, icons.logo},
 				{i18n.translate("Screenshot"), screenshot, photo},
+				{i18n.translate("Create"), files, file_icon},
 				{
 					i18n.translate("End Session"),
 					function()
@@ -142,7 +165,7 @@ local function gen_menu()
 			}
 		}
 	)
-	awful.widget.launcher({image = beautiful.tde_icon, menu = mymainmenu})
+	--awful.widget.launcher({image = beautiful.tde_icon, menu = mymainmenu})
 end
 
 
@@ -157,6 +180,7 @@ root.buttons(
 				if mymainmenu == nil then
 					gen_menu()
 				end
+				mousegrabber.stop()
 				mymainmenu:toggle()
 			end
 		),

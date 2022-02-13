@@ -55,7 +55,6 @@
 -- @supermodule wibox
 ---------------------------------------------------------------------------
 local gears = require("gears")
-local beautiful = require("beautiful")
 local logger = require("lib-tde.logger")
 
 local function menu(args)
@@ -78,16 +77,16 @@ local function menu(args)
 
     local mainMenu = awful.menu({ items = items})
 
-    awful.widget.launcher({image = beautiful.tde_icon, menu = mainMenu})
-
     box:buttons(
         gears.table.join(
             awful.button(
                 {},
                 3,
                 function()
-                    right_click_pressed()
+                    -- ensure no mousegrabber is running
+                    mousegrabber.stop()
                     mainMenu:toggle()
+                    right_click_pressed()
                 end,
                 right_click_released
             ),
@@ -95,10 +94,8 @@ local function menu(args)
                 {},
                 1,
                 function()
+                    mainMenu:hide()
                     left_click_pressed()
-                    if mymainmenu ~= nil then
-                        mainMenu:hide()
-                    end
                 end,
                 left_click_released
             )
