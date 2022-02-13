@@ -108,4 +108,23 @@ package() {
 
   # Make sure we can still access the background themselves
   chmod +x "$pkgdir"/usr/share/backgrounds/tos
+
+  # Add support for pipewire echo cancellation
+  mkdir -p "$pkgdir"/usr/share/pipewire/pipewire-pulse.conf.d/
+  cat <<EOF > "$pkgdir"/usr/share/pipewire/pipewire-pulse.conf.d/tde-echo-cancel.conf
+context.modules = [
+  {   name = libpipewire-module-echo-cancel
+      args = {
+          # aec.method = webrtc
+          # node.latency = 1024/48000
+          source.props = {
+             node.name = "Echo Cancellation Source"
+          }
+          sink.props = {
+             node.name = "Echo Cancellation Sink"
+          }
+      }
+  }
+]
+EOF
 }
