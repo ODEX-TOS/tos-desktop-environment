@@ -351,7 +351,8 @@ local function rm(filename)
 end
 
 --- Make a copy of a file
---@tparam string filename the path to the file
+--@tparam string input the path to the file
+--@tparam string output the path to the copied file
 local function copy_file(input, output)
   if type(input) ~= "string" then
     return false
@@ -378,6 +379,28 @@ local function copy_file(input, output)
   file:close()
 
   return overwrite(output, content)
+end
+
+--- Move a file from one location to another (Can be used to rename files)
+--@tparam string input the path to the file
+--@tparam string output the path to move the file to
+local function move_file(input, output)
+  if type(input) ~= "string" then
+    return false
+  end
+  if type(output) ~= "string" then
+    return false
+  end
+
+  if not file_exists(input) then
+    return false
+  end
+
+  if file_exists(output) then
+    return false
+  end
+  local stdio = require("posix.stdio")
+  return stdio.rename(input, output)
 end
 
 --- Function to create a temporary file in /tmp
@@ -444,6 +467,7 @@ return {
   dir_create = dir_create,
   rm = rm,
   copy_file = copy_file,
+  move_file = move_file,
   mktemp = mktemp,
   mktempdir = mktempdir,
   is_dotfile = is_dotfile
