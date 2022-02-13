@@ -141,7 +141,7 @@ local function run(cmd, args)
         kill_previous = false
     end
 
-    local max_restarts = -1 -- -1 means restart forever
+    local max_restarts = args.max_restarts or -1 -- -1 means restart forever
     local kill_cmd = args.kill_cmd or "pkill '%s'"
     local command = get_command(cmd)
 

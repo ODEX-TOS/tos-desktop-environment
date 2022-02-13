@@ -170,7 +170,7 @@ return {
 --
     ---- These are auxilary commands that might be usefull
     {cmd={"kdeconnectd"}, tbl= {restart = true, kill_previous = true}},
-    {cmd={"udiskie"}, tbl= {restart = true, kill_previous = true}},
+    {cmd={"udiskie"}, tbl= {restart = true, kill_previous = true, max_restarts=10}},
     {cmd={"psi-notify"}, tbl= {restart = true, kill_previous = true}},
     {cmd={"numlockx"}, tbl = {restart = false, kill_previous=false}},
 
