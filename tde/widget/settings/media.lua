@@ -246,7 +246,7 @@ return function()
       active_sr = source
       bIsSink = false
 
-      volume.set_default_source(_source.id)
+      volume.set_default_source(_source)
       __active_source = _source
 
       if #source.available_ports > 1 then

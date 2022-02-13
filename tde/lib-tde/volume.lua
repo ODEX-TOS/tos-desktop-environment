@@ -481,6 +481,8 @@ end
 -- reset the pipewire server
 local function _reset_pipewire()
     awful.spawn("systemctl --user restart pipewire", false)
+    awful.spawn("systemctl --user restart pipewire-pulse", false)
+    awful.spawn("systemctl --user restart pipewire-media-session", false)
 end
 
 -- reset the pulseaudio server
