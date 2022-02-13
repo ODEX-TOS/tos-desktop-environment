@@ -376,7 +376,7 @@ function _M.preview()
                     icon = gears.surface(c.icon)
                 end
 
-                local iconboxWidth = 0.9 * textboxHeight
+                local iconboxWidth = 0.9 * textboxHeight * (fontSize / bigFont)
                 local iconboxHeight = iconboxWidth
 
                 -- Titles
