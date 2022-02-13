@@ -63,6 +63,7 @@ function Test_file_check_parameters_exist()
     assert(files.overwrite, "The file api should have a overwrite function")
     assert(files.rm, "The file api should have a rm function")
     assert(files.copy_file, "The file api should have a copy_file function")
+    assert(files.move_file, "The file api should have a move_file function")
     assert(files.write, "The file api should have a write function")
 end
 
@@ -141,6 +142,28 @@ function Test_script_copy_file_overwrite()
     rm_file("test_file_1")
     rm_file("test_file_2")
 end
+
+function Test_script_move_file()
+    local data = "this is some test data"
+    create_file("test_file_1", data)
+    assert(
+        files.string("test_file_1") == data,
+        "The string representation of the file 'test_file_1' doesn't match: " .. data
+    )
+    assert(files.move_file("test_file_1", "test_file_2"))
+    assert(
+        files.string("test_file_2") == data,
+        "The string representation of the file 'test_file_1' doesn't match the string representation of file 'test_file_2', whilsts it was moved"
+    )
+
+    assert(files.exists("test_file_2"), "The output of the move_file command didn't work")
+    assert(not files.exists("test_file_1"), "It seems the original file still exists, it is not moved")
+
+    rm_file("test_file_1")
+    rm_file("test_file_2")
+end
+
+-- TODO: Implement a test case for moving directories instead of files for the move_file api
 
 function Test_script_create_string_from_file_single_line()
     local data = "this is some test data"
@@ -467,7 +490,7 @@ function Test_dotfile_detection_edge_cases()
 end
 
 function Test_filehandle_api_unit_tested()
-    local amount = 18
+    local amount = 19
     local result = tablelength(files)
     assert(
         result == amount,
