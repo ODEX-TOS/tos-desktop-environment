@@ -481,6 +481,11 @@ local function make_nav(load_callback)
     )
   end
 
+  for _, plugin in ipairs(plugins) do
+    validate_plugin(plugin)
+  end
+
+
   hardware.hasBluetooth(function(bHasBT)
     if bHasBT then
       local view = make_view(icons.bluetooth, i18n.translate("Bluetooth"), require("widget.settings.bluetooth")())
@@ -508,11 +513,6 @@ local function make_nav(load_callback)
       load_callback()
     end)
   end)
-
-
-  for _, plugin in ipairs(plugins) do
-    validate_plugin(plugin)
-  end
 
   local red = require("theme.mat-colors").red
   local power =
