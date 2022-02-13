@@ -902,8 +902,20 @@ changewallcycle.bottom = m
 
   local recursive_monitor_load_func
 
+  local function load_usr_backgrounds()
+    local backgrounds = filesystem.list_dir("/usr/share/backgrounds/")
+
+    local result = {}
+    for _, v in ipairs(backgrounds) do
+      if filesystem.dir_exists(v) then
+        result = gears.table.join(result, filesystem.list_dir(v))
+      end
+    end
+    return result
+  end
+
   local function loadMonitors()
-    local usr_files = filesystem.list_dir("/usr/share/backgrounds/tos")
+    local usr_files = load_usr_backgrounds()
 
     recursive_monitor_load_func = function(bool, table, i)
       if i < #table then
