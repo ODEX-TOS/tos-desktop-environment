@@ -56,7 +56,8 @@ local resolution_box = nil
 local m = dpi(10)
 local settings_index = dpi(40)
 
-local tempDisplayDir = filesystem.mktempdir()
+-- TODO: Make this persistant across TDE restarts (But not system restarts)
+local tempDisplayDir = filesystem.mk_persist_restart_temp_dir('displays')
 local monitorScaledImage = ""
 
 local active_pallet = beautiful.primary
@@ -83,12 +84,6 @@ local _inputfields = {}
 signals.connect_primary_theme_changed(
   function(pallete)
     active_pallet = pallete
-  end
-)
-
-signals.connect_exit(
-  function()
-    filesystem.rm(tempDisplayDir)
   end
 )
 
@@ -335,7 +330,7 @@ local function make_mon(wall, id, fullwall, disable_number)
     forced_width = mon_size.w,
     forced_height = mon_size.h
   }
-  monitor:set_image(wall)
+  monitor:set_image(gears.surface.load_silently (wall))
 
   if Display_Mode == NORMAL_MODE then
     awful.tooltip {
@@ -857,15 +852,13 @@ changewallcycle.bottom = m
     local v = table[k]
     -- check if it is a file
     if filesystem.exists(v) then
-      local base = filesystem.basename(v)
+      local base = string.gsub(v, '/', '_')
       -- TODO: 16/9 aspect ratio (we might want to calculate it form screen space)
       local width = dpi(300)
       local height = (width / 16) * 9
       local scaledImage = tempDisplayDir .. "/" .. base
-      if user then
-        scaledImage = tempDisplayDir .. "/user-" .. base
-      end
-      if filesystem.exists(scaledImage) and Display_Mode == WALLPAPER_MODE then
+
+      if filesystem.exists(scaledImage) and (Display_Mode == WALLPAPER_MODE or Display_Mode == WALLPAPER_CYCLE_MODE )then
         layout:add(make_mon(scaledImage, k, v, true))
         if done then
           done(user, table, k)

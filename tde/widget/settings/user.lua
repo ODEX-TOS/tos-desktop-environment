@@ -50,11 +50,7 @@ local m = _size.m
 local settings_index = _size.settings_index
 local settings_height = _size.settings_height
 
-local tempUserDir = filehandle.mktempdir()
-
-signals.connect_exit(function ()
-  filehandle.rm(tempUserDir)
-end)
+local tempUserDir = filehandle.mk_persist_restart_temp_dir('users')
 
 local bSelectedProfilePicture = false
 local refresh = function(_)
