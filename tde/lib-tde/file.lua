@@ -423,6 +423,45 @@ local function mktempdir(template)
   return dir
 end
 
+--- Function to create a temporary file in /tmp/tde/files that persists after tde restarts but not after a system restart
+-- @tparam string identifier The unique identifier for the temporary file
+-- @usage -- This returns a string containing the created file
+-- local file = lib-tde.file.mk_persist_restart_temp('users')
+local function mk_persist_restart_temp(identifier)
+  if type(identifier) ~= "string" then
+    return nil
+  end
+  local dir = "/tmp/tde/files/"
+  local file = dir .. identifier
+
+  if not dir_exists(dir) then
+    dir_create(dir)
+  end
+
+  if not file_exists(file) then
+    write(file, "")
+  end
+
+  return file
+end
+
+--- Function to create a temporary directory in /tmp/tde that persists after tde restarts but not after a system restart
+-- @tparam string identifier The unique identifier for the temporary directory
+-- @usage -- This returns a string containing the created directory
+-- local dir = lib-tde.file.mk_persist_restart_temp_dir('display')
+local function mk_persist_restart_temp_dir(identifier)
+  if type(identifier) ~= "string" then
+    return nil
+  end
+  local dir = "/tmp/tde/" .. identifier
+
+  if not dir_exists(dir) then
+    dir_create(dir)
+  end
+
+  return dir
+end
+
 local function log(filename)
   -- tests the functions above
   local lines = lines_from(filename)
@@ -470,5 +509,7 @@ return {
   move_file = move_file,
   mktemp = mktemp,
   mktempdir = mktempdir,
+  mk_persist_restart_temp = mk_persist_restart_temp,
+  mk_persist_restart_temp_dir = mk_persist_restart_temp_dir,
   is_dotfile = is_dotfile
 }

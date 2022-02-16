@@ -60,6 +60,8 @@ function Test_file_check_parameters_exist()
     assert(files.list_dir_full, "The file api should have a list_dir_full function")
     assert(files.mktemp, "The file api should have a mktemp function")
     assert(files.mktempdir, "The file api should have a mktempdir function")
+    assert(files.mk_persist_restart_temp, "The file api should have a mk_persist_restart_temp function")
+    assert(files.mk_persist_restart_temp_dir, "The file api should have a mk_persist_restart_temp_dir function")
     assert(files.overwrite, "The file api should have a overwrite function")
     assert(files.rm, "The file api should have a rm function")
     assert(files.copy_file, "The file api should have a copy_file function")
@@ -490,7 +492,7 @@ function Test_dotfile_detection_edge_cases()
 end
 
 function Test_filehandle_api_unit_tested()
-    local amount = 19
+    local amount = 21
     local result = tablelength(files)
     assert(
         result == amount,
