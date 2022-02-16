@@ -56,11 +56,17 @@ return function(s)
     print("About page")
 
     local function update_callback()
+      if not s then return end
       print("Refreshing about page")
 
       -- the action center itself
       aboutPage.x = s.geometry.x + s.geometry.width / 2 - (width / 2)
       aboutPage.y = s.geometry.y + s.geometry.height / 2 - (height / 2)
+
+      aboutBackdrop.x = s.geometry.x
+      aboutBackdrop.y = s.geometry.y
+      aboutBackdrop.width = s.geometry.width
+      aboutBackdrop.height = s.geometry.height
     end
 
     -- Create the box
@@ -112,7 +118,7 @@ return function(s)
             animate(
               _G.anim_speed,
               aboutPage,
-              {y = aboutPage.screen.geometry.y - aboutPage.height},
+              {y = s.geometry.y - aboutPage.height},
               "outCubic",
               function()
                 aboutPage.visible = false

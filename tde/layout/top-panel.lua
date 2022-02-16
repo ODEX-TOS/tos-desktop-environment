@@ -111,6 +111,7 @@ local top_panel = function(s)
 	end)
 
 	signals.connect_refresh_screen(function()
+		if not s then return end
 		panel.x = s.geometry.x
 		panel.y = s.geometry.y
 		panel.width = s.geometry.width

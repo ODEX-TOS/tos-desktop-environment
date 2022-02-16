@@ -407,6 +407,7 @@ return function()
         return i18n.translate("Duration of the break: %s", datetime.numberInSecToMS(break_time_value))
       end
     ),
+    spacing = m,
     layout = wibox.layout.fixed.vertical
   }
 

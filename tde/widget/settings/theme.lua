@@ -35,7 +35,7 @@ local slider = require("lib-widget.slider")
 
 local size = require("widget.settings.size")
 
-local m = size.m
+local m = size.m / 2
 local settings_index = size.settings_index
 local settings_width = size.settings_width
 local settings_nw = size.settings_nw
@@ -179,7 +179,7 @@ local function make_color_entry(name, slide, font_black)
     no_update = true
   })
 
-  btn.forced_height = settings_index - dpi(5)
+  btn.forced_height = settings_index - dpi(10)
 
   btn.forced_width = dpi(110)
 
@@ -209,7 +209,7 @@ local function make_color_entry(name, slide, font_black)
       },
       _slider,
       forced_width = (settings_width - settings_nw) / 2,
-      forced_height = settings_index,
+      forced_height = settings_index - dpi(5),
       layout = wibox.layout.fixed.horizontal
     },
     m,
