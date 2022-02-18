@@ -160,10 +160,15 @@ return function()
 
   local __volume_widget_cache = {}
 
-  local function create_volume_widget(button_icon, text, obj, set_function)
+  local function create_volume_widget(button_icon, text, obj, set_function, bIsVolumeSink)
 
-    if __volume_widget_cache[text] ~= nil then
-      return __volume_widget_cache[text]
+    local cache_appender = '-source'
+    if bIsVolumeSink then
+      cache_appender = '-sink'
+    end
+
+    if __volume_widget_cache[text .. cache_appender] ~= nil then
+      return __volume_widget_cache[text .. cache_appender]
     end
 
     local button_wgt = mat_icon_button(mat_icon(button_icon, dpi(25)))
@@ -182,7 +187,7 @@ return function()
       )
     )
 
-    __volume_widget_cache[text] = wibox.widget {
+    __volume_widget_cache[text .. cache_appender] = wibox.widget {
       wibox.container.margin(
         wibox.widget {
           widget = wibox.widget.textbox,
@@ -201,7 +206,7 @@ return function()
       layout = wibox.layout.align.horizontal
     }
 
-    return __volume_widget_cache[text]
+    return __volume_widget_cache[text .. cache_appender]
   end
 
   local function update_hardware_state_from_sink(_sink)
@@ -238,7 +243,7 @@ return function()
         DISPLAY_MODE = PORT_MODE
         refresh()
       end
-    end)
+    end, true)
   end
 
   local function create_source_widget(source)
@@ -253,7 +258,7 @@ return function()
         DISPLAY_MODE = PORT_MODE
         refresh()
       end
-    end)
+    end, false)
   end
 
   local body = wibox.layout.flex.horizontal()
@@ -501,6 +506,38 @@ return function()
 
   view.refresh = refresh
 
+  local default_volume_icon = icons.volume
+
+  if _G.save_state.volume_muted then
+    default_volume_icon = icons.muted
+  end
+
+  local vol_icon = wibox.widget.imagebox(default_volume_icon)
+
+  local vol_btn = mat_icon_button(vol_icon)
+
+  signals.connect_volume_is_muted(function (bIsMuted)
+    if bIsMuted then
+      vol_icon:set_image(icons.muted)
+    else
+      vol_icon:set_image(icons.volume)
+    end
+  end)
+
+  vol_btn:buttons(
+      gears.table.join(
+        awful.button(
+          {},
+          1,
+          nil,
+          function()
+            print("Toggle volume")
+            volume.toggle_master()
+          end
+        )
+      )
+    )
+
   local volume_card = card()
   volume_card.update_body(
     wibox.widget {
@@ -522,7 +559,7 @@ return function()
         bottom = m,
         forced_height = dpi(30) + (m * 2),
         {
-          mat_icon(icons.volume, dpi(25)),
+          vol_btn,
           nil,
           vol_slider,
           layout = wibox.layout.fixed.horizontal
