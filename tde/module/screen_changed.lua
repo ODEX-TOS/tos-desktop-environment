@@ -23,6 +23,7 @@
 --SOFTWARE.
 ]]
 local signals = require("lib-tde.signals")
+local hardware = require("lib-tde.hardware-check")
 local gettime = require("socket").gettime
 
 local screen_geometry = {}
@@ -30,8 +31,6 @@ local weak = {}
 setmetatable(screen_geometry, weak)
 weak.__mode = "k"
 
-
-local bIsInRemoveState = false
 
 local function update_screens()
     print("Screen layout changed")
@@ -47,29 +46,50 @@ local function update_screens()
     -- notify tde of screen changes
     signals.emit_refresh_screen()
 
-    bIsInRemoveState = false
 end
+
+local function get_all_output_names()
+    local output_names = {}
+    for s in screen do
+        for _, output in pairs(s.outputs) do
+            table.insert(output_names, output.name)
+        end
+    end
+    return output_names
+end
+
+local function remove_virtual_displays_if_found()
+    local output_names = get_all_output_names()
+
+    -- Check if we can find a VIRTUAL[0-9]+ output, if this is the case, we disable it
+    for _, output in ipairs(output_names) do
+        if string.find(output, "VIRTUAL[0-9]+") then
+            print("Virtual output found, disabling it")
+            -- NOTE: This will trigger a screen::change event which will restart tde
+            hardware.execute("xrandr --output " .. output .. " --off")
+        end
+    end
+end
+
+local function handle_screen_methods()
+    remove_virtual_displays_if_found()
+
+    -- No more virtual outputs, we can refresh TDE
+    tde.restart()
+end
+
+-- When starting TDE make sure no virtual displays are found
+remove_virtual_displays_if_found()
 
 -- listen for screen changes
 tde.connect_signal(
     "screen::change",
-    function()
-        print("screen::change")
-        if not bIsInRemoveState then
-            update_screens()
-        end
-    end
+    handle_screen_methods
 )
 
 screen.connect_signal(
     "removed",
-    function()
-        print("Removed a screen")
-        bIsInRemoveState = true
-        awful.spawn.easy_async("xrandr -s 0", function ()
-            update_screens()
-        end)
-    end
+    handle_screen_methods
 )
 
 local prev_time = gettime()

@@ -28,10 +28,12 @@ awful = require('awful')
 require("lib-tde.luapath")
 require('awful.autofocus')
 
+
 awful.util.shell = 'sh'
 
 
 require("global_var")
+require('module.screen_changed')
 
 
 require("collision")()
