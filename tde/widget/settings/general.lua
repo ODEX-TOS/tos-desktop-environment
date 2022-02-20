@@ -95,6 +95,10 @@ local function create_multi_option_array(name, tooltip, options, default, config
           option_widget.active = true
           configWriter.update_entry(configFile, configOption, option)
 
+          if general ~= nil then
+            general[configOption] = option
+          end
+
           if type(changed_callback) == "function" then
             changed_callback(option)
           end
@@ -152,6 +156,10 @@ local function create_checkbox(name, tooltip, checked, configOption, on, off, on
           onChange(box_checked)
         else
           configWriter.update_entry(configFile, configOption, value)
+        end
+
+        if general ~= nil then
+          general[configOption] = value
         end
       end,
       size = settings_index * 0.7
@@ -320,6 +328,12 @@ return function()
       i18n.translate("Disable a lot of network utilities to reduce network usage"),
       general["minimize_network_usage"] == "1",
       "minimize_network_usage"
+    ),
+    create_checkbox(
+      i18n.translate("Allow Virtual Displays"),
+      i18n.translate("Allow virtual displays to be created/manipulated and maintained"),
+      general["allow_virtual_display"] == "1",
+      "allow_virtual_display"
     )
   }
 

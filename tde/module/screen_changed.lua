@@ -59,6 +59,11 @@ local function get_all_output_names()
 end
 
 local function remove_virtual_displays_if_found()
+    -- We allow virtual displays to be added/removed, so don't do anything
+    if general["allow_virtual_display"] == "1" then
+        return
+    end
+
     local output_names = get_all_output_names()
 
     -- Check if we can find a VIRTUAL[0-9]+ output, if this is the case, we disable it
