@@ -84,6 +84,10 @@ function test_configuration_app_duplicate_screens()
     assert(apps.default.duplicate_screens, "Make sure apps.default.duplicate_screens exists")
 end
 
+function test_configuration_app_duplicate_screens_largest()
+    assert(apps.default.duplicate_screens_largest, "Make sure apps.default.duplicate_screens_largest exists")
+end
+
 function test_configuration_app_run_on_start_up()
     assert(type(apps.run_on_start_up) == "table", "apps.run_on_start_up should be a table of strings")
     assert(#apps.run_on_start_up > 1, "Starup apps during boot should be bigger than 1")
@@ -104,7 +108,7 @@ function test_configuration_app_bins()
 end
 
 function test_apps_api_unit_tested()
-    local amount_default = 15
+    local amount_default = 16
     local result_default = tablelength(apps.default)
     assert(
         result_default == amount_default,

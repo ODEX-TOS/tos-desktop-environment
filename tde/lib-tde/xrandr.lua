@@ -124,11 +124,11 @@ local function arrange(out)
 end
 
 local function get_cmd_from_output(output, use_save_state)
-   local cmd = " --output " .. output .. " --panning 0x0 --auto"
+   local cmd = " --output " .. output .. " --panning 0x0 --scale 1x1 --auto"
 
    -- we have a non default resolution and refresh rate stored
    if use_save_state == true and _G.save_state ~= nil and _G.save_state.display ~= nil and _G.save_state.display[output] ~= nil then
-      cmd = " --output " .. output .. " --panning 0x0 --mode " .. tostring(_G.save_state.display[output].resolution) .. " --rate " .. tostring(_G.save_state.display[output].refresh_rate)
+      cmd = " --output " .. output .. " --panning 0x0 --scale 1x1 --mode " .. tostring(_G.save_state.display[output].resolution) .. " --rate " .. tostring(_G.save_state.display[output].refresh_rate)
    end
 
    return cmd
@@ -179,14 +179,20 @@ local function menu()
       end
 
       menu_tbl[#menu_tbl + 1] = {label, cmd, choice, gen_cmd(out, choice, false)}
-      if #choice == 1 then
-         menu_tbl[#menu_tbl + 1] = {
-            i18n.translate("Duplicate") .. ' <span weight="bold">' .. choice[1] .. "</span>",
-            apps.default.duplicate_screens .. " " .. choice[1],
-            choice
-         }
-      end
    end
+
+   menu_tbl[#menu_tbl + 1] = {
+      i18n.translate("Duplicate Smallest Screen"),
+      apps.default.duplicate_screens,
+      {i18n.translate("Smallest")},
+   }
+
+
+   menu_tbl[#menu_tbl + 1] = {
+      i18n.translate("Duplicate Largest Screen"),
+      apps.default.duplicate_screens_largest,
+      {i18n.translate("Largest")},
+   }
 
    return menu_tbl
 end
@@ -434,7 +440,7 @@ local function reposition_monitors(_outputs)
       if i == 1 then
        local output = _outputs[mon.output]
        local resolution = output.resolution
-       cmd = cmd .. " --output " .. mon.output .. ' --mode ' .. resolution .. " --pos 0x0"
+       cmd = cmd .. " --output " .. mon.output .. ' --mode ' .. resolution .. " --scale 1x1 --pos 0x0"
       else
        local output = _outputs[mon.output]
        local prev_output = _outputs[monitor_positions[i - 1].output]
@@ -447,7 +453,7 @@ local function reposition_monitors(_outputs)
            total_x = math.floor(x_component + total_x)
        end
 
-       cmd = cmd .. " --output " .. mon.output .. ' --mode ' .. output.resolution .. " --pos " .. total_x .. "x" .. y_component
+       cmd = cmd .. " --output " .. mon.output .. ' --mode ' .. output.resolution .. " --scale 1x1 --pos " .. total_x .. "x" .. y_component
       end
   end
 

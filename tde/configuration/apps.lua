@@ -146,7 +146,9 @@ return {
     lock = "light-locker-command -l",
     --lock = "dm-tool lock",
     quake = (os.getenv("TERMINAL") or "st") .. " -T QuakeTerminal",
-    duplicate_screens = "bash /etc/xdg/tde/xrandr-duplicate.sh"
+    duplicate_screens = "autorandr common",
+    duplicate_screens_largest = "autorandr clone-largest"
+
   },
   -- List of apps to start once on start-up
   run_on_start_up = {
