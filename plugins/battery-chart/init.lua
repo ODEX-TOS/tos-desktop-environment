@@ -27,6 +27,7 @@ local wibox = require("wibox")
 local card = require("lib-widget.card")
 local progressbar = require("lib-widget.progress_bar")
 local gears = require("gears")
+local datetime = require("lib-tde.function.datetime")
 
 local battery = require("lib-tde.function.battery")
 local battery_initial_value = battery.getBatteryPercentage()
@@ -63,7 +64,7 @@ local function create()
     local _width = dpi(300)
 
     -- Show the next 3 hours
-    local steps = math.floor((3600) / config.battery_timeout)
+    local steps = math.floor((3600 * 3) / config.battery_timeout)
     local percentages = {battery_initial_value}
 
     local colors = {
@@ -92,7 +93,8 @@ local function create()
     bar.forced_width = dpi(650)
     bar.forced_height = _width
 
-    local function draw_graph(percentage)
+    local function draw_graph(percentage, step_size_in_seconds)
+        step_size_in_seconds = step_size_in_seconds or config.battery_timeout
         table.insert(percentages, percentage)
 
         -- make sure our array doesn't grow to big, all unneeded space can be cleaned
@@ -122,27 +124,56 @@ local function create()
         end
 
         -- we will not be providing an estimate in case we have no datapoints
-        if count == 0 then return end
+        if count == 0 then return '...' end
 
         local average_incline =  count / _valid_steps
 
         -- In case the battery is at 100% or disconnected we won't be provinding an estimate
-        if average_incline == 0 then return end
+        if average_incline == 0 then return '∞'end
 
         -- Let's fill in the extrapolated data in the graph
         local new_percentage = percentage
+        local time_in_seconds = 0
         -- make sure we are not in an infinite loop
         local i = 0
         while new_percentage > 0 and new_percentage < 100 and i < steps do
             new_percentage = new_percentage + average_incline
             i = i + 1
             graph:add_value(new_percentage, 2, false)
+
+            if new_percentage > 0 then
+                time_in_seconds = time_in_seconds + step_size_in_seconds
+            end
         end
+
+        -- In case the new_percentage is still not 0 we interpolate the time_in_seconds until it reaches 0
+        if new_percentage > 0 then
+            local diff = percentage - new_percentage
+            local todo = new_percentage
+
+            -- What is the ration between diff and todo
+            local ratio = todo / diff
+            time_in_seconds = ratio * time_in_seconds
+        end
+
+        return i18n.translate("Time until battery runs out: %s" , datetime.numberInSecToHMS(time_in_seconds))
     end
+
+    local tooltip = ""
+
+    awful.tooltip {
+        objects = {graph},
+        text = tooltip,
+        mode = "inside",
+        preferred_positions = {'bottom'},
+        timer_function = function()
+            return tooltip
+        end
+    }
 
     local function update(percentage)
 
-        draw_graph(percentage)
+        tooltip = draw_graph(percentage)
 
         -- Logic for the battery bar
         bar:set_value(percentage)

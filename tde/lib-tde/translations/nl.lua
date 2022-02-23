@@ -382,6 +382,7 @@ translations["There is %s security vulnerability. Please try and update the syst
 translations["There's nothing in here... Come back later."] = "Er is niets hier te vinden... Kom op een later moment terug"
 translations["This is a live system, no information will be saved after restarting this device. To install the full system please click me!"] = "Dit is een live systeem, geen informatie zal worden opgeslagen na het herstarten van dit apparaat. Om het volledige systeem te installeren, klik op mij!"
 translations["tiling"] = "tegelen"
+translations["Time until battery runs out: %s"] = "Tijd tot de batterij uit gaat: %s"
 translations["Timeout before the break triggers: %s"] = "Time-out voordat de pauze wordt geactiveerd: %s"
 translations["Timer list"] = "Time-out lijst"
 translations["Titlebar drawing"] = "Titlebar schrijven"
