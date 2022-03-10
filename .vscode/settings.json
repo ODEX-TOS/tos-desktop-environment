@@ -12,7 +12,8 @@
         "*.tde": "lua",
         "typeinfo": "c",
         "xkb.h": "c",
-        "xcb_atom.h": "c"
+        "xcb_atom.h": "c",
+        "globalconf.h": "c"
     },
     "Lua.runtime.version": "Lua 5.3",
     "Lua.workspace.ignoreSubmodules": false,

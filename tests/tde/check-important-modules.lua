@@ -143,6 +143,14 @@ function Test_configuration_mod_key_tde_module_screen_changed()
     assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/screen_changed.lua exists")
 end
 
+function Test_configuration_mod_key_tde_module_screen_swipe()
+    assert(exists("tde/module/screen_swipe.lua"), "Check that tde/module/screen_swipe.lua exists")
+end
+
+function Test_configuration_mod_key_tde_module_tag_renderer()
+    assert(exists("tde/lib-tde/tag_renderer.lua"), "Check that tde/lib-tde/tag_renderer.lua exists")
+end
+
 function Test_configuration_mod_key_tde_module_docs_exists()
     assert(exists("tde/module/screen_changed.lua"), "Check that tde/module/docs.lua exists")
 end
@@ -608,7 +616,7 @@ end
 
 
 function Test_that_all_important_files_are_tested()
-    local amount = 119
+    local amount = 121
 
     local filehandle = require("tde.lib-tde.file")
     local modules = filehandle.list_dir_full("tde/module")

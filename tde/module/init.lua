@@ -68,3 +68,4 @@ end
 
 
 require("module.wallpaper-changer")
+require("module.screen_swipe")

@@ -35,50 +35,10 @@ This draft is not a final version of what will be introduced in the next patch, 
 A major refactor went into the codebase to cleanup several leaking processes. This 1.0 release is still a beta version of TDE
 
 ### New Features
-- Restart crashed daemon processes
-- New action and control centers
-- Allow changing the blur strength of the compositor
-- Reworked the notification center notifications
-- Added a keyboard layout changing widget
-- Save custom gradient themes
-- Added a basic chess plugin
-- Added ability to change the wallpaper based on time of day
-- Fully reworked tutorial
-- You can now enable/disable plugins from the settings
-- You can now change the default applications from the settings
-- Added a new battery plugin for the settings
-- Handle dpi better for smaller displays ( < 1920x1080)
-- You can now tab-complete some parts in the prompt
 
 ### Bug Fixes
-- Don't play a 'pop' sound when opening the left-panel
-- The prompt now opens on the monitor with focus, instead of the primary monitor
-- Brightness and volume osd sliders now show on the focussed screen
-- Client popup windows now appear on the correct screen instead of the primary screen
-- Always recalculate screen space location of the control center and info center
-- When a faulty plugin is loaded you now get the correct name in the error message
-- Fetch wifi list now works when no connection is currently active
-- Right bar now fits correctly when no top-panel is present
-- Fix the titlebar close button showing the wrong tooltip
-- Fix the titlebar tooltip from showing when out of focus in some cases
-- Fixed some size_hint restricted windows from tiling
-- Correctly detect if blur is on/off on boot
 
 ### Dev Notes
-- The inputfield now allows editing of the field
-- You can now use printf syntax for the i18n.translate api
-- You can now enable developer settings by adding the line `developer="1"` in general.conf, this will add a developer tab in settings
-- You can now see drawboxes around widget if you enable it in the settings state
-- You can now see paint refreshes in the developer settings
-- Don't draw backdrops for invalidated clients
-- Plugins now have support for extended metadata
-- Introducing a new declarative `lib-widget` api, much like the `wibox`, `naughty`, `awful` and other api's
-- New QR code api added to `lib-tde.qr-code`
-- The `lib-widget.progress_bar` allows to configure the color now
-- The battery signal now sends a higher resolution battery percentage
-- The `wibox.widget.graph` can now add data both to the front and the back of the graph
-- Added a new `gears.shape.rectbubble` that behaves simular to the `infobubble` but is rectangular instead
-
 
 ## Patch 0.9
 
@@ -102,6 +62,21 @@ As well as a To-do list and a countdown timer plugin for the top-bar.
 - Show the News/Updates from the latest version when upgrading between major TDE versions
 - Added a nice loading animation for long tasks
 - Allow setting up gradients in the colors.conf file
+- Restart crashed daemon processes
+- New action and control centers
+- Allow changing the blur strength of the compositor
+- Reworked the notification center notifications
+- Added a keyboard layout changing widget
+- Save custom gradient themes
+- Added a basic chess plugin
+- Added ability to change the wallpaper based on time of day
+- Fully reworked tutorial
+- You can now enable/disable plugins from the settings
+- You can now change the default applications from the settings
+- Added a new battery plugin for the settings
+- Handle dpi better for smaller displays ( < 1920x1080)
+- You can now tab-complete some parts in the prompt
+- Swiping now shows the next and previous tag
 
 ### Bug Fixes
 
@@ -118,11 +93,35 @@ As well as a To-do list and a countdown timer plugin for the top-bar.
 - Top bar hover is now uniform
 - The countdown timer now doesn't trigger when in a fullscreen application (only the sound triggers)
 - Animation slider in the settings is now inverted making the UX more coherent
+- Don't play a 'pop' sound when opening the left-panel
+- The prompt now opens on the monitor with focus, instead of the primary monitor
+- Brightness and volume osd sliders now show on the focussed screen
+- Client popup windows now appear on the correct screen instead of the primary screen
+- Always recalculate screen space location of the control center and info center
+- When a faulty plugin is loaded you now get the correct name in the error message
+- Fetch wifi list now works when no connection is currently active
+- Right bar now fits correctly when no top-panel is present
+- Fix the titlebar close button showing the wrong tooltip
+- Fix the titlebar tooltip from showing when out of focus in some cases
+- Fixed some size_hint restricted windows from tiling
+- Correctly detect if blur is on/off on boot
 
 ### Dev Notes
 
 - We lazily load modules that are by default not loaded in. This decreases the initial load time
-
+- The inputfield now allows editing of the field
+- You can now use printf syntax for the i18n.translate api
+- You can now enable developer settings by adding the line `developer="1"` in general.conf, this will add a developer tab in settings
+- You can now see drawboxes around widget if you enable it in the settings state
+- You can now see paint refreshes in the developer settings
+- Don't draw backdrops for invalidated clients
+- Plugins now have support for extended metadata
+- Introducing a new declarative `lib-widget` api, much like the `wibox`, `naughty`, `awful` and other api's
+- New QR code api added to `lib-tde.qr-code`
+- The `lib-widget.progress_bar` allows to configure the color now
+- The battery signal now sends a higher resolution battery percentage
+- The `wibox.widget.graph` can now add data both to the front and the back of the graph
+- Added a new `gears.shape.rectbubble` that behaves simular to the `infobubble` but is rectangular instead
 
 ## Patch 0.8
 

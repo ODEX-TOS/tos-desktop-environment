@@ -1577,7 +1577,8 @@ function tag.object.view_only(self)
     local tags = self.screen.tags
     -- First, untag everyone except the viewed tag.
     for _, _tag in pairs(tags) do
-        if _tag ~= self then
+        if _tag ~= self and _tag.selected then
+            awesome.emit_signal("tag::leave", _tag) -- TDE: Patch to allow nice screen swiping
             _tag.selected = false
         end
     end
