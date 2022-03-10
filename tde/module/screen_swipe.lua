@@ -93,11 +93,6 @@ end
 tde.connect_signal("mouse::swipe_event::previous", function(percentage)
     local screen = awful.screen.focused()
 
-    -- Get the very latest 'snapshot' of the screen before transitioning
-    if(percentage < 10) then
-     tag_renderer.request_render_of_current_tag(screen)
-    end
-
     local index = screen.selected_tag.index - 1
     if index < 1 then
         index = 8
@@ -116,12 +111,6 @@ end)
 
 tde.connect_signal("mouse::swipe_event::next", function(percentage)
     local screen = awful.screen.focused()
-
-
-    -- Get the very latest 'snapshot' of the screen before transitioning
-    if(percentage < 10) then
-        tag_renderer.request_render_of_current_tag(screen)
-    end
 
     local index = screen.selected_tag.index + 1
     if index < 1 then

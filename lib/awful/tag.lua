@@ -1491,7 +1491,10 @@ function tag.viewnone(screen)
     screen = screen or ascreen.focused()
     local tags = screen.tags
     for _, t in pairs(tags) do
-        t.selected = false
+        if t.selected then
+            awesome.emit_signal("tag::leave", t) -- TDE: Patch to allow nice screen swiping
+            t.selected = false
+        end
     end
 end
 
@@ -1616,7 +1619,10 @@ function tag.viewmore(tags, screen, maximum)
     local screen_tags = screen.tags
     for _, _tag in ipairs(screen_tags) do
         if not gtable.hasitem(tags, _tag) then
-            _tag.selected = false
+            if _tag.selected then
+                awesome.emit_signal("tag::leave", _tag) -- TDE: Patch to allow nice screen swiping
+                _tag.selected = false
+            end
         elseif _tag.selected then
             selected = selected + 1
         end
@@ -1642,6 +1648,9 @@ end
 -- @see selected
 -- @tparam tag t Tag to be toggled
 function tag.viewtoggle(t)
+    if t.selected then
+        awesome.emit_signal("tag::leave", t) -- TDE: Patch to allow nice screen swiping
+    end
     t.selected = not t.selected
     capi.screen[tag.getproperty(t, "screen")]:emit_signal("tag::history::update")
 end
