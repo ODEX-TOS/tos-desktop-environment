@@ -29,6 +29,13 @@ local tag_renderer = require("lib-tde.tag_renderer")
 
 local wallpaper =  _G.save_state.wallpaper.default_image or beautiful.wallpaper
 
+local static_previous_wibox = wibox {
+    ontop = true,
+    screen = awful.screen.focused(),
+    type = 'dock',
+    visible = false,
+}
+
 
 local swipe_wibox = wibox {
     ontop = true,
@@ -37,17 +44,22 @@ local swipe_wibox = wibox {
     visible = false,
 }
 
-    swipe_wibox.shape = function(cr, w, h)
-        -- See the delta of x that is of the screen
-        local delta_x = swipe_wibox.screen.geometry.x - swipe_wibox.x
+swipe_wibox.shape = function(cr, w, h)
+    -- See the delta of x that is of the screen
+    local delta_x = swipe_wibox.screen.geometry.x - swipe_wibox.x
 
-        cr:rectangle(delta_x, 0, w, h)
-    end
+    cr:rectangle(delta_x, 0, w, h)
+end
 
 local swipe_image = wibox.widget.imagebox(wallpaper, true)
 swipe_image.valign = 'center'
 swipe_image.vertical_fit_policy = 'fit'
 swipe_image.scaling_quality = 'fast'
+
+local static_previous_image = wibox.widget.imagebox(wallpaper, true)
+static_previous_image.valign = 'center'
+static_previous_image.vertical_fit_policy = 'fit'
+static_previous_image.scaling_quality = 'fast'
 
 
 local function lerp(start, finish, percentage)
@@ -77,7 +89,7 @@ local function handle_swipe_event(scrn, percentage, bFromLeftSide)
     swipe_wibox.height = scrn.geometry.height
     swipe_wibox.y      = scrn.geometry.y
 
-    swipe_image.forced_height = scrn.geometry.height + 100
+    swipe_image.forced_height = scrn.geometry.height
     swipe_image.forced_width = scrn.geometry.width
 
    if bFromLeftSide then
@@ -87,6 +99,41 @@ local function handle_swipe_event(scrn, percentage, bFromLeftSide)
    end
 
     swipe_wibox.visible = true
+end
+
+local function previous_old_school(tag, screen, percentage)
+    local __surface = tag_renderer.fetch_from_tag_cache(tag) or tag_renderer.render_background(tag) or wallpaper
+    swipe_image:set_image(__surface)
+
+
+    handle_swipe_event(screen, percentage, true)
+end
+
+local function previous_new_school(tag, screen, percentage)
+    local current_tag = screen.selected_tag
+
+    -- Instead of showing the previous rendered tag, we show the previous tag and display the current on on top of it
+    local __surface = tag_renderer.fetch_from_tag_cache(current_tag) or tag_renderer.render_tag_content_to_image(current_tag) or tag_renderer.render_background(current_tag) or wallpaper
+    swipe_image:set_image(__surface)
+
+    local __surface_previous = tag_renderer.fetch_from_tag_cache(tag) or tag_renderer.render_background(tag) or wallpaper
+    static_previous_image:set_image(__surface_previous)
+
+    static_previous_wibox.screen = screen
+
+    -- We are in the middle of a swipe
+    static_previous_wibox.width  = screen.geometry.width
+    static_previous_wibox.height = screen.geometry.height
+    static_previous_wibox.y      = screen.geometry.y
+    static_previous_wibox.x      = screen.geometry.x
+
+    static_previous_image.forced_height = screen.geometry.height
+    static_previous_image.forced_width = screen.geometry.width
+
+    static_previous_wibox.visible = true
+
+    -- The swipe event needs to be painted on top of the static image
+    handle_swipe_event(screen, 100 -percentage, false)
 end
 
 -- Global swipe events
@@ -102,11 +149,11 @@ tde.connect_signal("mouse::swipe_event::previous", function(percentage)
 
     local tag = screen.tags[index]
 
-    local __surface = tag_renderer.fetch_from_tag_cache(tag) or wallpaper
-    swipe_image:set_image(__surface)
-
-
-    handle_swipe_event(screen, percentage, true)
+    if general["swipe_event_type"] == "new" or general["swipe_event_type"] == nil then
+        previous_new_school(tag, screen, percentage)
+    else
+        previous_old_school(tag, screen, percentage)
+    end
 end)
 
 tde.connect_signal("mouse::swipe_event::next", function(percentage)
@@ -121,7 +168,7 @@ tde.connect_signal("mouse::swipe_event::next", function(percentage)
 
     local tag = screen.tags[index]
 
-    local __surface = tag_renderer.fetch_from_tag_cache(tag) or wallpaper
+    local __surface = tag_renderer.fetch_from_tag_cache(tag) or tag_renderer.render_background(tag) or wallpaper
     swipe_image:set_image(__surface)
 
     handle_swipe_event(screen, percentage, false)
@@ -132,6 +179,7 @@ end)
 screen.connect_signal("tag::history::update", function()
     -- Ensure that after a tag change the wibox is no longer visible, because we completed an animation
     swipe_wibox.visible = false
+    static_previous_wibox.visible = false
 end)
 
 awful.screen.connect_for_each_screen(function(s)
@@ -140,6 +188,13 @@ awful.screen.connect_for_each_screen(function(s)
 	        layout = wibox.layout.align.horizontal,
             nil,
             swipe_image,
+            nil
+        }
+
+        static_previous_wibox:setup {
+	        layout = wibox.layout.align.horizontal,
+            nil,
+            static_previous_image,
             nil
         }
     end

@@ -30,6 +30,9 @@ local card = require("lib-widget.card")
 local checkbox = require("lib-widget.checkbox")
 local scrollbox = require("lib-widget.scrollbox")
 
+local configWriter = require("lib-tde.config-writer")
+local generalConfigFile = os.getenv("HOME") .. "/.config/tos/general.conf"
+
 local dpi = beautiful.xresources.apply_dpi
 
 local size = require("widget.settings.size")
@@ -51,6 +54,52 @@ return function()
   title.forced_height = settings_index + m + m
 
   local __mouse_cache = {}
+  local __general_cache
+
+  local function make_general_settings()
+    if __general_cache then
+      return __general_cache
+    end
+
+    __general_cache= card({
+      title = "General"
+    })
+
+    local swipe_event_checkbox = checkbox({
+      checked = general["swipe_event_type"] == "new" or general["swipe_event_type"] == nil,
+      callback = function(checked)
+       if checked then
+        general["swipe_event_type"] = "new"
+       else
+        general["swipe_event_type"] = "old"
+       end
+
+       configWriter.update_entry(generalConfigFile, "swipe_event_type", general["swipe_event_type"])
+      end,
+      size = settings_index
+    })
+
+    local swipe_event_type = wibox.widget {
+      layout = wibox.layout.align.horizontal,
+      wibox.widget.textbox(i18n.translate("Swipe Event Type")),
+      nil,
+      swipe_event_checkbox
+    }
+
+    __general_cache.update_body(
+      wibox.container.margin(
+        wibox.widget {
+          layout = wibox.layout.fixed.vertical,
+          spacing = m/2,
+          swipe_event_type
+        },
+        m,m,m,m
+      )
+    )
+
+
+    return __general_cache
+  end
 
   local function make_mouse(id, name, default_value, default_accel_value, natural_scrolling)
 
@@ -178,6 +227,9 @@ return function()
     -- reset the layout of all mice
     layout:reset()
     scrollbox_body.reset()
+
+    layout:add(make_general_settings())
+
     mouse.getInputDevices(function(devices)
       for _, device in ipairs(devices) do
         -- find the speed of the mouse

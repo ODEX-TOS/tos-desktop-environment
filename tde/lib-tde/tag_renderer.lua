@@ -55,13 +55,17 @@ local function paint_wallpaper(cr)
     cr:paint()
 end
 
+local function is_visible(_client)
+    return _client.valid and not _client.hidden and not _client.minimized and _client.opacity > 0
+end
+
 local function get_clients_on_tag(tag)
     local __clients = tag.screen.all_clients
 
     local __filtered = {}
 
     for _, _client in ipairs(__clients) do
-        if _client:tags()[1] == tag then
+        if _client:tags()[1] == tag and is_visible(_client) then
             table.insert(__filtered, _client)
         end
     end
@@ -69,8 +73,7 @@ local function get_clients_on_tag(tag)
     return __filtered
 end
 
-
-local function render_tag_content_to_image(tag)
+local function render_background(tag)
     local scrn = tag.screen or awful.screen.focused()
 
     local img = cairo.ImageSurface.create(cairo.Format.RGB24, scrn.geometry.width, scrn.geometry.height)
@@ -78,14 +81,6 @@ local function render_tag_content_to_image(tag)
 
     -- First pass we paint the wallpaper
     paint_wallpaper(cr)
-
-    -- Then we paint clients
-    local viewable_clients = get_clients_on_tag(tag)
-    -- Paint each client to the resulting image
-    for _, clnt in ipairs(viewable_clients) do
-        local _geo = clnt:geometry()
-        xcb_surface_to_image_surface(cr, clnt.content, _geo, scrn.geometry)
-    end
 
     -- Finally we paint tde wiboxes
     if scrn.bottom_panel and scrn.bottom_panel.visible then
@@ -95,6 +90,23 @@ local function render_tag_content_to_image(tag)
     if scrn.top_panel and scrn.top_panel.visible then
         wibox_to_image_surface(cr, scrn.top_panel, scrn.geometry)
     end
+    return img
+end
+
+local function render_tag_content_to_image(tag)
+    local scrn = tag.screen or awful.screen.focused()
+
+    local img = render_background(tag)
+    local cr  = cairo.Context(img)
+
+    -- Then we paint clients
+    local viewable_clients = get_clients_on_tag(tag)
+    -- Paint each client to the resulting image
+    for _, clnt in ipairs(viewable_clients) do
+        local _geo = clnt:geometry()
+        xcb_surface_to_image_surface(cr, clnt.content, _geo, scrn.geometry)
+    end
+
 
     if scrn.info_center and scrn.info_center.visible then
         wibox_to_image_surface(cr, scrn.info_center, scrn.geometry)
@@ -152,5 +164,6 @@ end
 return {
     render_tag_content_to_image = render_tag_content_to_image,
     fetch_from_tag_cache = fetch_from_tag_cache,
+    render_background = render_background,
     request_render_of_current_tag = request_render_of_current_tag
 }
