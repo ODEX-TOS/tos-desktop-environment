@@ -44,7 +44,7 @@ provides=('notification-daemon' 'awesome-tos' 'tde')
 conflicts=('awesome' 'awesome-git' 'awesome-tos' 'tde')
 backup=('etc/xdg/tde/rc.lua')
 
-source=("git://github.com/ODEX-TOS/tos-desktop-environment.git#branch=$BRANCH")
+source=("git+https://github.com/ODEX-TOS/tos-desktop-environment.git#branch=$BRANCH")
 sha512sums=('SKIP') 
 validpgpkeys=('SKIP')
 
