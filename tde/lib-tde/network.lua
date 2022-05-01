@@ -105,6 +105,20 @@ local function get_ssid_list(callback)
 end
 
 
+local function get_active_ssid(callback)
+    local function parse_ssid_list(result)
+        for ssid, tbl in pairs(result) do
+            if tbl["active"] then
+                callback(ssid)
+            end
+        end
+        callback(nil)
+    end
+
+    get_ssid_list(parse_ssid_list)
+end
+
 return {
-    get_ssid_list = get_ssid_list
+    get_ssid_list = get_ssid_list,
+    get_active_ssid = get_active_ssid
 }
