@@ -30,6 +30,7 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
+local mat_colors = require('theme.mat-colors')
 local gfs = require("gears.filesystem")
 local dpi = require("beautiful").xresources.apply_dpi
 local common = require("lib-tde.function.common")
@@ -259,18 +260,59 @@ local function add_time_prompt(text, index)
 
     bIsInPrompt = true
 
+    local _prompt = "<b>" .. i18n.translate("New timer") .. "</b>: "
+
+    local function _highlight(_text)
+        -- Find non numeric items
+        local sub_non_numeric = string.format("<span foreground='%s'>%%1</span>", mat_colors.red.hue_800)
+        _text = _text:gsub("([^0-9]+)", sub_non_numeric)
+
+        return _text
+    end
+
     awful.prompt.run{
-        prompt = "<b>" .. i18n.translate("New timer") .. "</b>: ",
+        prompt = _prompt,
         bg = beautiful.bg_modal,
         bg_cursor = beautiful.primary.hue_700,
         textbox = pr.widget,
         text = text or "1m",
+        -- Try to pre-format the input for the user
+        changed_callback  = function(input_text)
+
+            -- All the valid input
+            -- It can be a number 0-9
+            -- It can be a time delimiter eg : , - tab or a space
+            -- It can be a unit eg : s, m, h, d, w, y for seconds, minutes, hours, days, weeks, years
+            input_text = input_text:gsub("([^0-9:%.,- \t smhdwy]+)", "")
+            pr.widget.markup = _prompt .. input_text
+
+            local _seconds = toseconds(input_text)
+
+            -- In case we fail to parse the string we just show the existing value
+            if _seconds == nil or _seconds == 0 then
+                return
+            end
+
+            pr.widget.markup = _prompt .. _highlight(toHHMMSS(_seconds))
+        end,
         exe_callback = function(input_text)
             if not input_text or #input_text == 0 then return end
             add_txt_prompt(os.time() + toseconds(input_text),
             os.time(),
             input_text, "", index, pr)
         end,
+        highlighter  = function(b, a)
+            -- Add a random marker to delimitate the cursor
+            local cmd = b.."ZZZCURSORZZZ"..a
+
+            cmd = _highlight(cmd)
+
+            -- Split the string back to the original content
+            -- (ignore the recursive and escaped ones)
+            local pos = cmd:find("ZZZCURSORZZZ")
+            b,a = cmd:sub(1, pos-1), cmd:sub(pos+12, #cmd)
+            return b,a
+        end
     }
 
     popup:setup(rows)
