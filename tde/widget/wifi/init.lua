@@ -30,13 +30,13 @@ local config = require("config")
 local theme = require("theme.icons.dark-light")
 local filehandle = require("lib-tde.file")
 local signals = require("lib-tde.signals")
+local network = require("lib-tde.network")
 
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
 -- Battery 0: Charging, 53%, 00:57:43 until charged
 
 local PATH_TO_ICONS = "/etc/xdg/tde/widget/wifi/icons/"
-local interface = "wlp2s01"
 
 local connected = false
 local essid = "N/A"
@@ -86,16 +86,12 @@ awful.tooltip(
 
 local function grabText()
   if connected then
-    awful.spawn.easy_async(
-      "iw dev " .. interface .. " link",
-      function(stdout)
-        essid = stdout:match("SSID:(.-)\n")
-        if (essid == nil) then
-          essid = "N/A"
-        end
+    network.get_active_ssid(function(result)
+      if result then
+        essid = result
         print("Network essid: " .. essid)
       end
-    )
+    end)
   end
 end
 
@@ -115,7 +111,6 @@ gears.timer {
 
     local interface_name, _, link = interface_res:match("(%w+):%s+(%d+)%s+(%d+)")
 
-    interface = interface_name
     filehandle.overwrite("/tmp/interface.txt", interface_name)
 
     local wifi_strength = (tonumber(link) / 70) * 100
