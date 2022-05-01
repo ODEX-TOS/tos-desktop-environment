@@ -100,7 +100,7 @@ signals.connect_primary_theme_changed(
 -- returns the filename of the qr code image
 local function generate_qr_code(ssid, password)
   local qr_text = "WIFI:T:WPA;S:" .. ssid .. ";P:" .. password .. ";;"
-  qr_surface = qr_code.surface(qr_text, settings_width)
+  qr_surface = qr_code.surface(qr_text, settings_width, beautiful.awesome_icon)
 end
 
 local function make_qr_code_field()
@@ -109,8 +109,8 @@ local function make_qr_code_field()
     image = qr_surface,
     resize = true,
     forced_height = (settings_height / 2),
-    clip_shape = function(cr, _width, _height)
-      gears.shape.rounded_rect(cr, _width, _height, dpi(20))
+    clip_shape = function(cr, w, h)
+      gears.shape.rounded_rect(cr, w, h, dpi(20))
     end,
     widget = wibox.widget.imagebox
   }
@@ -235,12 +235,18 @@ local function make_network_widget(ssid, active)
       dpi(10),
       dpi(10)
     ),
-    wibox.container.margin(password, dpi(10), dpi(10), dpi(7), dpi(7)),
+    wibox.widget {
+      widget = wibox.container.margin(password, m,m,dpi(5), dpi(5)),
+      fill_horizontal = false,
+      valign = 'center',
+      halign = 'center',
+
+    },
     button,
     layout = wibox.layout.ratio.horizontal
   }
 
-  widget:adjust_ratio(2, 0.20, 0.75, 0.05)
+  widget:adjust_ratio(2, 0.25, 0.70, 0.05)
 
   box.update_body(widget)
 
@@ -420,7 +426,7 @@ return function()
       scrollbox_body.reset()
     end
 
-    if hardware.hasWifi() and not (interface == "") then
+    if hardware.hasWifi() and interface ~= "" then
       wireless.icon:set_image(icons.wifi)
       wireless.name.text = interface
       wireless.ip.text = hardware.getDefaultIP()
