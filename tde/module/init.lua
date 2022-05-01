@@ -50,7 +50,7 @@ if general["break"] == "1" then
     require("module.break-timer")
 end
 
-if not (general["disable_desktop"] == "1") then
+if general["disable_desktop"] ~= "1" then
     if IsreleaseMode then
         require("module.installer")
     end
@@ -69,3 +69,4 @@ end
 
 require("module.wallpaper-changer")
 require("module.screen_swipe")
+require("module.network-portal-detector")
